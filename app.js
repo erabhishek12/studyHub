@@ -2460,97 +2460,426 @@
 
     // ==================== SHARE ====================
 
-    function shareResource(id, type, title) {
-        const url = `${window.location.origin}${window.location.pathname}#${type}=${encodeURIComponent(id)}`;
-
-        if (navigator.share) {
-            navigator.share({
-                title: `StudyHub - ${title}`,
-                text: `Check out "${title}" on StudyHub!`,
-                url: url
-            }).catch(() => copyToClipboard(url));
-        } else {
-            copyToClipboard(url);
-        }
-    }
-
-    function copyToClipboard(text) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text)
-                .then(() => showToast('Link copied! 📋', 'success'))
-                .catch(() => fallbackCopy(text));
-        } else {
-            fallbackCopy(text);
-        }
-    }
-
-    function fallbackCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        
-        try {
-            document.execCommand('copy');
-            showToast('Link copied! 📋', 'success');
-        } catch {
-            showToast('Failed to copy', 'error');
+function shareResource(id, type, title) {
+    // Build proper share URL
+    const params = new URLSearchParams();
+    params.set('type', type);
+    params.set('id', String(id));
+    params.set('highlight', 'true');
+    
+    // Get navigation state for this type
+    const nav = state.navigation?.[type];
+    
+    if (nav) {
+        // Notes / Videos / PYQ
+        if (type === 'notes' || type === 'videos' || type === 'pyq') {
+            if (nav.course) params.set('course', nav.course);
+            if (nav.branch) params.set('branch', nav.branch);
+            if (nav.semester) params.set('sem', String(nav.semester));
         }
         
-        document.body.removeChild(textarea);
+        // Tutorials
+        if (type === 'tutorials') {
+            if (nav.language) params.set('language', nav.language);
+            if (nav.topic) params.set('topic', nav.topic);
+        }
     }
 
-    // ==================== DEEP LINKING ====================
+    // Correct URL format: #share?type=notes&id=14&...
+    const url = `${window.location.origin}${window.location.pathname}#share?${params.toString()}`;
+    
+    console.log('📤 Generated Share URL:', url);
+    console.log('📋 Navigation State:', nav);
 
-    function handleDeepLink() {
-        const hash = window.location.hash;
-        if (!hash) return;
+    if (navigator.share) {
+        navigator.share({
+            title: `StudyHub - ${title}`,
+            text: `Check out "${title}" on StudyHub!`,
+            url: url
+        }).catch(() => copyToClipboard(url));
+    } else {
+        copyToClipboard(url);
+    }
+}
 
-        const match = hash.match(/#(\w+)=(.+)/);
-        if (!match) return;
+function copyToClipboard(text) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+            .then(() => showToast('Link copied! 📋', 'success'))
+            .catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
 
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+        document.execCommand('copy');
+        showToast('Link copied! 📋', 'success');
+    } catch {
+        showToast('Failed to copy', 'error');
+    }
+    
+    document.body.removeChild(textarea);
+}
+
+// ==================== DEEP LINKING ====================
+
+function handleDeepLink() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    console.log('🔗 Hash detected:', hash);
+
+    // NEW FORMAT: #share?type=notes&id=14&...
+    if (hash.startsWith('#share?')) {
+        handleNewShareLink(hash);
+        return;
+    }
+
+    // OLD FORMAT: #notes=14 (backward compatibility - just redirect, no file open)
+    const match = hash.match(/#(\w+)=(.+)/);
+    if (match) {
         const [, type, encodedId] = match;
         const id = decodeURIComponent(encodedId);
+        
+        console.log('📌 Old format detected:', { type, id });
+        
+        // Convert to new format and handle
+        handleNewShareLink(`#share?type=${type}&id=${id}&highlight=true`);
+    }
+}
 
-        const attemptNavigation = () => {
-            if (state.isLoading) {
-                setTimeout(attemptNavigation, 500);
-                return;
-            }
+function handleNewShareLink(hash) {
+    console.log('🔗 Processing share link:', hash);
 
-            if (['notes', 'videos', 'pyq'].includes(type)) {
-                const resource = (state.data[type] || []).find(r => 
-                    String(r.ID || r.id) === String(id)
-                );
-                if (resource) {
-                    const url = resource.FileURL || resource.fileUrl || resource.url;
-                    const title = resource.Title || resource.title;
-                    if (url) {
-                        setTimeout(() => {
-                            openExternalLink(url, type, title, id);
-                        }, 500);
-                    }
-                }
-            } else if (type === 'tutorials') {
-                const tutorial = (state.data.tutorials || []).find(t => 
-                    String(t.ID || t.id || t.Topic || t.topic) === String(id)
-                );
-                if (tutorial) {
-                    navigateToPage('tutorials');
-                    setTimeout(() => {
-                        selectLanguage(tutorial.Subject || tutorial.subject);
-                        setTimeout(() => openTutorialReader(tutorial), 300);
-                    }, 300);
-                }
-            }
+    // Parse: #share?type=notes&id=14&course=BCA&branch=CS&sem=3&highlight=true
+    const queryString = hash.replace('#share?', '');
+    const params = new URLSearchParams(queryString);
 
-            history.replaceState(null, '', window.location.pathname);
-        };
+    const shareData = {
+        type: params.get('type'),
+        id: params.get('id'),
+        highlight: params.get('highlight') === 'true',
+        course: params.get('course'),
+        branch: params.get('branch'),
+        sem: params.get('sem'),
+        language: params.get('language'),
+        topic: params.get('topic')
+    };
 
-        attemptNavigation();
+    console.log('📋 Parsed share data:', shareData);
+
+    if (!shareData.type || !shareData.id) {
+        console.warn('❌ Invalid share link - missing type or id');
+        history.replaceState(null, '', window.location.pathname);
+        return;
     }
 
+    // Show loading
+    showShareLoading();
+
+    // Wait for data to load
+    waitForData(() => {
+        hideShareLoading();
+        processShareLink(shareData);
+    });
+}
+
+function waitForData(callback) {
+    let attempts = 0;
+    const maxAttempts = 40; // 20 seconds max
+
+    const check = () => {
+        attempts++;
+        console.log(`⏳ Waiting for data... (attempt ${attempts})`);
+        
+        // Check if data is loaded
+        const dataLoaded = !state.isLoading && state.data && 
+            (state.data.notes?.length > 0 || 
+             state.data.videos?.length > 0 || 
+             state.data.tutorials?.length > 0);
+
+        if (dataLoaded) {
+            console.log('✅ Data loaded!');
+            setTimeout(callback, 300);
+        } else if (attempts < maxAttempts) {
+            setTimeout(check, 500);
+        } else {
+            console.warn('⚠️ Timeout waiting for data');
+            callback();
+        }
+    };
+
+    check();
+}
+
+function processShareLink(shareData) {
+    const { type, id, highlight, course, branch, sem, language, topic } = shareData;
+
+    console.log('🚀 Processing share:', shareData);
+
+    // Clean URL immediately
+    history.replaceState(null, '', window.location.pathname);
+
+    switch (type) {
+        case 'notes':
+        case 'videos':
+        case 'pyq':
+            openSharedResource(type, id, highlight, { course, branch, sem });
+            break;
+
+        case 'tutorials':
+            openSharedTutorial(id, highlight, language);
+            break;
+
+        default:
+            console.warn('Unknown type:', type);
+            showToast('Invalid link', 'error');
+    }
+}
+
+// ==================== OPEN SHARED RESOURCE (NO AUTO FILE OPEN) ====================
+
+function openSharedResource(type, id, highlight, path) {
+    console.log(`📄 Opening shared ${type}:`, { id, path });
+
+    // Navigate to page
+    navigateToPage(type);
+
+    // If no path info, just try to find and highlight
+    if (!path.course && !path.branch && !path.sem) {
+        console.log('⚠️ No path info, trying direct highlight');
+        setTimeout(() => {
+            findAndHighlightResource(type, id, highlight);
+        }, 800);
+        return;
+    }
+
+    // Sequential navigation with path
+    setTimeout(() => {
+        // Step 1: Select Course
+        if (path.course && typeof selectCourse === 'function') {
+            console.log('📚 Selecting course:', path.course);
+            selectCourse(type, path.course);
+        }
+
+        setTimeout(() => {
+            // Step 2: Select Branch
+            if (path.branch && typeof selectBranch === 'function') {
+                console.log('🌿 Selecting branch:', path.branch);
+                selectBranch(type, path.branch);
+            }
+
+            setTimeout(() => {
+                // Step 3: Select Semester
+                if (path.sem && typeof selectSemester === 'function') {
+                    console.log('📅 Selecting semester:', path.sem);
+                    selectSemester(type, path.sem);
+                }
+
+                // Step 4: Find and highlight (NO FILE OPEN)
+                setTimeout(() => {
+                    findAndHighlightResource(type, id, highlight);
+                }, 500);
+
+            }, 400);
+        }, 400);
+    }, 500);
+}
+
+function findAndHighlightResource(type, id, highlight) {
+    console.log(`🔍 Finding ${type} with ID:`, id);
+
+    // Wait for cards to render
+    setTimeout(() => {
+        const card = findCardElement(id);
+
+        if (card) {
+            console.log('✅ Card found!');
+
+            // Scroll to card
+            smoothScrollToCard(card);
+
+            // Highlight
+            setTimeout(() => {
+                card.classList.add('shared-highlight');
+                showToast(`✨ Here's the shared ${type}!`, 'success');
+
+                // Remove highlight after 5 seconds
+                setTimeout(() => {
+                    card.classList.add('shared-highlight-exit');
+                    setTimeout(() => {
+                        card.classList.remove('shared-highlight', 'shared-highlight-exit');
+                    }, 500);
+                }, 5000);
+            }, 400);
+
+            // ❌ NO AUTO FILE OPEN - User will click manually
+
+        } else {
+            console.warn('❌ Card not found in DOM');
+            showToast('Resource card not found 😕', 'error');
+        }
+    }, 500);
+}
+
+function findCardElement(id) {
+    const searchId = String(id);
+    
+    // Try direct data-id match
+    let card = document.querySelector(`[data-id="${searchId}"]`);
+    
+    if (!card) {
+        // Try all cards with data-id
+        const allCards = document.querySelectorAll('[data-id]');
+        for (let c of allCards) {
+            if (String(c.dataset.id) === searchId) {
+                card = c;
+                break;
+            }
+        }
+    }
+
+    if (!card) {
+        // Try numeric comparison
+        const allCards = document.querySelectorAll('[data-id]');
+        for (let c of allCards) {
+            if (parseInt(c.dataset.id) === parseInt(searchId)) {
+                card = c;
+                break;
+            }
+        }
+    }
+
+    console.log('🔍 Card search result:', card ? 'Found' : 'Not found');
+    return card;
+}
+
+function smoothScrollToCard(card) {
+    const rect = card.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const targetPosition = rect.top + scrollTop - (window.innerHeight / 2) + (rect.height / 2);
+
+    window.scrollTo({
+        top: Math.max(0, targetPosition),
+        behavior: 'smooth'
+    });
+}
+
+// ==================== OPEN SHARED TUTORIAL (NO AUTO FILE OPEN) ====================
+
+function openSharedTutorial(id, highlight, language) {
+    console.log('📖 Opening shared tutorial:', { id, language });
+
+    navigateToPage('tutorials');
+
+    setTimeout(() => {
+        // Find tutorial first
+        const tutorials = state.data?.tutorials || [];
+        
+        const tutorial = tutorials.find(t => {
+            const tId = String(t.ID || t.id || '');
+            const tTopic = String(t.Topic || t.topic || '');
+            return tId === String(id) || tTopic === String(id);
+        });
+
+        if (tutorial) {
+            console.log('✅ Tutorial found:', tutorial);
+
+            // Select language
+            const tutorialLang = language || tutorial.Subject || tutorial.subject || tutorial.Language;
+            if (tutorialLang && typeof selectLanguage === 'function') {
+                selectLanguage(tutorialLang);
+            }
+
+            // Open tutorial reader
+            setTimeout(() => {
+                if (typeof openTutorialReader === 'function') {
+                    openTutorialReader(tutorial);
+                }
+
+                // Highlight reader
+                if (highlight) {
+                    setTimeout(() => {
+                        highlightReader();
+                        showToast('📖 Shared tutorial opened!', 'success');
+                    }, 500);
+                }
+            }, 500);
+        } else {
+            console.warn('❌ Tutorial not found');
+            showToast('Tutorial not found 😕', 'error');
+        }
+    }, 600);
+}
+
+function highlightReader() {
+    const reader = document.querySelector('.tutorial-reader:not(.hidden)') ||
+                   document.querySelector('#tutorial-reader:not(.hidden)') ||
+                   document.querySelector('.tutorial-reader') ||
+                   document.querySelector('#tutorial-reader');
+
+    if (reader) {
+        console.log('✅ Highlighting reader');
+        
+        reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        setTimeout(() => {
+            reader.classList.add('shared-highlight');
+
+            setTimeout(() => {
+                reader.classList.add('shared-highlight-exit');
+                setTimeout(() => {
+                    reader.classList.remove('shared-highlight', 'shared-highlight-exit');
+                }, 500);
+            }, 5000);
+        }, 300);
+    }
+}
+
+// ==================== LOADING OVERLAY ====================
+
+function showShareLoading() {
+    if (document.getElementById('share-loading')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'share-loading';
+    overlay.innerHTML = `
+        <div class="share-overlay">
+            <div class="share-loader-box">
+                <div class="share-spinner"></div>
+                <p>Opening shared content...</p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+}
+
+function hideShareLoading() {
+    const overlay = document.getElementById('share-loading');
+    if (overlay) {
+        const inner = overlay.querySelector('.share-overlay');
+        if (inner) {
+            inner.style.opacity = '0';
+            inner.style.transition = 'opacity 0.4s ease';
+        }
+        
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.remove();
+            }
+            document.body.style.overflow = '';
+        }, 400);
+    }
+}
     // ==================== AUTO-REFRESH DATA ====================
     
     async function refreshDataInBackground() {
@@ -4583,3 +4912,4 @@
     }
 
 })();
+
