@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,42 +9,47 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="StudyHub">
-    
+
     <title>StudyHub - Study Smarter</title>
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-    
+    <link rel="icon" type="image/png" sizes="32x32" href="images/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/logo.png">
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <!-- Highlight.js for Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    
+
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    
+
     <!-- ==================== LOADING SCREEN (Neumorphic Design) ==================== -->
     <div id="loading-screen" class="loading-screen">
         <div class="loading-container">
             <!-- Animated Logo -->
-<div class="loading-logo">
-    <div class="loading-logo-icon">
-        <img src="images/logo.png" alt="StudyHub Logo" class="logo-img">
-        <div class="loading-pulse"></div>
-    </div>
-    <p class="loading-tagline">Study Smarter, Not Harder</p>
-</div>
-            
+            <div class="loading-logo">
+                <div class="loading-logo-icon">
+                    <img src="images/logo.png" alt="StudyHub Logo" class="logo-img">
+                    <div class="loading-pulse"></div>
+                </div>
+                <p class="loading-tagline">Study Smarter, Not Harder</p>
+            </div>
+
             <!-- Progress Section -->
             <div class="loading-progress-section">
                 <div class="loading-steps">
@@ -64,7 +70,7 @@
                         <span>Ready!</span>
                     </div>
                 </div>
-                
+
                 <div class="loading-bar-container">
                     <div class="loading-bar">
                         <div class="loading-bar-fill" id="loading-progress"></div>
@@ -72,14 +78,14 @@
                     </div>
                     <span class="loading-percent" id="loading-percent">0%</span>
                 </div>
-                
+
                 <p class="loading-status" id="loading-status">Initializing...</p>
             </div>
-            
+
             <!-- Running Animation -->
             <div class="loading-runner">
                 <div class="runner-track">
-                    <span class="runner-emoji" id="runner-emoji">🏃</span>
+                    <span class="runner-emoji" id="runner-emoji">😵‍💫</span>
                 </div>
             </div>
         </div>
@@ -87,28 +93,30 @@
 
     <!-- ==================== MAIN APP CONTAINER ==================== -->
     <div id="app-container" class="app-container hidden">
-        
+
         <!-- ==================== HEADER ==================== -->
         <header class="header" id="header">
             <button class="header-btn menu-btn" id="menu-btn" aria-label="Menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="12" x2="18" y2="12"></line>
                     <line x1="3" y1="18" x2="15" y2="18"></line>
                 </svg>
             </button>
-            
+
             <div class="header-title" onclick="navigateToPage('home')">
-                <span class="logo-icon">📚</span>
+                <img src="images/logo.png" alt="StudyHub Logo" class="navbar-logo">
                 <span class="logo-text">StudyHub</span>
             </div>
-            
+
             <div class="header-actions">
                 <button class="header-btn theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
                     <span class="theme-icon" id="theme-icon">🌙</span>
                 </button>
                 <button class="header-btn search-btn" id="search-btn" aria-label="Search">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="M21 21l-4.35-4.35"></path>
                     </svg>
@@ -147,7 +155,7 @@
                 </div>
                 <button class="sidebar-close" id="sidebar-close">✕</button>
             </div>
-            
+
             <div class="sidebar-menu">
                 <a href="#" class="sidebar-item active" data-page="home">
                     <span class="sidebar-icon">🏠</span>
@@ -166,7 +174,7 @@
                 </a>
                 <a href="#" class="sidebar-item" data-page="pyq">
                     <span class="sidebar-icon">📋</span>
-                    <span>Previous Year Papers</span>
+                    <span>PYQ</span>
                     <span class="sidebar-arrow">›</span>
                 </a>
                 <a href="#" class="sidebar-item" data-page="tutorials">
@@ -174,9 +182,9 @@
                     <span>Tutorials</span>
                     <span class="sidebar-arrow">›</span>
                 </a>
-                
+
                 <div class="sidebar-divider"></div>
-                
+
                 <a href="#" class="sidebar-item" data-page="saved">
                     <span class="sidebar-icon">❤️</span>
                     <span>Saved Items</span>
@@ -187,9 +195,9 @@
                     <span>Study Tools</span>
                     <span class="sidebar-arrow">›</span>
                 </a>
-                
+
                 <div class="sidebar-divider"></div>
-                
+
                 <a href="#" class="sidebar-item" data-page="settings">
                     <span class="sidebar-icon">⚙️</span>
                     <span>Settings</span>
@@ -206,7 +214,7 @@
                     <span class="sidebar-arrow">›</span>
                 </a>
             </div>
-            
+
             <div class="sidebar-footer">
                 <p>Made with ❤️ by Abhishek</p>
                 <span class="version">v2.0.0</span>
@@ -218,11 +226,13 @@
             <div class="search-container">
                 <div class="search-header">
                     <div class="search-input-wrapper">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="M21 21l-4.35-4.35"></path>
                         </svg>
-                        <input type="text" id="search-input" placeholder="Search notes, videos, tutorials..." autocomplete="off">
+                        <input type="text" id="search-input" placeholder="Search notes, videos, tutorials..."
+                            autocomplete="off">
                         <button class="search-clear hidden" id="search-clear">✕</button>
                     </div>
                     <button class="search-close-btn" id="search-close">Cancel</button>
@@ -239,7 +249,7 @@
 
         <!-- ==================== MAIN CONTENT ==================== -->
         <main class="main-content" id="main-content">
-            
+
             <!-- ========== HOME PAGE ========== -->
             <section class="page active" id="page-home">
                 <div class="page-content">
@@ -401,8 +411,9 @@
                 <div class="page-content">
                     <div class="page-header">
                         <button class="back-btn hidden" id="notes-back">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
                         </button>
                         <div class="page-title-wrap">
@@ -410,18 +421,18 @@
                             <h1 class="page-title" id="notes-title">Notes</h1>
                         </div>
                     </div>
-                    
+
                     <div class="breadcrumb" id="notes-breadcrumb"></div>
-                    
+
                     <!-- Course Selection -->
                     <div class="selection-grid" id="notes-courses"></div>
-                    
+
                     <!-- Branch Selection -->
                     <div class="selection-grid hidden" id="notes-branches"></div>
-                    
+
                     <!-- Semester Selection -->
                     <div class="selection-grid hidden" id="notes-semesters"></div>
-                    
+
                     <!-- Subject Filter -->
                     <div class="filter-section hidden" id="notes-filter">
                         <div class="filter-wrapper">
@@ -431,23 +442,23 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <!-- Resource List -->
                     <div class="resource-grid hidden" id="notes-list"></div>
-                    
+
                     <!-- Loading State -->
                     <div class="loading-state hidden" id="notes-loading">
                         <div class="loading-spinner"></div>
                         <p>Loading resources...</p>
                     </div>
-                    
+
                     <!-- Empty State -->
                     <div class="empty-state hidden" id="notes-empty">
                         <div class="empty-illustration">📭</div>
                         <h3>No Notes Available</h3>
                         <p>Notes for this selection haven't been uploaded yet.</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" 
-                           target="_blank" class="request-btn">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                            target="_blank" class="request-btn">
                             <span>📝</span> Request This Material
                         </a>
                     </div>
@@ -459,8 +470,9 @@
                 <div class="page-content">
                     <div class="page-header">
                         <button class="back-btn hidden" id="videos-back">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
                         </button>
                         <div class="page-title-wrap">
@@ -468,12 +480,12 @@
                             <h1 class="page-title" id="videos-title">Video Lectures</h1>
                         </div>
                     </div>
-                    
+
                     <div class="breadcrumb" id="videos-breadcrumb"></div>
                     <div class="selection-grid" id="videos-courses"></div>
                     <div class="selection-grid hidden" id="videos-branches"></div>
                     <div class="selection-grid hidden" id="videos-semesters"></div>
-                    
+
                     <div class="filter-section hidden" id="videos-filter">
                         <div class="filter-wrapper">
                             <span class="filter-icon">🔍</span>
@@ -482,7 +494,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="resource-grid hidden" id="videos-list"></div>
                     <div class="loading-state hidden" id="videos-loading">
                         <div class="loading-spinner"></div>
@@ -492,8 +504,8 @@
                         <div class="empty-illustration">🎬</div>
                         <h3>No Videos Available</h3>
                         <p>Video lectures for this selection haven't been uploaded yet.</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" 
-                           target="_blank" class="request-btn">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                            target="_blank" class="request-btn">
                             <span>📝</span> Request This Material
                         </a>
                     </div>
@@ -505,8 +517,9 @@
                 <div class="page-content">
                     <div class="page-header">
                         <button class="back-btn hidden" id="pyq-back">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
                         </button>
                         <div class="page-title-wrap">
@@ -514,12 +527,12 @@
                             <h1 class="page-title" id="pyq-title">Previous Year Papers</h1>
                         </div>
                     </div>
-                    
+
                     <div class="breadcrumb" id="pyq-breadcrumb"></div>
                     <div class="selection-grid" id="pyq-courses"></div>
                     <div class="selection-grid hidden" id="pyq-branches"></div>
                     <div class="selection-grid hidden" id="pyq-semesters"></div>
-                    
+
                     <div class="filter-section hidden" id="pyq-filter">
                         <div class="filter-wrapper">
                             <span class="filter-icon">🔍</span>
@@ -528,7 +541,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="resource-grid hidden" id="pyq-list"></div>
                     <div class="loading-state hidden" id="pyq-loading">
                         <div class="loading-spinner"></div>
@@ -538,8 +551,8 @@
                         <div class="empty-illustration">📋</div>
                         <h3>No Papers Available</h3>
                         <p>Previous year papers for this selection haven't been uploaded yet.</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" 
-                           target="_blank" class="request-btn">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                            target="_blank" class="request-btn">
                             <span>📝</span> Request This Material
                         </a>
                     </div>
@@ -551,8 +564,9 @@
                 <div class="page-content">
                     <div class="page-header">
                         <button class="back-btn hidden" id="tutorials-back">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
                         </button>
                         <div class="page-title-wrap">
@@ -560,15 +574,15 @@
                             <h1 class="page-title" id="tutorials-title">Tutorials</h1>
                         </div>
                     </div>
-                    
+
                     <div class="breadcrumb" id="tutorials-breadcrumb"></div>
-                    
+
                     <!-- Language Selection -->
                     <div class="language-grid" id="tutorials-languages"></div>
-                    
+
                     <!-- Topics List -->
                     <div class="topics-list hidden" id="tutorials-topics"></div>
-                    
+
                     <!-- Tutorial Reader -->
                     <div class="tutorial-reader hidden" id="tutorial-reader">
                         <div class="reader-header">
@@ -587,13 +601,13 @@
                             <span>📥</span> Download Cheatsheet
                         </a>
                     </div>
-                    
+
                     <div class="empty-state hidden" id="tutorials-empty">
                         <div class="empty-illustration">💡</div>
                         <h3>No Tutorials Available</h3>
                         <p>Tutorials for this language haven't been added yet.</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" 
-                           target="_blank" class="request-btn">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                            target="_blank" class="request-btn">
                             <span>📝</span> Request This Tutorial
                         </a>
                     </div>
@@ -609,7 +623,7 @@
                             <h1 class="page-title">Saved Items</h1>
                         </div>
                     </div>
-                    
+
                     <div class="saved-tabs">
                         <button class="saved-tab active" data-type="all">All</button>
                         <button class="saved-tab" data-type="notes">📝 Notes</button>
@@ -617,9 +631,9 @@
                         <button class="saved-tab" data-type="pyq">📋 PYQs</button>
                         <button class="saved-tab" data-type="tutorials">💡 Tutorials</button>
                     </div>
-                    
+
                     <div class="resource-grid" id="saved-list"></div>
-                    
+
                     <div class="empty-state" id="saved-empty">
                         <div class="empty-illustration">❤️</div>
                         <h3>No Saved Items</h3>
@@ -633,8 +647,9 @@
                 <div class="page-content">
                     <div class="page-header">
                         <button class="back-btn hidden" id="tools-back">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
                         </button>
                         <div class="page-title-wrap">
@@ -642,7 +657,7 @@
                             <h1 class="page-title" id="tools-title">Study Tools</h1>
                         </div>
                     </div>
-                    
+
                     <!-- Tools Grid -->
                     <div class="tools-grid" id="tools-grid">
                         <!-- Productivity Tools -->
@@ -687,7 +702,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Academic Calculators -->
                         <div class="tools-category">
                             <h3 class="tools-category-title">🧮 Academic Calculators</h3>
@@ -730,7 +745,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Utility Tools -->
                         <div class="tools-category">
                             <h3 class="tools-category-title">🔧 Utilities</h3>
@@ -774,7 +789,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Tool Contents (All tools will be rendered here) -->
                     <div class="tool-content hidden" id="tool-container"></div>
                 </div>
@@ -789,7 +804,7 @@
                             <h1 class="page-title">Settings</h1>
                         </div>
                     </div>
-                    
+
                     <!-- Profile Section -->
                     <div class="settings-section">
                         <h3 class="settings-title">👤 Profile</h3>
@@ -812,7 +827,8 @@
                             </div>
                             <div class="setting-field">
                                 <label for="setting-college">College/University</label>
-                                <input type="text" id="setting-college" placeholder="Enter your college" maxlength="100">
+                                <input type="text" id="setting-college" placeholder="Enter your college"
+                                    maxlength="100">
                             </div>
                             <div class="setting-row-grid">
                                 <div class="setting-field">
@@ -844,18 +860,20 @@
                             </div>
                             <div class="setting-field">
                                 <label for="setting-bio">Bio</label>
-                                <textarea id="setting-bio" placeholder="Tell us about yourself..." maxlength="200" rows="3"></textarea>
+                                <textarea id="setting-bio" placeholder="Tell us about yourself..." maxlength="200"
+                                    rows="3"></textarea>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Exam Settings -->
                     <div class="settings-section">
                         <h3 class="settings-title">📅 Exam Countdown</h3>
                         <div class="settings-card">
                             <div class="setting-field">
                                 <label for="setting-exam-name">Exam Name</label>
-                                <input type="text" id="setting-exam-name" placeholder="e.g., End Semester Exam" maxlength="50">
+                                <input type="text" id="setting-exam-name" placeholder="e.g., End Semester Exam"
+                                    maxlength="50">
                             </div>
                             <div class="setting-field">
                                 <label for="setting-exam-date">Exam Date</label>
@@ -863,7 +881,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Appearance -->
                     <div class="settings-section">
                         <h3 class="settings-title">🎨 Appearance</h3>
@@ -883,7 +901,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Data Management -->
                     <div class="settings-section">
                         <h3 class="settings-title">💾 Data Management</h3>
@@ -911,7 +929,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <button class="save-settings-btn" id="save-settings-btn">
                         <span>💾</span> Save Settings
                     </button>
@@ -927,267 +945,298 @@
                             <h1 class="page-title">Support Developer</h1>
                         </div>
                     </div>
-                    
+
                     <!-- Support Message -->
                     <div class="support-message">
                         <div class="support-heart">💖</div>
                         <h2>Help Keep StudyHub Free!</h2>
-                        <p>StudyHub is built with love and is completely free with no ads. Your support helps cover server costs and motivates me to add new features!</p>
+                        <p>StudyHub is built with love and is completely free with no ads. Your support helps cover
+                            server costs and motivates me to add new features!</p>
                     </div>
-                    
+
                     <!-- Donation Section -->
                     <div class="donation-section">
                         <h3>☕ Buy Me a Coffee</h3>
-                        
-                        <!-- UPI QR Code -->
+
                         <div class="qr-container">
-                            <div class="qr-code" id="qr-code">
-                                <div class="qr-placeholder">
-                                    <span>📱</span>
-                                    <p>Scan to Pay</p>
-                                </div>
-                                <!-- You can add actual QR image here -->
-                                <img src="https://ibb.co/bjX4rfH2" alt="UPI QR Code" class="qr-image hidden" id="qr-image">
+                            <div class="qr-code">
+                                <img src="images/qr.jpg" alt="UPI Payment QR Code" class="qr-image">
                             </div>
-                        </div>
-                        
-                        <!-- UPI ID -->
-                        <div class="upi-section">
-                            <label>UPI ID</label>
-                            <div class="upi-id-box">
-                                <span class="upi-id" id="upi-id">9546983729@fam</span>
-                                <button class="copy-upi-btn" id="copy-upi-btn">
-                                    <span>📋</span> Copy
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Donation Buttons -->
-                        <div class="donation-buttons">
-                            <a href="https://www.buymeacoffee.com/" target="_blank" class="donate-btn buymeacoffee">
-                                <span>☕</span> Buy Me a Coffee
-                            </a>
-                            <a href="https://paypal.me/" target="_blank" class="donate-btn paypal">
-                                <span>💳</span> PayPal
-                            </a>
+
+                            <p class="scan-text">Scan & Support StudyHub ❤️</p>
                         </div>
                     </div>
-                    
-                    <!-- Connect Section -->
-                    <div class="connect-section">
-                        <h3>🌐 Connect With Me</h3>
-                        <p>Follow for updates, tips, and more student resources!</p>
-                        
-                        <div class="social-grid">
-                            <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn youtube">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                    </svg>
-                                </div>
-                                <span>YouTube</span>
-                            </a>
-                            <a href="https://instagram.com/naturelensbyabhi" target="_blank" class="social-btn instagram">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                    </svg>
-                                </div>
-                                <span>Instagram</span>
-                            </a>
-                            <a href="https://github.com/erabhishek12" target="_blank" class="social-btn github">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                                    </svg>
-                                </div>
-                                <span>GitHub</span>
-                            </a>
-                            <a href="https://linkedin.com/abhishek-kumar2007" target="_blank" class="social-btn linkedin">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                                    </svg>
-                                </div>
-                                <span>LinkedIn</span>
-                            </a>
-                            <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn twitter">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                                    </svg>
-                                </div>
-                                <span>Twitter/X</span>
-                            </a>
-                            <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn facebook">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                    </svg>
-                                </div>
-                                <span>Facebook</span>
-                            </a>
-                            <a href="https://t.me/er_abhiiii" target="_blank" class="social-btn telegram">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                                    </svg>
-                                </div>
-                                <span>Telegram</span>
-                            </a>
-                            <a href="https://wa.me/9546983729" target="_blank" class="social-btn whatsapp">
-                                <div class="social-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                    </svg>
-                                </div>
-                                <span>WhatsApp</span>
-                            </a>
+
+                    <!-- UPI ID -->
+                    <div class="upi-section">
+                        <label>UPI ID</label>
+                        <div class="upi-id-box">
+                            <span class="upi-id" id="upi-id">9546983729@fam</span>
+                            <button class="copy-upi-btn" id="copy-upi-btn">
+                                <span>📋</span> Copy
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- Thank You Message -->
-                    <div class="thank-you-section">
-                        <span class="thank-emoji">🙏</span>
-                        <p>Thank you for your support! Every contribution helps!</p>
+
+                    <!-- Donation Buttons -->
+                    <div class="donation-buttons">
+                        <a href="https://www.buymeacoffee.com/" target="_blank" class="donate-btn buymeacoffee">
+                            <span>☕</span> Buy Me a Coffee
+                        </a>
+                        <a href="https://paypal.me/" target="_blank" class="donate-btn paypal">
+                            <span>💳</span> PayPal
+                        </a>
                     </div>
                 </div>
-            </section>
 
-            <!-- ========== ABOUT PAGE ========== -->
-            <section class="page" id="page-about">
-                <div class="page-content">
-                    <div class="page-header">
-                        <div class="page-title-wrap">
-                            <span class="page-icon">ℹ️</span>
-                            <h1 class="page-title">About</h1>
-                        </div>
-                    </div>
-                    
-                    <!-- App Logo -->
-                    <div class="about-logo">
-                        <div class="about-logo-icon">
-                            <span>📚</span>
-                        </div>
-                        <h2>StudyHub</h2>
-                        <p class="about-tagline">Study Smarter, Not Harder</p>
-                        <span class="about-version">Version 2.0.0</span>
-                    </div>
-                    
-                    <!-- Description -->
-                    <div class="about-description">
-                        <p>StudyHub is your ultimate study companion, designed to help students access educational resources like notes, video lectures, previous year papers, and programming tutorials all in one place.</p>
-                    </div>
-                    
-                    <!-- Features -->
-                    <div class="about-features">
-                        <h3>✨ Features</h3>
-                        <ul>
-                            <li>📝 Access Notes & Study Materials</li>
-                            <li>🎬 Video Lectures from YouTube</li>
-                            <li>📋 Previous Year Question Papers</li>
-                            <li>💡 Programming Tutorials</li>
-                            <li>🛠️ 12+ Student Tools</li>
-                            <li>❤️ Save & Bookmark Resources</li>
-                            <li>🌙 Dark Mode Support</li>
-                            <li>📱 Works Offline (PWA)</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Developer Card -->
-                    <div class="developer-card" id="developer-card">
-                        <div class="developer-card-inner">
-                            <div class="developer-card-front">
-                                <div class="dev-front-content">
-                                    <span class="dev-hand">👆</span>
-                                    <h3>Meet the Developer</h3>
-                                    <p>Tap to flip</p>
-                                </div>
+                <!-- Connect Section -->
+                <div class="connect-section">
+                    <h3>🌐 Connect With Me</h3>
+                    <p>Follow for updates, tips, and more student resources!</p>
+
+                    <div class="social-grid">
+                        <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn youtube">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                </svg>
                             </div>
-                            <div class="developer-card-back">
-                                <div class="dev-avatar">👨‍💻</div>
-                                <h3>Abhishek</h3>
-                                <p class="dev-title">Full-Stack Developer</p>
-                                <p class="dev-bio">Passionate about creating useful tools for students. Building applications that make learning easier and more accessible.</p>
-                                <div class="dev-skills">
-                                    <span>JavaScript</span>
-                                    <span>React</span>
-                                    <span>Node.js</span>
-                                    <span>Python</span>
-                                </div>
-                                <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="dev-portfolio-btn">
-                                    <span>🌐</span> Visit Portfolio
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Links -->
-                    <div class="about-links">
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" target="_blank" class="about-link">
-                            <span class="about-link-icon">📝</span>
-                            <div class="about-link-text">
-                                <span>Request Material</span>
-                                <span class="about-link-desc">Request notes, videos or papers</span>
-                            </div>
-                            <span class="about-link-arrow">→</span>
+                            <span>YouTube</span>
                         </a>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform" target="_blank" class="about-link">
-                            <span class="about-link-icon">🚩</span>
-                            <div class="about-link-text">
-                                <span>Report Issue</span>
-                                <span class="about-link-desc">Found a bug? Let us know</span>
+                        <a href="https://instagram.com/naturelensbyabhi" target="_blank" class="social-btn instagram">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                </svg>
                             </div>
-                            <span class="about-link-arrow">→</span>
+                            <span>Instagram</span>
                         </a>
-                        <a href="#" class="about-link" onclick="navigateToPage('support'); return false;">
-                            <span class="about-link-icon">💖</span>
-                            <div class="about-link-text">
-                                <span>Support Developer</span>
-                                <span class="about-link-desc">Help keep StudyHub free</span>
+                        <a href="https://github.com/erabhishek12" target="_blank" class="social-btn github">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                                </svg>
                             </div>
-                            <span class="about-link-arrow">→</span>
+                            <span>GitHub</span>
                         </a>
-                    </div>
-                    
-                    <!-- Credits -->
-                    <div class="about-credits">
-                        <p>Made with ❤️ in India</p>
-                        <p>© 2024 StudyHub. All rights reserved.</p>
+                        <a href="https://linkedin.com/abhishek-kumar2007" target="_blank" class="social-btn linkedin">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg>
+                            </div>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn twitter">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </div>
+                            <span>Twitter/X</span>
+                        </a>
+                        <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="social-btn facebook">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                </svg>
+                            </div>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="https://t.me/er_abhiiii" target="_blank" class="social-btn telegram">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                                </svg>
+                            </div>
+                            <span>Telegram</span>
+                        </a>
+                        <a href="https://wa.me/9546983729" target="_blank" class="social-btn whatsapp">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg>
+                            </div>
+                            <span>WhatsApp</span>
+                        </a>
                     </div>
                 </div>
-            </section>
 
-        </main>
+                <!-- Thank You Message -->
+                <div class="thank-you-section">
+                    <span class="thank-emoji">🙏</span>
+                    <p>Thank you for your support! Every contribution helps!</p>
+                </div>
+    </div>
+    </section>
 
-        <!-- ==================== FOOTER DOCK ==================== -->
-        <footer class="footer-dock" id="footer-dock">
-            <button class="dock-item active" data-page="home">
-                <span class="dock-icon">🏠</span>
-                <span class="dock-label">Home</span>
-                <span class="dock-indicator"></span>
-            </button>
-            <button class="dock-item" data-page="notes">
-                <span class="dock-icon">📝</span>
-                <span class="dock-label">Notes</span>
-                <span class="dock-indicator"></span>
-            </button>
-            <button class="dock-item" data-page="tutorials">
-                <span class="dock-icon">💡</span>
-                <span class="dock-label">Tutorials</span>
-                <span class="dock-indicator"></span>
-            </button>
-            <button class="dock-item" data-page="videos">
-                <span class="dock-icon">🎬</span>
-                <span class="dock-label">Videos</span>
-                <span class="dock-indicator"></span>
-            </button>
-            <button class="dock-item" data-page="tools">
-                <span class="dock-icon">🛠️</span>
-                <span class="dock-label">Tools</span>
-                <span class="dock-indicator"></span>
-            </button>
-        </footer>
+<!-- ========== ABOUT PAGE ========== -->
+<section class="page" id="page-about">
+    <div class="page-content">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="page-title-wrap">
+                <span class="page-icon">ℹ️</span>
+                <h1 class="page-title">About</h1>
+            </div>
+        </div>
+
+        <!-- App Logo -->
+        <div class="about-logo">
+            <div class="about-logo-icon">
+                <img src="images/logo.png" alt="StudyHub Logo" class="about-logo-img">
+            </div>
+            <h2>StudyHub</h2>
+            <p class="about-tagline">Study Smarter, Not Harder</p>
+            <span class="about-version">Version 2.0.0</span>
+        </div>
+
+        <!-- Description -->
+        <div class="about-description">
+            <p>
+                StudyHub is your ultimate study companion, designed to help students access educational resources
+                like notes, video lectures, previous year papers, programming tutorials, and productivity tools —
+                all in one place.
+            </p>
+        </div>
+
+        <!-- Features -->
+        <div class="about-features">
+            <h3>✨ Features</h3>
+            <ul>
+                <li>📝 Access Notes & Study Materials</li>
+                <li>🎬 Video Lectures from YouTube</li>
+                <li>📋 Previous Year Question Papers</li>
+                <li>💡 Programming Tutorials</li>
+                <li>🛠️ 12+ Student Tools</li>
+                <li>❤️ Save & Bookmark Resources</li>
+                <li>🌙 Dark Mode Support</li>
+                <li>📱 Works Offline (PWA)</li>
+            </ul>
+        </div>
+
+        <!-- Developer Card -->
+        <div class="developer-card" id="developer-card">
+            <div class="developer-card-inner">
+
+                <!-- FRONT -->
+                <div class="developer-card-front">
+                    <div class="dev-front-content">
+                        <div class="dev-front-image-wrap">
+                            <img src="images/developer.png" alt="Abhishek" class="dev-front-image">
+                        </div>
+                        <h3>Meet the Developer</h3>
+                        <p>Tap to Flip</p>
+                        <span class="dev-hand">👆</span>
+                    </div>
+                </div>
+
+                <!-- BACK -->
+                <div class="developer-card-back">
+                    <div class="dev-back-header"></div>
+                    <div class="dev-avatar">
+                        <img src="images/developer.png" alt="Abhishek" class="dev-image">
+                    </div>
+                    <h3>Abhishek</h3>
+                    <p class="dev-title">Full Stack Developer</p>
+                    <p class="dev-bio">
+                        Passionate about creating useful tools for students.
+                        Building applications that make learning easier,
+                        smarter and more accessible.
+                    </p>
+                    <div class="dev-skills">
+                        <span>JavaScript</span>
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>Python</span>
+                    </div>
+                    <a href="https://i-m-er-abhi.vercel.app" target="_blank" class="dev-portfolio-btn"
+                        onclick="event.stopPropagation();">
+                        🌐 Visit Portfolio
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Links -->
+        <div class="about-links">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                target="_blank" class="about-link">
+                <span class="about-link-icon">📝</span>
+                <div class="about-link-text">
+                    <span>Request Material</span>
+                    <span class="about-link-desc">Request notes, videos or papers</span>
+                </div>
+                <span class="about-link-arrow">→</span>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeE2QjRDeyfPm3CXezjlMPuzfE-nPhquPiPU_mPp2lfK8Vuww/viewform"
+                target="_blank" class="about-link">
+                <span class="about-link-icon">🚩</span>
+                <div class="about-link-text">
+                    <span>Report Issue</span>
+                    <span class="about-link-desc">Found a bug? Let us know</span>
+                </div>
+                <span class="about-link-arrow">→</span>
+            </a>
+            <a href="#" class="about-link" onclick="navigateToPage('support'); return false;">
+                <span class="about-link-icon">💖</span>
+                <div class="about-link-text">
+                    <span>Support Developer</span>
+                    <span class="about-link-desc">Help keep StudyHub free</span>
+                </div>
+                <span class="about-link-arrow">→</span>
+            </a>
+        </div>
+
+        <!-- Credits -->
+        <div class="about-credits">
+            <p>Made with ❤️ in India</p>
+            <p>© 2024 StudyHub. All rights reserved.</p>
+        </div>
+
+    </div>
+</section>
+
+    </main>
+
+    <!-- ==================== FOOTER DOCK ==================== -->
+    <footer class="footer-dock" id="footer-dock">
+        <button class="dock-item active" data-page="home">
+            <span class="dock-icon">🏠</span>
+            <span class="dock-label">Home</span>
+            <span class="dock-indicator"></span>
+        </button>
+        <button class="dock-item" data-page="notes">
+            <span class="dock-icon">📝</span>
+            <span class="dock-label">Notes</span>
+            <span class="dock-indicator"></span>
+        </button>
+        <button class="dock-item" data-page="tutorials">
+            <span class="dock-icon">💡</span>
+            <span class="dock-label">Tutorials</span>
+            <span class="dock-indicator"></span>
+        </button>
+        <button class="dock-item" data-page="videos">
+            <span class="dock-icon">🎬</span>
+            <span class="dock-label">Videos</span>
+            <span class="dock-indicator"></span>
+        </button>
+        <button class="dock-item" data-page="tools">
+            <span class="dock-icon">🛠️</span>
+            <span class="dock-label">Tools</span>
+            <span class="dock-indicator"></span>
+        </button>
+    </footer>
 
     </div>
 
@@ -1209,7 +1258,7 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script src="app.js"></script>
-    
+
     <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -1223,4 +1272,3 @@
 </body>
 
 </html>
-
