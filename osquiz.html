@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OS Quiz — StudyHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #7C3AED;
+  --primary-light: #A855F7;
+  --primary-dark: #5B21B6;
+  --secondary: #EA580C;
+  --secondary-light: #F97316;
+  --bg: #EEF0F5;
+  --surface: #F2F4F8;
+  --card: #FFFFFF;
+  --text: #1E1B4B;
+  --text-sub: #6B7280;
+  --correct: #16A34A;
+  --correct-bg: #DCFCE7;
+  --wrong: #DC2626;
+  --wrong-bg: #FEE2E2;
+  --shadow-raise: 8px 8px 16px #D1D5DB, -8px -8px 16px #FFFFFF;
+  --shadow-raise-sm: 4px 4px 10px #D1D5DB, -4px -4px 10px #FFFFFF;
+  --shadow-inset: inset 4px 4px 8px #D1D5DB, inset -4px -4px 8px #FFFFFF;
+  --nav-h: 68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-top:var(--nav-h);}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(238,240,245,0.93);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(124,58,237,0.10);z-index:1000;}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-logo{width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);object-fit:cover;}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px;}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all 0.2s;}
+.nav-links a:hover{color:var(--primary);background:rgba(124,58,237,0.08);}
+.nav-links a.active{color:var(--primary);background:rgba(124,58,237,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600;}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px;}
+.mobile-menu{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,240,245,0.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;flex-direction:column;gap:2px;display:none;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{text-decoration:none;color:var(--text);font-size:0.92rem;font-weight:500;padding:12px 16px;border-radius:12px;transition:all 0.2s;}
+.mobile-menu a:hover{background:rgba(124,58,237,0.08);color:var(--primary);}
+
+/* TOAST */
+#toast{position:fixed;top:calc(var(--nav-h) + 16px);left:50%;transform:translateX(-50%);background:#1E1B4B;color:#fff;font-size:0.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,0.3);opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+/* PAGE WRAP */
+.page-wrap{max-width:720px;margin:0 auto;padding:32px 20px 60px;}
+
+/* SCREENS */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ANIMATIONS */
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* ===== SCREEN 1: INFO ===== */
+.info-screen-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center;}
+.info-header-emoji{font-size:3.5rem;display:inline-block;animation:floatBob 3s ease-in-out infinite;margin-bottom:12px;}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px;}
+.info-sub{font-size:0.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px;}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left;}
+.info-form label{display:block;font-size:0.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.info-form input,.info-form select{width:100%;padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:0.92rem;font-weight:500;color:var(--text);transition:all 0.2s;outline:none;appearance:none;}
+.info-form input:focus,.info-form select:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(124,58,237,0.12);}
+.info-form input::placeholder{color:var(--text-sub);opacity:0.7;}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ===== SCREEN 2: INTRO ===== */
+.intro-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center;}
+.intro-emoji{font-size:5rem;display:inline-block;animation:floatBob 3s ease-in-out infinite;margin-bottom:16px;}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px;}
+.intro-sub{font-size:0.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6;}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px;}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary);}
+.intro-stat-lbl{font-size:0.75rem;color:var(--text-sub);margin-top:2px;font-weight:500;}
+.chapter-wrap{margin-bottom:28px;text-align:left;}
+.chapter-label{display:block;font-size:0.88rem;font-weight:600;color:var(--text-sub);margin-bottom:12px;}
+.chapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:0.8rem;font-weight:600;color:var(--text-sub);text-align:left;line-height:1.4;cursor:pointer;transition:all 0.2s;}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(124,58,237,0.3);}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(124,58,237,0.07);box-shadow:var(--shadow-inset);}
+.chapter-all-btn{grid-column:1/-1;text-align:center;}
+
+/* PRIMARY BUTTON */
+.btn-primary{width:100%;padding:16px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 14px rgba(234,88,12,0.38),0 7px 0 #C2410C;transition:all 0.2s;position:relative;top:0;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,0.42),0 9px 0 #C2410C;}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,0.3),0 2px 0 #C2410C;}
+
+/* ===== SCREEN 3: QUIZ ===== */
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);transition:all 0.2s;flex-shrink:0;}
+.back-btn:hover{background:var(--primary);color:#fff;}
+.progress-wrap{flex:1;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px;}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden;}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width 0.5s ease;width:0%;}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);border-radius:50px;padding:8px 14px;font-size:0.9rem;font-weight:700;color:var(--text);flex-shrink:0;min-width:72px;justify-content:center;}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse 0.8s infinite;}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse 0.8s infinite;}
+.chapter-badge{display:inline-flex;gap:6px;background:rgba(124,58,237,0.10);color:var(--primary);font-size:0.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm);}
+.question-card{background:linear-gradient(135deg,#5B21B6,#7C3AED);border-radius:24px;padding:32px 28px;margin-bottom:16px;box-shadow:0 8px 32px rgba(124,58,237,0.3),8px 8px 16px #D1D5DB,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden;}
+.question-card::before{content:'';position:absolute;inset:0;opacity:0.06;background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px);}
+.q-num{font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:10px;position:relative;z-index:1;}
+.q-text{font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1;}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.12);border-radius:10px;border-left:3px solid rgba(255,255,255,0.5);font-size:0.8rem;color:rgba(255,255,255,0.8);font-style:italic;line-height:1.5;position:relative;z-index:1;}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.option{display:flex;align-items:center;gap:14px;background:#fff;border-radius:14px;padding:15px 18px;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;border:2px solid transparent;user-select:none;}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:6px 6px 14px #C4C8D4,-4px -4px 10px #FFFFFF;border-color:rgba(124,58,237,0.2);}
+.option.locked{cursor:not-allowed;}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;color:var(--primary);flex-shrink:0;}
+.option-text{font-size:0.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4;}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #D1D5DB;box-shadow:var(--shadow-raise-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;}
+.option.correct{background:#DCFCE7;border:2px solid #16A34A;box-shadow:0 0 0 3px rgba(22,163,74,0.15),6px 6px 16px rgba(22,163,74,0.1);transform:translateX(4px);}
+.option.correct .option-letter{background:#16A34A;color:#fff;box-shadow:0 4px 12px rgba(22,163,74,0.4);}
+.option.correct .option-radio{background:#16A34A;border-color:#16A34A;color:#fff;}
+.option.correct .option-text{color:#065F46;font-weight:600;}
+.option.wrong{background:#FEE2E2;border:2px solid #DC2626;box-shadow:0 0 0 3px rgba(220,38,38,0.15),6px 6px 16px rgba(220,38,38,0.1);}
+.option.wrong .option-letter{background:#DC2626;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,0.4);}
+.option.wrong .option-radio{background:#DC2626;border-color:#DC2626;color:#fff;}
+.option.wrong .option-text{color:#991B1B;}
+.explanation{background:#fff;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;}
+.explanation.show{display:block;animation:slideDown 0.3s ease;}
+.explanation-title{font-size:0.78rem;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.explanation-text{font-size:0.85rem;color:var(--text-sub);line-height:1.55;}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end;}
+.skip-btn{padding:12px 20px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.skip-btn:hover{color:var(--wrong);}
+.btn-next{padding:14px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(124,58,237,0.38),0 6px 0 var(--primary-dark);cursor:pointer;display:none;align-items:center;gap:6px;transition:all 0.2s;}
+.btn-next.visible{display:flex;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(124,58,237,0.45),0 8px 0 var(--primary-dark);}
+.btn-next:active{transform:translateY(4px);box-shadow:0 2px 8px rgba(124,58,237,0.3),0 2px 0 var(--primary-dark);}
+
+/* ===== SCREEN 4: RESULT ===== */
+.result-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden;}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px;}
+.result-emoji{font-size:4rem;display:inline-block;animation:floatBob 2.5s ease-in-out infinite;margin-bottom:12px;}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left;}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm);}
+.student-info-text{flex:1;min-width:0;}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.student-info-meta{font-size:0.78rem;color:var(--text-sub);font-weight:500;}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1;}
+.score-total{font-size:0.85rem;color:var(--text-sub);font-weight:500;}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.remark-sub{font-size:0.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5;}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap;}
+.result-pill{display:flex;gap:6px;padding:9px 18px;border-radius:50px;font-size:0.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm);}
+.pill-correct{background:#DCFCE7;color:#16A34A;}
+.pill-wrong{background:#FEE2E2;color:#DC2626;}
+.pill-skip{background:#FEF3C7;color:#92400E;}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:0;}
+.btn-retry{padding:14px 30px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(124,58,237,0.4),0 6px 0 var(--primary-dark);cursor:pointer;transition:all 0.2s;}
+.btn-retry:hover{transform:translateY(-2px);}
+.btn-explore{padding:14px 30px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(234,88,12,0.4),0 6px 0 #C2410C;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;}
+.btn-explore:hover{transform:translateY(-2px);}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.btn-share:hover{color:var(--primary);}
+
+/* CERTIFICATE DOWNLOAD SECTION */
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#1E0A3C,#3B1A7A);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden;}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.015) 0px,rgba(255,255,255,0.015) 1px,transparent 1px,transparent 20px);}
+.cert-section-title{font-size:0.78rem;font-weight:700;color:rgba(168,85,247,0.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.cert-section-meta{font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:18px;}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;box-shadow:0 4px 20px rgba(234,88,12,0.5),0 7px 0 #C2410C;cursor:pointer;transition:all 0.2s;position:relative;z-index:1;}
+.btn-download-cert:hover{transform:translateY(-3px);}
+.btn-download-cert:active{transform:translateY(4px);}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,0.4),0 7px 0 #15803D;}
+
+/* SHARE PANEL */
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;}
+.share-panel.open{display:block;animation:slideDown 0.3s ease;}
+.share-panel-title{font-size:0.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center;}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #C4C8D4,-8px -8px 18px #FFFFFF;}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset);}
+.share-action-icon{font-size:1.5rem;line-height:1;}
+.share-action-label{font-size:0.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3;}
+
+/* REVIEW */
+.review-toggle{margin-top:28px;text-align:center;}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(124,58,237,0.3);background:var(--bg);color:var(--primary);font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.btn-review:hover{border-color:var(--primary);}
+.review-list{margin-top:20px;display:none;text-align:left;}
+.review-list.open{display:block;}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub);}
+.review-item.ri-correct{border-left-color:#16A34A;}
+.review-item.ri-wrong{border-left-color:#DC2626;}
+.review-item.ri-skip{border-left-color:#F59E0B;}
+.ri-q{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4;}
+.ri-ans{font-size:0.78rem;color:var(--text-sub);}
+.ri-correct-ans{color:#16A34A;font-weight:600;}
+.ri-wrong-ans{color:#DC2626;font-weight:600;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .navbar{padding:0 16px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .page-wrap{padding-left:14px;padding-right:14px;}
+  .intro-card{padding:30px 20px;}
+  .info-screen-card{padding:30px 20px;}
+  .info-row{grid-template-columns:1fr;}
+  .chapter-grid{grid-template-columns:1fr;}
+  .result-card{padding:30px 20px;}
+  .result-btns{flex-direction:column;align-items:center;}
+  .btn-retry,.btn-explore{width:100%;justify-content:center;}
+  .quiz-header{gap:8px;}
+  .option{padding:12px 14px;gap:10px;}
+  .option-text{font-size:0.85rem;}
+  .question-card{padding:24px 20px;}
+  .share-actions{gap:8px;}
+  .share-action-btn{min-width:68px;padding:12px 8px;}
+}
+</style>
+</head>
+<body data-quiz="os">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="images/logo.png" alt="Logo" class="nav-logo">
+    <span class="nav-name">StudyHub</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="quiz.html" class="active">Quizzes</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 Home</a>
+  <a href="quiz.html">📝 Quizzes</a>
+  <a href="about.html">ℹ️ About</a>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<main class="page-wrap">
+
+  <!-- SCREEN 1: INFO -->
+  <div class="screen active" id="screenInfo">
+    <div class="info-screen-card">
+      <span class="info-header-emoji">🎓</span>
+      <div class="info-title">Almost Ready!</div>
+      <div class="info-sub">Enter your details to personalize your quiz experience and certificate.</div>
+      <div class="info-form">
+        <div>
+          <label for="inputName">👤 Full Name</label>
+          <input type="text" id="inputName" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+        </div>
+        <div class="info-row">
+          <div>
+            <label for="inputBranch">🏫 Branch / Stream</label>
+            <input type="text" id="inputBranch" placeholder="e.g. Computer Science" maxlength="40">
+          </div>
+          <div>
+            <label for="inputSem">📅 Semester</label>
+            <select id="inputSem">
+              <option value="">— Select —</option>
+              <option value="1st Semester">1st Semester</option>
+              <option value="2nd Semester">2nd Semester</option>
+              <option value="3rd Semester">3rd Semester</option>
+              <option value="4th Semester">4th Semester</option>
+              <option value="5th Semester">5th Semester</option>
+              <option value="6th Semester">6th Semester</option>
+              <option value="7th Semester">7th Semester</option>
+              <option value="8th Semester">8th Semester</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="inputCollege">🏛️ College / Institute (Optional)</label>
+          <input type="text" id="inputCollege" placeholder="e.g. IIT Delhi" maxlength="60">
+        </div>
+      </div>
+      <button class="btn-primary" id="infoNextBtn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: INTRO -->
+  <div class="screen" id="screenIntro">
+    <div class="intro-card">
+      <span class="intro-emoji">💻</span>
+      <div class="intro-title">OS Quiz</div>
+      <div class="intro-sub">Test your Operating Systems knowledge across 6 units</div>
+      <div class="intro-stats">
+        <div class="intro-stat">
+          <div class="intro-stat-num">163</div>
+          <div class="intro-stat-lbl">Questions</div>
+        </div>
+        <div class="intro-stat">
+          <div class="intro-stat-num">6</div>
+          <div class="intro-stat-lbl">Units</div>
+        </div>
+        <div class="intro-stat">
+          <div class="intro-stat-num">30s</div>
+          <div class="intro-stat-lbl">Per Question</div>
+        </div>
+      </div>
+      <div class="chapter-wrap">
+        <span class="chapter-label">📌 Choose Unit (or play all)</span>
+        <div class="chapter-grid" id="chapterGrid">
+          <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (163 Questions)</button>
+          <button class="chapter-btn" data-chapter="0">1. Intro to OS</button>
+          <button class="chapter-btn" data-chapter="1">2. Processes, Threads & CPU Scheduling</button>
+          <button class="chapter-btn" data-chapter="2">3. IPC & Synchronization</button>
+          <button class="chapter-btn" data-chapter="3">4. Deadlocks</button>
+          <button class="chapter-btn" data-chapter="4">5. Memory Management & Virtual Memory</button>
+          <button class="chapter-btn" data-chapter="5">6. File, Disk & I/O Management</button>
+        </div>
+      </div>
+      <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: QUIZ -->
+  <div class="screen" id="screenQuiz">
+    <div class="quiz-header">
+      <button class="back-btn" id="backBtn">←</button>
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progressText">Question 1 of 163</span>
+          <span id="scoreText">Score: 0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="timer-pill" id="timerPill">⏱ 30s</div>
+    </div>
+    <div class="chapter-badge" id="chapterBadge">💻 Intro to OS</div>
+    <div class="question-card">
+      <div class="q-num" id="qNum">Q1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-example" id="qExample" style="display:none"></div>
+    </div>
+    <ul class="options-list" id="optionsList"></ul>
+    <div class="explanation" id="explanationBox">
+      <div class="explanation-title">💡 Explanation</div>
+      <div class="explanation-text" id="explanationText"></div>
+    </div>
+    <div class="action-row">
+      <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+      <button class="btn-next" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: RESULT -->
+  <div class="screen" id="screenResult">
+    <div class="result-card">
+      <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+      <span class="result-emoji" id="resultEmoji">🏆</span>
+      <div class="student-info-banner" id="studentInfoBanner">
+        <div class="student-avatar">🎓</div>
+        <div class="student-info-text">
+          <div class="student-info-name" id="bannerName">Student</div>
+          <div class="student-info-meta" id="bannerMeta">OS Quiz</div>
+        </div>
+      </div>
+      <div class="result-score-ring">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-total" id="scoreTotal">/ 163</div>
+      </div>
+      <div class="result-percent" id="resultPercent">0%</div>
+      <div class="remark-text" id="remarkText">Keep Going!</div>
+      <div class="remark-sub" id="remarkSub">Review and try again!</div>
+      <div class="result-pills">
+        <div class="result-pill pill-correct" id="pillCorrect">✅ 0 Correct</div>
+        <div class="result-pill pill-wrong" id="pillWrong">❌ 0 Wrong</div>
+        <div class="result-pill pill-skip" id="pillSkip">⟫ 0 Skipped</div>
+      </div>
+      <div class="result-btns">
+        <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+        <a class="btn-explore" href="quiz.html">🔍 Explore More</a>
+        <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+      </div>
+      <div class="cert-download-section">
+        <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+        <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+        <div class="cert-section-meta" id="certBannerMeta">OS Quiz · StudyHub</div>
+        <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+      </div>
+      <div class="share-panel" id="sharePanel">
+        <div class="share-panel-title">Share your achievement</div>
+        <div class="share-actions">
+          <button class="share-action-btn" id="copyLinkBtn">
+            <span class="share-action-icon">🔗</span>
+            <span class="share-action-label">Copy Quiz<br>Link</span>
+          </button>
+          <button class="share-action-btn" id="whatsappBtn">
+            <span class="share-action-icon">💬</span>
+            <span class="share-action-label">Share on<br>WhatsApp</span>
+          </button>
+          <button class="share-action-btn" id="twitterBtn">
+            <span class="share-action-icon">🐦</span>
+            <span class="share-action-label">Share on<br>Twitter</span>
+          </button>
+          <button class="share-action-btn" id="copyTextBtn">
+            <span class="share-action-icon">📋</span>
+            <span class="share-action-label">Copy Score<br>Text</span>
+          </button>
+        </div>
+      </div>
+      <canvas id="certCanvas" style="display:none"></canvas>
+      <div class="review-toggle">
+        <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===================== CONFIG =====================
+const QUIZ_TITLE = "OS Quiz";
+const QUIZ_SUBJECT_TAG = "os";
+const QUIZ_HASHTAGS = "#OS #OperatingSystems #StudyHub #Coding #CSE";
+const CERT_QUIZ_NAME = "Operating Systems Quiz — StudyHub";
+const CERT_SIGNATURE = "StudyHub  ✦  OSSourceCode";
+const FALLBACK_URL = "https://erabhi.in/studyHub/quiz/osquiz.html";
+const TIMER_SECS = 30;
+const LETTERS = ['A','B','C','D'];
+
+const CHAPTERS = [
+  { name: "Intro to OS", icon: "💻" },
+  { name: "Processes, Threads & CPU Scheduling", icon: "⚙️" },
+  { name: "IPC & Synchronization", icon: "🔄" },
+  { name: "Deadlocks", icon: "🔒" },
+  { name: "Memory Management & Virtual Memory", icon: "🧠" },
+  { name: "File, Disk & I/O Management", icon: "💾" },
+];
+
+// ===================== QUESTION BANK =====================
+const ALL_QUESTIONS = [
+  // ===== UNIT 1 (c:0) =====
+  {c:0,q:"Which of the following is NOT an operating system service?",o:["Process management","Memory management","Database normalization","File management"],a:2,ex:"Database normalization is a DBMS concept, not an OS service."},
+  {c:0,q:"The first generation of computers used which technology?",o:["Transistors","Integrated circuits","Vacuum tubes","VLSI chips"],a:2,ex:"1st generation (1945–55) computers used vacuum tubes as electronic switches."},
+  {c:0,q:"Which OS structure places the entire OS in a single module in kernel space?",o:["Layered","Microkernel","Monolithic","Virtual Machine"],a:2,ex:"In monolithic structure, the entire OS runs as one large kernel-space program."},
+  {c:0,q:"In a microkernel OS, which services run in user space?",o:["Memory management only","Most OS services like file system and device drivers","CPU scheduling only","All services run in kernel space"],a:1,ex:"Microkernel keeps minimal code in kernel; most services run as user-space servers."},
+  {c:0,q:"A system call provides an interface between a process and the:",o:["Hardware directly","Operating system","Compiler","Linker"],a:1,ex:"System calls are programmatic interfaces to request services from the OS."},
+  {c:0,q:"Which of the following is NOT a type of operating system?",o:["Batch OS","Time-sharing OS","Network OS","Compiler OS"],a:3,ex:"Compiler is a language translator, not an OS type."},
+  {c:0,q:"Time-sharing OS allows multiple users to share CPU time using:",o:["Polling","Context switching","DMA","Interrupt disabling"],a:1,ex:"Time-sharing rapidly switches CPU among users via context switching."},
+  {c:0,q:"Which system call type is used to manage inter-process communications?",o:["Process control","File management","Information maintenance","Communications"],a:3,ex:"Communication system calls handle message passing, pipes, shared memory, etc."},
+  {c:0,q:"A virtual machine provides:",o:["Direct hardware access","An illusion of dedicated hardware to each process","Faster I/O","Large physical memory"],a:1,ex:"VMs abstract hardware so each OS instance believes it has its own dedicated machine."},
+  {c:0,q:"The UNIX OS kernel is written primarily in:",o:["Assembly","C language","C++","Java"],a:1,ex:"UNIX was rewritten in C by Dennis Ritchie, making it highly portable."},
+  {c:0,q:"Which OS type is most suitable for missile guidance systems?",o:["Batch OS","Time-sharing OS","Real-Time OS","Distributed OS"],a:2,ex:"Hard real-time OS guarantees deadlines—critical for safety systems."},
+  {c:0,q:"In the layered OS structure, layer 0 is:",o:["User interface","Hardware","Memory management","File system"],a:1,ex:"The bottommost layer (0) is hardware; upper layers add abstractions."},
+  {c:0,q:"Which Windows system call is equivalent to UNIX fork()?",o:["CreateThread()","CreateProcess()","OpenProcess()","LoadLibrary()"],a:1,ex:"Windows uses CreateProcess() to create new processes, analogous to fork()+exec()."},
+  {c:0,q:"Spooling is associated with which generation of OS?",o:["First generation","Second generation","Third generation","Fourth generation"],a:2,ex:"Spooling (Simultaneous Peripheral Operations On-Line) appeared in 3rd generation OS."},
+  {c:0,q:"Which of the following is an advantage of a microkernel OS?",o:["High performance due to fewer context switches","Easier extensibility and portability","No message passing overhead","Direct hardware access by applications"],a:1,ex:"Microkernel is more portable and extensible since most services run in user space."},
+  {c:0,q:"An OS that supports running multiple applications simultaneously is called:",o:["Single-user single-tasking","Multi-programming","Batch processing","Dedicated OS"],a:1,ex:"Multi-programming keeps CPU busy by running multiple programs simultaneously."},
+  {c:0,q:"System programs that provide a convenient environment for program development include:",o:["Kernel modules","Compilers, editors, and interpreters","Device drivers","Interrupt handlers"],a:1,ex:"System programs like compilers and editors aid program development at user level."},
+  {c:0,q:"The fork() system call in UNIX creates:",o:["A new thread","A duplicate of the calling process","A new file","A new device"],a:1,ex:"fork() creates a child process that is an exact copy of the parent."},
+  {c:0,q:"Which is TRUE about a Batch Operating System?",o:["User interacts with jobs during execution","Jobs are submitted and executed without user interaction","It is used only for scientific computing","It processes one job at a time with no spooling"],a:1,ex:"Batch OS queues jobs and executes them automatically without user interaction."},
+  {c:0,q:"The purpose of an OS kernel is to:",o:["Provide GUI to users","Manage hardware resources and provide services","Compile programs","Browse the internet"],a:1,ex:"The kernel is the core of OS, managing CPU, memory, I/O and providing system calls."},
+  {c:0,q:"Which OS type runs on geographically distributed nodes?",o:["Distributed OS","Network OS","Real-time OS","Embedded OS"],a:0,ex:"Distributed OS manages a collection of networked computers as a single coherent system."},
+  {c:0,q:"In WINDOWS, the HAL stands for:",o:["Hardware Abstraction Layer","High-level Application Layer","Heap Allocation Library","Hardware Access Library"],a:0,ex:"HAL in Windows isolates the OS from hardware-specific details for portability."},
+  {c:0,q:"Which mechanism allows user programs to request OS services?",o:["Interrupts only","System calls (trap/software interrupt)","DMA","Polling"],a:1,ex:"System calls use software interrupts (traps) to switch from user to kernel mode."},
+  {c:0,q:"Dual-mode operation in OS consists of:",o:["User mode and supervisor (kernel) mode","User mode and interrupt mode","Kernel mode and device mode","Protected mode and safe mode"],a:0,ex:"Dual-mode protects OS by restricting privileged instructions to kernel mode only."},
+  {c:0,q:"Which of the following is a UNIX feature?",o:["Single-user OS","Proprietary kernel not written in C","Hierarchical file system and pipes","No support for multi-processing"],a:2,ex:"UNIX offers hierarchical directory structure, pipes, and multi-user support."},
+  {c:0,q:"A process that is running in user mode attempts a privileged instruction. What happens?",o:["It executes successfully","A hardware trap/exception is raised","OS ignores it","DMA handles it"],a:1,ex:"Attempting privileged instructions in user mode triggers a hardware protection fault."},
+  {c:0,q:"Which is an example of a real-time operating system?",o:["Windows XP","Ubuntu","VxWorks","Android"],a:2,ex:"VxWorks is a widely used hard real-time OS for embedded/industrial systems."},
+  {c:0,q:"The exec() system call in UNIX:",o:["Creates a child process","Replaces process image with a new program","Terminates a process","Waits for child to finish"],a:1,ex:"exec() overlays the current process's address space with a new program."},
+  {c:0,q:"Multi-processing OS uses:",o:["Multiple CPUs","Multiple programs on one CPU","Multiple threads only","Multiple user terminals"],a:0,ex:"Multi-processing involves multiple processors (CPUs) working together."},
+  {c:0,q:"Which of the following is a major disadvantage of monolithic kernel?",o:["Complex to build from scratch","A bug can crash the entire system","Too slow due to message passing","Cannot support device drivers"],a:1,ex:"In monolithic kernel, all code runs in kernel space, so a single bug can crash the OS."},
+  {c:0,q:"The concept of 'Spooling' primarily improves:",o:["CPU speed","I/O and CPU overlap efficiency","Memory capacity","Network throughput"],a:1,ex:"Spooling buffers I/O data so CPU and I/O devices can work simultaneously."},
+  {c:0,q:"Which layer in THE OS (Dijkstra's layered OS) handles memory allocation?",o:["Layer 0","Layer 1","Layer 2","Layer 3"],a:1,ex:"In Dijkstra's THE system, Layer 1 handles memory and drum management."},
+  {c:0,q:"An Embedded OS is characterized by:",o:["General purpose and highly extensible","Resource-constrained, dedicated to specific hardware tasks","Full GUI support","Running on mainframes"],a:1,ex:"Embedded OS (e.g., FreeRTOS) is optimized for specific hardware with limited resources."},
+
+  // ===== UNIT 2 (c:1) =====
+  {c:1,q:"A Process Control Block (PCB) does NOT contain:",o:["Process state","Program counter","Source code of the program","CPU registers"],a:2,ex:"PCB stores execution context (state, PC, registers, memory info), not source code."},
+  {c:1,q:"Which process state transition occurs when a process is moved from running to ready?",o:["Dispatch","Preemption","Block","Wakeup"],a:1,ex:"Preemption moves a running process to ready queue when a higher-priority process arrives."},
+  {c:1,q:"Context switching overhead is considered:",o:["Useful computation","Pure overhead (wasted time)","I/O operation","Memory allocation"],a:1,ex:"Context switch time is pure overhead; no useful work is done during switching."},
+  {c:1,q:"Which scheduling algorithm can cause starvation?",o:["Round Robin","FCFS","Priority Scheduling (non-preemptive)","SJF"],a:2,ex:"Low-priority processes may starve indefinitely if high-priority processes keep arriving."},
+  {c:1,q:"FCFS scheduling is also known as:",o:["Shortest Job First","First In First Out (FIFO) scheduling","Round Robin","Multilevel Queue"],a:1,ex:"FCFS services processes in arrival order, just like FIFO queue."},
+  {c:1,q:"Given processes P1(burst=4), P2(burst=3), P3(burst=5) all arriving at time 0, what is average waiting time with FCFS?",o:["4 ms","5 ms","3.67 ms","6 ms"],a:2,ex:"P1 waits 0, P2 waits 4, P3 waits 7. Avg = (0+4+7)/3 = 11/3 ≈ 3.67 ms."},
+  {c:1,q:"Which scheduling algorithm gives minimum average waiting time for a given set of processes?",o:["Round Robin","FCFS","SJF (non-preemptive)","Priority"],a:2,ex:"SJF is provably optimal in minimizing average waiting time among non-preemptive algorithms."},
+  {c:1,q:"Preemptive SJF is also known as:",o:["Round Robin","SRTF (Shortest Remaining Time First)","FCFS","EDF"],a:1,ex:"Preemptive SJF preempts running process if a new shorter job arrives."},
+  {c:1,q:"In Round Robin scheduling with time quantum q, if q is very large, it behaves like:",o:["SJF","FCFS","Priority scheduling","SRTF"],a:1,ex:"Very large quantum means each process runs to completion before next—same as FCFS."},
+  {c:1,q:"Thrashing in context of CPU scheduling means:",o:["Too many cache misses","Processes spend more time swapping than executing","Deadlock of processes","High CPU utilization"],a:1,ex:"Thrashing occurs when insufficient memory causes excessive paging/swapping."},
+  {c:1,q:"A thread is also called a:",o:["Heavy-weight process","Lightweight process","Zombie process","Daemon process"],a:1,ex:"Threads are lightweight because they share the process's memory and resources."},
+  {c:1,q:"Which of the following is NOT shared among threads of the same process?",o:["Heap memory","Global variables","Stack","Code segment"],a:2,ex:"Each thread has its own stack for local variables and function calls."},
+  {c:1,q:"User-level threads are managed by:",o:["OS kernel","User-level thread library","Hardware","Device drivers"],a:1,ex:"User-level threads are managed by runtime libraries (e.g., pthreads) without kernel involvement."},
+  {c:1,q:"The main advantage of kernel-level threads over user-level threads is:",o:["Faster creation","Can run in parallel on multiprocessors","No system call overhead","Easier to implement"],a:1,ex:"Kernel threads are scheduled by OS and can run truly in parallel on multi-core CPUs."},
+  {c:1,q:"In Rate Monotonic (RM) scheduling, priority is assigned based on:",o:["Deadline","Execution time","Task period (shorter period = higher priority)","Arrival time"],a:2,ex:"RM is a static priority algorithm: tasks with shorter periods get higher priority."},
+  {c:1,q:"Earliest Deadline First (EDF) is:",o:["Static priority scheduling","Dynamic priority scheduling based on absolute deadlines","A non-preemptive algorithm","Used only in batch systems"],a:1,ex:"EDF dynamically assigns highest priority to the task with the nearest deadline."},
+  {c:1,q:"CPU utilization bound for n tasks under RM scheduling is:",o:["100%","n(2^(1/n)−1)","50%","1/n"],a:1,ex:"RM schedulability test: U ≤ n(2^(1/n)−1). As n→∞, limit approaches ln2 ≈ 69.3%."},
+  {c:1,q:"Which process state comes AFTER 'waiting' when an I/O operation completes?",o:["Running","Terminated","Ready","New"],a:2,ex:"After I/O completes, process moves to ready queue to wait for CPU allocation."},
+  {c:1,q:"Response time in CPU scheduling is defined as:",o:["Time from submission to completion","Time from submission to first CPU response","Time process spends in ready queue","CPU burst time"],a:1,ex:"Response time = time from arrival until the process first gets CPU, important in interactive systems."},
+  {c:1,q:"Turnaround time = ?",o:["Burst time + waiting time","Completion time − arrival time","Response time + burst time","Waiting time only"],a:1,ex:"Turnaround time measures total time from job submission to job completion."},
+  {c:1,q:"Aging technique in scheduling is used to prevent:",o:["Deadlock","Starvation","Thrashing","Context switch overhead"],a:1,ex:"Aging gradually increases priority of waiting processes to prevent indefinite starvation."},
+  {c:1,q:"The PCB is stored in:",o:["User memory","Kernel memory (OS-controlled)","Secondary storage","Cache memory"],a:1,ex:"PCBs are stored in kernel space to protect them from user process access."},
+  {c:1,q:"Which is a preemptive scheduling algorithm?",o:["Non-preemptive SJF","FCFS","Round Robin","Non-preemptive Priority"],a:2,ex:"Round Robin is inherently preemptive—it preempts processes after each time quantum."},
+  {c:1,q:"Convoy effect is a problem associated with:",o:["Round Robin","FCFS","SJF","Priority scheduling"],a:1,ex:"In FCFS, short processes get stuck behind a long process (the 'convoy'), causing high wait times."},
+  {c:1,q:"Which scheduling metric is most important for time-sharing interactive systems?",o:["Throughput","CPU utilization","Response time","Turnaround time"],a:2,ex:"Interactive systems prioritize fast response time to maintain user satisfaction."},
+  {c:1,q:"Multi-level feedback queue scheduling allows:",o:["Processes to move between queues based on CPU usage behavior","Fixed priority assignment","Only batch jobs","Equal time quantum for all levels"],a:0,ex:"MLFQ is adaptive: I/O-bound processes stay in high queues; CPU-bound move to lower queues."},
+  {c:1,q:"A process waiting for an event to complete is in which state?",o:["Ready","Running","Waiting/Blocked","New"],a:2,ex:"Waiting state means the process is blocked pending an I/O event or signal."},
+  {c:1,q:"The dispatcher in OS is responsible for:",o:["Choosing which process to run","Giving CPU control to the scheduled process","Managing memory","Handling interrupts"],a:1,ex:"Dispatcher handles context switch, switches to user mode, and jumps to the correct program location."},
+  {c:1,q:"In SJF scheduling (non-preemptive), if two processes have the same burst time, they are scheduled by:",o:["Priority","FCFS (arrival order)","Random selection","Alphabetically"],a:1,ex:"Ties in SJF are broken by arrival time (FCFS order)."},
+  {c:1,q:"What is the CPU utilization formula?",o:["CPU idle time / total time","(Total time − idle time) / total time × 100%","Burst time / arrival time","Turnaround / waiting time"],a:1,ex:"CPU utilization = fraction of time CPU is doing useful work."},
+  {c:1,q:"Many-to-One thread model maps:",o:["Many kernel threads to one user thread","Many user threads to one kernel thread","One user thread to one kernel thread","Many-to-many threads"],a:1,ex:"Many-to-one: the thread library manages all user threads; kernel sees only one thread."},
+  {c:1,q:"A 'zombie process' in UNIX is:",o:["A process waiting for I/O","A terminated process whose parent hasn't called wait()","A process in ready queue","A process with no PCB"],a:1,ex:"Zombie processes have finished execution but their PCB remains until parent reads exit status."},
+  {c:1,q:"Which real-time scheduling algorithm is considered optimal (can schedule any feasible task set)?",o:["Rate Monotonic","Earliest Deadline First (EDF)","Round Robin","FCFS"],a:1,ex:"EDF is optimal for preemptive uniprocessor scheduling—it can schedule any feasible task set."},
+
+  // ===== UNIT 3 (c:2) =====
+  {c:2,q:"A race condition occurs when:",o:["Two processes run on different CPUs","The outcome depends on the order of execution of concurrent processes","A process waits for I/O","CPU preempts a process"],a:1,ex:"Race condition: correctness depends on non-deterministic scheduling order."},
+  {c:2,q:"Which is NOT a required condition for a valid critical section solution?",o:["Mutual exclusion","Progress","Bounded waiting","Preemption"],a:3,ex:"The three requirements are mutual exclusion, progress, and bounded waiting."},
+  {c:2,q:"Peterson's solution works for:",o:["N processes","2 processes","3 processes only","Any number with modification"],a:1,ex:"Classic Peterson's solution is designed for exactly 2 processes."},
+  {c:2,q:"A semaphore initialized to 1 is called:",o:["Counting semaphore","Binary semaphore (mutex)","Strong semaphore","Weak semaphore"],a:1,ex:"Semaphore initialized to 1 acts as a mutex for mutual exclusion."},
+  {c:2,q:"The wait() operation on a semaphore S does:",o:["S++","S-- ; if S<0 block the process","Signal another process","Terminate the process"],a:1,ex:"wait(S): decrement S; if S < 0, block the calling process."},
+  {c:2,q:"The signal() (V) operation on a semaphore:",o:["Decrements S","Increments S; if S ≤ 0, wakes a blocked process","Terminates a process","Resets S to 0"],a:1,ex:"signal(S): increment S; if S ≤ 0, unblock a waiting process."},
+  {c:2,q:"In the Producer-Consumer problem, which semaphore tracks empty buffer slots?",o:["full","mutex","empty","buffer"],a:2,ex:"'empty' semaphore is initialized to N (buffer size) and decremented by producer."},
+  {c:2,q:"A monitor differs from a semaphore in that:",o:["It requires programmer to explicitly use wait/signal","Mutual exclusion is automatically enforced by the monitor construct","It can't handle synchronization","It uses hardware directly"],a:1,ex:"Monitors are high-level synchronization constructs where only one process is active at a time."},
+  {c:2,q:"Which problem illustrates deadlock among philosophers trying to use shared forks?",o:["Producer-Consumer","Reader-Writer","Dining Philosophers","Sleeping Barber"],a:2,ex:"Dining Philosophers: each philosopher needs 2 forks, potential deadlock if all grab one."},
+  {c:2,q:"In the Readers-Writers problem, the first variant gives priority to:",o:["Writers","Readers","Both equally","Whoever arrives first"],a:1,ex:"First Readers-Writers: no reader waits unless a writer has already been granted access."},
+  {c:2,q:"Busy waiting (spinlock) wastes:",o:["Memory","CPU cycles","Disk space","I/O bandwidth"],a:1,ex:"Busy waiting keeps CPU in a tight loop checking a condition, wasting cycles."},
+  {c:2,q:"Which hardware instruction atomically reads and writes a memory word?",o:["LOAD","TestAndSet()","MOV","PUSH"],a:1,ex:"TestAndSet is an atomic hardware instruction used to implement mutex locks."},
+  {c:2,q:"Peterson's solution uses which two variables?",o:["flag[] and turn","semaphore and mutex","wait and signal","lock and unlock"],a:0,ex:"Peterson's uses a boolean flag[] (intent) array and a turn variable to ensure fairness."},
+  {c:2,q:"A counting semaphore can take:",o:["Only values 0 and 1","Any non-negative integer value","Negative values only","Values 0, 1, and -1 only"],a:1,ex:"Counting semaphores (general semaphores) can take any non-negative integer."},
+  {c:2,q:"In the critical section problem, 'Progress' requirement means:",o:["Every process must enter critical section","If no process is in CS and some want to enter, selection must happen in finite time","Each process waits bounded time","Processes enter CS in order"],a:1,ex:"Progress prevents deadlock at the entry point of critical sections."},
+  {c:2,q:"Strict Alternation solves mutual exclusion but violates:",o:["Bounded waiting","Progress","Mutual exclusion","Safety"],a:1,ex:"Strict alternation forces turn-taking even when one process doesn't want to enter CS, violating progress."},
+  {c:2,q:"Shared memory IPC requires which synchronization mechanism?",o:["Semaphores/mutex for consistency","No synchronization needed","Message queues only","Pipes"],a:0,ex:"Shared memory is fast but requires explicit synchronization to prevent race conditions."},
+  {c:2,q:"Message passing IPC does NOT require:",o:["Send() primitive","Receive() primitive","Shared memory segment","Communication channel"],a:2,ex:"Message passing communicates via messages without needing shared memory."},
+  {c:2,q:"The main disadvantage of semaphores is:",o:["They can't solve mutual exclusion","Incorrect usage (e.g., forgetting signal) can cause deadlock or race conditions","They require hardware support","They work only with 2 processes"],a:1,ex:"Semaphores are error-prone; missing wait/signal can cause bugs."},
+  {c:2,q:"In a monitor, condition variables support which operations?",o:["wait() and signal()","P() and V()","lock() and unlock()","open() and close()"],a:0,ex:"Monitor condition variables use wait() to block and signal() to wake threads."},
+  {c:2,q:"Event counters provide synchronization without:",o:["Shared variables","Busy waiting","OS involvement","Multiple processes"],a:1,ex:"Event counters (Reed & Kanodia) avoid busy waiting through await() operation."},
+  {c:2,q:"Which solution to the Dining Philosophers problem avoids deadlock?",o:["Each philosopher picks up left fork first","Allow at most 4 philosophers to sit simultaneously","No ordering of fork pickup","All pick right fork first"],a:1,ex:"Allowing at most n-1 philosophers prevents circular wait and thus deadlock."},
+  {c:2,q:"In second Readers-Writers problem, priority is given to:",o:["Readers","Writers","First arriver","Processes with lower PID"],a:1,ex:"Second Readers-Writers: once a writer is ready, no new readers can start (writer priority)."},
+  {c:2,q:"A mutex lock is essentially:",o:["A counting semaphore","A binary semaphore used for mutual exclusion","A hardware register","A type of pipe"],a:1,ex:"Mutex provides exclusive access; only the locking thread can unlock it."},
+  {c:2,q:"Critical Section problem solution using disable interrupts:",o:["Works on multiprocessors","Simple but only works on single-processor systems","Is the preferred modern approach","Satisfies bounded waiting"],a:1,ex:"Disabling interrupts prevents context switches but fails on multiprocessors."},
+  {c:2,q:"The compare-and-swap (CAS) instruction is used to:",o:["Compare two floats","Atomically test and modify a memory location","Swap two files","Perform memory copying"],a:1,ex:"CAS is a hardware atomic operation used to implement lock-free synchronization."},
+  {c:2,q:"In producer-consumer with semaphores, producer does wait(empty) before producing to:",o:["Acquire the mutex","Check if there's space in the buffer","Wake the consumer","Increment the full count"],a:1,ex:"wait(empty) decrements empty count; if 0, producer blocks until consumer frees a slot."},
+  {c:2,q:"The 'Bounded Buffer' problem is another name for:",o:["Readers-Writers","Dining Philosophers","Producer-Consumer","Sleeping Barber"],a:2,ex:"Bounded buffer and producer-consumer refer to the same classic synchronization problem."},
+  {c:2,q:"Which of the following can lead to a livelock?",o:["Processes holding locks and waiting","Processes continually changing state in response to each other without making progress","Processes waiting for I/O","Semaphore overflow"],a:1,ex:"Livelock: processes are active (not blocked) but make no overall progress."},
+  {c:2,q:"Hardware solution using the 'swap' instruction atomically swaps:",o:["Two register values","Contents of two memory words","Process states","Page frames"],a:1,ex:"Atomic swap instruction swaps two memory locations atomically for synchronization."},
+  {c:2,q:"In monitors, if a process signals a condition variable and no process is waiting:",o:["Signal is lost","Process crashes","Deadlock occurs","OS saves the signal"],a:0,ex:"In Hoare and Mesa monitors, if no process waits on a condition, signal() has no effect."},
+  {c:2,q:"The main advantage of message passing over shared memory is:",o:["Faster communication","No need for synchronization primitives—structured communication","Less memory usage","Works only on single machine"],a:1,ex:"Message passing naturally synchronizes communication through send/receive without shared state."},
+
+  // ===== UNIT 4 (c:3) =====
+  {c:3,q:"Which of the following is NOT a necessary condition for deadlock?",o:["Mutual exclusion","Preemption","Hold and wait","Circular wait"],a:1,ex:"The four necessary conditions are: mutual exclusion, hold-and-wait, no preemption, circular wait."},
+  {c:3,q:"Deadlock prevention works by:",o:["Detecting deadlock after it occurs","Eliminating at least one of the four necessary conditions","Allowing deadlock and recovering from it","Running Banker's algorithm every time"],a:1,ex:"Prevention ensures deadlock cannot occur by denying a necessary condition."},
+  {c:3,q:"Banker's Algorithm is used for deadlock:",o:["Prevention","Detection","Avoidance","Recovery"],a:2,ex:"Banker's algorithm checks if granting a request leads to a safe state (avoidance)."},
+  {c:3,q:"A system is in a safe state if:",o:["No process is running","There exists a safe sequence to complete all processes","All resources are allocated","No circular wait exists"],a:1,ex:"Safe state guarantees all processes can eventually complete without deadlock."},
+  {c:3,q:"In the Resource Allocation Graph, a deadlock is indicated by:",o:["A cycle when all resources have single instances","A tree structure","No edges","Multi-instance resources always"],a:0,ex:"For single-instance resources, a cycle in RAG implies deadlock."},
+  {c:3,q:"Which deadlock condition can be prevented by requiring processes to request all resources at once?",o:["Mutual exclusion","Hold and wait","No preemption","Circular wait"],a:1,ex:"Requiring all resources upfront prevents hold-and-wait condition."},
+  {c:3,q:"Circular wait can be prevented by:",o:["Allowing multiple instances","Imposing a total ordering on resources and requiring requests in order","Preempting all resources","Using FIFO allocation"],a:1,ex:"Ordered resource allocation prevents circular dependencies."},
+  {c:3,q:"In Banker's Algorithm, the 'Need' matrix is calculated as:",o:["Max − Available","Max − Allocation","Allocation − Available","Max + Allocation"],a:1,ex:"Need[i][j] = Max[i][j] − Allocation[i][j]: remaining resources process i may still request."},
+  {c:3,q:"Deadlock detection for single-instance resources uses:",o:["Banker's algorithm","Wait-for graph cycle detection","Priority queues","Semaphores"],a:1,ex:"A cycle in the wait-for graph (derived from RAG) indicates deadlock."},
+  {c:3,q:"Which recovery technique from deadlock terminates processes?",o:["Resource preemption","Process termination","Rollback","Checkpoint"],a:1,ex:"Abort one or all deadlocked processes to release resources and break deadlock."},
+  {c:3,q:"The 'ostrich algorithm' for deadlock means:",o:["Always prevent deadlock","Ignore the deadlock problem","Detect and recover","Avoid unsafe states"],a:1,ex:"The ostrich approach (used by UNIX/Windows) pretends deadlock doesn't occur assuming it's rare."},
+  {c:3,q:"In Banker's Algorithm, if a process's request exceeds its 'Need', the OS should:",o:["Grant it anyway","Raise an error/deny the request","Terminate the process","Add more resources"],a:1,ex:"A request exceeding maximum claim is an error in Banker's algorithm."},
+  {c:3,q:"For multi-instance resources, a cycle in RAG means:",o:["Definitely a deadlock","Possibly a deadlock (not necessarily)","No deadlock","System is safe"],a:1,ex:"With multi-instance resources, a cycle is necessary but not sufficient for deadlock."},
+  {c:3,q:"The main disadvantage of deadlock prevention is:",o:["It requires periodic cycle detection","Low resource utilization and reduced concurrency","Cannot handle multiple resource types","Requires all processes to declare max needs"],a:1,ex:"Prevention is conservative; it unnecessarily restricts resource allocation."},
+  {c:3,q:"Resource preemption for deadlock recovery involves:",o:["Killing all processes","Forcibly taking resources from some processes to give to others","Adding more hardware resources","Restarting the OS"],a:1,ex:"Preemption reclaims resources from victim processes to break deadlock."},
+  {c:3,q:"A deadlock detection algorithm for multiple resource instances uses:",o:["Wait-for graph","Matrix-based algorithm similar to Banker's","Circular reference counting","Semaphore checking"],a:1,ex:"Multi-instance detection uses allocation, request, and available matrices to find finishing processes."},
+  {c:3,q:"Starvation differs from deadlock in that:",o:["Starvation involves circular wait","In starvation, processes can theoretically proceed but are indefinitely postponed","Starvation requires all four conditions","Deadlock is rare; starvation is impossible"],a:1,ex:"Starvation: resources are available but never granted; deadlock: resources are mutually blocked."},
+  {c:3,q:"Which condition cannot be violated for most resources (making it impractical to prevent)?",o:["Hold and wait","Circular wait","No preemption","Mutual exclusion"],a:3,ex:"Mutual exclusion is inherent for non-sharable resources (e.g., printers) and can't be violated."},
+  {c:3,q:"In Banker's algorithm safe sequence check, a process Pi is selected if:",o:["Need[i] > Available","Need[i] ≤ Available","Allocation[i] > Max[i]","Work < Need[i]"],a:1,ex:"Process can complete if its remaining need can be satisfied by currently available resources."},
+  {c:3,q:"Deadlock avoidance requires processes to declare:",o:["Their arrival time","Maximum resource needs in advance","Minimum required CPU time","Number of threads"],a:1,ex:"Banker's algorithm requires each process to declare maximum resource needs at start."},
+  {c:3,q:"Which of the following rollback strategies is used in deadlock recovery?",o:["Total rollback—abort the process completely","Partial rollback—roll back only enough to break deadlock","Both A and B are used","Neither is used"],a:2,ex:"Both total abort and partial rollback to a safe checkpoint are valid recovery strategies."},
+  {c:3,q:"A system with 3 processes and 1 resource type with 2 instances: P1 holds 1, P2 holds 1, P3 requests 1. Is this a deadlock?",o:["Yes, definitely","No, if P3 can wait for P1 or P2 to finish","Yes, because circular wait exists","Cannot determine"],a:1,ex:"P3 is just blocked waiting; P1 and P2 can still complete and release resources."},
+  {c:3,q:"The key difference between deadlock prevention and avoidance is:",o:["Prevention is runtime; avoidance is compile-time","Prevention eliminates conditions; avoidance ensures system stays in safe state dynamically","They are the same","Avoidance eliminates conditions; prevention is dynamic"],a:1,ex:"Prevention is structural; avoidance is dynamic using knowledge of future requests."},
+  {c:3,q:"Which deadlock handling strategy is used by most modern OS?",o:["Prevention","Avoidance","Ignore (ostrich algorithm)","Always detect and recover"],a:2,ex:"Most general-purpose OS (UNIX, Windows) ignore deadlock assuming it's sufficiently rare."},
+  {c:3,q:"If a process has: Max=[7,5,3], Allocation=[3,2,2], then Need=?",o:["[4,3,1]","[10,7,5]","[4,4,4]","[3,2,2]"],a:0,ex:"Need = Max − Allocation = [7-3, 5-2, 3-2] = [4,3,1]."},
+  {c:3,q:"Hold-and-wait condition can be prevented by:",o:["Allowing processes to request any number of resources","Requiring process to release all held resources before requesting new ones","Preempting resources from other processes","Alphabetical resource ordering"],a:1,ex:"One prevention: require a process to release all resources before requesting additional ones."},
+  {c:3,q:"Deadlock can occur in which of the following systems?",o:["Single-process systems only","Multi-process systems with shared resources","Systems with infinite resources","Systems with only one resource type"],a:1,ex:"Deadlock requires multiple processes competing for shared limited resources."},
+  {c:3,q:"The time complexity of the Banker's Algorithm for n processes and m resource types is:",o:["O(n)","O(m×n²)","O(n²)","O(2^n)"],a:1,ex:"Banker's safety algorithm complexity is O(m×n²) where n=processes, m=resource types."},
+  {c:3,q:"In deadlock recovery, choosing the 'victim' process involves considering:",o:["The process with highest priority only","Resources held, time to completion, number of rollbacks","Always the most recently created process","The process with least CPU usage"],a:1,ex:"Victim selection minimizes cost: resources held, work done, number of rollbacks incurred."},
+  {c:3,q:"Which of the following ensures no circular wait?",o:["Semaphore ordering","Resource ordering (assign numbers, request in increasing order)","Priority-based scheduling","Using monitors"],a:1,ex:"Requiring requests in strict resource order prevents circular wait chains."},
+
+  // ===== UNIT 5 (c:4) =====
+  {c:4,q:"The Memory Management Unit (MMU) translates:",o:["Physical addresses to logical addresses","Logical addresses to physical addresses","Virtual pages to segments","Cache lines to main memory"],a:1,ex:"MMU performs runtime address translation from logical (virtual) to physical addresses."},
+  {c:4,q:"Internal fragmentation occurs in:",o:["Variable partition allocation","Fixed partition allocation and paging","Segmentation","Pure demand paging"],a:1,ex:"Fixed partitions and pages may be partially empty, wasting space inside allocated blocks."},
+  {c:4,q:"External fragmentation occurs in:",o:["Fixed partition allocation","Paging","Variable partition allocation","Demand paging"],a:2,ex:"Variable partitions leave scattered free holes too small to use—external fragmentation."},
+  {c:4,q:"Compaction is used to solve:",o:["Internal fragmentation","External fragmentation","Page faults","TLB misses"],a:1,ex:"Compaction shuffles memory contents to combine scattered free space into one large block."},
+  {c:4,q:"In paging, a page table entry typically contains:",o:["Frame number and valid bit","Process ID and priority","Page size and segment number","Physical address directly"],a:0,ex:"Page table maps page numbers to frame numbers with a present/valid bit."},
+  {c:4,q:"The size of a page table for a 32-bit address space with 4KB pages and 4B entries is:",o:["1 MB","4 MB","2 MB","8 MB"],a:1,ex:"Number of pages = 2^32/2^12 = 2^20 entries × 4B = 4 MB per process."},
+  {c:4,q:"TLB (Translation Lookaside Buffer) is:",o:["A type of disk cache","A fast associative cache for page table entries","Part of the page table in RAM","A backup memory"],a:1,ex:"TLB caches recent address translations to speed up virtual-to-physical mapping."},
+  {c:4,q:"Effective memory access time with TLB hit ratio h, TLB time α, memory time m is:",o:["h×α + (1−h)×2m","h×(α+m) + (1−h)×(α+2m)","h×m + (1−h)×2m","α + 2m"],a:1,ex:"EAT = h×(TLB+1 mem access) + (1−h)×(TLB+2 mem accesses for page table + data)."},
+  {c:4,q:"Belady's anomaly occurs in which page replacement algorithm?",o:["LRU","Optimal","FIFO","Second Chance"],a:2,ex:"Belady's anomaly: increasing frames can increase page faults in FIFO (counterintuitive)."},
+  {c:4,q:"The optimal page replacement algorithm replaces:",o:["The page used least recently","The page that will not be used for the longest time in future","The first loaded page","The most recently used page"],a:1,ex:"OPT (Belady's) is theoretically optimal but requires future knowledge."},
+  {c:4,q:"LRU page replacement approximation methods include:",o:["Counter and stack implementations","FIFO queue only","Random replacement","Optimal prediction"],a:0,ex:"LRU can be approximated using hardware counters or a stack of page references."},
+  {c:4,q:"Demand paging means:",o:["Loading all pages before execution","Loading pages only when they are accessed (on page fault)","Allocating fixed number of frames","Swapping entire processes"],a:1,ex:"Demand paging loads pages lazily—only when a page fault occurs."},
+  {c:4,q:"A page fault occurs when:",o:["A page is found in TLB","An accessed page is not in physical memory","Memory is full","A process exits"],a:1,ex:"Page fault: the referenced page has valid=0 in page table, triggering OS to load it."},
+  {c:4,q:"Which page replacement algorithm suffers from Belady's anomaly?",o:["LRU","Optimal","FIFO","LFU"],a:2,ex:"FIFO can have more page faults with more frames in some reference strings."},
+  {c:4,q:"The Second Chance (Clock) algorithm is a modification of:",o:["LRU","FIFO","Optimal","NRU"],a:1,ex:"Second Chance gives pages in FIFO order a second chance if their reference bit is set."},
+  {c:4,q:"In segmentation, each segment has:",o:["Fixed size","Base address and limit (variable size)","Only a frame number","No protection bits"],a:1,ex:"Segments vary in size; segment table stores base and limit for each segment."},
+  {c:4,q:"Thrashing is caused by:",o:["Too many frames allocated to a process","Insufficient frames causing constant page faults","Fast CPU","Large page size"],a:1,ex:"Thrashing: process lacks enough frames, causing page faults faster than useful work."},
+  {c:4,q:"Working set model is used to:",o:["Prevent Belady's anomaly","Determine the number of frames a process needs to avoid thrashing","Implement TLB","Schedule processes"],a:1,ex:"Working set W(t,Δ) = pages used in last Δ references; used to allocate sufficient frames."},
+  {c:4,q:"Copy-on-Write (COW) in virtual memory means:",o:["All pages are copied on fork()","Parent and child share pages until one modifies them, then a copy is made","Pages are written to disk on every write","Memory is copied to cache"],a:1,ex:"COW defers page copying until modification, saving memory after fork()."},
+  {c:4,q:"In the NRU (Not Recently Used) algorithm, pages are classified using:",o:["Age and frequency counters","Reference bit (R) and Modify bit (M)","FIFO order only","Access time stamps"],a:1,ex:"NRU classifies pages into 4 classes based on R and M bits; lowest class is replaced first."},
+  {c:4,q:"The 'dirty bit' (modify bit) in a page table entry indicates:",o:["The page has an error","The page has been modified and must be written to disk before replacement","The page is clean and need not be loaded","The page is locked in memory"],a:1,ex:"Dirty bit=1 means page was written; must be saved to swap before eviction."},
+  {c:4,q:"For a system with logical address space = 2^m and page size = 2^n, the page number has:",o:["n bits","m bits","m−n bits","m+n bits"],a:2,ex:"Page number = upper m−n bits of logical address; offset = lower n bits."},
+  {c:4,q:"Inverted page table has one entry per:",o:["Process","Page","Physical frame","Segment"],a:2,ex:"Inverted page table has one entry per physical frame (not per virtual page), reducing table size."},
+  {c:4,q:"Given page reference string 7,0,1,2,0,3,0,4,2,3 with 3 frames using FIFO, how many page faults occur?",o:["7","9","8","6"],a:1,ex:"Tracing FIFO with 3 frames on this string yields 9 page faults (verify by simulation)."},
+  {c:4,q:"Prepaging vs demand paging: prepaging loads:",o:["Pages only on fault","Pages predicted to be needed before they are referenced","All pages at process start","Pages in LRU order"],a:1,ex:"Prepaging prefetches likely-needed pages to reduce future page faults."},
+  {c:4,q:"In paging, protection is achieved through:",o:["Segment limits","Protection bits in page table entries","Base registers","TLB only"],a:1,ex:"Read/write/execute protection bits in PTE prevent unauthorized page access."},
+  {c:4,q:"A process generates a virtual address 5000 with page size 1000. Page number and offset are:",o:["Page=5, Offset=0","Page=4, Offset=0","Page=5, Offset=500","Page=4, Offset=1000"],a:0,ex:"Page number = 5000/1000 = 5, Offset = 5000 mod 1000 = 0."},
+  {c:4,q:"Which memory allocation technique suffers from both internal and external fragmentation?",o:["Fixed partitioning (internal only)","Variable partitioning (external only)","Paging (internal only)","Segmentation with paging (both)"],a:3,ex:"Pure segmentation has external fragmentation; pure paging has internal; combined can have both."},
+  {c:4,q:"First Fit, Best Fit, and Worst Fit are strategies for:",o:["Page replacement","Contiguous variable partition allocation","Frame allocation","Disk scheduling"],a:1,ex:"These strategies select which free hole to allocate for variable-size partitions."},
+  {c:4,q:"Which fit strategy tends to leave the largest leftover holes?",o:["First Fit","Best Fit","Worst Fit","Next Fit"],a:2,ex:"Worst Fit allocates the largest hole, leaving the biggest remaining fragment."},
+  {c:4,q:"Page sharing (re-entrant code) allows:",o:["Multiple processes to share the same page in memory","Pages to be swapped faster","Pages to be larger","Reducing TLB size"],a:0,ex:"Read-only code pages can be shared among processes to save memory."},
+  {c:4,q:"Locality of reference principle states:",o:["All memory is equally likely to be accessed","Programs tend to access the same or nearby memory locations repeatedly","Large pages improve performance","Physical memory is faster than cache"],a:1,ex:"Temporal and spatial locality make paging and caching effective."},
+  {c:4,q:"Global vs local page replacement: global replacement means:",o:["Only replace frames of the faulting process","Replacement can take a frame from any process","All processes share one frame","No replacement occurs"],a:1,ex:"Global replacement selects from all frames; local is restricted to the faulting process's frames."},
+
+  // ===== UNIT 6 (c:5) =====
+  {c:5,q:"Which file access method reads records in order from beginning to end?",o:["Direct access","Sequential access","Indexed access","Random access"],a:1,ex:"Sequential access reads file from start, one record after another in order."},
+  {c:5,q:"Which directory structure allows sharing of files but may cause infinite loops?",o:["Single-level directory","Two-level directory","Tree-structured directory","Acyclic-graph directory"],a:3,ex:"Acyclic-graph allows sharing via links; cycles (loops) must be prevented explicitly."},
+  {c:5,q:"In disk scheduling, SSTF stands for:",o:["Shortest Seek Time First","Shortest Sector Transfer First","Sequential Sector Transfer Function","Systematic Seek and Track First"],a:0,ex:"SSTF selects the request closest to current disk head position."},
+  {c:5,q:"The SCAN disk scheduling algorithm is also called:",o:["Circular sweep","Elevator algorithm","Shortest path","Round Robin disk"],a:1,ex:"SCAN moves the disk arm back and forth like an elevator, servicing requests along the way."},
+  {c:5,q:"C-SCAN differs from SCAN in that:",o:["It services requests in both directions","It only services requests in one direction, then returns to start without servicing","It always goes to track 0 first","It uses a priority queue"],a:1,ex:"C-SCAN (Circular SCAN) provides more uniform wait times by treating disk as circular."},
+  {c:5,q:"Which disk scheduling algorithm can cause starvation for distant requests?",o:["FCFS","SCAN","SSTF","C-SCAN"],a:2,ex:"SSTF always picks the nearest request; far requests can starve if close requests keep arriving."},
+  {c:5,q:"The boot block contains:",o:["User files","Bootstrap program to load the OS","File allocation table","Bad block list"],a:1,ex:"Boot block (boot sector) contains bootstrap loader that initializes OS loading."},
+  {c:5,q:"Bad blocks on a disk are handled by:",o:["Ignoring them","Sector sparing (forwarding)—remapping to spare sectors","Using them for temp files","Formatting the entire disk"],a:1,ex:"Bad block management remaps defective sectors to spare sectors transparently."},
+  {c:5,q:"DMA (Direct Memory Access) allows:",o:["CPU to control all data transfers","I/O devices to transfer data directly to/from memory without CPU","Memory to be directly accessed by disk","Cache to bypass RAM"],a:1,ex:"DMA frees the CPU by having the DMA controller manage bulk data transfers."},
+  {c:5,q:"An interrupt-driven I/O is more efficient than polling because:",o:["It uses DMA always","CPU is freed to do other work until I/O completes","It transfers more data at once","It doesn't require an interrupt handler"],a:1,ex:"Interrupt-driven I/O notifies CPU when done; polling wastes CPU cycles constantly checking."},
+  {c:5,q:"The inode in UNIX file system contains:",o:["The file name","File metadata and pointers to data blocks","Directory listing","Boot sector information"],a:1,ex:"Inode stores file attributes (size, permissions, timestamps) and block pointers."},
+  {c:5,q:"Which free space management technique uses a bit per block to indicate free/occupied?",o:["Linked list","Bit vector (bitmap)","Grouping","Counting"],a:1,ex:"Bit vector: each bit corresponds to one disk block; 0=free, 1=allocated."},
+  {c:5,q:"Contiguous file allocation suffers from:",o:["Poor sequential access","External fragmentation and difficulty of file growth","High overhead for small files","No direct access support"],a:1,ex:"Contiguous allocation needs large contiguous space; expansion and fragmentation are major issues."},
+  {c:5,q:"In linked file allocation, direct access is:",o:["O(1) time","Inefficient—O(n) pointer traversal","Only possible with FAT","Faster than contiguous"],a:1,ex:"Linked allocation requires traversing pointers from start for random access."},
+  {c:5,q:"Indexed file allocation uses:",o:["Direct pointers only","An index block containing all pointers to file's data blocks","Linked list of blocks","Contiguous sectors"],a:1,ex:"Indexed allocation stores all block pointers in an index block for direct access."},
+  {c:5,q:"The FAT (File Allocation Table) file system uses which allocation method?",o:["Contiguous","Linked with table in memory (FAT)","Indexed","Hashed"],a:1,ex:"FAT stores linked list pointers in a table in memory, enabling faster traversal."},
+  {c:5,q:"Which disk scheduling algorithm provides the best performance overall (SCAN variant)?",o:["FCFS","SSTF","C-SCAN","LOOK"],a:3,ex:"LOOK (and C-LOOK) are improvements over SCAN that reverse direction at the last request, not disk edge."},
+  {c:5,q:"The interrupt handler (ISR) is responsible for:",o:["Loading the OS","Saving CPU state and handling the interrupt, then resuming","Scheduling processes","Allocating memory"],a:1,ex:"ISR saves registers, handles the interrupt event, then restores state and resumes execution."},
+  {c:5,q:"Low-level formatting (physical formatting) divides the disk into:",o:["Partitions","Sectors with header, data area, and trailer (ECC)","Clusters","Inodes"],a:1,ex:"Physical formatting creates sectors containing header, data, and ECC for error correction."},
+  {c:5,q:"A device driver is responsible for:",o:["User authentication","Translating OS-level commands to device-specific operations","Memory allocation","Scheduling CPU"],a:1,ex:"Device drivers form the abstraction layer between OS and hardware."},
+  {c:5,q:"Device-independent I/O software performs which function?",o:["Device-specific control","Uniform interface, buffering, error reporting for all devices","Interrupt handling only","DMA configuration"],a:1,ex:"Device-independent layer provides uniform OS-device interface abstracting hardware differences."},
+  {c:5,q:"The secondary storage in modern systems typically refers to:",o:["CPU cache","RAM","Hard Disk Drives and SSDs","Registers"],a:2,ex:"Secondary storage is non-volatile, persistent storage (HDD, SSD, optical)."},
+  {c:5,q:"In UNIX, the file descriptor table is:",o:["Global for all processes","Per-process table indexing open files","Stored on disk","Part of inode"],a:1,ex:"Each process has its own file descriptor table mapping fd numbers to open file entries."},
+  {c:5,q:"Seek time in disk access is the time to:",o:["Rotate disk to sector","Move disk arm to correct track","Transfer data","Detect disk errors"],a:1,ex:"Seek time is the time for the arm to move to the desired cylinder/track."},
+  {c:5,q:"Rotational latency is:",o:["Time to move disk head to correct track","Time for disk to rotate so desired sector is under the head","Data transfer time","Controller processing time"],a:1,ex:"Rotational latency averages half a disk rotation."},
+  {c:5,q:"Given disk head at track 50, requests: 82,170,43,140,24,16,190 (FCFS), what is total head movement?",o:["642 tracks","208 tracks","519 tracks","400 tracks"],a:0,ex:"FCFS: |50-82|+|82-170|+|170-43|+|43-140|+|140-24|+|24-16|+|16-190| = 32+88+127+97+116+8+174 = 642."},
+  {c:5,q:"Solid State Drives (SSDs) differ from HDDs in that:",o:["SSDs have moving mechanical parts","SSDs have no seek or rotational latency","SSDs use magnetic storage","SSDs are slower for sequential reads"],a:1,ex:"SSDs use flash memory; no mechanical movement means near-zero latency."},
+  {c:5,q:"Mounting a file system means:",o:["Installing the OS","Attaching a file system to the directory tree at a mount point","Formatting a disk","Backing up files"],a:1,ex:"mount command integrates a file system into the existing directory hierarchy."},
+  {c:5,q:"A hard link in UNIX:",o:["Creates a copy of the file","Creates a new directory entry pointing to the same inode","Is a shortcut to another path","Requires admin privileges"],a:1,ex:"Hard link: another name (directory entry) pointing to the same inode; same data."},
+  {c:5,q:"Journaling file systems (like ext4, NTFS) use a journal to:",o:["Speed up read operations","Maintain consistency by logging changes before applying them","Compress files","Encrypt data"],a:1,ex:"Journaling records pending operations; enables recovery after crashes without full fsck."},
+  {c:5,q:"RAID 1 provides:",o:["Data striping for performance","Disk mirroring for redundancy","Parity blocks for error correction","No redundancy"],a:1,ex:"RAID 1 mirrors data across two disks; provides redundancy but doubles storage cost."},
+  {c:5,q:"The role of an I/O port is:",o:["Network connection","A memory-mapped or port-mapped interface for CPU to communicate with I/O devices","A type of disk sector","A CPU register"],a:1,ex:"I/O ports allow CPU to send/receive control and data signals to devices."},
+  {c:5,q:"Spooling in the context of I/O management refers to:",o:["Storing output in memory only","Buffering I/O data on disk so CPU and I/O can proceed concurrently","Synchronous I/O","Interrupt-based I/O"],a:1,ex:"Spooling (e.g., print spooler) buffers jobs on disk, allowing CPU-I/O overlap."},
+  {c:5,q:"The primary purpose of buffering in I/O is:",o:["To permanently store data","To smooth out speed mismatch between producer and consumer","To encrypt data","To compress data"],a:1,ex:"Buffers hold data temporarily to bridge the speed gap between fast CPU and slow I/O."},
+  {c:5,q:"In SSTF disk scheduling with head at track 53 and requests [98,183,37,122,14,124,65,67], which request is served first?",o:["14","37","65","98"],a:2,ex:"SSTF picks the nearest: |53-65|=12 is smaller than |53-37|=16, so 65 is served first."},
+];
+
+// ===================== STATE =====================
+let activeQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let skipped = 0;
+let userAnswers = [];
+let isAnswered = false;
+let timerInterval = null;
+let timeLeft = TIMER_SECS;
+let selectedChapter = 'all';
+let studentName = '';
+let studentBranch = '';
+let studentSem = '';
+let studentCollege = '';
+
+// ===================== DOM REFS =====================
+const toast = document.getElementById('toast');
+const screenInfo = document.getElementById('screenInfo');
+const screenIntro = document.getElementById('screenIntro');
+const screenQuiz = document.getElementById('screenQuiz');
+const screenResult = document.getElementById('screenResult');
+const infoNextBtn = document.getElementById('infoNextBtn');
+const startBtn = document.getElementById('startBtn');
+const backBtn = document.getElementById('backBtn');
+const nextBtn = document.getElementById('nextBtn');
+const skipBtn = document.getElementById('skipBtn');
+const retryBtn = document.getElementById('retryBtn');
+const shareBtn = document.getElementById('shareBtn');
+const downloadCertBtn = document.getElementById('downloadCertBtn');
+const reviewToggleBtn = document.getElementById('reviewToggleBtn');
+const reviewList = document.getElementById('reviewList');
+const sharePanel = document.getElementById('sharePanel');
+const progressText = document.getElementById('progressText');
+const scoreText = document.getElementById('scoreText');
+const progressFill = document.getElementById('progressFill');
+const timerPill = document.getElementById('timerPill');
+const chapterBadge = document.getElementById('chapterBadge');
+const qNum = document.getElementById('qNum');
+const qText = document.getElementById('qText');
+const qExample = document.getElementById('qExample');
+const optionsList = document.getElementById('optionsList');
+const explanationBox = document.getElementById('explanationBox');
+const explanationText = document.getElementById('explanationText');
+const resultEmoji = document.getElementById('resultEmoji');
+const scoreBig = document.getElementById('scoreBig');
+const scoreTotal = document.getElementById('scoreTotal');
+const resultPercent = document.getElementById('resultPercent');
+const remarkText = document.getElementById('remarkText');
+const remarkSub = document.getElementById('remarkSub');
+const pillCorrect = document.getElementById('pillCorrect');
+const pillWrong = document.getElementById('pillWrong');
+const pillSkip = document.getElementById('pillSkip');
+const bannerName = document.getElementById('bannerName');
+const bannerMeta = document.getElementById('bannerMeta');
+const certBannerName = document.getElementById('certBannerName');
+const certBannerMeta = document.getElementById('certBannerMeta');
+const confettiCanvas = document.getElementById('confettiCanvas');
+const certCanvas = document.getElementById('certCanvas');
+const chapterGrid = document.getElementById('chapterGrid');
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+const whatsappBtn = document.getElementById('whatsappBtn');
+const twitterBtn = document.getElementById('twitterBtn');
+const copyTextBtn = document.getElementById('copyTextBtn');
+
+// ===================== UTILS =====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg, dur = 2500) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), dur);
+}
+
+function getRemark(pct) {
+  if (pct >= 90) return { emoji: '🏆', title: "Outstanding! You're a genius!", sub: "Exceptional performance! You've mastered OS Quiz concepts." };
+  if (pct >= 75) return { emoji: '🌟', title: "Excellent Work! Almost Perfect!", sub: "Great score! A little more practice and you'll be unstoppable." };
+  if (pct >= 60) return { emoji: '👍', title: "Good Job! Keep Practicing!", sub: "Solid performance. Review the topics you missed to improve further." };
+  if (pct >= 40) return { emoji: '📚', title: "Not Bad! Review & Retry", sub: "You're getting there. Focus on the chapters you struggled with." };
+  if (pct >= 20) return { emoji: '💪', title: "Keep Going! Practice Makes Perfect", sub: "Don't give up! Start reviewing from basics and try again." };
+  return { emoji: '🎯', title: "Don't Give Up! Back to Basics", sub: "Start fresh! Review the study material and give it another shot." };
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getQuizURL() {
+  return (window.location.href && window.location.href !== 'about:blank') ? window.location.href : FALLBACK_URL;
+}
+
+function buildShareText() {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const nameStr = studentName ? `👤 ${studentName}\n` : '';
+  const sem = studentSem && studentSem !== 'N/A' ? studentSem : '';
+  const metaStr = (studentBranch && studentBranch !== 'N/A') ? `📘 ${studentBranch}${sem ? ' · ' + sem : ''}\n` : '';
+  return `${remark.emoji} ${QUIZ_TITLE} Result\n${nameStr}${metaStr}\n📊 Score: ${score}/${total} (${pct}%)\n✅ Correct: ${score} | ❌ Wrong: ${total - score - skipped} | ⟫ Skipped: ${skipped}\n\n💬 ${remark.title}\n\n🔗 Quiz Link: ${getQuizURL()}\n\nPowered by StudyHub 🎓\n${QUIZ_HASHTAGS}`;
+}
+
+// ===================== INFO SCREEN =====================
+infoNextBtn.addEventListener('click', () => {
+  const name = document.getElementById('inputName').value.trim();
+  if (!name) {
+    showToast('⚠️ Please enter your name to continue');
+    document.getElementById('inputName').focus();
+    return;
+  }
+  studentName = name;
+  studentBranch = document.getElementById('inputBranch').value.trim() || 'N/A';
+  studentSem = document.getElementById('inputSem').value || 'N/A';
+  studentCollege = document.getElementById('inputCollege').value.trim() || '';
+  showScreen('screenIntro');
+});
+
+// ===================== CHAPTER SELECTOR =====================
+chapterGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.chapter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedChapter = btn.dataset.chapter;
+});
+
+// ===================== START QUIZ =====================
+startBtn.addEventListener('click', () => {
+  if (selectedChapter === 'all') {
+    activeQuestions = [...ALL_QUESTIONS];
+  } else {
+    activeQuestions = ALL_QUESTIONS.filter(q => q.c === parseInt(selectedChapter));
+  }
+  shuffle(activeQuestions);
+  currentIndex = 0;
+  score = 0;
+  skipped = 0;
+  userAnswers = new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');
+  renderQuestion();
+});
+
+// ===================== RENDER QUESTION =====================
+function renderQuestion() {
+  isAnswered = false;
+  nextBtn.classList.remove('visible');
+  explanationBox.classList.remove('show');
+  skipBtn.style.display = '';
+
+  const q = activeQuestions[currentIndex];
+  const total = activeQuestions.length;
+  const pct = (currentIndex / total) * 100;
+
+  progressText.textContent = `Question ${currentIndex + 1} of ${total}`;
+  scoreText.textContent = `Score: ${score}`;
+  progressFill.style.width = pct + '%';
+
+  chapterBadge.textContent = CHAPTERS[q.c].icon + ' ' + CHAPTERS[q.c].name;
+  qNum.textContent = 'Q' + (currentIndex + 1);
+  qText.textContent = q.q;
+
+  if (q.hint) {
+    qExample.textContent = q.hint;
+    qExample.style.display = '';
+  } else {
+    qExample.style.display = 'none';
+  }
+
+  optionsList.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option';
+    li.innerHTML = `
+      <div class="option-letter">${LETTERS[i]}</div>
+      <div class="option-text">${opt}</div>
+      <div class="option-radio"></div>
+    `;
+    li.addEventListener('click', () => selectAnswer(i));
+    optionsList.appendChild(li);
+  });
+
+  startTimer();
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = TIMER_SECS;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  timerPill.textContent = '⏱ ' + timeLeft + 's';
+  timerPill.className = 'timer-pill';
+  if (timeLeft <= 5) timerPill.classList.add('critical');
+  else if (timeLeft <= 10) timerPill.classList.add('urgent');
+}
+
+function timeUp() {
+  if (isAnswered) return;
+  isAnswered = true;
+  showToast('⏰ Time Up! Correct answer revealed.');
+  lockOptions();
+  highlightCorrect();
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+}
+
+// ===================== SELECT ANSWER =====================
+function selectAnswer(idx) {
+  if (isAnswered) return;
+  isAnswered = true;
+  clearInterval(timerInterval);
+  userAnswers[currentIndex] = idx;
+  const q = activeQuestions[currentIndex];
+  const options = optionsList.querySelectorAll('.option');
+  lockOptions();
+  if (idx === q.a) {
+    options[idx].classList.add('correct');
+    options[idx].querySelector('.option-radio').textContent = '✓';
+    score++;
+  } else {
+    options[idx].classList.add('wrong');
+    options[idx].querySelector('.option-radio').textContent = '✕';
+    highlightCorrect();
+  }
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+  scoreText.textContent = 'Score: ' + score;
+}
+
+function lockOptions() {
+  optionsList.querySelectorAll('.option').forEach(o => o.classList.add('locked'));
+}
+
+function highlightCorrect() {
+  const q = activeQuestions[currentIndex];
+  const options = optionsList.querySelectorAll('.option');
+  options[q.a].classList.add('correct');
+  options[q.a].querySelector('.option-radio').textContent = '✓';
+}
+
+function showExplanation() {
+  explanationText.textContent = activeQuestions[currentIndex].ex;
+  explanationBox.classList.add('show');
+}
+
+// ===================== SKIP =====================
+skipBtn.addEventListener('click', () => {
+  if (isAnswered) return;
+  isAnswered = true;
+  clearInterval(timerInterval);
+  userAnswers[currentIndex] = -1;
+  skipped++;
+  lockOptions();
+  highlightCorrect();
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+  showToast('⟫ Skipped — correct answer shown.');
+});
+
+// ===================== NEXT =====================
+nextBtn.addEventListener('click', () => {
+  currentIndex++;
+  if (currentIndex >= activeQuestions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+});
+
+// ===================== BACK =====================
+backBtn.addEventListener('click', () => {
+  if (confirm('Go back to intro? Your progress will be lost.')) {
+    clearInterval(timerInterval);
+    showScreen('screenIntro');
+  }
+});
+
+// ===================== SHOW RESULT =====================
+function showResult() {
+  clearInterval(timerInterval);
+  const total = activeQuestions.length;
+  const wrong = total - score - skipped;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+
+  resultEmoji.textContent = remark.emoji;
+  scoreTotal.textContent = '/ ' + total;
+  resultPercent.textContent = pct + '% Score';
+  remarkText.textContent = remark.title;
+  remarkSub.textContent = remark.sub;
+  pillCorrect.textContent = `✅ ${score} Correct`;
+  pillWrong.textContent = `❌ ${wrong} Wrong`;
+  pillSkip.textContent = `⟫ ${skipped} Skipped`;
+
+  bannerName.textContent = studentName || 'Student';
+  const metaParts = [studentBranch, studentSem, studentCollege].filter(v => v && v !== 'N/A' && v !== '');
+  bannerMeta.textContent = metaParts.join(' · ') || QUIZ_TITLE;
+
+  certBannerName.textContent = studentName || 'Your';
+  certBannerMeta.textContent = `${QUIZ_TITLE} · ${pct}% · StudyHub`;
+
+  // Count-up animation
+  let cnt = 0;
+  scoreBig.textContent = '0';
+  if (score > 0) {
+    const interval = Math.max(20, Math.floor(800 / score));
+    const counter = setInterval(() => {
+      cnt++;
+      scoreBig.textContent = cnt;
+      if (cnt >= score) clearInterval(counter);
+    }, interval);
+  } else {
+    scoreBig.textContent = '0';
+  }
+
+  downloadCertBtn.classList.remove('done');
+  showScreen('screenResult');
+  if (pct >= 75) launchConfetti();
+  buildReview();
+}
+
+// ===================== CONFETTI =====================
+function launchConfetti() {
+  const canvas = confettiCanvas;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 600;
+  canvas.height = canvas.offsetHeight || 400;
+  const colors = ['#7C3AED','#EA580C','#16A34A','#F59E0B','#3B82F6','#EC4899'];
+  const pieces = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    w: 5 + Math.random() * 10,
+    h: 3 + Math.random() * 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vy: 2 + Math.random() * 3,
+    vx: (Math.random() - 0.5) * 2,
+    rot: Math.random() * 360,
+    rSpeed: (Math.random() - 0.5) * 6
+  }));
+  let frames = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const alpha = Math.max(0, 1 - frames / 120);
+    ctx.globalAlpha = alpha;
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rSpeed;
+      if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+    });
+    ctx.globalAlpha = 1;
+    frames++;
+    if (frames < 130) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ===================== BUILD REVIEW =====================
+function buildReview() {
+  reviewList.innerHTML = '';
+  activeQuestions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const isCorrect = ua === q.a;
+    const isSkip = ua === -1;
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (isCorrect ? 'ri-correct' : isSkip ? 'ri-skip' : 'ri-wrong');
+    let ansHtml = '';
+    if (isSkip) {
+      ansHtml = `Skipped · <span class="ri-correct-ans">Correct: ${q.o[q.a]}</span>`;
+    } else if (isCorrect) {
+      ansHtml = `<span class="ri-correct-ans">✓ ${q.o[ua]}</span>`;
+    } else {
+      ansHtml = `<span class="ri-wrong-ans">✕ Your answer: ${q.o[ua]}</span> · <span class="ri-correct-ans">Correct: ${q.o[q.a]}</span>`;
+    }
+    div.innerHTML = `<div class="ri-q">Q${i+1}. ${q.q}</div><div class="ri-ans">${ansHtml}</div>`;
+    reviewList.appendChild(div);
+  });
+}
+
+reviewToggleBtn.addEventListener('click', () => {
+  const isOpen = reviewList.classList.toggle('open');
+  reviewToggleBtn.textContent = isOpen ? '✕ Hide Answers' : '📖 Review Answers';
+});
+
+// ===================== RETRY =====================
+retryBtn.addEventListener('click', () => {
+  reviewList.classList.remove('open');
+  reviewToggleBtn.textContent = '📖 Review Answers';
+  sharePanel.classList.remove('open');
+  shuffle(activeQuestions);
+  currentIndex = 0;
+  score = 0;
+  skipped = 0;
+  userAnswers = new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');
+  renderQuestion();
+});
+
+// ===================== SHARE =====================
+shareBtn.addEventListener('click', () => {
+  const isOpen = sharePanel.classList.toggle('open');
+  if (isOpen) sharePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+copyLinkBtn.addEventListener('click', () => {
+  const url = getQuizURL();
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('🔗 Quiz link copied!'))
+    .catch(() => prompt('Copy this link:', url));
+});
+
+whatsappBtn.addEventListener('click', () => {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const msg = `${remark.emoji} *${QUIZ_TITLE}*\n\n📊 Score: ${score}/${total} (${pct}%)\n✅ Correct: ${score} | ❌ Wrong: ${total-score-skipped} | ⟫ Skipped: ${skipped}\n\n💬 ${remark.title}\n\n🔗 ${getQuizURL()}\n\nStudyHub 🎓`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+});
+
+twitterBtn.addEventListener('click', () => {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const tweet = `${remark.emoji} Just scored ${score}/${total} (${pct}%) on ${QUIZ_TITLE}!\n"${remark.title}"\n\n${getQuizURL()}\n\n${QUIZ_HASHTAGS}`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet), '_blank');
+});
+
+copyTextBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(buildShareText())
+    .then(() => showToast('📋 Score text copied!'))
+    .catch(() => prompt('Copy this text:', buildShareText()));
+});
+
+// ===================== CERTIFICATE =====================
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function drawCertificate() {
+  const W = 960, H = 680;
+  const canvas = certCanvas;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const displayName = studentName || 'Student';
+
+  // STEP 1 — Background
+  const bgG = ctx.createLinearGradient(0, 0, W, H);
+  bgG.addColorStop(0, '#0F0520');
+  bgG.addColorStop(0.5, '#2A0F5E');
+  bgG.addColorStop(1, '#0F0520');
+  ctx.fillStyle = bgG;
+  ctx.fillRect(0, 0, W, H);
+
+  // STEP 2 — Radial glow
+  const rG = ctx.createRadialGradient(W/2, H*0.38, 0, W/2, H*0.38, 320);
+  rG.addColorStop(0, 'rgba(124,58,237,0.18)');
+  rG.addColorStop(1, 'transparent');
+  ctx.fillStyle = rG;
+  ctx.fillRect(0, 0, W, H);
+
+  // STEP 3 — Grid
+  ctx.strokeStyle = 'rgba(168,85,247,0.07)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // STEP 4 — Corner arcs
+  const corners = [[0,0],[W,0],[0,H],[W,H]];
+  corners.forEach(([cx,cy]) => {
+    for (let r = 40; r <= 160; r += 30) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(168,85,247,${Math.max(0, 0.25 - r*0.001)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  });
+
+  // STEP 5 — Borders
+  ctx.strokeStyle = 'rgba(234,88,12,0.85)';
+  ctx.lineWidth = 3.5;
+  roundRect(ctx, 22, 22, W-44, H-44, 22);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(168,85,247,0.45)';
+  ctx.lineWidth = 1.2;
+  roundRect(ctx, 36, 36, W-72, H-72, 14);
+  ctx.stroke();
+
+  // STEP 6 — hLine helper
+  function hLine(y) {
+    const g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, 'transparent');
+    g.addColorStop(0.3, 'rgba(234,88,12,0.9)');
+    g.addColorStop(0.7, 'rgba(234,88,12,0.9)');
+    g.addColorStop(1, 'transparent');
+    return g;
+  }
+
+  // STEP 7 — Top bar
+  ctx.fillStyle = hLine(58);
+  ctx.fillRect(80, 58, W-160, 2.5);
+
+  // STEP 8 — Seal badge
+  const sealX = W/2, sealY = 96, sealR = 34;
+  const sealG = ctx.createRadialGradient(sealX, sealY, 0, sealX, sealY, sealR);
+  sealG.addColorStop(0, '#A855F7');
+  sealG.addColorStop(1, '#5B21B6');
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, sealR, 0, Math.PI*2);
+  ctx.fillStyle = sealG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.8)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff';
+  ctx.fillText('💻', sealX, sealY);
+
+  // STEP 9 — Brand text
+  ctx.font = 'bold 15px Arial';
+  ctx.fillStyle = '#C084FC';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('S T U D Y H U B', sealX, sealY + 52);
+  ctx.font = 'bold 11px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', sealX, sealY + 74);
+
+  // STEP 10 — Divider at y=150
+  const divG = ctx.createLinearGradient(120, 0, W-120, 0);
+  divG.addColorStop(0, 'transparent');
+  divG.addColorStop(0.5, 'rgba(234,88,12,0.7)');
+  divG.addColorStop(1, 'transparent');
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 150);
+  ctx.lineTo(W-120, 150);
+  ctx.stroke();
+
+  // STEP 11 — "This certifies that"
+  ctx.font = '15px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.textAlign = 'center';
+  ctx.fillText('This certifies that', W/2, 183);
+
+  // STEP 12 — Student name
+  const fontSize = displayName.length > 22 ? 36 : 44;
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.shadowColor = 'rgba(168,85,247,0.85)';
+  ctx.shadowBlur = 22;
+  ctx.fillText(displayName, W/2, 234);
+  ctx.shadowBlur = 0;
+
+  // STEP 13 — Name underline
+  const nw = ctx.measureText(displayName).width;
+  const ulx = W/2 - nw/2;
+  const ulG = ctx.createLinearGradient(ulx, 0, ulx+nw, 0);
+  ulG.addColorStop(0, 'rgba(168,85,247,0)');
+  ulG.addColorStop(0.5, 'rgba(168,85,247,0.8)');
+  ulG.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.strokeStyle = ulG;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ulx, 245);
+  ctx.lineTo(ulx+nw, 245);
+  ctx.stroke();
+
+  // STEP 14 — Student details
+  const details = [studentBranch, studentSem, studentCollege].filter(v => v && v !== 'N/A' && v !== '');
+  if (details.length > 0) {
+    ctx.font = '13px Arial';
+    ctx.fillStyle = 'rgba(192,132,252,0.85)';
+    ctx.fillText(details.join('  ·  '), W/2, 268);
+  }
+
+  // STEP 15 — "has successfully completed"
+  ctx.font = '14px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('has successfully completed the quiz', W/2, 296);
+
+  // STEP 16 — Quiz name box
+  const qnameY = 334;
+  roundRect(ctx, W/2-260, qnameY-26, 520, 44, 22);
+  const qnameG = ctx.createLinearGradient(W/2-260, 0, W/2+260, 0);
+  qnameG.addColorStop(0, 'rgba(234,88,12,0.18)');
+  qnameG.addColorStop(1, 'rgba(124,58,237,0.18)');
+  ctx.fillStyle = qnameG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.font = 'bold 20px Arial';
+  ctx.fillStyle = '#FB923C';
+  ctx.fillText(CERT_QUIZ_NAME, W/2, 340);
+
+  // STEP 17 — Divider at 370
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 370);
+  ctx.lineTo(W-120, 370);
+  ctx.stroke();
+
+  // STEP 18 — Stats
+  const statsY = 410;
+  const rX = 190;
+  const rR = 60;
+
+  // Score ring background
+  ctx.beginPath();
+  ctx.arc(rX, statsY, rR, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fill();
+
+  // Arc progress
+  const scoreColor = pct >= 75 ? '#22C55E' : pct >= 40 ? '#FB923C' : '#F87171';
+  const arcEnd = -Math.PI/2 + (2*Math.PI*(pct/100));
+  ctx.beginPath();
+  ctx.arc(rX, statsY, rR-6, -Math.PI/2, arcEnd);
+  ctx.strokeStyle = scoreColor;
+  ctx.lineWidth = 11;
+  ctx.shadowColor = scoreColor;
+  ctx.shadowBlur = 14;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.lineCap = 'butt';
+
+  // Score text
+  ctx.font = 'bold 28px Arial';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${score}/${total}`, rX, statsY + 8);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('SCORE', rX, statsY + 26);
+  ctx.font = `bold 14px Arial`;
+  ctx.fillStyle = scoreColor;
+  ctx.fillText(pct + '%', rX, statsY + 46);
+
+  // Grade badge
+  const grade = pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  const gbx = rX + 80, gby = statsY - 34;
+  roundRect(ctx, gbx, gby, 90, 68, 14);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fill();
+  ctx.font = 'bold 36px Arial';
+  ctx.fillStyle = scoreColor;
+  ctx.textAlign = 'center';
+  ctx.fillText(grade, gbx+45, gby + 42);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('GRADE', gbx+45, gby + 60);
+
+  // Stat boxes
+  const bx = 440, by = statsY - 46;
+  const statsData = [
+    {icon:'✅', val:score, lbl:'CORRECT', color:'#22C55E'},
+    {icon:'❌', val:total-score-skipped, lbl:'WRONG', color:'#F87171'},
+    {icon:'⟫', val:skipped, lbl:'SKIPPED', color:'#FBBF24'},
+    {icon:'📊', val:pct+'%', lbl:'ACCURACY', color:'#A78BFA'},
+  ];
+  statsData.forEach((s, idx) => {
+    const col = idx % 2, row = Math.floor(idx / 2);
+    const sx = bx + col * 230, sy = by + row * 68;
+    roundRect(ctx, sx, sy, 210, 56, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.font = '18px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = s.color;
+    ctx.fillText(s.icon, sx+12, sy+30);
+    ctx.font = 'bold 20px Arial';
+    ctx.fillStyle = s.color;
+    ctx.fillText(String(s.val), sx+42, sy+30);
+    ctx.font = '10px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText(s.lbl, sx+12, sy+48);
+  });
+
+  // STEP 19 — Remark badge
+  const badgeY = 516;
+  roundRect(ctx, W/2-230, badgeY-24, 460, 40, 20);
+  const badgeG = ctx.createLinearGradient(W/2-230, 0, W/2+230, 0);
+  badgeG.addColorStop(0, 'rgba(234,88,12,0.15)');
+  badgeG.addColorStop(1, 'rgba(124,58,237,0.15)');
+  ctx.fillStyle = badgeG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.font = 'bold 14px Arial';
+  ctx.fillStyle = '#FFA07A';
+  ctx.textAlign = 'center';
+  ctx.fillText(remark.emoji + '  ' + remark.title, W/2, badgeY + 4);
+
+  // STEP 20 — Bottom divider at 548
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, 548);
+  ctx.lineTo(W-120, 548);
+  ctx.stroke();
+
+  // STEP 21 — Date left, college
+  const dateStr = new Date().toLocaleDateString('en-IN', {year:'numeric',month:'long',day:'numeric'});
+  ctx.font = '11px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.textAlign = 'left';
+  ctx.fillText('📅  Issued: ' + dateStr, 80, 572);
+  if (studentCollege && studentCollege !== 'N/A') {
+    ctx.fillText('🏛  ' + studentCollege, 80, 590);
+  }
+
+  // STEP 22 — Signature right
+  ctx.font = 'bold 14px Arial';
+  ctx.fillStyle = '#A855F7';
+  ctx.textAlign = 'right';
+  ctx.fillText(CERT_SIGNATURE, W-80, 567);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.32)';
+  ctx.fillText('erabhi.in/studyHub', W-80, 584);
+
+  // STEP 23 — Verified text
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.textAlign = 'center';
+  ctx.fillText('⭐  Verified Digital Certificate  ⭐', W/2, 600);
+
+  // STEP 24 — Bottom bar
+  ctx.fillStyle = hLine(H-55);
+  ctx.fillRect(80, H-55, W-160, 2.5);
+
+  return canvas;
+}
+
+downloadCertBtn.addEventListener('click', () => {
+  showToast('🎨 Generating certificate…');
+  setTimeout(() => {
+    try {
+      const canvas = drawCertificate();
+      const pct = Math.round((score / activeQuestions.length) * 100);
+      const safeName = (studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+      const filename = `StudyHub_${QUIZ_SUBJECT_TAG}_Certificate_${safeName}_${score}_${activeQuestions.length}_${pct}pct.png`;
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = filename;
+      a.click();
+      showToast('✅ Certificate downloaded!');
+      downloadCertBtn.classList.add('done');
+    } catch(e) {
+      showToast('⚠️ Download failed — try another browser');
+    }
+  }, 200);
+});
+
+// ===================== HAMBURGER =====================
+hamburger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mobileMenu.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    mobileMenu.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
