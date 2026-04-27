@@ -627,6 +627,127 @@
     100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
   }
 
+  /* ══════════════════════════════════
+     PERSONAL INFO SCREEN
+  ══════════════════════════════════ */
+  .info-screen-card {
+    background: var(--card);
+    border-radius: 28px;
+    box-shadow: var(--shadow-raise);
+    padding: 44px 40px;
+    text-align: center;
+  }
+
+  .info-header-emoji { font-size: 3.5rem; display: block; margin-bottom: 16px; animation: floatBob 3s ease-in-out infinite; }
+  .info-title { font-size: 1.7rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .info-sub { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 28px; line-height: 1.6; }
+
+  .info-form { text-align: left; display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+
+  .info-field { display: flex; flex-direction: column; gap: 7px; }
+
+  .info-field label {
+    font-size: 0.82rem; font-weight: 700; color: var(--text-sub);
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+
+  .info-field input, .info-field select {
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: var(--bg);
+    box-shadow: var(--shadow-inset);
+    border: 2px solid transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .info-field input:focus, .info-field select:focus {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-inset), 0 0 0 3px rgba(124,58,237,0.12);
+  }
+
+  .info-field input::placeholder { color: var(--text-sub); opacity: 0.7; }
+
+  .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── CERT DOWNLOAD always-visible section ── */
+  .cert-download-section {
+    margin-top: 28px;
+    background: linear-gradient(135deg, #1E0A3C, #3B1A7A);
+    border-radius: 22px;
+    padding: 26px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cert-download-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 20px);
+    pointer-events: none;
+  }
+
+  .cert-section-title {
+    font-size: 0.78rem; font-weight: 700; color: rgba(168,85,247,0.9);
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .cert-section-name {
+    font-size: 1.1rem; font-weight: 800; color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .cert-section-meta {
+    font-size: 0.78rem; color: rgba(255,255,255,0.5);
+    margin-bottom: 18px;
+  }
+
+  .btn-download-cert {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 32px;
+    border: none; border-radius: 50px;
+    background: linear-gradient(135deg, #EA580C, #F97316);
+    color: #fff;
+    font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(234,88,12,0.5), 0 7px 0 #C2410C;
+    transition: all 0.2s;
+    position: relative; z-index: 1;
+  }
+
+  .btn-download-cert:hover { transform: translateY(-3px); box-shadow: 0 8px 26px rgba(234,88,12,0.55), 0 9px 0 #C2410C; }
+  .btn-download-cert:active { transform: translateY(4px); box-shadow: 0 2px 8px rgba(234,88,12,0.3), 0 2px 0 #C2410C; }
+  .btn-download-cert.done { background: linear-gradient(135deg, #16A34A, #22C55E); box-shadow: 0 4px 16px rgba(22,163,74,0.4), 0 7px 0 #15803D; }
+
+  /* Student info card on result page */
+  .student-info-banner {
+    background: var(--bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow-inset);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px;
+    text-align: left;
+  }
+
+  .student-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+    box-shadow: var(--shadow-raise-sm);
+  }
+
+  .student-info-text { flex: 1; min-width: 0; }
+  .student-info-name { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .student-info-meta { font-size: 0.78rem; color: var(--text-sub); font-weight: 500; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .navbar { padding: 0 16px; }
@@ -634,6 +755,8 @@
     .nav-hamburger { display: flex; }
     .page-wrap { padding-left: 14px; padding-right: 14px; }
     .intro-card { padding: 30px 20px; }
+    .info-screen-card { padding: 30px 20px; }
+    .info-row { grid-template-columns: 1fr; }
     .intro-stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .chapter-grid { grid-template-columns: 1fr; }
     .result-card { padding: 30px 20px; }
@@ -651,11 +774,11 @@
 <!-- NAVBAR -->
 <nav class="navbar">
   <a href="https://erabhi.in/studyHub/" class="nav-brand">
-    <img src="../images/logo.png" alt="Logo" class="nav-logo">
+    <img src="images/logo.png" alt="Logo" class="nav-logo">
     <span class="nav-name">StudyHub</span>
   </a>
   <ul class="nav-links">
-    <li><a href="quiz.html">Home</a></li>
+    <li><a href="index.html">Home</a></li>
     <li><a href="quiz.html" class="active">Quizzes</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
@@ -665,7 +788,7 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="quiz.html">🏠 Home</a>
+  <a href="index.html">🏠 Home</a>
   <a href="quiz.html" class="active">🧠 Quizzes</a>
   <a href="about.html">ℹ️ About</a>
 </div>
@@ -675,8 +798,50 @@
 
 <main class="page-wrap">
 
+  <!-- ══ PERSONAL INFO SCREEN ══ -->
+  <div class="screen active" id="screenInfo">
+    <div class="info-screen-card">
+      <span class="info-header-emoji">🎓</span>
+      <div class="info-title">Almost Ready!</div>
+      <div class="info-sub">Fill in your details — they'll appear on your certificate when you complete the quiz.</div>
+
+      <div class="info-form" id="infoForm">
+        <div class="info-field">
+          <label>👤 Full Name</label>
+          <input type="text" id="inputName" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name" />
+        </div>
+        <div class="info-row">
+          <div class="info-field">
+            <label>🏫 Branch / Stream</label>
+            <input type="text" id="inputBranch" placeholder="e.g. Computer Science" maxlength="40" />
+          </div>
+          <div class="info-field">
+            <label>📅 Semester</label>
+            <select id="inputSem">
+              <option value="">— Select —</option>
+              <option>1st Semester</option>
+              <option>2nd Semester</option>
+              <option>3rd Semester</option>
+              <option>4th Semester</option>
+              <option>5th Semester</option>
+              <option>6th Semester</option>
+              <option>7th Semester</option>
+              <option>8th Semester</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>🏛️ College / Institute (Optional)</label>
+          <input type="text" id="inputCollege" placeholder="e.g. IIT Delhi" maxlength="60" />
+        </div>
+      </div>
+
+      <button class="btn-primary" id="infoNextBtn">Continue →</button>
+    </div>
+  </div>
+
   <!-- ══ INTRO SCREEN ══ -->
-  <div class="screen active" id="screenIntro">
+  <div class="screen" id="screenIntro">
     <div class="intro-card">
       <span class="intro-emoji">☕</span>
       <div class="intro-title">Java OOP Quiz</div>
@@ -757,6 +922,15 @@
       <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
       <span class="result-emoji" id="resultEmoji">🏆</span>
 
+      <!-- Student info banner -->
+      <div class="student-info-banner" id="studentInfoBanner">
+        <div class="student-avatar">🎓</div>
+        <div class="student-info-text">
+          <div class="student-info-name" id="bannerName">Student</div>
+          <div class="student-info-meta" id="bannerMeta">—</div>
+        </div>
+      </div>
+
       <div class="result-score-ring">
         <div class="score-big" id="scoreBig">0</div>
         <div class="score-total" id="scoreTotal">/ 30</div>
@@ -778,14 +952,18 @@
         <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
       </div>
 
+      <!-- Always-visible Certificate Download -->
+      <div class="cert-download-section">
+        <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+        <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+        <div class="cert-section-meta" id="certBannerMeta">Java OOP Quiz · StudyHub</div>
+        <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+      </div>
+
       <!-- Share Panel -->
       <div class="share-panel" id="sharePanel">
         <div class="share-panel-title">Share your achievement</div>
         <div class="share-actions">
-          <button class="share-action-btn" id="downloadCertBtn">
-            <span class="share-action-icon">🖼️</span>
-            <span class="share-action-label">Download<br>Certificate</span>
-          </button>
           <button class="share-action-btn" id="copyLinkBtn">
             <span class="share-action-icon">🔗</span>
             <span class="share-action-label">Copy Quiz<br>Link</span>
@@ -1039,6 +1217,12 @@ let selectedChapter = 'all';
 const TIMER_SECS = 30;
 const LETTERS = ['A','B','C','D'];
 
+// Student info
+let studentName = '';
+let studentBranch = '';
+let studentSem = '';
+let studentCollege = '';
+
 // ═══════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════
@@ -1062,6 +1246,23 @@ function getRemark(pct) {
   if (pct >= 20) return { emoji:'💪', title:'Keep Going! Practice Makes Perfect', sub:'Don\'t give up! Start reviewing from basics and try again.' };
   return { emoji:'🎯', title:'Don\'t Give Up! Back to Basics', sub:'Start fresh! Review the study material and give it another shot.' };
 }
+
+// ═══════════════════════════════════════════════
+//  PERSONAL INFO SCREEN
+// ═══════════════════════════════════════════════
+document.getElementById('infoNextBtn').addEventListener('click', () => {
+  const nameVal = document.getElementById('inputName').value.trim();
+  if (!nameVal) {
+    showToast('⚠️ Please enter your name to continue');
+    document.getElementById('inputName').focus();
+    return;
+  }
+  studentName = nameVal;
+  studentBranch = document.getElementById('inputBranch').value.trim() || 'N/A';
+  studentSem = document.getElementById('inputSem').value || 'N/A';
+  studentCollege = document.getElementById('inputCollege').value.trim() || '';
+  showScreen('screenIntro');
+});
 
 // ═══════════════════════════════════════════════
 //  CHAPTER SELECTOR
@@ -1292,6 +1493,15 @@ function showResult() {
   document.getElementById('pillWrong').textContent = wrong;
   document.getElementById('pillSkip').textContent = skipped;
 
+  // Student info banner
+  document.getElementById('bannerName').textContent = studentName || 'Student';
+  const metaParts = [studentBranch, studentSem, studentCollege].filter(v => v && v !== 'N/A');
+  document.getElementById('bannerMeta').textContent = metaParts.join(' · ') || 'Java OOP Quiz';
+
+  // Cert banner
+  document.getElementById('certBannerName').textContent = studentName || 'Your';
+  document.getElementById('certBannerMeta').textContent = `Java OOP Quiz · ${pct}% · StudyHub`;
+
   // Score count-up animation
   let cnt = 0;
   const target = score;
@@ -1429,7 +1639,9 @@ function buildShareText() {
   const pct = Math.round((score / total) * 100);
   const remark = getRemark(pct);
   const quizURL = getQuizURL();
-  return `${remark.emoji} Java OOP Quiz — StudyHub\n\n🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${total - score - skipped}  ⟫ Skipped: ${skipped}\n\n📚 Try this quiz: ${quizURL}\n\nPowered by StudyHub — erabhi.in/studyHub/`;
+  const nameStr = studentName ? `👤 ${studentName}\n` : '';
+  const metaStr = (studentBranch && studentBranch !== 'N/A') ? `📘 ${studentBranch}${studentSem && studentSem !== 'N/A' ? ' · ' + studentSem : ''}\n` : '';
+  return `${remark.emoji} Java OOP Quiz — StudyHub\n\n${nameStr}${metaStr}\n🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${total - score - skipped}  ⟫ Skipped: ${skipped}\n\n📚 Try this quiz: ${quizURL}\n\nPowered by StudyHub — erabhi.in/studyHub/`;
 }
 
 // ── CERTIFICATE GENERATOR ──
@@ -1442,24 +1654,37 @@ function drawCertificate() {
   const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
   const canvas = document.getElementById('certCanvas');
-  const W = 900, H = 620;
+  const W = 960, H = 680;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // ── Background
+  // ── Background gradient
   const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-  bgGrad.addColorStop(0, '#1E0A3C');
-  bgGrad.addColorStop(0.5, '#3B1A7A');
-  bgGrad.addColorStop(1, '#1E0A3C');
+  bgGrad.addColorStop(0, '#0F0520');
+  bgGrad.addColorStop(0.45, '#2A0F5E');
+  bgGrad.addColorStop(1, '#0F0520');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // ── Decorative corner arcs
-  ctx.strokeStyle = 'rgba(168,85,247,0.25)';
+  // ── Radial glow center
+  const glowGrad = ctx.createRadialGradient(W/2, H*0.38, 0, W/2, H*0.38, 320);
+  glowGrad.addColorStop(0, 'rgba(124,58,237,0.18)');
+  glowGrad.addColorStop(1, 'rgba(124,58,237,0)');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Grid pattern
+  ctx.strokeStyle = 'rgba(168,85,247,0.07)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // ── Corner arc decorations
   ctx.lineWidth = 1.5;
   [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy], i) => {
-    for (let r = 40; r <= 130; r += 30) {
+    for (let r = 40; r <= 160; r += 30) {
+      ctx.strokeStyle = `rgba(168,85,247,${0.25 - r*0.001})`;
       ctx.beginPath();
       const startA = [0, Math.PI/2, -Math.PI/2, Math.PI][i];
       ctx.arc(cx, cy, r, startA, startA + Math.PI/2);
@@ -1467,166 +1692,229 @@ function drawCertificate() {
     }
   });
 
-  // ── Outer border
-  ctx.strokeStyle = 'rgba(234,88,12,0.7)';
-  ctx.lineWidth = 3;
-  roundRect(ctx, 24, 24, W-48, H-48, 20);
+  // ── Outer border (orange)
+  ctx.strokeStyle = 'rgba(234,88,12,0.85)';
+  ctx.lineWidth = 3.5;
+  roundRect(ctx, 22, 22, W-44, H-44, 22);
   ctx.stroke();
 
-  // ── Inner border
-  ctx.strokeStyle = 'rgba(168,85,247,0.5)';
-  ctx.lineWidth = 1;
+  // ── Inner border (purple)
+  ctx.strokeStyle = 'rgba(168,85,247,0.45)';
+  ctx.lineWidth = 1.2;
   roundRect(ctx, 36, 36, W-72, H-72, 14);
   ctx.stroke();
 
-  // ── Top gold bar
-  const topGrad = ctx.createLinearGradient(80, 60, W-80, 60);
+  // ── Top decorative bar
+  const topGrad = ctx.createLinearGradient(80, 58, W-80, 58);
   topGrad.addColorStop(0, 'rgba(234,88,12,0)');
-  topGrad.addColorStop(0.3, 'rgba(234,88,12,0.8)');
-  topGrad.addColorStop(0.7, 'rgba(234,88,12,0.8)');
+  topGrad.addColorStop(0.3, 'rgba(234,88,12,0.9)');
+  topGrad.addColorStop(0.7, 'rgba(234,88,12,0.9)');
   topGrad.addColorStop(1, 'rgba(234,88,12,0)');
   ctx.fillStyle = topGrad;
-  ctx.fillRect(80, 60, W-160, 2);
+  ctx.fillRect(80, 58, W-160, 2.5);
 
-  // ── StudyHub Logo + Name
-  ctx.font = 'bold 22px Arial';
-  ctx.fillStyle = '#A855F7';
+  // ── Medal / seal circle top-center
+  const sealX = W/2, sealY = 96;
+  const sealR = 34;
+  ctx.beginPath(); ctx.arc(sealX, sealY, sealR, 0, 2*Math.PI);
+  const sealGrad = ctx.createRadialGradient(sealX-8, sealY-8, 2, sealX, sealY, sealR);
+  sealGrad.addColorStop(0, '#A855F7');
+  sealGrad.addColorStop(1, '#5B21B6');
+  ctx.fillStyle = sealGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.8)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.font = 'bold 28px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('📚 StudyHub', W/2, 105);
+  ctx.fillStyle = '#FFF';
+  ctx.fillText('📚', sealX, sealY + 10);
 
-  // ── "Certificate of Achievement"
-  ctx.font = 'bold 13px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.letterSpacing = '4px';
-  ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', W/2, 135);
+  // ── "StudyHub" brand
+  ctx.font = 'bold 15px Arial';
+  ctx.fillStyle = '#C084FC';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('S T U D Y H U B', W/2, sealY + 52);
   ctx.letterSpacing = '0px';
 
-  // ── Divider line
-  const divGrad = ctx.createLinearGradient(120, 150, W-120, 150);
+  // ── "CERTIFICATE OF ACHIEVEMENT"
+  ctx.font = 'bold 11px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.letterSpacing = '5px';
+  ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', W/2, sealY + 74);
+  ctx.letterSpacing = '0px';
+
+  // ── Divider 1
+  const divGrad = ctx.createLinearGradient(120, 148, W-120, 148);
   divGrad.addColorStop(0, 'transparent');
-  divGrad.addColorStop(0.5, 'rgba(234,88,12,0.6)');
+  divGrad.addColorStop(0.5, 'rgba(234,88,12,0.7)');
   divGrad.addColorStop(1, 'transparent');
   ctx.strokeStyle = divGrad;
   ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(120, 150); ctx.lineTo(W-120, 150); ctx.stroke();
 
   // ── "This certifies that"
-  ctx.font = '16px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.fillText('This certifies that', W/2, 195);
+  ctx.font = '15px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('This certifies that', W/2, 183);
 
-  // ── "You" (student name placeholder) with glow effect
-  ctx.font = 'bold 46px Arial';
+  // ── Student name (big, glowing)
+  const displayName = studentName || 'Student';
+  ctx.font = `bold ${displayName.length > 22 ? '36px' : '44px'} Arial`;
   ctx.fillStyle = '#FFFFFF';
-  ctx.shadowColor = 'rgba(168,85,247,0.7)';
-  ctx.shadowBlur = 18;
-  ctx.fillText('You', W/2, 248);
+  ctx.shadowColor = 'rgba(168,85,247,0.85)';
+  ctx.shadowBlur = 22;
+  ctx.fillText(displayName, W/2, 234);
   ctx.shadowBlur = 0;
 
+  // ── Underline below name
+  const nameWidth = ctx.measureText(displayName).width;
+  const ulx = W/2 - nameWidth/2;
+  const ulGrad = ctx.createLinearGradient(ulx, 242, ulx + nameWidth, 242);
+  ulGrad.addColorStop(0, 'rgba(168,85,247,0)');
+  ulGrad.addColorStop(0.5, 'rgba(168,85,247,0.8)');
+  ulGrad.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.strokeStyle = ulGrad;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ulx, 245); ctx.lineTo(ulx + nameWidth, 245); ctx.stroke();
+
+  // ── Student details row (branch, sem, college)
+  const detailParts = [];
+  if (studentBranch && studentBranch !== 'N/A') detailParts.push(studentBranch);
+  if (studentSem && studentSem !== 'N/A') detailParts.push(studentSem);
+  if (studentCollege) detailParts.push(studentCollege);
+  if (detailParts.length > 0) {
+    ctx.font = '13px Arial';
+    ctx.fillStyle = 'rgba(192,132,252,0.85)';
+    ctx.fillText(detailParts.join('  ·  '), W/2, 268);
+  }
+
   // ── "successfully completed"
-  ctx.font = '16px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.fillText('successfully completed', W/2, 285);
-
-  // ── Quiz name
-  ctx.font = 'bold 26px Arial';
-  ctx.fillStyle = '#EA580C';
-  ctx.fillText('Java OOP Quiz', W/2, 325);
-
-  // ── Score ring (left side)
-  const ringX = 220, ringY = 415, ringR = 68;
-  // Outer ring bg
-  ctx.beginPath();
-  ctx.arc(ringX, ringY, ringR, 0, 2*Math.PI);
-  ctx.fillStyle = 'rgba(255,255,255,0.05)';
-  ctx.fill();
-  // Progress arc
-  ctx.beginPath();
-  ctx.arc(ringX, ringY, ringR - 8, -Math.PI/2, -Math.PI/2 + (2*Math.PI * pct/100));
-  ctx.strokeStyle = pct >= 75 ? '#16A34A' : pct >= 40 ? '#EA580C' : '#DC2626';
-  ctx.lineWidth = 10;
-  ctx.lineCap = 'round';
-  ctx.stroke();
-  // Score text
-  ctx.font = 'bold 30px Arial';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textAlign = 'center';
-  ctx.fillText(`${score}/${total}`, ringX, ringY + 8);
-  ctx.font = '12px Arial';
+  ctx.font = '14px Arial';
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.fillText('SCORE', ringX, ringY + 28);
+  ctx.fillText('has successfully completed the quiz', W/2, 296);
 
-  // ── Stats (center-right)
-  const statsX = 490, statsY = 375;
-  const stats = [
-    { icon: '✅', label: 'Correct', val: score, color: '#16A34A' },
-    { icon: '❌', label: 'Wrong', val: wrongCount, color: '#DC2626' },
-    { icon: '⟫', label: 'Skipped', val: skipped, color: '#F59E0B' },
-    { icon: '📊', label: 'Accuracy', val: pct + '%', color: '#A855F7' },
+  // ── Quiz name box
+  const qnameY = 334;
+  roundRect(ctx, W/2 - 220, qnameY - 26, 440, 44, 22);
+  const qboxGrad = ctx.createLinearGradient(W/2 - 220, qnameY, W/2 + 220, qnameY);
+  qboxGrad.addColorStop(0, 'rgba(234,88,12,0.18)');
+  qboxGrad.addColorStop(1, 'rgba(124,58,237,0.18)');
+  ctx.fillStyle = qboxGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#FB923C';
+  ctx.fillText('Java OOP Quiz — StudyHub', W/2, qnameY + 6);
+
+  // ── Divider 2
+  ctx.strokeStyle = divGrad;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(120, 370); ctx.lineTo(W-120, 370); ctx.stroke();
+
+  // ── Stats section
+  const statsY = 410;
+  // Score ring (left)
+  const ringX = 190, ringR = 60;
+  ctx.beginPath(); ctx.arc(ringX, statsY, ringR, 0, 2*Math.PI);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+  // Score arc
+  const scoreColor = pct >= 75 ? '#22C55E' : pct >= 40 ? '#FB923C' : '#F87171';
+  ctx.beginPath();
+  ctx.arc(ringX, statsY, ringR - 9, -Math.PI/2, -Math.PI/2 + (2*Math.PI * pct/100));
+  ctx.strokeStyle = scoreColor;
+  ctx.lineWidth = 11; ctx.lineCap = 'round'; ctx.stroke();
+  // Ring glow
+  ctx.shadowColor = scoreColor; ctx.shadowBlur = 14;
+  ctx.beginPath();
+  ctx.arc(ringX, statsY, ringR - 9, -Math.PI/2, -Math.PI/2 + (2*Math.PI * pct/100));
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  // Score text
+  ctx.font = 'bold 28px Arial'; ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText(`${score}/${total}`, ringX, statsY + 8);
+  ctx.font = '10px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('SCORE', ringX, statsY + 26);
+  // Pct below ring
+  ctx.font = 'bold 14px Arial'; ctx.fillStyle = scoreColor;
+  ctx.fillText(pct + '%', ringX, statsY + 46);
+
+  // Grade badge (right of ring)
+  const grade = pct >= 90 ? 'A+' : pct >= 75 ? 'A' : pct >= 60 ? 'B' : pct >= 40 ? 'C' : 'D';
+  roundRect(ctx, ringX + 80, statsY - 34, 90, 68, 14);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill();
+  ctx.font = 'bold 36px Arial'; ctx.fillStyle = scoreColor;
+  ctx.fillText(grade, ringX + 125, statsY + 10);
+  ctx.font = '10px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('GRADE', ringX + 125, statsY + 30);
+
+  // Stats boxes (center-right)
+  const statsData = [
+    { icon: '✅', label: 'Correct', val: score, color: '#22C55E' },
+    { icon: '❌', label: 'Wrong', val: wrongCount, color: '#F87171' },
+    { icon: '⟫', label: 'Skipped', val: skipped, color: '#FBBF24' },
+    { icon: '📊', label: 'Accuracy', val: pct + '%', color: '#A78BFA' },
   ];
+  const bx = 440, by = statsY - 46;
+  statsData.forEach((s, i) => {
+    const col = i % 2, row = Math.floor(i / 2);
+    const sx = bx + col * 230, sy = by + row * 68;
+    roundRect(ctx, sx, sy, 210, 56, 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1; ctx.stroke();
 
-  stats.forEach((s, i) => {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const sx = statsX + col * 180;
-    const sy = statsY + row * 72;
-
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    roundRect(ctx, sx - 10, sy - 20, 158, 58, 10);
-    ctx.fill();
-
-    ctx.font = '18px Arial';
-    ctx.fillStyle = '#FFFFFF';
-    ctx.textAlign = 'left';
-    ctx.fillText(s.icon, sx + 4, sy + 5);
-
-    ctx.font = 'bold 22px Arial';
-    ctx.fillStyle = s.color;
-    ctx.fillText(String(s.val), sx + 34, sy + 5);
-
-    ctx.font = '11px Arial';
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText(s.label, sx + 4, sy + 24);
+    ctx.font = '18px Arial'; ctx.fillStyle = s.color; ctx.textAlign = 'left';
+    ctx.fillText(s.icon, sx + 12, sy + 28);
+    ctx.font = 'bold 20px Arial'; ctx.fillStyle = s.color;
+    ctx.fillText(String(s.val), sx + 42, sy + 28);
+    ctx.font = '10px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText(s.label.toUpperCase(), sx + 12, sy + 46);
   });
 
   // ── Remark badge
   ctx.textAlign = 'center';
-  const badgeY = 510;
-  ctx.fillStyle = 'rgba(234,88,12,0.2)';
-  roundRect(ctx, W/2 - 200, badgeY - 22, 400, 38, 19);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(234,88,12,0.5)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.font = 'bold 15px Arial';
-  ctx.fillStyle = '#FFA07A';
-  ctx.fillText(`${remark.emoji}  ${remark.title}`, W/2, badgeY + 3);
+  const badgeY = 516;
+  roundRect(ctx, W/2 - 230, badgeY - 24, 460, 40, 20);
+  const badgeGrad = ctx.createLinearGradient(W/2 - 230, badgeY, W/2 + 230, badgeY);
+  badgeGrad.addColorStop(0, 'rgba(234,88,12,0.15)');
+  badgeGrad.addColorStop(1, 'rgba(124,58,237,0.15)');
+  ctx.fillStyle = badgeGrad; ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.font = 'bold 14px Arial'; ctx.fillStyle = '#FFA07A';
+  ctx.fillText(`${remark.emoji}  ${remark.title}`, W/2, badgeY + 4);
 
   // ── Bottom divider
   ctx.strokeStyle = divGrad;
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(120, 555); ctx.lineTo(W-120, 555); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(120, 548); ctx.lineTo(W-120, 548); ctx.stroke();
 
-  // ── Date & Signature row
-  ctx.font = '12px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  // ── Date (left)
+  ctx.font = '11px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.38)';
   ctx.textAlign = 'left';
-  ctx.fillText(`Issued: ${dateStr}`, 80, 582);
+  ctx.fillText(`📅  Issued: ${dateStr}`, 80, 572);
+  if (studentCollege) {
+    ctx.fillText(`🏛  ${studentCollege}`, 80, 590);
+  }
 
-  // StudyHub signature (right)
+  // ── Signature (right)
   ctx.textAlign = 'right';
-  ctx.font = 'bold 13px Arial';
-  ctx.fillStyle = '#A855F7';
-  ctx.fillText('StudyHub  ✦  JavaSourceCode', W-80, 575);
-  ctx.font = '10px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  ctx.fillText('erabhi.in/studyHub', W-80, 591);
+  ctx.font = 'bold 14px Arial'; ctx.fillStyle = '#A855F7';
+  ctx.fillText('StudyHub  ✦  JavaSourceCode', W-80, 567);
+  ctx.font = '10px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.32)';
+  ctx.fillText('erabhi.in/studyHub', W-80, 584);
 
-  // ── Bottom gold bar
+  // ── Verified seal (bottom center)
+  ctx.textAlign = 'center';
+  ctx.font = '10px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fillText('⭐  Verified Digital Certificate  ⭐', W/2, 600);
+
+  // ── Bottom orange bar
   ctx.fillStyle = topGrad;
-  ctx.fillRect(80, H-62, W-160, 1.5);
+  ctx.fillRect(80, H-55, W-160, 2);
 
-  ctx.textAlign = 'left'; // reset
+  ctx.textAlign = 'left';
   return canvas;
 }
 
@@ -1654,7 +1942,8 @@ document.getElementById('downloadCertBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       const total = activeQuestions.length;
       const pct = Math.round((score / total) * 100);
-      link.download = `StudyHub_JavaOOP_Certificate_${score}_${total}_${pct}pct.png`;
+      const safeName = (studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+      link.download = `StudyHub_Certificate_${safeName}_${score}_${total}_${pct}pct.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       showToast('✅ Certificate downloaded!');
