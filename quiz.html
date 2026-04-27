@@ -446,103 +446,172 @@
     box-shadow: 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF;
   }
 
-  /* ── SHARE HIGHLIGHT ANIMATION ── */
-  @keyframes shareHighlight {
-    0%   { box-shadow: var(--shadow-raise); }
-    15%  { box-shadow: 0 0 0 4px #7C3AED, 0 0 40px rgba(124,58,237,0.6), 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF; transform: translateY(-8px) scale(1.02); }
-    30%  { box-shadow: 0 0 0 2px #A855F7, 0 0 20px rgba(124,58,237,0.3), 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF; transform: translateY(-5px) scale(1.01); }
-    50%  { box-shadow: 0 0 0 4px #7C3AED, 0 0 40px rgba(124,58,237,0.6), 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF; transform: translateY(-8px) scale(1.02); }
-    70%  { box-shadow: 0 0 0 2px #A855F7, 0 0 20px rgba(124,58,237,0.3), 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF; transform: translateY(-5px) scale(1.01); }
-    85%  { box-shadow: 0 0 0 4px #7C3AED, 0 0 40px rgba(124,58,237,0.6), 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF; transform: translateY(-8px) scale(1.02); }
-    100% { box-shadow: var(--shadow-raise); transform: translateY(0) scale(1); }
+  /* ───────────────── SHARE HIGHLIGHT FIXED ───────────────── */
+
+@keyframes shareHighlightPulse {
+
+  0%,100%{
+      transform: translateY(-6px) scale(1.015);
+      box-shadow:
+       0 0 0 4px rgba(124,58,237,.35),
+       0 0 35px rgba(124,58,237,.45),
+       12px 12px 28px #C4C8D4,
+      -12px -12px 28px #FFFFFF;
   }
 
-  .quiz-card.shared-highlight {
-    animation: shareHighlight 2.8s ease-in-out forwards;
-    z-index: 10;
+  50%{
+      transform: translateY(-10px) scale(1.03);
+      box-shadow:
+       0 0 0 7px rgba(168,85,247,.45),
+       0 0 55px rgba(124,58,237,.65),
+       12px 12px 28px #C4C8D4,
+      -12px -12px 28px #FFFFFF;
   }
+}
 
-  .quiz-card-img {
-    width: 100%;
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    position: relative;
-    overflow: hidden;
-  }
+/* shared card stays highlighted permanently */
+.quiz-card.shared-highlight{
+position:relative;
+z-index:10;
+border:2px solid #7C3AED;
 
-  .quiz-card-img::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 50%;
-    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08));
-  }
+animation:none;
 
-  .card-img-0 { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
-  .card-img-1 { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
-  .card-img-2 { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
-  .card-img-3 { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
-  .card-img-4 { background: linear-gradient(135deg, #FCE7F3, #FBCFE8); }
-  .card-img-5 { background: linear-gradient(135deg, #FEE2E2, #FECACA); }
-  .card-img-6  { background: linear-gradient(135deg, #CCFBF1, #99F6E4); }
-  .card-img-7  { background: linear-gradient(135deg, #E0F2FE, #BAE6FD); }
-  .card-img-8  { background: linear-gradient(135deg, #FAF5FF, #E9D5FF); }
-  .card-img-9  { background: linear-gradient(135deg, #ECFCCB, #D9F99D); }
-  .card-img-10 { background: linear-gradient(135deg, #FFEDD5, #FED7AA); }
+box-shadow:
+0 0 0 4px rgba(124,58,237,.35),
+0 0 35px rgba(124,58,237,.45),
+12px 12px 28px #C4C8D4,
+-12px -12px 28px #FFFFFF;
+}
 
-  .difficulty-badge {
-    position: absolute;
-    top: 14px; right: 14px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 50px;
-    z-index: 2;
-  }
+/* badge on shared quiz */
+.quiz-card.shared-highlight::before{
+   content:"📌 Shared With You";
+   position:absolute;
+   top:14px;
+   left:14px;
+   background:linear-gradient(135deg,#7C3AED,#A855F7);
+   color:#fff;
+   font-size:.72rem;
+   font-weight:700;
+   padding:6px 12px;
+   border-radius:40px;
+   box-shadow:0 4px 14px rgba(124,58,237,.35);
+   z-index:20;
+}
 
-  .diff-easy { background: #D1FAE5; color: #065F46; }
-  .diff-medium { background: #FEF3C7; color: #92400E; }
-  .diff-hard { background: #FEE2E2; color: #991B1B; }
+/* hover still works with shared highlight */
+.quiz-card.shared-highlight:hover{
+ transform:none !important;
+}
 
-  .quiz-card-body {
-    padding: 20px 22px 22px;
-  }
+/* ───────── QUIZ CARD IMAGE ───────── */
 
-  .quiz-card-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
+.quiz-card-img{
+ width:100%;
+ height:160px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:5rem;
+ position:relative;
+ overflow:hidden;
+}
 
-  .quiz-card-sub {
-    font-size: 0.82rem;
-    color: var(--text-sub);
-    margin-bottom: 14px;
-  }
+.quiz-card-img::after{
+ content:'';
+ position:absolute;
+ left:0;
+ right:0;
+ bottom:0;
+ height:50%;
+ background:linear-gradient(
+   to bottom,
+   transparent,
+   rgba(0,0,0,.08)
+ );
+}
 
-  .quiz-card-meta {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
+/* ───────── CARD GRADIENTS ───────── */
 
-  .meta-pill {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--text-sub);
-    background: var(--bg);
-    padding: 5px 12px;
-    border-radius: 50px;
-    box-shadow: var(--shadow-raise-sm);
-  }
+.card-img-0{background:linear-gradient(135deg,#EDE9FE,#DDD6FE);}
+.card-img-1{background:linear-gradient(135deg,#FEF3C7,#FDE68A);}
+.card-img-2{background:linear-gradient(135deg,#D1FAE5,#A7F3D0);}
+.card-img-3{background:linear-gradient(135deg,#DBEAFE,#BFDBFE);}
+.card-img-4{background:linear-gradient(135deg,#FCE7F3,#FBCFE8);}
+.card-img-5{background:linear-gradient(135deg,#FEE2E2,#FECACA);}
+.card-img-6{background:linear-gradient(135deg,#CCFBF1,#99F6E4);}
+.card-img-7{background:linear-gradient(135deg,#E0F2FE,#BAE6FD);}
+.card-img-8{background:linear-gradient(135deg,#FAF5FF,#E9D5FF);}
+.card-img-9{background:linear-gradient(135deg,#ECFCCB,#D9F99D);}
+.card-img-10{background:linear-gradient(135deg,#FFEDD5,#FED7AA);}
+
+/* ───────── DIFFICULTY BADGES ───────── */
+
+.difficulty-badge{
+ position:absolute;
+ top:14px;
+ right:14px;
+ z-index:2;
+ font-size:.7rem;
+ font-weight:700;
+ padding:4px 12px;
+ border-radius:50px;
+}
+
+.diff-easy{
+ background:#D1FAE5;
+ color:#065F46;
+}
+
+.diff-medium{
+ background:#FEF3C7;
+ color:#92400E;
+}
+
+.diff-hard{
+ background:#FEE2E2;
+ color:#991B1B;
+}
+
+/* ───────── BODY ───────── */
+
+.quiz-card-body{
+ padding:20px 22px 22px;
+}
+
+.quiz-card-title{
+ font-size:1.05rem;
+ font-weight:700;
+ color:var(--text);
+ margin-bottom:4px;
+}
+
+.quiz-card-sub{
+ font-size:.82rem;
+ color:var(--text-sub);
+ margin-bottom:14px;
+}
+
+.quiz-card-meta{
+ display:flex;
+ gap:10px;
+ margin-bottom:18px;
+ flex-wrap:wrap;
+}
+
+.meta-pill{
+ display:flex;
+ align-items:center;
+ gap:5px;
+ font-size:.78rem;
+ font-weight:500;
+ color:var(--text-sub);
+ background:var(--bg);
+ padding:5px 12px;
+ border-radius:50px;
+ box-shadow:var(--shadow-raise-sm);
+}
 
   /* ── CARD BUTTONS ROW ── */
   .card-btn-row {
@@ -1848,44 +1917,73 @@ function showToast(msg) {
 // ═══════════════════════════════════════════════════
 // DEEP LINK — handle ?quiz= on page load
 // ═══════════════════════════════════════════════════
-(function handleDeepLink() {
-  const params = new URLSearchParams(window.location.search);
-  const quizId = params.get('quiz');
-  if (!quizId) return;
+(function handleDeepLink(){
 
-  // Clean the URL (remove query string without reload)
-  const cleanUrl = window.location.pathname;
-  window.history.replaceState({}, '', cleanUrl);
+const params = new URLSearchParams(window.location.search);
+const quizId = params.get("quiz");
 
-  // Wait for layout then scroll + highlight
-  setTimeout(() => {
-    const card = document.querySelector(`.quiz-card[data-quiz-id="${quizId}"]`);
-    if (!card) return;
+if(!quizId) return;
 
-    // Scroll the card into view, centered
-    const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 68;
-    const rect = card.getBoundingClientRect();
-    const scrollTop = window.scrollY + rect.top - navH - 48;
+window.addEventListener("load", ()=>{
 
-    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+setTimeout(()=>{
 
-    // After scroll settles, add highlight
-    setTimeout(() => {
-      card.classList.add('shared-highlight');
+const card=document.querySelector(
+`.quiz-card[data-quiz-id="${quizId}"]`
+);
 
-      // Show banner toast
-      const nameMap = {
-        dsa: 'DSA Quiz', java: 'Java Quiz', os: 'O.S Quiz',
-        python: 'Python Quiz', html: 'HTML Quiz', css: 'CSS Quiz', js: 'JavaScript Quiz'
-      };
-      const name = nameMap[quizId] || quizId + ' Quiz';
-      showToast(`📌 Someone shared the ${name} with you!`);
+if(!card) return;
 
-      // Remove highlight class after animation completes
-      setTimeout(() => card.classList.remove('shared-highlight'), 3200);
-    }, 700);
+/* scroll to card */
+const navH=68;
+const y=
+card.getBoundingClientRect().top+
+window.pageYOffset-
+navH-
+40;
 
-  }, 400);
+window.scrollTo({
+top:y,
+behavior:"smooth"
+});
+
+
+/* remove old highlights */
+document
+.querySelectorAll(".quiz-card")
+.forEach(c=>c.classList.remove("shared-highlight"));
+
+/* after scroll completes apply permanent highlight */
+setTimeout(()=>{
+
+card.classList.remove("fade-up");
+card.classList.add("shared-highlight");
+
+/* force it persistent */
+card.style.animation=
+"shareHighlightPulse 2.2s ease-in-out infinite";
+
+/* show toast */
+showToast("📌 Shared quiz highlighted for you");
+
+/* keep card highlighted even after focus loss */
+const observer=new MutationObserver(()=>{
+if(!card.classList.contains("shared-highlight")){
+card.classList.add("shared-highlight");
+}
+});
+
+observer.observe(card,{
+attributes:true,
+attributeFilter:["class"]
+});
+
+},1200);
+
+},700);
+
+});
+
 })();
 </script>
 </body>
