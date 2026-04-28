@@ -1343,6 +1343,25 @@ box-shadow:
           <div class="slide-illustration">🖥️</div>
         </div>
 
+        <!-- Slide 3 — pps -->
+        <div class="carousel-slide slide-7">
+          <div class="slide-content">
+            <div class="slide-badge">©️ Classic</div>
+            <div class="slide-title">PPS Quiz</div>
+            <div class="slide-sub">Test your PPS core concepts — algorithms, data structures, and more</div>
+            <div class="slide-meta">
+              <span class="slide-meta-pill">📝 210 Questions</span>
+              <span class="slide-meta-pill">⏱ ~30 min</span>
+              <span class="slide-meta-pill">⚡ Medium</span>
+            </div>
+            <div class="slide-actions">
+              <a href="ppsquiz.html" class="slide-cta">Start Quiz →</a>
+              <button class="slide-share-btn" onclick="openShareModal('pps','PPS Quiz')">🔗 Share</button>
+            </div>
+          </div>
+          <div class="slide-illustration">©️</div>
+        </div>
+
         <!-- Slide 3 — Python -->
         <div class="carousel-slide slide-2">
           <div class="slide-content">
@@ -1434,14 +1453,14 @@ box-shadow:
     <div class="stat-card fade-up">
       <div class="stat-icon stat-icon-0">🧠</div>
       <div>
-        <div class="stat-num" id="countQuizzes">7</div>
+        <div class="stat-num" id="countQuizzes">10</div>
         <div class="stat-label">Quiz Categories</div>
       </div>
     </div>
     <div class="stat-card fade-up">
       <div class="stat-icon stat-icon-1">📝</div>
       <div>
-        <div class="stat-num" id="countQuestions">500+</div>
+        <div class="stat-num" id="countQuestions">1500+</div>
         <div class="stat-label">Total Questions</div>
       </div>
     </div>
@@ -1526,6 +1545,28 @@ box-shadow:
           <div class="card-btn-row">
             <button class="btn-start" onclick="event.stopPropagation();location.href='osquiz.html'">⚡ Start Quiz</button>
             <button class="btn-share-card" title="Share O.S Quiz" onclick="event.stopPropagation();openShareModal('os','O.S Quiz')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PPS -->
+      <div class="quiz-card fade-up" data-quiz-id="pps" onclick="handleCardClick(event,'ppsquiz.html')">
+        <div class="quiz-card-img card-img-7">
+          <span class="difficulty-badge diff-medium">Medium</span>
+          ©️
+        </div>
+        <div class="quiz-card-body">
+          <div class="quiz-card-title">PPS Quiz</div>
+          <div class="quiz-card-sub">Programming & Problem Solving Concepts</div>
+          <div class="quiz-card-meta">
+            <span class="meta-pill">📝 210 Qs</span>
+            <span class="meta-pill">⏱ 30 min</span>
+          </div>
+          <div class="card-btn-row">
+            <button class="btn-start" onclick="event.stopPropagation();location.href='ppsquiz.html'">⚡ Start Quiz</button>
+            <button class="btn-share-card" title="Share PPS Quiz" onclick="event.stopPropagation();openShareModal('pps','PPS Quiz')">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
           </div>
