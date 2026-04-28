@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Design Quiz — StudyHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #7C3AED;
+  --primary-light: #A855F7;
+  --primary-dark: #5B21B6;
+  --secondary: #EA580C;
+  --secondary-light: #F97316;
+  --bg: #EEF0F5;
+  --surface: #F2F4F8;
+  --card: #FFFFFF;
+  --text: #1E1B4B;
+  --text-sub: #6B7280;
+  --correct: #16A34A;
+  --correct-bg: #DCFCE7;
+  --wrong: #DC2626;
+  --wrong-bg: #FEE2E2;
+  --shadow-raise: 8px 8px 16px #D1D5DB, -8px -8px 16px #FFFFFF;
+  --shadow-raise-sm: 4px 4px 10px #D1D5DB, -4px -4px 10px #FFFFFF;
+  --shadow-inset: inset 4px 4px 8px #D1D5DB, inset -4px -4px 8px #FFFFFF;
+  --nav-h: 68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-top:var(--nav-h);}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(238,240,245,0.93);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(124,58,237,0.10);z-index:1000;}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-logo{width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);object-fit:cover;}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px;}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all 0.2s;}
+.nav-links a:hover{color:var(--primary);background:rgba(124,58,237,0.08);}
+.nav-links a.active{color:var(--primary);background:rgba(124,58,237,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600;}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px;}
+.mobile-menu{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,240,245,0.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;flex-direction:column;gap:2px;display:none;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{text-decoration:none;color:var(--text);font-size:0.92rem;font-weight:500;padding:12px 16px;border-radius:12px;transition:all 0.2s;}
+.mobile-menu a:hover{background:rgba(124,58,237,0.08);color:var(--primary);}
+
+/* TOAST */
+#toast{position:fixed;top:calc(var(--nav-h) + 16px);left:50%;transform:translateX(-50%);background:#1E1B4B;color:#fff;font-size:0.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,0.3);opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+/* PAGE WRAP */
+.page-wrap{max-width:720px;margin:0 auto;padding:32px 20px 60px;}
+
+/* SCREENS */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ANIMATIONS */
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* ===== SCREEN 1: INFO ===== */
+.info-screen-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center;}
+.info-header-emoji{font-size:3.5rem;display:inline-block;animation:floatBob 3s ease-in-out infinite;margin-bottom:12px;}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px;}
+.info-sub{font-size:0.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px;}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left;}
+.info-form label{display:block;font-size:0.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.info-form input,.info-form select{width:100%;padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:0.92rem;font-weight:500;color:var(--text);transition:all 0.2s;outline:none;appearance:none;}
+.info-form input:focus,.info-form select:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(124,58,237,0.12);}
+.info-form input::placeholder{color:var(--text-sub);opacity:0.7;}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ===== SCREEN 2: INTRO ===== */
+.intro-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center;}
+.intro-emoji{font-size:5rem;display:inline-block;animation:floatBob 3s ease-in-out infinite;margin-bottom:16px;}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px;}
+.intro-sub{font-size:0.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6;}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px;}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary);}
+.intro-stat-lbl{font-size:0.75rem;color:var(--text-sub);margin-top:2px;font-weight:500;}
+.chapter-wrap{margin-bottom:28px;text-align:left;}
+.chapter-label{display:block;font-size:0.88rem;font-weight:600;color:var(--text-sub);margin-bottom:12px;}
+.chapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:0.8rem;font-weight:600;color:var(--text-sub);text-align:left;line-height:1.4;cursor:pointer;transition:all 0.2s;}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(124,58,237,0.3);}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(124,58,237,0.07);box-shadow:var(--shadow-inset);}
+.chapter-all-btn{grid-column:1/-1;text-align:center;}
+
+/* PRIMARY BUTTON */
+.btn-primary{width:100%;padding:16px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 14px rgba(234,88,12,0.38),0 7px 0 #C2410C;transition:all 0.2s;position:relative;top:0;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,0.42),0 9px 0 #C2410C;}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,0.3),0 2px 0 #C2410C;}
+
+/* ===== SCREEN 3: QUIZ ===== */
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);transition:all 0.2s;flex-shrink:0;}
+.back-btn:hover{background:var(--primary);color:#fff;}
+.progress-wrap{flex:1;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px;}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden;}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width 0.5s ease;width:0%;}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);border-radius:50px;padding:8px 14px;font-size:0.9rem;font-weight:700;color:var(--text);flex-shrink:0;min-width:72px;justify-content:center;}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse 0.8s infinite;}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse 0.8s infinite;}
+.chapter-badge{display:inline-flex;gap:6px;background:rgba(124,58,237,0.10);color:var(--primary);font-size:0.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm);}
+.question-card{background:linear-gradient(135deg,#5B21B6,#7C3AED);border-radius:24px;padding:32px 28px;margin-bottom:16px;box-shadow:0 8px 32px rgba(124,58,237,0.3),8px 8px 16px #D1D5DB,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden;}
+.question-card::before{content:'';position:absolute;inset:0;opacity:0.06;background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px);}
+.q-num{font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:10px;position:relative;z-index:1;}
+.q-text{font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1;}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.12);border-radius:10px;border-left:3px solid rgba(255,255,255,0.5);font-size:0.8rem;color:rgba(255,255,255,0.85);font-style:italic;line-height:1.5;position:relative;z-index:1;white-space:pre-wrap;font-family:monospace;}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.option{display:flex;align-items:center;gap:14px;background:#fff;border-radius:14px;padding:15px 18px;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;border:2px solid transparent;user-select:none;}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:6px 6px 14px #C4C8D4,-4px -4px 10px #FFFFFF;border-color:rgba(124,58,237,0.2);}
+.option.locked{cursor:not-allowed;}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;color:var(--primary);flex-shrink:0;}
+.option-text{font-size:0.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4;}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #D1D5DB;box-shadow:var(--shadow-raise-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;}
+.option.correct{background:#DCFCE7;border:2px solid #16A34A;box-shadow:0 0 0 3px rgba(22,163,74,0.15),6px 6px 16px rgba(22,163,74,0.1);transform:translateX(4px);}
+.option.correct .option-letter{background:#16A34A;color:#fff;box-shadow:0 4px 12px rgba(22,163,74,0.4);}
+.option.correct .option-radio{background:#16A34A;border-color:#16A34A;color:#fff;}
+.option.correct .option-text{color:#065F46;font-weight:600;}
+.option.wrong{background:#FEE2E2;border:2px solid #DC2626;box-shadow:0 0 0 3px rgba(220,38,38,0.15),6px 6px 16px rgba(220,38,38,0.1);}
+.option.wrong .option-letter{background:#DC2626;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,0.4);}
+.option.wrong .option-radio{background:#DC2626;border-color:#DC2626;color:#fff;}
+.option.wrong .option-text{color:#991B1B;}
+.explanation{background:#fff;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;}
+.explanation.show{display:block;animation:slideDown 0.3s ease;}
+.explanation-title{font-size:0.78rem;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.explanation-text{font-size:0.85rem;color:var(--text-sub);line-height:1.55;}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end;}
+.skip-btn{padding:12px 20px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.skip-btn:hover{color:var(--wrong);}
+.btn-next{padding:14px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(124,58,237,0.38),0 6px 0 var(--primary-dark);cursor:pointer;display:none;align-items:center;gap:6px;transition:all 0.2s;}
+.btn-next.visible{display:flex;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(124,58,237,0.45),0 8px 0 var(--primary-dark);}
+.btn-next:active{transform:translateY(4px);box-shadow:0 2px 8px rgba(124,58,237,0.3),0 2px 0 var(--primary-dark);}
+
+/* ===== SCREEN 4: RESULT ===== */
+.result-card{background:#fff;border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden;}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px;}
+.result-emoji{font-size:4rem;display:inline-block;animation:floatBob 2.5s ease-in-out infinite;margin-bottom:12px;}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left;}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm);}
+.student-info-text{flex:1;min-width:0;}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.student-info-meta{font-size:0.78rem;color:var(--text-sub);font-weight:500;}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1;}
+.score-total{font-size:0.85rem;color:var(--text-sub);font-weight:500;}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.remark-sub{font-size:0.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5;}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap;}
+.result-pill{display:flex;gap:6px;padding:9px 18px;border-radius:50px;font-size:0.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm);}
+.pill-correct{background:#DCFCE7;color:#16A34A;}
+.pill-wrong{background:#FEE2E2;color:#DC2626;}
+.pill-skip{background:#FEF3C7;color:#92400E;}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:0;}
+.btn-retry{padding:14px 30px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(124,58,237,0.4),0 6px 0 var(--primary-dark);cursor:pointer;transition:all 0.2s;}
+.btn-retry:hover{transform:translateY(-2px);}
+.btn-explore{padding:14px 30px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.92rem;box-shadow:0 4px 14px rgba(234,88,12,0.4),0 6px 0 #C2410C;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;}
+.btn-explore:hover{transform:translateY(-2px);}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.btn-share:hover{color:var(--primary);}
+
+/* CERTIFICATE DOWNLOAD SECTION */
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#1E0A3C,#3B1A7A);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden;}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.015) 0px,rgba(255,255,255,0.015) 1px,transparent 1px,transparent 20px);}
+.cert-section-title{font-size:0.78rem;font-weight:700;color:rgba(168,85,247,0.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.cert-section-meta{font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:18px;}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;box-shadow:0 4px 20px rgba(234,88,12,0.5),0 7px 0 #C2410C;cursor:pointer;transition:all 0.2s;position:relative;z-index:1;}
+.btn-download-cert:hover{transform:translateY(-3px);}
+.btn-download-cert:active{transform:translateY(4px);}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,0.4),0 7px 0 #15803D;}
+
+/* SHARE PANEL */
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;}
+.share-panel.open{display:block;animation:slideDown 0.3s ease;}
+.share-panel-title{font-size:0.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center;}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #C4C8D4,-8px -8px 18px #FFFFFF;}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset);}
+.share-action-icon{font-size:1.5rem;line-height:1;}
+.share-action-label{font-size:0.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3;}
+
+/* REVIEW */
+.review-toggle{margin-top:28px;text-align:center;}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(124,58,237,0.3);background:var(--bg);color:var(--primary);font-family:'Poppins',sans-serif;font-weight:600;font-size:0.85rem;box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all 0.2s;}
+.btn-review:hover{border-color:var(--primary);}
+.review-list{margin-top:20px;display:none;text-align:left;}
+.review-list.open{display:block;}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub);}
+.review-item.ri-correct{border-left-color:#16A34A;}
+.review-item.ri-wrong{border-left-color:#DC2626;}
+.review-item.ri-skip{border-left-color:#F59E0B;}
+.ri-q{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4;}
+.ri-ans{font-size:0.78rem;color:var(--text-sub);}
+.ri-correct-ans{color:#16A34A;font-weight:600;}
+.ri-wrong-ans{color:#DC2626;font-weight:600;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .navbar{padding:0 16px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .page-wrap{padding-left:14px;padding-right:14px;}
+  .intro-card{padding:30px 20px;}
+  .info-screen-card{padding:30px 20px;}
+  .info-row{grid-template-columns:1fr;}
+  .chapter-grid{grid-template-columns:1fr;}
+  .result-card{padding:30px 20px;}
+  .result-btns{flex-direction:column;align-items:center;}
+  .btn-retry,.btn-explore{width:100%;justify-content:center;}
+  .quiz-header{gap:8px;}
+  .option{padding:12px 14px;gap:10px;}
+  .option-text{font-size:0.85rem;}
+  .question-card{padding:24px 20px;}
+  .share-actions{gap:8px;}
+  .share-action-btn{min-width:68px;padding:12px 8px;}
+}
+</style>
+</head>
+<body data-quiz="webdesign">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="images/logo.png" alt="Logo" class="nav-logo">
+    <span class="nav-name">StudyHub</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="quiz.html" class="active">Quizzes</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 Home</a>
+  <a href="quiz.html">📝 Quizzes</a>
+  <a href="about.html">ℹ️ About</a>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<main class="page-wrap">
+
+  <!-- SCREEN 1: INFO -->
+  <div class="screen active" id="screenInfo">
+    <div class="info-screen-card">
+      <span class="info-header-emoji">🎓</span>
+      <div class="info-title">Almost Ready!</div>
+      <div class="info-sub">Enter your details to personalize your quiz experience and certificate.</div>
+      <div class="info-form">
+        <div>
+          <label for="inputName">👤 Full Name</label>
+          <input type="text" id="inputName" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+        </div>
+        <div class="info-row">
+          <div>
+            <label for="inputBranch">🏫 Branch / Stream</label>
+            <input type="text" id="inputBranch" placeholder="e.g. Computer Science" maxlength="40">
+          </div>
+          <div>
+            <label for="inputSem">📅 Semester</label>
+            <select id="inputSem">
+              <option value="">— Select —</option>
+              <option value="1st Semester">1st Semester</option>
+              <option value="2nd Semester">2nd Semester</option>
+              <option value="3rd Semester">3rd Semester</option>
+              <option value="4th Semester">4th Semester</option>
+              <option value="5th Semester">5th Semester</option>
+              <option value="6th Semester">6th Semester</option>
+              <option value="7th Semester">7th Semester</option>
+              <option value="8th Semester">8th Semester</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="inputCollege">🏛️ College / Institute (Optional)</label>
+          <input type="text" id="inputCollege" placeholder="e.g. IIT Delhi" maxlength="60">
+        </div>
+      </div>
+      <button class="btn-primary" id="infoNextBtn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: INTRO -->
+  <div class="screen" id="screenIntro">
+    <div class="intro-card">
+      <span class="intro-emoji">🌐</span>
+      <div class="intro-title">Web Design Quiz</div>
+      <div class="intro-sub">Test your Web Design & Development knowledge across 6 units</div>
+      <div class="intro-stats">
+        <div class="intro-stat">
+          <div class="intro-stat-num">200</div>
+          <div class="intro-stat-lbl">Questions</div>
+        </div>
+        <div class="intro-stat">
+          <div class="intro-stat-num">6</div>
+          <div class="intro-stat-lbl">Units</div>
+        </div>
+        <div class="intro-stat">
+          <div class="intro-stat-num">30s</div>
+          <div class="intro-stat-lbl">Per Question</div>
+        </div>
+      </div>
+      <div class="chapter-wrap">
+        <span class="chapter-label">📌 Choose Unit (or play all)</span>
+        <div class="chapter-grid" id="chapterGrid">
+          <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+          <button class="chapter-btn" data-chapter="0">1. Internet & Web Fundamentals</button>
+          <button class="chapter-btn" data-chapter="1">2. HTML Elements & Structure</button>
+          <button class="chapter-btn" data-chapter="2">3. HTML Forms & Multimedia</button>
+          <button class="chapter-btn" data-chapter="3">4. CSS Styling & Layout</button>
+          <button class="chapter-btn" data-chapter="4">5. JavaScript Basics</button>
+          <button class="chapter-btn" data-chapter="5">6. Advanced JavaScript</button>
+        </div>
+      </div>
+      <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: QUIZ -->
+  <div class="screen" id="screenQuiz">
+    <div class="quiz-header">
+      <button class="back-btn" id="backBtn">←</button>
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progressText">Question 1 of 200</span>
+          <span id="scoreText">Score: 0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="timer-pill" id="timerPill">⏱ 30s</div>
+    </div>
+    <div class="chapter-badge" id="chapterBadge">🌐 Internet & Web Fundamentals</div>
+    <div class="question-card">
+      <div class="q-num" id="qNum">Q1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-example" id="qExample" style="display:none"></div>
+    </div>
+    <ul class="options-list" id="optionsList"></ul>
+    <div class="explanation" id="explanationBox">
+      <div class="explanation-title">💡 Explanation</div>
+      <div class="explanation-text" id="explanationText"></div>
+    </div>
+    <div class="action-row">
+      <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+      <button class="btn-next" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: RESULT -->
+  <div class="screen" id="screenResult">
+    <div class="result-card">
+      <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+      <span class="result-emoji" id="resultEmoji">🏆</span>
+      <div class="student-info-banner" id="studentInfoBanner">
+        <div class="student-avatar">🎓</div>
+        <div class="student-info-text">
+          <div class="student-info-name" id="bannerName">Student</div>
+          <div class="student-info-meta" id="bannerMeta">Web Design Quiz</div>
+        </div>
+      </div>
+      <div class="result-score-ring">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-total" id="scoreTotal">/ 200</div>
+      </div>
+      <div class="result-percent" id="resultPercent">0%</div>
+      <div class="remark-text" id="remarkText">Keep Going!</div>
+      <div class="remark-sub" id="remarkSub">Review and try again!</div>
+      <div class="result-pills">
+        <div class="result-pill pill-correct" id="pillCorrect">✅ 0 Correct</div>
+        <div class="result-pill pill-wrong" id="pillWrong">❌ 0 Wrong</div>
+        <div class="result-pill pill-skip" id="pillSkip">⟫ 0 Skipped</div>
+      </div>
+      <div class="result-btns">
+        <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+        <a class="btn-explore" href="quiz.html">🔍 Explore More</a>
+        <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+      </div>
+      <div class="cert-download-section">
+        <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+        <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+        <div class="cert-section-meta" id="certBannerMeta">Web Design Quiz · StudyHub</div>
+        <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+      </div>
+      <div class="share-panel" id="sharePanel">
+        <div class="share-panel-title">Share your achievement</div>
+        <div class="share-actions">
+          <button class="share-action-btn" id="copyLinkBtn">
+            <span class="share-action-icon">🔗</span>
+            <span class="share-action-label">Copy Quiz<br>Link</span>
+          </button>
+          <button class="share-action-btn" id="whatsappBtn">
+            <span class="share-action-icon">💬</span>
+            <span class="share-action-label">Share on<br>WhatsApp</span>
+          </button>
+          <button class="share-action-btn" id="twitterBtn">
+            <span class="share-action-icon">🐦</span>
+            <span class="share-action-label">Share on<br>Twitter</span>
+          </button>
+          <button class="share-action-btn" id="copyTextBtn">
+            <span class="share-action-icon">📋</span>
+            <span class="share-action-label">Copy Score<br>Text</span>
+          </button>
+        </div>
+      </div>
+      <canvas id="certCanvas" style="display:none"></canvas>
+      <div class="review-toggle">
+        <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===================== CONFIG =====================
+const QUIZ_TITLE = "Web Design Quiz";
+const QUIZ_SUBJECT_TAG = "webdesign";
+const QUIZ_HASHTAGS = "#WebDesign #HTML #CSS #JavaScript #StudyHub #WebDev";
+const CERT_QUIZ_NAME = "Web Design Quiz — StudyHub";
+const CERT_SIGNATURE = "StudyHub  ✦  JavaSourceCode.in";
+const FALLBACK_URL = "https://erabhi.in/studyHub/webquiz.html";
+const TIMER_SECS = 30;
+const LETTERS = ['A','B','C','D'];
+
+const CHAPTERS = [
+  { name: "Internet & Web Fundamentals", icon: "🌐" },
+  { name: "HTML Elements & Structure", icon: "🏗️" },
+  { name: "HTML Forms & Multimedia", icon: "📋" },
+  { name: "CSS Styling & Layout", icon: "🎨" },
+  { name: "JavaScript Basics", icon: "⚡" },
+  { name: "Advanced JavaScript", icon: "🚀" },
+];
+
+// ===================== QUESTION BANK =====================
+const ALL_QUESTIONS = [
+
+  // ===== UNIT 1 (c:0) — Internet & Web Fundamentals =====
+  {c:0,q:"Which protocol is primarily used to transfer web pages over the Internet?",o:["FTP","HTTP","SMTP","TCP"],a:1,ex:"HTTP (HyperText Transfer Protocol) is the foundation of data communication on the World Wide Web."},
+  {c:0,q:"What does WWW stand for?",o:["World Wide Web","World Wide Wire","Web Wide World","Wide World Web"],a:0,ex:"WWW stands for World Wide Web, a system of interlinked hypertext documents accessible via the Internet."},
+  {c:0,q:"The first web browser ever created was:",o:["Mosaic","Netscape","WorldWideWeb (Nexus)","Internet Explorer"],a:2,ex:"WorldWideWeb (later renamed Nexus) was created by Tim Berners-Lee in 1990 — the world's first web browser."},
+  {c:0,q:"Who is credited as the inventor of the World Wide Web?",o:["Vint Cerf","Bill Gates","Tim Berners-Lee","Marc Andreessen"],a:2,ex:"Tim Berners-Lee invented the WWW in 1989 while working at CERN."},
+  {c:0,q:"What is the full form of URL?",o:["Universal Resource Locator","Uniform Resource Locator","Uniform Resource Link","Universal Reference Link"],a:1,ex:"URL stands for Uniform Resource Locator — the address used to access resources on the web."},
+  {c:0,q:"Which part of a URL specifies the resource location on the server?",o:["Protocol","Domain","Path","Port"],a:2,ex:"The path portion of a URL (after the domain) specifies the exact location of the resource on the web server."},
+  {c:0,q:"In the URL https://www.example.com:8080/page, what is '8080'?",o:["Domain name","Protocol","Port number","File name"],a:2,ex:"8080 is the port number. The default HTTP port is 80 and HTTPS is 443; other ports are specified explicitly."},
+  {c:0,q:"MIME stands for:",o:["Multi-purpose Internet Mail Extensions","Multiple Internet Messaging Extensions","Mail Internet MIME Extension","Multiplex Internet Mail Entity"],a:0,ex:"MIME (Multipurpose Internet Mail Extensions) defines the format of email messages and web content types."},
+  {c:0,q:"What is the MIME type for an HTML document?",o:["text/plain","application/html","text/html","html/text"],a:2,ex:"The MIME type for HTML documents is text/html."},
+  {c:0,q:"In a 3-Tier Architecture, which tier contains the application logic?",o:["Presentation Tier","Logic/Application Tier","Data Tier","Network Tier"],a:1,ex:"The middle tier (Application/Logic Tier) contains business logic; presentation handles UI and data tier handles the database."},
+  {c:0,q:"Which of the following best describes web hosting?",o:["Designing a website","Storing website files on a server accessible via the Internet","Creating HTML pages","Registering a domain name"],a:1,ex:"Web hosting is a service that stores website files on servers, making them accessible over the Internet."},
+  {c:0,q:"A domain name is resolved to an IP address by:",o:["HTTP","DNS","FTP","SMTP"],a:1,ex:"DNS (Domain Name System) translates human-readable domain names into IP addresses."},
+  {c:0,q:"Which of the following is a valid Top-Level Domain (TLD)?",o:[".html",".web",".org",".site123"],a:2,ex:".org is a valid Top-Level Domain commonly used by non-profit organizations."},
+  {c:0,q:"HTTP operates at which layer of the OSI model?",o:["Transport Layer","Network Layer","Application Layer","Session Layer"],a:2,ex:"HTTP is an Application Layer protocol in the OSI model."},
+  {c:0,q:"What is the default port number for HTTP?",o:["21","25","80","443"],a:2,ex:"HTTP uses port 80 by default; HTTPS uses port 443."},
+  {c:0,q:"HTTPS is HTTP with:",o:["Higher speed","SSL/TLS encryption","More headers","Compression"],a:1,ex:"HTTPS (HTTP Secure) uses SSL/TLS to encrypt data between browser and server."},
+  {c:0,q:"In Client-Server architecture, which component sends requests?",o:["Server","Database","Client","Firewall"],a:2,ex:"The client initiates requests; the server processes and responds to those requests."},
+  {c:0,q:"Which HTTP method is used to submit form data to a server?",o:["GET","DELETE","POST","PUT"],a:2,ex:"POST method sends data in the HTTP request body, commonly used for form submissions."},
+  {c:0,q:"Which HTTP status code indicates 'Page Not Found'?",o:["200","301","403","404"],a:3,ex:"HTTP 404 means the requested resource was not found on the server."},
+  {c:0,q:"HTTP status code 200 means:",o:["Redirect","Server Error","OK – Request Successful","Unauthorized"],a:2,ex:"200 OK is the standard response indicating the request was successful."},
+  {c:0,q:"What does a web server do?",o:["Browses websites","Stores and serves web pages to clients","Translates domain names","Encrypts passwords"],a:1,ex:"A web server receives HTTP requests and serves the corresponding web page files to clients."},
+  {c:0,q:"The 3-Tier Architecture consists of which three layers?",o:["Input, Process, Output","Client, Network, Server","Presentation, Logic, Data","HTML, CSS, JavaScript"],a:2,ex:"3-Tier Architecture comprises Presentation (UI), Logic (Business), and Data (Database) tiers."},
+  {c:0,q:"Which of the following is an example of a web browser?",o:["Apache","Mozilla Firefox","MySQL","PHP"],a:1,ex:"Mozilla Firefox is a web browser; Apache is a web server; MySQL is a database; PHP is a scripting language."},
+  {c:0,q:"What does ISP stand for?",o:["Internet Service Provider","Internal Server Process","Internet Security Protocol","International System Protocol"],a:0,ex:"ISP stands for Internet Service Provider — a company that provides internet access."},
+  {c:0,q:"The HTTP request-response cycle begins with the client sending a:",o:["Response","Request","Packet","Frame"],a:1,ex:"In HTTP, the client always initiates by sending a request, and the server replies with a response."},
+  {c:0,q:"What is the purpose of the navigation toolbar in a browser?",o:["Display source code","Provide back/forward/refresh and address bar controls","Show downloads","Manage bookmarks only"],a:1,ex:"The navigation toolbar provides Back, Forward, Refresh, Home buttons and the address bar for navigation."},
+  {c:0,q:"Which protocol is used for sending email?",o:["HTTP","FTP","SMTP","DNS"],a:2,ex:"SMTP (Simple Mail Transfer Protocol) is used for sending emails between servers."},
+  {c:0,q:"FTP stands for:",o:["Fast Transfer Protocol","File Transfer Protocol","File Type Protocol","File Transmission Process"],a:1,ex:"FTP (File Transfer Protocol) is used to transfer files between client and server over a network."},
+  {c:0,q:"In a URL, what does the '#' symbol indicate?",o:["Query string","Fragment identifier (anchor)","Protocol separator","Directory separator"],a:1,ex:"'#' in a URL denotes a fragment identifier, linking to a specific section within a page."},
+  {c:0,q:"What year was the World Wide Web publicly introduced?",o:["1985","1989","1991","1995"],a:2,ex:"Tim Berners-Lee publicly released the WWW in 1991, though he proposed it in 1989."},
+  {c:0,q:"Which company developed the Internet Explorer browser?",o:["Mozilla","Google","Microsoft","Apple"],a:2,ex:"Internet Explorer was developed by Microsoft, first released in 1995."},
+  {c:0,q:"TCP/IP stands for:",o:["Transfer Control Protocol / Internet Provider","Transmission Control Protocol / Internet Protocol","Transfer Communication Protocol / IP","None of the above"],a:1,ex:"TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental communication protocol of the Internet."},
+  {c:0,q:"A static website serves:",o:["Dynamic content from a database","The same fixed content to every user","Personalized content","Content generated via server-side scripts"],a:1,ex:"Static websites serve the same pre-built HTML files to every visitor without server-side processing."},
+  {c:0,q:"URL encoding replaces unsafe characters with:",o:["HTML entities","% followed by hex code","Spaces","Underscores"],a:1,ex:"URL encoding converts special characters to a '%' followed by two hexadecimal digits (e.g., space = %20)."},
+  {c:0,q:"Which of the following is NOT a component of a URL?",o:["Protocol","Domain","Port","MIME type"],a:3,ex:"A URL consists of protocol, domain, port, path and query string. MIME type is not a URL component."},
+
+  // ===== UNIT 2 (c:1) — HTML Elements & Structure =====
+  {c:1,q:"HTML stands for:",o:["Hyper Text Markup Language","High Tech Modern Language","Hyper Transfer Markup Language","Hyperlink Text Management Language"],a:0,ex:"HTML (HyperText Markup Language) is the standard language for creating web pages."},
+  {c:1,q:"Which tag defines the root of an HTML document?",o:["<body>","<root>","<html>","<head>"],a:2,ex:"<html> is the root element that wraps all other HTML elements in a document."},
+  {c:1,q:"What does the <!DOCTYPE html> declaration do?",o:["Links a CSS file","Declares the document type as HTML5","Adds a comment","Creates a heading"],a:1,ex:"<!DOCTYPE html> tells the browser the document uses HTML5 standards."},
+  {c:1,q:"Which HTML tag is used for the largest heading?",o:["<h6>","<h3>","<h1>","<heading>"],a:2,ex:"<h1> is the largest heading; headings go from <h1> (largest) to <h6> (smallest)."},
+  {c:1,q:"Which tag creates a hyperlink in HTML?",o:["<link>","<href>","<a>","<url>"],a:2,ex:"The <a> (anchor) tag creates hyperlinks. The href attribute specifies the destination URL."},
+  {c:1,q:"What is the correct HTML for inserting an image?",o:['<img src="pic.jpg" alt="photo">',"<image src='pic.jpg'>","<img href='pic.jpg'>","<picture src='pic.jpg'/>"],a:0,ex:"<img src='...' alt='...'> is the correct syntax. The alt attribute provides alternative text."},
+  {c:1,q:"Which HTML element defines an unordered list?",o:["<ol>","<li>","<ul>","<list>"],a:2,ex:"<ul> creates an unordered (bulleted) list; <ol> creates an ordered (numbered) list."},
+  {c:1,q:"What is the correct way to create an ordered list?",o:["<ul><li>Item</li></ul>","<ol><li>Item</li></ol>","<list><item>Item</item></list>","<dl><dt>Item</dt></dl>"],a:1,ex:"<ol> (ordered list) with <li> (list item) elements creates a numbered list."},
+  {c:1,q:"Which tag is used to define a table row?",o:["<td>","<th>","<tr>","<table>"],a:2,ex:"<tr> defines a table row; <td> defines a table data cell; <th> defines a header cell."},
+  {c:1,q:"The <th> tag in HTML represents:",o:["A table row","Table header cell (bold and centered by default)","A table data cell","Table height"],a:1,ex:"<th> creates table header cells that are bold and center-aligned by default."},
+  {c:1,q:"What does the colspan attribute do in a table?",o:["Sets column width","Spans a cell across multiple columns","Spans a cell across multiple rows","Aligns column content"],a:1,ex:"colspan='n' makes a table cell span 'n' columns horizontally."},
+  {c:1,q:"Which attribute of the <a> tag opens a link in a new tab?",o:['rel="_blank"','target="_blank"','href="_new"','open="tab"'],a:1,ex:'target="_blank" opens the hyperlink in a new browser tab or window.'},
+  {c:1,q:"HTML comment syntax is:",o:["// comment","<!-- comment -->","/* comment */","# comment"],a:1,ex:"<!-- comment --> is the correct HTML comment syntax; it's not rendered in the browser."},
+  {c:1,q:"Which HTML tag makes text bold?",o:["<i>","<em>","<strong>","<b>"],a:3,ex:"<b> makes text bold without semantic importance; <strong> also bolds text but carries semantic emphasis."},
+  {c:1,q:"The <span> tag is a _______ element:",o:["Block-level","Inline","Structural","Semantic"],a:1,ex:"<span> is an inline element used to group inline content for styling without breaking the flow."},
+  {c:1,q:"The <div> tag is a _______ element:",o:["Inline","Block-level","Table","Form"],a:1,ex:"<div> is a block-level container element that starts on a new line and takes full width."},
+  {c:1,q:"Which character entity represents the copyright symbol ©?",o:["&copy;","&reg;","&trade;","&copy2;"],a:0,ex:"&copy; is the HTML character entity for the copyright symbol ©."},
+  {c:1,q:"What is the HTML character entity for a non-breaking space?",o:["&space;","&nbsp;","&nbs;","&ws;"],a:1,ex:"&nbsp; (non-breaking space) prevents the browser from breaking a line at that point."},
+  {c:1,q:"Which HTML5 structural tag represents the main navigation links?",o:["<section>","<nav>","<aside>","<header>"],a:1,ex:"<nav> is a semantic HTML5 element used for major navigation link blocks."},
+  {c:1,q:"The 'href' attribute in <a href='#top'> creates:",o:["An external link","An email link","An internal page anchor link","A download link"],a:2,ex:"href='#id' creates an in-page anchor link that scrolls to the element with that id."},
+  {c:1,q:"Which attribute makes a text input read-only in HTML?",o:["disabled","readonly","locked","static"],a:1,ex:"The readonly attribute prevents users from modifying the input value while still submitting it."},
+  {c:1,q:"What does the alt attribute of <img> provide?",o:["Image alignment","Image size","Alternative text for accessibility","Image border"],a:2,ex:"alt provides descriptive text shown when the image cannot be displayed; critical for accessibility."},
+  {c:1,q:"Frames in HTML allow:",o:["Animations","Multiple web pages displayed in the same browser window","CSS styling","Database connections"],a:1,ex:"Frames (using <frameset> and <frame>) divide the browser window into sections showing different HTML pages."},
+  {c:1,q:"Which tag is used in HTML5 to replace frames?",o:["<embed>","<object>","<iframe>","<frame>"],a:2,ex:"<iframe> (inline frame) is the modern HTML5 approach to embedding another HTML page within the current page."},
+  {c:1,q:"What is URL encoding of the space character?",o:["%00","%20","%32","+ or %20"],a:3,ex:"A space is encoded as '+' in query strings or '%20' in URL paths."},
+  {c:1,q:"Which HTML tag is used for subscript text?",o:["<sup>","<sub>","<small>","<s>"],a:1,ex:"<sub> renders text as subscript (e.g., H₂O). <sup> renders superscript."},
+  {c:1,q:"What is the purpose of the <meta charset='UTF-8'> tag?",o:["Sets page background","Declares the character encoding","Links stylesheet","Sets viewport"],a:1,ex:"charset='UTF-8' specifies the character encoding for the HTML document."},
+  {c:1,q:"In HTML, which tag creates a definition list?",o:["<ul>","<ol>","<dl>","<list>"],a:2,ex:"<dl> creates a definition list with <dt> (term) and <dd> (description) pairs."},
+  {c:1,q:"The bgcolor attribute is used to:",o:["Set background color (deprecated in HTML5)","Set font color","Set border color","Set text decoration"],a:0,ex:"bgcolor set background color in older HTML; it's deprecated in HTML5 in favor of CSS."},
+  {c:1,q:"Which tag is used to create a horizontal rule (line)?",o:["<line>","<br>","<hr>","<rule>"],a:2,ex:"<hr> (horizontal rule) inserts a thematic break rendered as a horizontal line."},
+  {c:1,q:"What does the rowspan attribute do?",o:["Spans a cell across multiple columns","Spans a cell across multiple rows","Sets row height","Aligns row content"],a:1,ex:"rowspan='n' makes a table cell span 'n' rows vertically."},
+  {c:1,q:"Which of the following is a semantic HTML5 element?",o:["<div>","<span>","<article>","<b>"],a:2,ex:"<article> is a semantic HTML5 element that describes self-contained content. <div> and <span> are non-semantic."},
+  {c:1,q:"An HTML document's visible content is placed inside:",o:["<head>","<meta>","<body>","<html>"],a:2,ex:"All visible page content — text, images, links, etc. — is placed inside the <body> tag."},
+  {c:1,q:"The <title> tag in HTML:",o:["Displays a heading on the page","Sets the browser tab/window title","Creates bold text","Adds metadata"],a:1,ex:"<title> sets the text shown in the browser tab and is important for SEO."},
+
+  // ===== UNIT 3 (c:2) — HTML Forms & Multimedia =====
+  {c:2,q:"Which HTML tag is used to create a form?",o:["<input>","<form>","<fieldset>","<submit>"],a:1,ex:"<form> defines an HTML form for user input; it wraps all form elements."},
+  {c:2,q:"Which input type creates a password field?",o:['<input type="text">','<input type="hidden">','<input type="password">','<input type="secure">'],a:2,ex:'type="password" masks the entered characters for confidentiality.'},
+  {c:2,q:"The 'action' attribute in a <form> tag specifies:",o:["The HTTP method","Where form data is sent on submission","The form's CSS class","Input validation rules"],a:1,ex:"action specifies the URL to which form data is submitted for processing."},
+  {c:2,q:"Which form method sends data visible in the URL?",o:["POST","PUT","GET","DELETE"],a:2,ex:"GET appends form data to the URL as query parameters; POST sends it in the request body."},
+  {c:2,q:"Which input type creates a checkbox?",o:['type="radio"','type="check"','type="checkbox"','type="toggle"'],a:2,ex:'type="checkbox" creates a checkbox allowing multiple selections.'},
+  {c:2,q:"What is the difference between radio buttons and checkboxes?",o:["No difference","Radio allows one selection; checkboxes allow multiple","Checkboxes allow one; radio allows multiple","Radio is for numbers only"],a:1,ex:"Radio buttons are mutually exclusive (one selection); checkboxes allow multiple simultaneous selections."},
+  {c:2,q:"The <textarea> tag creates:",o:["A single-line text input","A multi-line text input area","A drop-down list","A file upload field"],a:1,ex:"<textarea> provides a multi-line text input, unlike <input type='text'> which is single-line."},
+  {c:2,q:"Which HTML element creates a drop-down list?",o:["<list>","<input type='dropdown'>","<select>","<dropdown>"],a:2,ex:"<select> with <option> child elements creates a drop-down selection list."},
+  {c:2,q:"What does the 'required' attribute do on a form input?",o:["Marks field as read-only","Forces the field to be filled before form submission","Disables the field","Adds a placeholder"],a:1,ex:"required is an HTML5 attribute that prevents form submission if the field is empty."},
+  {c:2,q:"Which attribute groups radio buttons so only one can be selected?",o:["id","class","name","group"],a:2,ex:"Radio buttons with the same 'name' attribute form a group where only one can be selected at a time."},
+  {c:2,q:"The HTML5 <canvas> element is used for:",o:["Playing video","Drawing graphics via JavaScript","Embedding audio","Creating forms"],a:1,ex:"<canvas> provides a resolution-dependent bitmap canvas for drawing 2D graphics using JavaScript."},
+  {c:2,q:"Which method is used to draw a filled rectangle on canvas?",o:["fillRect()","drawRect()","rectFill()","paintRect()"],a:0,ex:"ctx.fillRect(x, y, width, height) draws a solid (filled) rectangle on the canvas."},
+  {c:2,q:"Which HTML5 tag is used to embed audio?",o:["<sound>","<media>","<audio>","<embed>"],a:2,ex:"<audio> is the HTML5 element for embedding audio content with native browser controls."},
+  {c:2,q:"Which HTML5 tag is used to embed video?",o:["<video>","<movie>","<media>","<clip>"],a:0,ex:"<video> is the HTML5 element for embedding video with controls, autoplay, and loop attributes."},
+  {c:2,q:"Which audio format has the best cross-browser support in HTML5?",o:["WAV","MP3","AAC","MP3 and OGG together"],a:3,ex:"MP3 and OGG together provide the broadest cross-browser audio support since no single format is universally supported."},
+  {c:2,q:"The 'controls' attribute in <video controls> does what?",o:["Auto-plays the video","Shows native browser video controls","Loops the video","Mutes the video"],a:1,ex:"controls attribute displays the browser's default play/pause, volume and progress controls for the media."},
+  {c:2,q:"Which attribute makes a video play automatically when the page loads?",o:["autoplay","autostart","play","start"],a:0,ex:"autoplay attribute causes the media to start playing as soon as it's ready."},
+  {c:2,q:"What does the <source> element inside <video> allow?",o:["Captions","Multiple video formats for browser compatibility","Subtitles only","Streaming links"],a:1,ex:"<source> lets you specify multiple formats (mp4, webm, ogg) so the browser picks the one it supports."},
+  {c:2,q:"Which HTML5 API is used to store data in the browser?",o:["IndexedDB API","Canvas API","Web Storage API (localStorage/sessionStorage)","Geolocation API"],a:2,ex:"Web Storage API provides localStorage (persistent) and sessionStorage (session-only) for client-side data storage."},
+  {c:2,q:"Which HTML5 API retrieves the user's geographic location?",o:["Location API","Geolocation API","Position API","Map API"],a:1,ex:"The Geolocation API (navigator.geolocation) allows web apps to access the user's location with permission."},
+  {c:2,q:"The <fieldset> tag in forms is used to:",o:["Submit the form","Group related form elements visually","Validate inputs","Create a text area"],a:1,ex:"<fieldset> groups related form controls; <legend> provides a caption for the group."},
+  {c:2,q:"Which input type is used to select a date?",o:['type="text"','type="date"','type="calendar"','type="datetime"'],a:1,ex:'type="date" provides a native date picker in supporting browsers.'},
+  {c:2,q:"What does the 'placeholder' attribute do?",o:["Sets default value","Shows hint text in empty input field","Disables input","Sets input width"],a:1,ex:"placeholder displays grey hint text inside an empty input that disappears when the user types."},
+  {c:2,q:"Which input type creates a submit button?",o:['type="button"','type="click"','type="submit"','type="send"'],a:2,ex:'type="submit" creates a button that submits the enclosing form when clicked.'},
+  {c:2,q:"The 'enctype' attribute in a form is required when:",o:["Using GET method","Submitting text data","Uploading files (multipart/form-data)","Using HTTPS"],a:2,ex:'enctype="multipart/form-data" is required for file uploads to send binary data correctly.'},
+  {c:2,q:"Which HTML5 canvas method begins a new drawing path?",o:["newPath()","startPath()","beginPath()","initPath()"],a:2,ex:"ctx.beginPath() starts a new path; subsequent drawing calls add to this path."},
+  {c:2,q:"What does the Web Workers API do?",o:["Animates CSS","Runs JavaScript in background threads without blocking UI","Manages cookies","Handles geolocation"],a:1,ex:"Web Workers allow scripts to run in background threads, preventing heavy computation from freezing the UI."},
+  {c:2,q:"The <label> tag in a form:",o:["Creates a text box","Associates a text label with a form control improving accessibility","Validates input","Submits the form"],a:1,ex:"<label for='id'> links text to a form element; clicking the label focuses the associated input."},
+  {c:2,q:"Which input type is used for email validation in HTML5?",o:['type="text"','type="mail"','type="email"','type="address"'],a:2,ex:'type="email" provides built-in format validation ensuring the value contains @ and a domain.'},
+  {c:2,q:"What does the 'loop' attribute do in <audio loop>?",o:["Plays once","Pauses audio","Repeats audio continuously","Mutes audio"],a:2,ex:"loop attribute causes the audio/video to restart automatically when it finishes playing."},
+  {c:2,q:"The Drag and Drop API in HTML5 is used to:",o:["Animate elements","Allow users to drag elements and drop them in different locations","Resize elements","Scroll pages"],a:1,ex:"HTML5 Drag and Drop API enables native drag-and-drop interactions without external libraries."},
+  {c:2,q:"Which HTML5 input type shows a color picker?",o:['type="palette"','type="color"','type="rgb"','type="picker"'],a:1,ex:'type="color" provides a native color picker widget in supporting browsers.'},
+  {c:2,q:"The method getContext('2d') is used with which element?",o:["<svg>","<canvas>","<video>","<audio>"],a:1,ex:"getContext('2d') retrieves the 2D rendering context of a <canvas> element for drawing operations."},
+
+  // ===== UNIT 4 (c:3) — CSS Styling & Layout =====
+  {c:3,q:"CSS stands for:",o:["Computer Style Sheets","Colorful Style Sheets","Cascading Style Sheets","Creative Style Sheets"],a:2,ex:"CSS (Cascading Style Sheets) describes the presentation and visual styling of HTML documents."},
+  {c:3,q:"Which is the correct CSS syntax?",o:["body {color: red;}","body:color=red;","{body;color:red;}","body[color=red]"],a:0,ex:"CSS syntax is: selector { property: value; }. The selector targets elements, followed by declaration block."},
+  {c:3,q:"Which type of CSS has the highest priority (specificity)?",o:["External CSS","Internal CSS","Inline CSS","Browser default CSS"],a:2,ex:"Inline CSS (style attribute) has the highest specificity, overriding internal and external styles."},
+  {c:3,q:"How is an external CSS file linked to HTML?",o:['<style src="style.css">','<css href="style.css">','<link rel="stylesheet" href="style.css">','<script src="style.css">'],a:2,ex:'<link rel="stylesheet" href="..."> in the <head> section links an external CSS file.'},
+  {c:3,q:"Which CSS property changes the text color?",o:["font-color","text-color","color","foreground"],a:2,ex:"The CSS 'color' property sets the foreground (text) color of an element."},
+  {c:3,q:"The CSS Box Model consists of (from inside out):",o:["Content, Margin, Border, Padding","Content, Padding, Border, Margin","Margin, Padding, Border, Content","Border, Padding, Content, Margin"],a:1,ex:"Box Model layers from inside out: Content → Padding → Border → Margin."},
+  {c:3,q:"What does the CSS property 'margin: 10px 20px' mean?",o:["10px all sides","top/bottom 10px, left/right 20px","top 10px, right 20px, bottom 0, left 0","left/right 10px, top/bottom 20px"],a:1,ex:"Two-value shorthand: first value = top/bottom, second = left/right margins."},
+  {c:3,q:"What does 'padding' control in CSS?",o:["Space outside the border","Space between content and border","Space between elements","Border thickness"],a:1,ex:"Padding is the space between the element's content and its border (inside the border)."},
+  {c:3,q:"Which CSS property is used to change the background color?",o:["color","bgcolor","background-color","bg-color"],a:2,ex:"background-color sets the background fill color of an element."},
+  {c:3,q:"What does the CSS selector 'p.intro' select?",o:["All <p> elements","All .intro elements","<p> elements with class='intro'","The first <p> element"],a:2,ex:"p.intro is a compound selector targeting <p> elements that also have the class 'intro'."},
+  {c:3,q:"Which CSS selector has the highest specificity?",o:["Element selector","Class selector","ID selector","Universal selector"],a:2,ex:"ID selectors (#id) have higher specificity than class (.class) and element selectors."},
+  {c:3,q:"The CSS property 'display: none' does what?",o:["Makes element invisible but keeps its space","Removes element from layout entirely","Hides element with opacity 0","Collapses the element"],a:1,ex:"display:none removes the element from the document flow; visibility:hidden hides it but keeps its space."},
+  {c:3,q:"What does 'float: left' do in CSS?",o:["Aligns text left","Makes element float to the left, allowing text to wrap around it","Centers the element","Moves element to left margin"],a:1,ex:"float:left takes the element out of normal flow and positions it to the left, with content wrapping around it."},
+  {c:3,q:"The 'clear' property in CSS is used to:",o:["Clear all styles","Prevent elements from floating beside floated elements","Remove margins","Clear cache"],a:1,ex:"clear:both/left/right prevents an element from sitting adjacent to floated elements."},
+  {c:3,q:"CSS property to make text bold:",o:["text-style: bold","font-style: bold","font-weight: bold","text-weight: bold"],a:2,ex:"font-weight: bold (or 700) makes text bold."},
+  {c:3,q:"Which CSS property sets the space between text characters?",o:["word-spacing","line-height","letter-spacing","text-indent"],a:2,ex:"letter-spacing controls the spacing between individual characters (tracking)."},
+  {c:3,q:"What is the default value of the CSS 'position' property?",o:["relative","absolute","fixed","static"],a:3,ex:"position: static is the default; elements follow normal document flow."},
+  {c:3,q:"CSS 'overflow: hidden' does what?",o:["Hides the element","Clips overflowing content without scrollbar","Adds a scrollbar","Makes element transparent"],a:1,ex:"overflow:hidden clips content that exceeds the element's dimensions and hides the overflow."},
+  {c:3,q:"Which CSS property controls the stacking order of elements?",o:["stack-order","layer","z-index","depth"],a:2,ex:"z-index sets the stacking order; higher values appear on top of lower ones."},
+  {c:3,q:"The CSS pseudo-class ':hover' applies styles when:",o:["Page loads","Element is in focus","Mouse pointer is over the element","Element is clicked"],a:2,ex:":hover applies styles when the user's cursor moves over the element."},
+  {c:3,q:"What does 'border: 2px solid red' mean?",o:["2px red dotted border","2px red solid border","Solid border, 2px padding, red text","None of the above"],a:1,ex:"border shorthand: width (2px), style (solid), color (red)."},
+  {c:3,q:"CSS 'display: inline-block' allows:",o:["Element to behave like a block only","Element to flow inline but accept width/height","Element to become hidden","Element to float"],a:1,ex:"inline-block combines inline flow (no line break) with block capabilities (width/height/margin)."},
+  {c:3,q:"Which property removes the bullet points from a list?",o:["list-style: remove","list-style-type: none","bullet: none","list-decoration: none"],a:1,ex:"list-style-type: none removes list markers (bullets or numbers)."},
+  {c:3,q:"The CSS property 'opacity: 0' makes an element:",o:["Hidden and removed from layout","Fully transparent but still occupies space","Semi-transparent","Invisible and collapsed"],a:1,ex:"opacity:0 makes an element fully transparent while keeping its space in the layout."},
+  {c:3,q:"What is the correct CSS to set font size to 16 pixels?",o:["font-size: 16","size: 16px","font-size: 16px","text-size: 16px"],a:2,ex:"font-size: 16px sets the text size to 16 pixels."},
+  {c:3,q:"Which CSS property is used to create rounded corners?",o:["border-radius","corner-radius","border-curve","round-corner"],a:0,ex:"border-radius sets the radius of element corners, creating rounded edges."},
+  {c:3,q:"CSS 'text-align: justify' does what?",o:["Aligns text to the left","Centers text","Aligns text to the right","Stretches text to fill the line width"],a:3,ex:"text-align: justify spreads text so both left and right edges are flush with the container."},
+  {c:3,q:"What does the CSS universal selector (*) select?",o:["All <p> elements","The first element","All elements on the page","Only block elements"],a:2,ex:"The universal selector * applies styles to every element in the document."},
+  {c:3,q:"Which CSS property controls line spacing?",o:["text-spacing","letter-spacing","line-height","word-spacing"],a:2,ex:"line-height controls the vertical space between lines of text."},
+  {c:3,q:"CSS 'outline' differs from 'border' in that:",o:["Outline is thicker","Outline doesn't take up space in the layout","Outline cannot be colored","Outline is inside the element"],a:1,ex:"Outline doesn't affect layout (no space reserved); border is part of the box model and affects layout."},
+  {c:3,q:"What does 'background-repeat: no-repeat' do?",o:["Tiles the background image","Shows background only once without repeating","Repeats only vertically","Fills the background"],a:1,ex:"background-repeat: no-repeat displays the background image once without tiling."},
+  {c:3,q:"Which CSS class selector syntax is correct?",o:["#myClass","*myClass",".myClass","@myClass"],a:2,ex:"CSS class selectors use a period prefix (.className). ID selectors use #."},
+  {c:3,q:"Which property controls the font family in CSS?",o:["text-font","font-type","font-family","typeface"],a:2,ex:"font-family specifies the typeface (e.g., Arial, Times New Roman) for text."},
+
+  // ===== UNIT 5 (c:4) — JavaScript Basics =====
+  {c:4,q:"JavaScript is a _______ language:",o:["Compiled, statically-typed","Interpreted, dynamically-typed scripting language","Object-oriented only","Markup language"],a:1,ex:"JavaScript is an interpreted, dynamically-typed scripting language primarily used for client-side web interactivity."},
+  {c:4,q:"Which HTML tag is used to include JavaScript in a webpage?",o:["<javascript>","<js>","<script>","<code>"],a:2,ex:"<script> tag is used to embed or reference JavaScript code in HTML documents."},
+  {c:4,q:"Which keyword declares a variable in modern JavaScript?",o:["var only","dim","let and const (ES6+)","define"],a:2,ex:"ES6 introduced 'let' (block-scoped, reassignable) and 'const' (block-scoped, constant). 'var' is function-scoped."},
+  {c:4,q:"What is the output of: console.log(typeof 42)?",o:["int","integer","number","num"],a:2,ex:"typeof 42 returns 'number' — JavaScript has a single 'number' type for all numeric values."},
+  {c:4,q:"What is the output of: console.log(typeof 'hello')?",o:["char","text","String","string"],a:3,ex:"typeof 'hello' returns 'string' (lowercase). JavaScript typeof returns lowercase type names."},
+  {c:4,q:"Which operator is used for strict equality in JavaScript?",o:["==","=","===","!="],a:2,ex:"=== checks both value AND type without type coercion; == only checks value (with coercion)."},
+  {c:4,q:"What does NaN stand for?",o:["Not a Number","Null and None","Negative and Null","Not a Name"],a:0,ex:"NaN (Not a Number) is a special value indicating an invalid numeric operation (e.g., 0/0 or parseInt('abc'))."},
+  {c:4,q:"What is the result of: 5 + '3' in JavaScript?",o:["8","53","'53'","Error"],a:2,ex:"When a number is added to a string, JavaScript coerces the number to string and concatenates: '53'."},
+  {c:4,q:"Which loop is guaranteed to execute at least once?",o:["for","while","do...while","for...in"],a:2,ex:"do...while checks the condition AFTER executing the body, ensuring at least one execution."},
+  {c:4,q:"What is the correct way to declare a function in JavaScript?",o:["function = myFunc() {}","def myFunc():","function myFunc() {}","func myFunc() {}"],a:2,ex:"JavaScript function declaration syntax: function functionName(params) { body }"},
+  {c:4,q:"How do you call a function named 'greet'?",o:["call greet()","greet();","function greet;","execute greet()"],a:1,ex:"Functions are invoked by writing the function name followed by parentheses: greet();"},
+  {c:4,q:"Which method adds an element to the END of an array?",o:["push()","pop()","shift()","unshift()"],a:0,ex:"push() adds one or more elements to the end of an array and returns the new length."},
+  {c:4,q:"Which array method removes the LAST element?",o:["push()","pop()","shift()","splice()"],a:1,ex:"pop() removes and returns the last element of an array."},
+  {c:4,q:"Which method removes the FIRST element of an array?",o:["push()","pop()","shift()","unshift()"],a:2,ex:"shift() removes and returns the first element, shifting all other elements down."},
+  {c:4,q:"What is the output of: console.log(10 % 3)?",o:["3","1","0.33","10"],a:1,ex:"% is the modulus operator returning the remainder: 10 ÷ 3 = 3 remainder 1."},
+  {c:4,q:"Which statement exits a loop immediately?",o:["exit","stop","break","continue"],a:2,ex:"break immediately terminates the loop; continue skips the current iteration and continues the loop."},
+  {c:4,q:"What is the output of: console.log(Boolean(0))?",o:["true","false","0","undefined"],a:1,ex:"0 is a falsy value in JavaScript; Boolean(0) returns false."},
+  {c:4,q:"Falsy values in JavaScript include:",o:["0, '', null, undefined, NaN, false","0, '', null, undefined, NaN, false — all of these","1, 'hello', true","Only null and undefined"],a:1,ex:"All six values are falsy: false, 0, '' (empty string), null, undefined, NaN."},
+  {c:4,q:"What does the 'typeof' operator return for an array?",o:["array","list","object","Array"],a:2,ex:"typeof [] returns 'object'. Use Array.isArray() to correctly check if something is an array."},
+  {c:4,q:"Which is the correct syntax for an if-else statement?",o:["if (x > 5) then { } else { }","if (x > 5) { } else { }","if x > 5 { } else { }","if (x > 5): else:"],a:1,ex:"JavaScript if-else syntax: if (condition) { } else { } — no 'then' keyword."},
+  {c:4,q:"What is a closure in JavaScript?",o:["A way to close the browser","A function that remembers its lexical scope even when called outside it","A loop that exits automatically","A method to close a connection"],a:1,ex:"Closures allow inner functions to access outer function variables even after the outer function has returned."},
+  {c:4,q:"Which operator is used for logical AND?",o:["&","&&","AND","and"],a:1,ex:"&& is the logical AND operator; | is bitwise OR; || is logical OR."},
+  {c:4,q:"The ternary operator syntax in JavaScript is:",o:["condition ? value_if_true : value_if_false","condition : value_if_true ? value_if_false","if(condition) value_if_true else value_if_false","condition then value_if_true else value_if_false"],a:0,ex:"Ternary: condition ? valueIfTrue : valueIfFalse — a shorthand for if-else."},
+  {c:4,q:"What does parseInt('3.9') return?",o:["3.9","4","3","Error"],a:2,ex:"parseInt() parses a string and returns the integer part only: 3 (truncates, does not round)."},
+  {c:4,q:"What is operator precedence?",o:["Order of variable declaration","The rules determining which operator is evaluated first in an expression","Left-to-right reading order","Assignment before comparison"],a:1,ex:"Operator precedence defines evaluation order; e.g., * and / are evaluated before + and -."},
+  {c:4,q:"Which method converts a number to a string?",o:["num.parse()","num.toString()","String.parseInt()","num.convert()"],a:1,ex:"toString() converts a number (or other values) to a string representation."},
+  {c:4,q:"What is the output of: console.log(2 ** 3)?",o:["6","8","5","Error"],a:1,ex:"** is the exponentiation operator; 2**3 = 2³ = 8."},
+  {c:4,q:"A 'for...of' loop iterates over:",o:["Object properties","Index values","Iterable values (array elements, string characters, etc.)","Only numbers"],a:2,ex:"for...of iterates over iterable objects (arrays, strings, maps, sets) returning values directly."},
+  {c:4,q:"What is type coercion in JavaScript?",o:["Declaring a variable type","Automatic conversion of values from one type to another","Converting HTML to JS","Manual type casting only"],a:1,ex:"Type coercion is JavaScript's automatic conversion of values between types (e.g., number + string → string)."},
+  {c:4,q:"Which method joins array elements into a string?",o:["toString()","concat()","join()","merge()"],a:2,ex:"array.join(separator) joins all elements into a single string with the specified separator."},
+  {c:4,q:"What is the length of the array: [1, 2, 3, 4, 5]?",o:["4","5","6","0"],a:1,ex:"array.length returns the number of elements; the array has 5 elements so length is 5."},
+  {c:4,q:"What does the 'return' statement do in a function?",o:["Exits the program","Exits the function and optionally returns a value to the caller","Skips the current iteration","Throws an error"],a:1,ex:"return exits the function execution and can pass a value back to where the function was called."},
+
+  // ===== UNIT 6 (c:5) — Advanced JavaScript =====
+  {c:5,q:"Which method is used to access an HTML element by its ID?",o:["querySelector()","getElementsByClass()","getElementById()","getElement()"],a:2,ex:"document.getElementById('id') returns the DOM element with the specified ID."},
+  {c:5,q:"What does DOM stand for?",o:["Document Object Model","Data Object Management","Document Oriented Module","Dynamic Object Model"],a:0,ex:"DOM (Document Object Model) represents the HTML document as a tree of objects that JavaScript can manipulate."},
+  {c:5,q:"How do you add an event listener in JavaScript?",o:["element.addEvent('click', fn)","element.on('click', fn)","element.addEventListener('click', fn)","element.listen('click', fn)"],a:2,ex:"addEventListener(event, callback) attaches an event handler to a DOM element."},
+  {c:5,q:"What is the 'this' keyword in a JavaScript object method?",o:["Refers to the global object always","Refers to the object that owns the currently executing method","Refers to the parent element","Refers to the DOM document"],a:1,ex:"Inside an object method, 'this' refers to the object the method belongs to."},
+  {c:5,q:"Which statement is used for error handling in JavaScript?",o:["if...catch","try...catch","error...handle","on...error"],a:1,ex:"try...catch (optionally with finally) is used to handle exceptions gracefully."},
+  {c:5,q:"What does the 'throw' statement do?",o:["Logs an error","Stops the program permanently","Throws a custom exception that can be caught by catch","Clears the error stack"],a:2,ex:"throw creates a custom exception; it must be caught by a try...catch block."},
+  {c:5,q:"What is a regular expression (regex) in JavaScript?",o:["A mathematical formula","A pattern used for matching/searching strings","A loop structure","A type of object"],a:1,ex:"Regular expressions are patterns used for string matching, searching, and replacement operations."},
+  {c:5,q:"Which regex flag makes a pattern case-insensitive?",o:["g","m","i","s"],a:2,ex:"The 'i' flag makes the regex match case-insensitively. 'g' = global, 'm' = multiline."},
+  {c:5,q:"Which method tests if a regex pattern matches a string?",o:["match()","search()","test()","exec()"],a:2,ex:"regex.test(string) returns true/false indicating whether the pattern is found in the string."},
+  {c:5,q:"What is variable scope in JavaScript?",o:["The data type of a variable","The region of code where a variable is accessible","The lifetime of a page","The size of a variable"],a:1,ex:"Scope determines where in code a variable can be accessed: global scope, function scope, or block scope."},
+  {c:5,q:"'var' in JavaScript has _______ scope:",o:["Block","Module","Function (or global if outside function)","Class"],a:2,ex:"var is function-scoped (or globally scoped if declared outside a function), unlike let/const which are block-scoped."},
+  {c:5,q:"What is the difference between 'let' and 'var'?",o:["No difference","let is block-scoped and not hoisted to top with initial value; var is function-scoped and hoisted","let is for numbers; var is for strings","let cannot be reassigned"],a:1,ex:"let is block-scoped and not initialized during hoisting; var is function-scoped and initialized to undefined when hoisted."},
+  {c:5,q:"Which event fires when a page finishes loading?",o:["onstart","onload","onready","onopen"],a:1,ex:"The 'load' event fires on the window when the page (including all resources) has fully loaded."},
+  {c:5,q:"Which event fires when an input field value changes?",o:["ontype","onkey","onchange","oninput"],a:2,ex:"onchange fires when the user changes an input value and moves focus away (blurs) from the element."},
+  {c:5,q:"What does event.preventDefault() do?",o:["Stops event propagation","Removes the event listener","Prevents the browser's default action for the event","Cancels event bubbling"],a:2,ex:"preventDefault() stops the browser's default behavior (e.g., preventing form submission or link navigation)."},
+  {c:5,q:"What is event bubbling?",o:["An event that fires only once","Events propagating from child elements up to parent elements","An error in event handling","Mouse hover event"],a:1,ex:"Event bubbling means when an event fires on an element, it also triggers on all ancestor elements up to the document."},
+  {c:5,q:"What does event.stopPropagation() do?",o:["Prevents default action","Stops the event from bubbling up to parent elements","Removes the listener","Prevents all future events"],a:1,ex:"stopPropagation() prevents the event from bubbling up the DOM tree to parent elements."},
+  {c:5,q:"Which method selects the first matching CSS selector element?",o:["getElementById()","getElementsByTagName()","querySelector()","getBySelector()"],a:2,ex:"document.querySelector('.class') returns the first element matching the given CSS selector."},
+  {c:5,q:"Which method selects ALL matching elements?",o:["querySelector()","querySelectorAll()","getElementsById()","selectAll()"],a:1,ex:"querySelectorAll() returns a NodeList of all elements matching the CSS selector."},
+  {c:5,q:"How do you change the inner HTML of an element?",o:["element.html = 'text'","element.content = 'text'","element.innerHTML = '<b>text</b>'","element.setText('text')"],a:2,ex:"element.innerHTML property sets or gets the HTML content inside the element."},
+  {c:5,q:"Which DOM property changes only the text (not HTML) of an element?",o:["innerHTML","outerHTML","textContent","innerText"],a:2,ex:"textContent gets/sets the text content as plain text; innerHTML parses HTML."},
+  {c:5,q:"How do you add a CSS class to an element using JS?",o:["element.style.class = 'myClass'","element.addClass('myClass')","element.classList.add('myClass')","element.class = 'myClass'"],a:2,ex:"classList.add() adds a class; classList.remove() removes it; classList.toggle() toggles it."},
+  {c:5,q:"Which function runs code after a delay (once)?",o:["setInterval()","setTimeout()","delay()","wait()"],a:1,ex:"setTimeout(fn, ms) executes the callback once after the specified millisecond delay."},
+  {c:5,q:"Which function repeatedly executes code at intervals?",o:["setTimeout()","setInterval()","repeat()","runEvery()"],a:1,ex:"setInterval(fn, ms) repeatedly calls the function at the specified interval until cleared."},
+  {c:5,q:"What does JSON.stringify() do?",o:["Parses a JSON string to object","Converts a JavaScript object to a JSON string","Validates JSON","Formats JSON"],a:1,ex:"JSON.stringify(obj) serializes a JavaScript object to a JSON-formatted string for storage or transmission."},
+  {c:5,q:"What does JSON.parse() do?",o:["Converts object to JSON string","Parses a JSON string and returns a JavaScript object","Validates JSON format","Logs JSON data"],a:1,ex:"JSON.parse(str) converts a JSON string back into a JavaScript object."},
+  {c:5,q:"Which regex pattern matches an email address format?",o:["/[a-z]+/","/@/","/^[^@]+@[^@]+\\.[^@]+$/","//email//"],a:2,ex:"A common email regex checks for characters before @, a domain, and a TLD separated by dots."},
+  {c:5,q:"What is form validation in JavaScript?",o:["Styling form inputs","Checking that form inputs meet required criteria before submission","Encrypting form data","Submitting form automatically"],a:1,ex:"Form validation ensures user input is correct, complete, and in the right format before processing."},
+  {c:5,q:"Which object represents the browser window in JavaScript?",o:["document","browser","screen","window"],a:3,ex:"The 'window' object is the global object representing the browser window and provides properties like location, history."},
+  {c:5,q:"How do you create an object literal in JavaScript?",o:["var obj = new Object[]","var obj = {}","var obj = Object()","var obj = <object>"],a:1,ex:"Object literal syntax uses curly braces: var obj = { key: value, method() {} }."},
+  {c:5,q:"What is a prototype in JavaScript?",o:["A template HTML file","A mechanism by which objects inherit properties and methods from other objects","A CSS class","A form element"],a:1,ex:"Every JavaScript object has a prototype — an object from which it inherits properties and methods."},
+  {c:5,q:"What does the 'finally' block in try-catch do?",o:["Runs only if an error occurs","Runs only if no error occurs","Always runs regardless of whether an error occurred","Catches errors from catch block"],a:2,ex:"finally always executes after try and catch, making it ideal for cleanup code like closing connections."},
+  {c:5,q:"Which method creates a new array by transforming each element?",o:["forEach()","filter()","map()","reduce()"],a:2,ex:"map() creates a new array by applying a function to each element of the original array."},
+];
+
+// ===================== STATE =====================
+let activeQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let skipped = 0;
+let userAnswers = [];
+let isAnswered = false;
+let timerInterval = null;
+let timeLeft = TIMER_SECS;
+let selectedChapter = 'all';
+let studentName = '';
+let studentBranch = '';
+let studentSem = '';
+let studentCollege = '';
+
+// ===================== DOM REFS =====================
+const toast = document.getElementById('toast');
+const infoNextBtn = document.getElementById('infoNextBtn');
+const startBtn = document.getElementById('startBtn');
+const backBtn = document.getElementById('backBtn');
+const nextBtn = document.getElementById('nextBtn');
+const skipBtn = document.getElementById('skipBtn');
+const retryBtn = document.getElementById('retryBtn');
+const shareBtn = document.getElementById('shareBtn');
+const downloadCertBtn = document.getElementById('downloadCertBtn');
+const reviewToggleBtn = document.getElementById('reviewToggleBtn');
+const reviewList = document.getElementById('reviewList');
+const sharePanel = document.getElementById('sharePanel');
+const progressText = document.getElementById('progressText');
+const scoreText = document.getElementById('scoreText');
+const progressFill = document.getElementById('progressFill');
+const timerPill = document.getElementById('timerPill');
+const chapterBadge = document.getElementById('chapterBadge');
+const qNum = document.getElementById('qNum');
+const qText = document.getElementById('qText');
+const qExample = document.getElementById('qExample');
+const optionsList = document.getElementById('optionsList');
+const explanationBox = document.getElementById('explanationBox');
+const explanationText = document.getElementById('explanationText');
+const resultEmoji = document.getElementById('resultEmoji');
+const scoreBig = document.getElementById('scoreBig');
+const scoreTotal = document.getElementById('scoreTotal');
+const resultPercent = document.getElementById('resultPercent');
+const remarkText = document.getElementById('remarkText');
+const remarkSub = document.getElementById('remarkSub');
+const pillCorrect = document.getElementById('pillCorrect');
+const pillWrong = document.getElementById('pillWrong');
+const pillSkip = document.getElementById('pillSkip');
+const bannerName = document.getElementById('bannerName');
+const bannerMeta = document.getElementById('bannerMeta');
+const certBannerName = document.getElementById('certBannerName');
+const certBannerMeta = document.getElementById('certBannerMeta');
+const confettiCanvas = document.getElementById('confettiCanvas');
+const certCanvas = document.getElementById('certCanvas');
+const chapterGrid = document.getElementById('chapterGrid');
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+const whatsappBtn = document.getElementById('whatsappBtn');
+const twitterBtn = document.getElementById('twitterBtn');
+const copyTextBtn = document.getElementById('copyTextBtn');
+
+// ===================== UTILS =====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg, dur = 2500) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), dur);
+}
+
+function getRemark(pct) {
+  if (pct >= 90) return { emoji: '🏆', title: "Outstanding! You're a genius!", sub: "Exceptional performance! You've mastered Web Design concepts." };
+  if (pct >= 75) return { emoji: '🌟', title: "Excellent Work! Almost Perfect!", sub: "Great score! A little more practice and you'll be unstoppable." };
+  if (pct >= 60) return { emoji: '👍', title: "Good Job! Keep Practicing!", sub: "Solid performance. Review the topics you missed to improve further." };
+  if (pct >= 40) return { emoji: '📚', title: "Not Bad! Review & Retry", sub: "You're getting there. Focus on the units you struggled with." };
+  if (pct >= 20) return { emoji: '💪', title: "Keep Going! Practice Makes Perfect", sub: "Don't give up! Start reviewing from basics and try again." };
+  return { emoji: '🎯', title: "Don't Give Up! Back to Basics", sub: "Start fresh! Review the study material and give it another shot." };
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getQuizURL() {
+  return (window.location.href && window.location.href !== 'about:blank') ? window.location.href : FALLBACK_URL;
+}
+
+function buildShareText() {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const nameStr = studentName ? `👤 ${studentName}\n` : '';
+  const sem = studentSem && studentSem !== 'N/A' ? studentSem : '';
+  const metaStr = (studentBranch && studentBranch !== 'N/A') ? `📘 ${studentBranch}${sem ? ' · ' + sem : ''}\n` : '';
+  return `${remark.emoji} ${QUIZ_TITLE} Result\n${nameStr}${metaStr}\n📊 Score: ${score}/${total} (${pct}%)\n✅ Correct: ${score} | ❌ Wrong: ${total - score - skipped} | ⟫ Skipped: ${skipped}\n\n💬 ${remark.title}\n\n🔗 Quiz Link: ${getQuizURL()}\n\nPowered by StudyHub 🎓\n${QUIZ_HASHTAGS}`;
+}
+
+// ===================== INFO SCREEN =====================
+infoNextBtn.addEventListener('click', () => {
+  const name = document.getElementById('inputName').value.trim();
+  if (!name) {
+    showToast('⚠️ Please enter your name to continue');
+    document.getElementById('inputName').focus();
+    return;
+  }
+  studentName = name;
+  studentBranch = document.getElementById('inputBranch').value.trim() || 'N/A';
+  studentSem = document.getElementById('inputSem').value || 'N/A';
+  studentCollege = document.getElementById('inputCollege').value.trim() || '';
+  showScreen('screenIntro');
+});
+
+// ===================== CHAPTER SELECTOR =====================
+chapterGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.chapter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedChapter = btn.dataset.chapter;
+});
+
+// ===================== START QUIZ =====================
+startBtn.addEventListener('click', () => {
+  if (selectedChapter === 'all') {
+    activeQuestions = [...ALL_QUESTIONS];
+  } else {
+    activeQuestions = ALL_QUESTIONS.filter(q => q.c === parseInt(selectedChapter));
+  }
+  shuffle(activeQuestions);
+  currentIndex = 0;
+  score = 0;
+  skipped = 0;
+  userAnswers = new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');
+  renderQuestion();
+});
+
+// ===================== RENDER QUESTION =====================
+function renderQuestion() {
+  isAnswered = false;
+  nextBtn.classList.remove('visible');
+  explanationBox.classList.remove('show');
+  skipBtn.style.display = '';
+
+  const q = activeQuestions[currentIndex];
+  const total = activeQuestions.length;
+  const pct = (currentIndex / total) * 100;
+
+  progressText.textContent = `Question ${currentIndex + 1} of ${total}`;
+  scoreText.textContent = `Score: ${score}`;
+  progressFill.style.width = pct + '%';
+
+  chapterBadge.textContent = CHAPTERS[q.c].icon + ' ' + CHAPTERS[q.c].name;
+  qNum.textContent = 'Q' + (currentIndex + 1);
+  qText.textContent = q.q;
+
+  if (q.hint) {
+    qExample.textContent = q.hint;
+    qExample.style.display = '';
+  } else {
+    qExample.style.display = 'none';
+  }
+
+  optionsList.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option';
+    li.innerHTML = `
+      <div class="option-letter">${LETTERS[i]}</div>
+      <div class="option-text">${opt}</div>
+      <div class="option-radio"></div>
+    `;
+    li.addEventListener('click', () => selectAnswer(i));
+    optionsList.appendChild(li);
+  });
+
+  startTimer();
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = TIMER_SECS;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  timerPill.textContent = '⏱ ' + timeLeft + 's';
+  timerPill.className = 'timer-pill';
+  if (timeLeft <= 5) timerPill.classList.add('critical');
+  else if (timeLeft <= 10) timerPill.classList.add('urgent');
+}
+
+function timeUp() {
+  if (isAnswered) return;
+  isAnswered = true;
+  showToast('⏰ Time Up! Correct answer revealed.');
+  lockOptions();
+  highlightCorrect();
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+}
+
+// ===================== SELECT ANSWER =====================
+function selectAnswer(idx) {
+  if (isAnswered) return;
+  isAnswered = true;
+  clearInterval(timerInterval);
+  userAnswers[currentIndex] = idx;
+  const q = activeQuestions[currentIndex];
+  const options = optionsList.querySelectorAll('.option');
+  lockOptions();
+  if (idx === q.a) {
+    options[idx].classList.add('correct');
+    options[idx].querySelector('.option-radio').textContent = '✓';
+    score++;
+  } else {
+    options[idx].classList.add('wrong');
+    options[idx].querySelector('.option-radio').textContent = '✕';
+    highlightCorrect();
+  }
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+  scoreText.textContent = 'Score: ' + score;
+}
+
+function lockOptions() {
+  optionsList.querySelectorAll('.option').forEach(o => o.classList.add('locked'));
+}
+
+function highlightCorrect() {
+  const q = activeQuestions[currentIndex];
+  const options = optionsList.querySelectorAll('.option');
+  options[q.a].classList.add('correct');
+  options[q.a].querySelector('.option-radio').textContent = '✓';
+}
+
+function showExplanation() {
+  explanationText.textContent = activeQuestions[currentIndex].ex;
+  explanationBox.classList.add('show');
+}
+
+// ===================== SKIP =====================
+skipBtn.addEventListener('click', () => {
+  if (isAnswered) return;
+  isAnswered = true;
+  clearInterval(timerInterval);
+  userAnswers[currentIndex] = -1;
+  skipped++;
+  lockOptions();
+  highlightCorrect();
+  showExplanation();
+  skipBtn.style.display = 'none';
+  nextBtn.classList.add('visible');
+  showToast('⟫ Skipped — correct answer shown.');
+});
+
+// ===================== NEXT =====================
+nextBtn.addEventListener('click', () => {
+  currentIndex++;
+  if (currentIndex >= activeQuestions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+});
+
+// ===================== BACK =====================
+backBtn.addEventListener('click', () => {
+  if (confirm('Go back to intro? Your progress will be lost.')) {
+    clearInterval(timerInterval);
+    showScreen('screenIntro');
+  }
+});
+
+// ===================== SHOW RESULT =====================
+function showResult() {
+  clearInterval(timerInterval);
+  const total = activeQuestions.length;
+  const wrong = total - score - skipped;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+
+  resultEmoji.textContent = remark.emoji;
+  scoreTotal.textContent = '/ ' + total;
+  resultPercent.textContent = pct + '% Score';
+  remarkText.textContent = remark.title;
+  remarkSub.textContent = remark.sub;
+  pillCorrect.textContent = `✅ ${score} Correct`;
+  pillWrong.textContent = `❌ ${wrong} Wrong`;
+  pillSkip.textContent = `⟫ ${skipped} Skipped`;
+
+  bannerName.textContent = studentName || 'Student';
+  const metaParts = [studentBranch, studentSem, studentCollege].filter(v => v && v !== 'N/A' && v !== '');
+  bannerMeta.textContent = metaParts.join(' · ') || QUIZ_TITLE;
+
+  certBannerName.textContent = studentName || 'Your';
+  certBannerMeta.textContent = `${QUIZ_TITLE} · ${pct}% · StudyHub`;
+
+  // Count-up animation
+  let cnt = 0;
+  scoreBig.textContent = '0';
+  if (score > 0) {
+    const intervalMs = Math.max(20, Math.floor(800 / score));
+    const counter = setInterval(() => {
+      cnt++;
+      scoreBig.textContent = cnt;
+      if (cnt >= score) clearInterval(counter);
+    }, intervalMs);
+  } else {
+    scoreBig.textContent = '0';
+  }
+
+  downloadCertBtn.classList.remove('done');
+  showScreen('screenResult');
+  if (pct >= 75) launchConfetti();
+  buildReview();
+}
+
+// ===================== CONFETTI =====================
+function launchConfetti() {
+  const canvas = confettiCanvas;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 600;
+  canvas.height = canvas.offsetHeight || 400;
+  const colors = ['#7C3AED','#EA580C','#16A34A','#F59E0B','#3B82F6','#EC4899'];
+  const pieces = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    w: 5 + Math.random() * 10,
+    h: 3 + Math.random() * 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vy: 2 + Math.random() * 3,
+    vx: (Math.random() - 0.5) * 2,
+    rot: Math.random() * 360,
+    rSpeed: (Math.random() - 0.5) * 6
+  }));
+  let frames = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = Math.max(0, 1 - frames / 120);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rSpeed;
+      if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+    });
+    ctx.globalAlpha = 1;
+    frames++;
+    if (frames < 130) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ===================== BUILD REVIEW =====================
+function buildReview() {
+  reviewList.innerHTML = '';
+  activeQuestions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const isCorrect = ua === q.a;
+    const isSkip = ua === -1;
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (isCorrect ? 'ri-correct' : isSkip ? 'ri-skip' : 'ri-wrong');
+    let ansHtml = '';
+    if (isSkip) {
+      ansHtml = `Skipped · <span class="ri-correct-ans">Correct: ${q.o[q.a]}</span>`;
+    } else if (isCorrect) {
+      ansHtml = `<span class="ri-correct-ans">✓ ${q.o[ua]}</span>`;
+    } else {
+      ansHtml = `<span class="ri-wrong-ans">✕ Your answer: ${q.o[ua]}</span> · <span class="ri-correct-ans">Correct: ${q.o[q.a]}</span>`;
+    }
+    div.innerHTML = `<div class="ri-q">Q${i+1}. ${q.q.replace(/\n/g,' ')}</div><div class="ri-ans">${ansHtml}</div>`;
+    reviewList.appendChild(div);
+  });
+}
+
+reviewToggleBtn.addEventListener('click', () => {
+  const isOpen = reviewList.classList.toggle('open');
+  reviewToggleBtn.textContent = isOpen ? '✕ Hide Answers' : '📖 Review Answers';
+});
+
+// ===================== RETRY =====================
+retryBtn.addEventListener('click', () => {
+  reviewList.classList.remove('open');
+  reviewToggleBtn.textContent = '📖 Review Answers';
+  sharePanel.classList.remove('open');
+  shuffle(activeQuestions);
+  currentIndex = 0;
+  score = 0;
+  skipped = 0;
+  userAnswers = new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');
+  renderQuestion();
+});
+
+// ===================== SHARE =====================
+shareBtn.addEventListener('click', () => {
+  const isOpen = sharePanel.classList.toggle('open');
+  if (isOpen) sharePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+copyLinkBtn.addEventListener('click', () => {
+  const url = getQuizURL();
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('🔗 Quiz link copied!'))
+    .catch(() => prompt('Copy this link:', url));
+});
+
+whatsappBtn.addEventListener('click', () => {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const msg = `${remark.emoji} *${QUIZ_TITLE}*\n\n📊 Score: ${score}/${total} (${pct}%)\n✅ Correct: ${score} | ❌ Wrong: ${total-score-skipped} | ⟫ Skipped: ${skipped}\n\n💬 ${remark.title}\n\n🔗 ${getQuizURL()}\n\nStudyHub 🎓`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+});
+
+twitterBtn.addEventListener('click', () => {
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const tweet = `${remark.emoji} Just scored ${score}/${total} (${pct}%) on ${QUIZ_TITLE}!\n"${remark.title}"\n\n${getQuizURL()}\n\n${QUIZ_HASHTAGS}`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet), '_blank');
+});
+
+copyTextBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(buildShareText())
+    .then(() => showToast('📋 Score text copied!'))
+    .catch(() => prompt('Copy this text:', buildShareText()));
+});
+
+// ===================== CERTIFICATE =====================
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function drawCertificate() {
+  const W = 960, H = 680;
+  const canvas = certCanvas;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const total = activeQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const remark = getRemark(pct);
+  const displayName = studentName || 'Student';
+
+  // Background
+  const bgG = ctx.createLinearGradient(0, 0, W, H);
+  bgG.addColorStop(0, '#0F0520');
+  bgG.addColorStop(0.5, '#2A0F5E');
+  bgG.addColorStop(1, '#0F0520');
+  ctx.fillStyle = bgG;
+  ctx.fillRect(0, 0, W, H);
+
+  // Radial glow
+  const rG = ctx.createRadialGradient(W/2, H*0.38, 0, W/2, H*0.38, 320);
+  rG.addColorStop(0, 'rgba(124,58,237,0.18)');
+  rG.addColorStop(1, 'transparent');
+  ctx.fillStyle = rG;
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(168,85,247,0.07)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Corner arcs
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy]) => {
+    for (let r = 40; r <= 160; r += 30) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(168,85,247,${Math.max(0, 0.25 - r*0.001)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  });
+
+  // Borders
+  ctx.strokeStyle = 'rgba(234,88,12,0.85)';
+  ctx.lineWidth = 3.5;
+  roundRect(ctx, 22, 22, W-44, H-44, 22);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(168,85,247,0.45)';
+  ctx.lineWidth = 1.2;
+  roundRect(ctx, 36, 36, W-72, H-72, 14);
+  ctx.stroke();
+
+  // hLine helper
+  function hLine() {
+    const g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, 'transparent');
+    g.addColorStop(0.3, 'rgba(234,88,12,0.9)');
+    g.addColorStop(0.7, 'rgba(234,88,12,0.9)');
+    g.addColorStop(1, 'transparent');
+    return g;
+  }
+
+  // Top bar
+  ctx.fillStyle = hLine();
+  ctx.fillRect(80, 58, W-160, 2.5);
+
+  // Seal badge
+  const sealX = W/2, sealY = 96, sealR = 34;
+  const sealG = ctx.createRadialGradient(sealX, sealY, 0, sealX, sealY, sealR);
+  sealG.addColorStop(0, '#A855F7');
+  sealG.addColorStop(1, '#5B21B6');
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, sealR, 0, Math.PI*2);
+  ctx.fillStyle = sealG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.8)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff';
+  ctx.fillText('🌐', sealX, sealY);
+
+  // Brand text
+  ctx.font = 'bold 15px Arial';
+  ctx.fillStyle = '#C084FC';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText('S T U D Y H U B', sealX, sealY + 52);
+  ctx.font = 'bold 11px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', sealX, sealY + 74);
+
+  // Divider gradient
+  const divG = ctx.createLinearGradient(120, 0, W-120, 0);
+  divG.addColorStop(0, 'transparent');
+  divG.addColorStop(0.5, 'rgba(234,88,12,0.7)');
+  divG.addColorStop(1, 'transparent');
+
+  // Divider at 150
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 150);
+  ctx.lineTo(W-120, 150);
+  ctx.stroke();
+
+  // "This certifies that"
+  ctx.font = '15px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.textAlign = 'center';
+  ctx.fillText('This certifies that', W/2, 183);
+
+  // Student name
+  const fontSize = displayName.length > 22 ? 36 : 44;
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.shadowColor = 'rgba(168,85,247,0.85)';
+  ctx.shadowBlur = 22;
+  ctx.fillText(displayName, W/2, 234);
+  ctx.shadowBlur = 0;
+
+  // Name underline
+  const nw = ctx.measureText(displayName).width;
+  const ulx = W/2 - nw/2;
+  const ulG = ctx.createLinearGradient(ulx, 0, ulx+nw, 0);
+  ulG.addColorStop(0, 'rgba(168,85,247,0)');
+  ulG.addColorStop(0.5, 'rgba(168,85,247,0.8)');
+  ulG.addColorStop(1, 'rgba(168,85,247,0)');
+  ctx.strokeStyle = ulG;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ulx, 245);
+  ctx.lineTo(ulx+nw, 245);
+  ctx.stroke();
+
+  // Student details
+  const details = [studentBranch, studentSem, studentCollege].filter(v => v && v !== 'N/A' && v !== '');
+  if (details.length > 0) {
+    ctx.font = '13px Arial';
+    ctx.fillStyle = 'rgba(192,132,252,0.85)';
+    ctx.fillText(details.join('  ·  '), W/2, 268);
+  }
+
+  // "has successfully completed"
+  ctx.font = '14px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('has successfully completed the quiz', W/2, 296);
+
+  // Quiz name box
+  const qnameY = 334;
+  roundRect(ctx, W/2-260, qnameY-26, 520, 44, 22);
+  const qnameG = ctx.createLinearGradient(W/2-260, 0, W/2+260, 0);
+  qnameG.addColorStop(0, 'rgba(234,88,12,0.18)');
+  qnameG.addColorStop(1, 'rgba(124,58,237,0.18)');
+  ctx.fillStyle = qnameG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.font = 'bold 20px Arial';
+  ctx.fillStyle = '#FB923C';
+  ctx.fillText(CERT_QUIZ_NAME, W/2, 340);
+
+  // Divider at 370
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 370);
+  ctx.lineTo(W-120, 370);
+  ctx.stroke();
+
+  // Stats section
+  const statsY = 410;
+  const rX = 190, rR = 60;
+  ctx.beginPath();
+  ctx.arc(rX, statsY, rR, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fill();
+
+  const scoreColor = pct >= 75 ? '#22C55E' : pct >= 40 ? '#FB923C' : '#F87171';
+  const arcEnd = -Math.PI/2 + (2*Math.PI*(pct/100));
+  ctx.beginPath();
+  ctx.arc(rX, statsY, rR-6, -Math.PI/2, arcEnd);
+  ctx.strokeStyle = scoreColor;
+  ctx.lineWidth = 11;
+  ctx.shadowColor = scoreColor;
+  ctx.shadowBlur = 14;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.lineCap = 'butt';
+
+  ctx.font = 'bold 28px Arial';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${score}/${total}`, rX, statsY + 8);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('SCORE', rX, statsY + 26);
+  ctx.font = 'bold 14px Arial';
+  ctx.fillStyle = scoreColor;
+  ctx.fillText(pct + '%', rX, statsY + 46);
+
+  // Grade badge
+  const grade = pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  const gbx = rX + 80, gby = statsY - 34;
+  roundRect(ctx, gbx, gby, 90, 68, 14);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fill();
+  ctx.font = 'bold 36px Arial';
+  ctx.fillStyle = scoreColor;
+  ctx.textAlign = 'center';
+  ctx.fillText(grade, gbx+45, gby + 42);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('GRADE', gbx+45, gby + 60);
+
+  // Stat boxes
+  const bx = 440, by = statsY - 46;
+  const statsData = [
+    {icon:'✅', val:score, lbl:'CORRECT', color:'#22C55E'},
+    {icon:'❌', val:total-score-skipped, lbl:'WRONG', color:'#F87171'},
+    {icon:'⟫', val:skipped, lbl:'SKIPPED', color:'#FBBF24'},
+    {icon:'📊', val:pct+'%', lbl:'ACCURACY', color:'#A78BFA'},
+  ];
+  statsData.forEach((s, idx) => {
+    const col = idx % 2, row = Math.floor(idx / 2);
+    const sx = bx + col * 230, sy = by + row * 68;
+    roundRect(ctx, sx, sy, 210, 56, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.font = '18px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = s.color;
+    ctx.fillText(s.icon, sx+12, sy+30);
+    ctx.font = 'bold 20px Arial';
+    ctx.fillStyle = s.color;
+    ctx.fillText(String(s.val), sx+42, sy+30);
+    ctx.font = '10px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText(s.lbl, sx+12, sy+48);
+  });
+
+  // Remark badge
+  const badgeY = 516;
+  roundRect(ctx, W/2-230, badgeY-24, 460, 40, 20);
+  const badgeG = ctx.createLinearGradient(W/2-230, 0, W/2+230, 0);
+  badgeG.addColorStop(0, 'rgba(234,88,12,0.15)');
+  badgeG.addColorStop(1, 'rgba(124,58,237,0.15)');
+  ctx.fillStyle = badgeG;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(234,88,12,0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.font = 'bold 14px Arial';
+  ctx.fillStyle = '#FFA07A';
+  ctx.textAlign = 'center';
+  ctx.fillText(remark.emoji + '  ' + remark.title, W/2, badgeY + 4);
+
+  // Bottom divider at 548
+  ctx.strokeStyle = divG;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, 548);
+  ctx.lineTo(W-120, 548);
+  ctx.stroke();
+
+  // Date & college
+  const dateStr = new Date().toLocaleDateString('en-IN', {year:'numeric',month:'long',day:'numeric'});
+  ctx.font = '11px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.textAlign = 'left';
+  ctx.fillText('📅  Issued: ' + dateStr, 80, 572);
+  if (studentCollege && studentCollege !== 'N/A') {
+    ctx.fillText('🏛  ' + studentCollege, 80, 590);
+  }
+
+  // Signature
+  ctx.font = 'bold 14px Arial';
+  ctx.fillStyle = '#A855F7';
+  ctx.textAlign = 'right';
+  ctx.fillText(CERT_SIGNATURE, W-80, 567);
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.32)';
+  ctx.fillText('erabhi.in/studyHub', W-80, 584);
+
+  // Verified
+  ctx.font = '10px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.textAlign = 'center';
+  ctx.fillText('⭐  Verified Digital Certificate  ⭐', W/2, 600);
+
+  // Bottom bar
+  ctx.fillStyle = hLine();
+  ctx.fillRect(80, H-55, W-160, 2.5);
+
+  return canvas;
+}
+
+downloadCertBtn.addEventListener('click', () => {
+  showToast('🎨 Generating certificate…');
+  setTimeout(() => {
+    try {
+      const canvas = drawCertificate();
+      const pct = Math.round((score / activeQuestions.length) * 100);
+      const safeName = (studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+      const filename = `StudyHub_${QUIZ_SUBJECT_TAG}_Certificate_${safeName}_${score}_${activeQuestions.length}_${pct}pct.png`;
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = filename;
+      a.click();
+      showToast('✅ Certificate downloaded!');
+      downloadCertBtn.classList.add('done');
+    } catch(e) {
+      showToast('⚠️ Download failed — try another browser');
+    }
+  }, 200);
+});
+
+// ===================== HAMBURGER =====================
+hamburger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mobileMenu.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    mobileMenu.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
