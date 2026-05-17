@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Effective Technical Communication Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">✍️</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<!-- INFO SCREEN -->
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Priya Singh" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / ECE / MBA" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">✍️</span>
+    <div class="intro-title">ETC Quiz</div>
+    <div class="intro-sub">Effective Technical Communication — 180 VVI MCQs covering Information Design, Technical Writing, Self-Development, Communication Skills, Technical Writing Formats & Professional Ethics. B.Tech Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">180</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (180 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Information Design & Development</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Technical Writing, Grammar & Editing</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Self-Development & Assessment</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Communication Skills</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Technical Writing Formats</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Ethics</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">✍️ Start Quiz</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 180</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">✍️ Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">ETC Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 180</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">ETC Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Information Design & Development",      icon:"📋"},
+  {name:"Technical Writing, Grammar & Editing",  icon:"✏️"},
+  {name:"Self-Development & Assessment",         icon:"🌱"},
+  {name:"Communication Skills",                  icon:"🗣️"},
+  {name:"Technical Writing Formats",             icon:"📄"},
+  {name:"Ethics",                                icon:"⚖️"},
+];
+
+const ALL_QUESTIONS=[
+/* ═══════════════════════════════════════════════
+   UNIT 1 — Information Design & Development (30 Qs)
+═══════════════════════════════════════════════ */
+{c:0,q:"Technical communication is best defined as:",o:["Writing fiction for engineers","The process of communicating complex technical information clearly to a specific audience","Writing emails only","Informal conversation among engineers"],a:1,ex:"Technical communication is the purposeful transmission of technical, scientific, or specialized information to an intended audience through written, oral, or visual means with clarity and accuracy.",star:true},
+{c:0,q:"Which of the following is NOT a characteristic of technical documents?",o:["Clarity","Accuracy","Ambiguity","Conciseness"],a:2,ex:"Good technical documents must be clear, accurate, concise, correct, complete, and audience-focused. Ambiguity is the opposite of these qualities — it creates misunderstanding and should be avoided.",star:true},
+{c:0,q:"The primary purpose of information design is to:",o:["Make documents look attractive","Organize and present information so it is easily understood by the intended audience","Use as many graphics as possible","Write long reports"],a:1,ex:"Information design focuses on organizing, structuring, and presenting information visually and textually in a way that helps the specific audience understand and use it effectively.",star:true},
+{c:0,q:"The document development life cycle (DDLC) begins with:",o:["Writing the first draft","Editing","Audience analysis and planning","Publishing"],a:2,ex:"DDLC: (1) Planning/Audience Analysis → (2) Research → (3) Drafting → (4) Reviewing/Editing → (5) Publishing/Delivery. It begins with understanding the purpose and audience before any writing.",star:true},
+{c:0,q:"Audience analysis in technical writing involves determining:",o:["Only the reader's age","Who the readers are, their knowledge level, needs, and how they will use the document","The writer's preferences","The document length"],a:1,ex:"Audience analysis: identify primary and secondary audiences, their technical expertise, their purpose for reading, and what decisions or actions the document will help them take.",star:true},
+{c:0,q:"Organization structure in a technical document refers to:",o:["Physical location of the office","The logical arrangement of information — introduction, body, conclusion — to guide readers","Font and colour choices","Number of pages"],a:1,ex:"Document organization: logical structure that guides readers through information. Common structures: problem-solution, cause-effect, chronological, compare-contrast, general-to-specific.",star:true},
+{c:0,q:"Factors affecting information design include:",o:["Only font size","Audience, purpose, medium, content complexity, and cultural context","Writer's mood","Paper quality only"],a:1,ex:"Information design factors: audience characteristics, document purpose, delivery medium (print/digital), content type and complexity, available space, cultural considerations, and accessibility requirements.",star:true},
+{c:0,q:"A 'strategy for organization' in technical writing means:",o:["Filing system for papers","The plan for how information will be sequenced and grouped to serve the reader's needs","Random arrangement of content","Using bullet points always"],a:1,ex:"Organizational strategy: choosing the most effective pattern — chronological, spatial, order of importance, problem-solution, comparison — based on content type and what readers need to accomplish.",star:false},
+{c:0,q:"Information design for print media differs from online media mainly in:",o:["Language used","Navigation, interactivity, screen reading patterns (F-pattern), hyperlinking, and scrolling vs. page-turning","Number of words","Author's name"],a:1,ex:"Print: linear reading, fixed layout, page numbers. Online: non-linear (hyperlinks), responsive design, scroll-friendly, shorter chunks, F-pattern eye-tracking, SEO considerations, interactive elements.",star:true},
+{c:0,q:"Which of the following best describes 'document design'?",o:["Choosing the topic","The visual and structural arrangement of text and graphics on a page to enhance readability and communication","Only selecting fonts","Writing the conclusion"],a:1,ex:"Document design: use of visual elements (white space, headings, lists, fonts, graphics) and page layout to make information accessible and to guide readers through the document hierarchy.",star:true},
+{c:0,q:"White space in document design:",o:["Wastes paper and should be avoided","Improves readability by reducing visual clutter and grouping related information","Is used only in textbooks","Makes documents look incomplete"],a:1,ex:"White space (negative space): empty areas around text and graphics. Improves readability, reduces cognitive load, indicates groupings (proximity principle), and creates professional appearance.",star:true},
+{c:0,q:"A style guide in technical communication serves to:",o:["Teach grammar basics","Ensure consistency in language, formatting, and terminology across an organization's documents","List all employees","Track document versions"],a:1,ex:"Style guide: organization-specific rules for grammar, punctuation, terminology, formatting, tone, and visual elements. Ensures brand consistency and saves time. Examples: Chicago Manual of Style, Microsoft Writing Style Guide.",star:false},
+{c:0,q:"The SMOG (Simple Measure of Gobbledygook) formula is used to:",o:["Measure document length","Estimate reading level/grade level of a text based on polysyllabic word count","Check grammar errors","Assess document design"],a:1,ex:"SMOG readability formula: counts polysyllabic words in sample sentences to estimate reading grade level. Useful for checking if technical documents match audience's reading ability.",star:false},
+{c:0,q:"Which principle of information design relates to grouping related items visually?",o:["Contrast","Proximity","Alignment","Repetition"],a:1,ex:"Proximity principle (Robin Williams CRAP): related items should be placed close together; unrelated items far apart. Readers instinctively group nearby elements, so proximity communicates relationship.",star:true},
+{c:0,q:"'Single sourcing' in technical documentation means:",o:["Using only one source of information","Creating content once and publishing it in multiple formats/outputs from a single repository","Writing one document per year","Having one author",""],a:1,ex:"Single sourcing: write content once in a structured format (like XML/DITA), then automatically publish to multiple outputs — PDF, HTML, online help, mobile. Reduces duplication and maintenance.",star:true},
+{c:0,q:"Localization of technical documents refers to:",o:["Printing locally","Adapting content — language, units, cultural references, date formats — for a specific locale or market","Making documents shorter","Using local examples only"],a:1,ex:"Localization: adapting technical content for a specific culture/locale — translating language, converting units (metric/imperial), adjusting date/time formats, adapting graphics, and respecting cultural sensitivities.",star:true},
+{c:0,q:"The inverted pyramid structure in technical writing means:",o:["Starting with details and ending with main point","Presenting most important information first, followed by supporting details","Using a triangular graphic","Writing conclusions first"],a:1,ex:"Inverted pyramid: lead with the most critical information (what, who, when, where), then provide supporting details, then background. Common in news writing, press releases, and executive summaries.",star:true},
+{c:0,q:"Content management system (CMS) in technical communication is used for:",o:["Managing employee schedules","Storing, organizing, and publishing technical content efficiently across teams","Graphic design only","Spell checking"],a:1,ex:"CMS: software platform for creating, managing, and publishing technical content. Allows multiple authors, version control, workflow approval, content reuse, and multi-channel publishing.",star:false},
+{c:0,q:"Information architecture refers to:",o:["Building layout design","The structural design of information spaces — how content is organized, labeled, and navigated","Only website design","Grammar rules"],a:1,ex:"Information architecture: organization of information so users can find what they need. Involves structure (hierarchy), labeling (terminology), navigation systems, and search design. Critical for user experience.",star:false},
+{c:0,q:"The purpose of a table of contents (TOC) in a technical document is to:",o:["Increase page count","Provide a navigational overview of document structure and help readers locate specific sections quickly","List all authors","Show bibliography"],a:1,ex:"TOC: lists headings and page numbers in hierarchical order. Allows readers to quickly locate information without reading the entire document. Essential in long reports, manuals, and proposals.",star:false},
+{c:0,q:"DITA (Darwin Information Typing Architecture) is:",o:["A programming language","An XML-based architecture for creating modular, reusable technical content in topics (concept, task, reference)","A graphic design tool","A grammar checker"],a:1,ex:"DITA: XML-based standard for technical documentation. Organizes content into modular topics (concept, task, reference), enabling reuse, single-sourcing, and conditional publishing to multiple formats.",star:false},
+{c:0,q:"Which of the following is true about headings in technical documents?",o:["Should be long sentences","Should be avoided to save space","Help readers scan content, understand hierarchy, and navigate to relevant sections","Are only decorative"],a:2,ex:"Headings: organize documents hierarchically, allow scanning, improve navigation, help readers decide what to read, and break up dense text. Use parallel grammatical structure across same-level headings.",star:true},
+{c:0,q:"The concept of 'chunking' in technical writing refers to:",o:["Dividing salary into portions","Breaking information into small, logically grouped pieces that are easier to process and remember","Writing without paragraphs","Using only bullet points"],a:1,ex:"Chunking: dividing content into small, manageable pieces (based on Miller's Law — 7±2 chunks). Each chunk = one idea. Improves readability, comprehension, and memory retention.",star:true},
+{c:0,q:"A technical document's 'purpose statement' should appear:",o:["At the end of the document","In the introduction, clearly stating what the document covers and what readers will gain","Only in the index","In footnotes"],a:1,ex:"Purpose statement: appears in introduction, states what document is about, what it covers, who it's for, and what readers will be able to do. Sets expectations and helps readers self-select.",star:false},
+{c:0,q:"Which of the following represents good information design for online help documentation?",o:["Long paragraphs with no headings","Task-based topics, short paragraphs, numbered steps for procedures, and search functionality","No images","Very small font"],a:1,ex:"Online help best practices: task-oriented (what users want to do), chunked into short topics, step-by-step numbered procedures, contextual links, search, and visual aids for complex concepts.",star:true},
+{c:0,q:"User testing of technical documents involves:",o:["Authors proofreading their own work","Having representative users perform tasks using the document to identify usability problems","Grammar checking","Format checking only"],a:1,ex:"Usability testing: real users attempt tasks with the document. Identifies where users fail, get confused, or need more information. Most effective form of document evaluation — reveals real-world issues.",star:true},
+{c:0,q:"The Flesch Reading Ease score measures:",o:["Document length","Readability: higher score = easier to read, based on sentence length and syllable count per word","Number of headings","Grammar correctness"],a:1,ex:"Flesch Reading Ease: 0-100 scale. Higher = easier. Formula uses average sentence length and average syllables per word. Score 60-70 = standard. Technical documents often score lower (more complex).",star:false},
+{c:0,q:"'Information mapping' as a technical writing methodology involves:",o:["Drawing maps","Organizing information into strictly defined blocks (procedure, process, concept, fact, structure, principle) for modular, consistent documentation","Writing long narratives","Random information placement"],a:1,ex:"Information Mapping: methodology dividing content into standardized blocks (Robert Horn). Each block = one type of information. Improves consistency, scanning, and reuse. Precursor to DITA.",star:false},
+{c:0,q:"Which of the following is an example of a primary research method in technical writing?",o:["Reading published reports","Conducting interviews, surveys, or experiments to gather original data","Searching the internet","Reading textbooks"],a:1,ex:"Primary research: original data collection — interviews, surveys, observations, experiments, usability tests. Secondary research: existing sources — books, journals, reports. Technical writers use both.",star:true},
+{c:0,q:"The 'deliverable' in technical communication refers to:",o:["Courier delivery","The final document or product that fulfills the communication project requirements","Meeting agenda","Writer's notes"],a:1,ex:"Deliverable: the tangible output of a technical communication project — user manual, white paper, specification, online help, training materials. Defined upfront in project scope.",star:false},
+
+/* ═══════════════════════════════════════════════
+   UNIT 2 — Technical Writing, Grammar & Editing (30 Qs)
+═══════════════════════════════════════════════ */
+{c:1,q:"The technical writing process typically follows which order?",o:["Draft → Plan → Edit","Plan → Research → Draft → Review → Revise → Publish","Write → Publish → Plan","Edit → Draft → Plan"],a:1,ex:"Technical writing process: (1) Plan (audience, purpose, scope), (2) Research (gather info), (3) Draft (write), (4) Review (peer/SME review), (5) Revise/Edit, (6) Publish/Deliver.",star:true},
+{c:1,q:"A form of discourse in technical writing that explains how something works is called:",o:["Narration","Description","Process explanation / Exposition","Argumentation"],a:2,ex:"Forms of discourse: narration (tells events in time), description (sensory details of appearance), exposition (explains concepts, processes, how things work), argumentation (persuades). Exposition is most common in technical writing.",star:true},
+{c:1,q:"'Writing drafts and revising' in technical communication means:",o:["Writing the final version immediately","Producing an initial draft freely, then systematically improving content, organization, style, and mechanics","Typing and printing only","Editing grammar only"],a:1,ex:"Drafting: generate content without excessive self-editing. Revising: big-picture improvements (content, organization, logic). Editing: sentence-level (clarity, conciseness, style). Proofreading: mechanics (spelling, grammar).",star:true},
+{c:1,q:"Collaborative writing in technical communication requires:",o:["Only one author always","A team working together with clear roles, version control, shared style guides, and effective communication","No planning","No editing"],a:1,ex:"Collaborative writing: multiple contributors with defined roles (lead, reviewer, SME, editor). Requires: shared outline, style guide, version control (track changes, Git), regular meetings, and conflict resolution.",star:true},
+{c:1,q:"An index in a technical document serves to:",o:["Decorate the end of the document","Provide an alphabetical list of topics with page numbers for quick reference","List figures only","Show the bibliography"],a:1,ex:"Index: alphabetical list of significant terms, concepts, names, and topics with corresponding page numbers. Enables readers to locate specific information without sequential reading. Different from TOC (structural).",star:false},
+{c:1,q:"Creating indexes (indexing) involves:",o:["Listing all words in a document","Selecting significant terms readers would search for and recording their locations","Numbering all pages","Listing all authors"],a:1,ex:"Indexing: identify significant terms (nouns, noun phrases, concepts, names), determine what readers would look for, create see also cross-references, and arrange alphabetically. More art than science.",star:false},
+{c:1,q:"Technical writing style is characterized by:",o:["Emotional language and personal anecdotes","Objective, precise, clear, and concise language appropriate to the technical subject and audience","Flowery, descriptive prose","Stream of consciousness"],a:1,ex:"Technical style: (1) precise vocabulary, (2) active voice preferred, (3) clear sentence structure, (4) objective/impersonal tone, (5) no jargon without definition, (6) consistent terminology throughout.",star:true},
+{c:1,q:"Which sentence demonstrates active voice?",o:["The report was written by the engineer.","The engineer wrote the report.","It was found that the test failed.","Errors were detected in the system."],a:1,ex:"Active voice: Subject performs the action (Engineer wrote the report). Passive voice: Subject receives action (Report was written by engineer). Active is clearer, more direct, and usually shorter. Preferred in technical writing.",star:true},
+{c:1,q:"'Basics of grammar' in technical writing includes understanding:",o:["Only spelling","Parts of speech, sentence structure, subject-verb agreement, punctuation, and modifiers","Only paragraph structure","Only formatting"],a:1,ex:"Grammar basics for technical writers: parts of speech (nouns, verbs, adjectives…), sentence types, subject-verb agreement, pronoun reference, modifier placement, parallel structure, and punctuation rules.",star:true},
+{c:1,q:"A dangling modifier is:",o:["A correctly placed adjective","A modifying phrase that does not clearly and logically relate to the word it modifies","A type of heading","A grammatical term for passive voice"],a:1,ex:"Dangling modifier example: 'Running quickly, the deadline was missed.' (Who was running? The deadline?) Correct: 'Running quickly, she missed the deadline.' Modifier must have a clear subject to modify.",star:true},
+{c:1,q:"Which of the following is an example of advanced grammar in technical writing?",o:["Using simple sentences only","Correct use of subjunctive mood, participial phrases, absolute phrases, and complex subordination","Avoiding all punctuation","Writing in passive voice always"],a:1,ex:"Advanced grammar includes: subjunctive mood ('if the system were to fail'), participial phrases ('having completed the test…'), gerunds, infinitives, absolute phrases, and sophisticated subordination without ambiguity.",star:false},
+{c:1,q:"Editing strategies for appropriate technical style include:",o:["Making text longer","Eliminating redundancy, replacing jargon with plain language, varying sentence length, and ensuring parallel structure","Adding more adjectives","Using informal language"],a:1,ex:"Editing for style: cut unnecessary words, use specific/concrete language, vary sentence structure, maintain parallel form in lists, use consistent terminology, and adjust tone to audience's expertise level.",star:true},
+{c:1,q:"'Introduction to advanced technical communication' covers which advanced concept?",o:["Only email writing","Complex report structures, specialized genre conventions, intercultural communication, and persuasive technical documents","Basic grammar only","Simple memos"],a:1,ex:"Advanced technical communication: sophisticated document types (technical proposals, feasibility studies), intercultural writing considerations, advanced research methods, complex visual communication, and legal/ethical issues.",star:false},
+{c:1,q:"Usability in technical documentation means:",o:["Documents must be decorative","Documents must enable users to find information and complete tasks efficiently with minimum frustration","Documents must be short","Documents must have many images"],a:1,ex:"Usability: extent to which users can find information and accomplish their goals effectively, efficiently, and with satisfaction. Tested through user observation. High usability = fewer support calls, fewer errors.",star:true},
+{c:1,q:"Parallel structure in technical writing requires:",o:["All sentences to be the same length","Items in a series to have the same grammatical form (all nouns, all verbs, all phrases)","No lists","Only simple sentences"],a:1,ex:"Parallel structure: 'The system monitors performance, records data, and generates reports' (all verbs). NOT: 'monitors performance, data recording, and to generate reports.' Critical for lists and bullet points.",star:true},
+{c:1,q:"A technical style guide typically includes rules for:",o:["Plot and characters","Terminology, abbreviations, capitalization, punctuation, number usage, and document formatting","Personal opinions","Creative writing"],a:1,ex:"Technical style guide: terminology preferences, abbreviation rules, capitalization conventions, punctuation (Oxford comma, hyphens), number formatting (spell out vs. numerals), units, and document templates.",star:false},
+{c:1,q:"'Human factors' in technical communication relates to:",o:["HR department policies","How human cognitive, physical, and social characteristics affect the design and use of technical communication products","Workplace relationships","Employee benefits"],a:1,ex:"Human factors (ergonomics): understanding human limitations and capabilities — visual perception, reading patterns, cognitive load, memory limits, physical accessibility. Applied to document design for usability.",star:true},
+{c:1,q:"Managing technical communication projects requires:",o:["No planning","Planning, scheduling, resource allocation, risk management, stakeholder communication, and quality control","Only writing skills","Only editing skills"],a:1,ex:"Project management for tech comm: define scope, create schedule (milestones), assign roles, manage SME relationships, control quality, handle changes, and deliver on time. Similar to software project management.",star:false},
+{c:1,q:"Time estimation in technical writing projects considers:",o:["Only word count","Complexity, research time, review cycles, revision time, production, and writer skill level","Only deadline","Only topic familiarity"],a:1,ex:"Time estimation factors: document complexity, unfamiliarity with subject, number of review cycles, amount of original research needed, graphic creation time, translation needs, and approval workflows.",star:false},
+{c:1,q:"Single sourcing in technical writing achieves:",o:["More paper usage","Write once, publish many — same content delivered in multiple formats (PDF, HTML, ebook, mobile) without rewriting","Less content","Faster writing"],a:1,ex:"Single sourcing reduces cost and errors by maintaining one content set. When updated, all output formats update simultaneously. Requires structured authoring (DITA, DocBook) and publishing systems.",star:true},
+{c:1,q:"Which of the following is the correct use of a semicolon?",o:["Use it before a list introduced by a colon","Use it to join two independent clauses without a conjunction: 'The test passed; the system is ready.'","Use it between a dependent and independent clause","Use it instead of a comma in simple lists"],a:1,ex:"Semicolon: joins two related independent clauses ('Results were positive; the team was relieved.'), or separates items in a series when the items contain commas ('London, England; Paris, France; Rome, Italy.')",star:true},
+{c:1,q:"Technical reports differ from essays in that:",o:["Reports use casual language","Reports have specific structure (front matter, body, back matter), serve functional purposes, and target specific audiences","Essays are always longer","Reports have no conclusions"],a:1,ex:"Technical reports: defined format, functional purpose (inform decisions, document findings), targeted audience, factual/objective tone, visual elements, and executive summary. Essays: academic argument, general audience.",star:true},
+{c:1,q:"Which term describes removing unnecessary words from technical writing?",o:["Expanding","Conciseness / pruning / cutting","Elaborating","Paraphrasing"],a:1,ex:"Conciseness: eliminate redundant words, cut empty phrases ('in order to' → 'to'), avoid circumlocutions ('at this point in time' → 'now'), and remove padding. Improves clarity and respects reader's time.",star:true},
+{c:1,q:"The revision stage of technical writing focuses on:",o:["Correcting spelling errors","Big-picture improvements: content completeness, logical organization, argument strength, and audience appropriateness","Only formatting","Word count reduction"],a:1,ex:"Revision (macro-editing): content accuracy and completeness, logical flow and organization, meeting audience needs, argument coherence, and appropriate level of detail. Different from editing (micro-level).",star:true},
+{c:1,q:"What is the purpose of a glossary in a technical document?",o:["Increase page count","Define technical terms, acronyms, and specialized vocabulary used in the document","List all references","Show document history"],a:1,ex:"Glossary: alphabetical list of specialized terms with definitions, placed at end of document. Helps readers with less expertise understand the content. Also improves consistency when writers refer to it.",star:false},
+{c:1,q:"Which of the following sentences is most appropriate in technical writing?",o:["We think the system might possibly work in most cases.","The system operates within specified parameters under normal conditions.","The thingy goes into the whatchamacallit.","You know what I mean about the process?"],a:1,ex:"Technical writing: precise, objective, uses proper terminology, avoids hedging ('might possibly'), avoids informal language ('thingy'), and avoids reader assumptions ('you know'). Option B is precise and professional.",star:true},
+{c:1,q:"Subject-verb agreement error example:",o:["The data are collected daily (data = plural)","The committee have decided (British usage)","The team of engineers are responsible for the errors (team = singular)","None of the above"],a:2,ex:"'The team of engineers is responsible' (team = singular collective noun in American English). Common errors: collective nouns, indefinite pronouns (everyone is, each is), compound subjects (A and B = plural, A or B = singular).",star:false},
+{c:1,q:"The Oxford comma is:",o:["Used before the first item in a list","A comma placed after the second-to-last item in a series, before 'and' or 'or'","Never used in technical writing","A British punctuation rule only"],a:1,ex:"Oxford/serial comma: 'I need a hammer, nails, and a drill.' (comma before 'and'). Technical writing strongly recommends it to avoid ambiguity: 'I thanked my parents, Batman and Superman' vs. 'Batman, and Superman.'",star:true},
+{c:1,q:"Peer review in technical writing serves to:",o:["Compete with colleagues","Have colleagues evaluate a document for accuracy, clarity, completeness, and consistency before final submission","Replace professional editing","Delay publication"],a:1,ex:"Peer review: subject matter experts check accuracy; writing peers check clarity and organization; editors check style and mechanics. Multiple review cycles improve quality and catch errors the author misses.",star:false},
+{c:1,q:"Which type of sentence is generally recommended for complex technical instructions?",o:["Very long compound-complex sentences","Short, direct sentences with one instruction per sentence","No punctuation","Passive voice sentences"],a:1,ex:"For instructions/procedures: short declarative sentences, active voice, imperative mood ('Click the button'), one step per sentence, numbered sequence. Reduces errors and is universally translatable.",star:true},
+{c:1,q:"'Plain language' in technical writing means:",o:["Using simple vocabulary only","Writing that uses clear, direct language accessible to the intended reader, even for complex subjects","Avoiding technical terms completely","Writing like a child"],a:1,ex:"Plain language: uses words readers know, short sentences, active voice, clear structure, and appropriate vocabulary for the audience. NOT dumbing down — rather respecting the reader's time and comprehension.",star:true},
+
+/* ═══════════════════════════════════════════════
+   UNIT 3 — Self-Development & Assessment (30 Qs)
+═══════════════════════════════════════════════ */
+{c:2,q:"Self-assessment in professional development helps an individual to:",o:["Criticize others","Identify personal strengths, weaknesses, skill gaps, and areas for improvement","Compare salaries","Complain about work"],a:1,ex:"Self-assessment: systematic reflection on one's own skills, values, interests, and performance. Helps set development goals, choose appropriate training, and make career decisions. Tools: SWOT analysis, 360° feedback.",star:true},
+{c:2,q:"Perception in communication refers to:",o:["Only eyesight","How an individual selects, organizes, and interprets sensory information to make sense of the world","Speed of reading","Typing accuracy"],a:1,ex:"Perception: process of selecting (selective attention), organizing (schema), and interpreting sensory stimuli. Perceptions are subjective and influenced by past experiences, culture, expectations, and emotional state.",star:true},
+{c:2,q:"Attitudes in the workplace are:",o:["Only related to posture","Learned evaluative responses (positive/negative) toward people, objects, or situations that influence behavior","Fixed and unchangeable","Same for all people"],a:1,ex:"Attitudes: cognitive (beliefs), affective (feelings), and behavioral (tendency to act) components. Positive work attitudes improve productivity, teamwork, and communication. They can be changed through experience and reflection.",star:true},
+{c:2,q:"Values in professional life are:",o:["Only financial concerns","Core beliefs and principles that guide behavior and decision-making (integrity, respect, accountability)","Physical health habits","Communication speed"],a:1,ex:"Professional values: fundamental beliefs that guide ethical behavior and professional decisions — integrity, honesty, respect, accountability, excellence, innovation. Aligned values improve job satisfaction and ethics.",star:true},
+{c:2,q:"Personal goal setting in self-development should follow the SMART criteria, where SMART stands for:",o:["Simple, Manageable, Acceptable, Real, Timely","Specific, Measurable, Achievable, Relevant, Time-bound","Strong, Motivated, Active, Reviewed, Tracked","Short, Meaningful, Attainable, Reasonable, Tactical"],a:1,ex:"SMART goals: Specific (what exactly), Measurable (how you'll know), Achievable (realistic), Relevant (aligned to larger goals), Time-bound (deadline). Converts vague aspirations into actionable plans.",star:true},
+{c:2,q:"Self-esteem in professional communication refers to:",o:["Being arrogant","An individual's overall subjective sense of personal worth and competence that affects confidence in communication","Formal qualifications","Salary level"],a:1,ex:"Self-esteem: how you evaluate your own worth. High self-esteem: confident communication, assertive (not aggressive), open to feedback. Low self-esteem: passive/aggressive communication, avoids conflict, accepts blame.",star:true},
+{c:2,q:"Managing time effectively as a professional involves:",o:["Working 24 hours","Prioritizing tasks, setting deadlines, avoiding procrastination, and using tools like to-do lists and calendars","Doing all tasks simultaneously","Ignoring deadlines"],a:1,ex:"Time management: (1) Prioritize (Eisenhower matrix: urgent/important), (2) Plan (daily/weekly schedule), (3) Eliminate distractions, (4) Batch similar tasks, (5) Delegate appropriately, (6) Review and adjust.",star:true},
+{c:2,q:"Personal memory improvement techniques include:",o:["Watching more television","Mnemonics, spaced repetition, mind mapping, active recall, and adequate sleep","Avoiding reading","Multitasking always"],a:1,ex:"Memory techniques: mnemonics (acronyms, rhymes), spaced repetition (reviewing at increasing intervals), chunking, visual association, mind maps, and active recall (testing yourself). Sleep consolidates memory.",star:false},
+{c:2,q:"Rapid reading (speed reading) techniques include:",o:["Reading every word slowly","Skimming, scanning, reducing subvocalization, using a pacer, and expanding eye span to take in more words","Reading backwards","Reading only headings"],a:1,ex:"Speed reading: skimming (main ideas), scanning (specific information), eliminating subvocalization (inner voice), using finger/pointer as pacer, expanding peripheral vision span. Comprehension must not be sacrificed.",star:true},
+{c:2,q:"Taking effective notes during lectures or reading involves:",o:["Writing every word spoken","Selecting key ideas, using abbreviations, organizing by structure, and reviewing notes promptly after","Only highlighting text","Recording audio only"],a:1,ex:"Effective note-taking: Cornell method (cue column, notes, summary), mind mapping, outline method. Key: capture main ideas and examples, not verbatim. Review within 24 hours to strengthen memory.",star:true},
+{c:2,q:"Complex problem solving as a professional skill involves:",o:["Guessing the answer","Defining the problem, analyzing causes, generating solutions, evaluating options, implementing, and reviewing outcomes","Delegating all problems","Ignoring difficult issues"],a:1,ex:"Problem-solving process: (1) Define problem clearly, (2) Gather information, (3) Analyze root causes (5-Whys, fishbone diagram), (4) Brainstorm solutions, (5) Evaluate/select, (6) Implement, (7) Evaluate outcome.",star:true},
+{c:2,q:"Creativity in professional development is:",o:["Only for artists","The ability to generate novel and useful ideas or solutions by making unexpected connections","Following all rules strictly","Imitating existing products"],a:1,ex:"Creativity: divergent thinking (generating many ideas), making novel connections between concepts, and producing useful outcomes. Enhanced by: open mindset, diverse experiences, brainstorming, and psychological safety.",star:true},
+{c:2,q:"Emotional intelligence (EI) in self-development involves:",o:["Only IQ","Ability to recognize, understand, manage one's own emotions and recognize/influence others' emotions","Technical skills only","Physical fitness"],a:1,ex:"Emotional intelligence (Goleman): self-awareness, self-regulation, motivation, empathy, and social skills. High EI predicts professional success better than IQ alone. Improves relationships, leadership, and communication.",star:true},
+{c:2,q:"Perception and attitude affect communication in the workplace because:",o:["They have no effect","They filter how messages are sent and received, creating potential misunderstandings and communication barriers","Only attitude matters","Only verbal communication is affected"],a:1,ex:"Perception filters: we hear what we expect to hear, interpret through personal lens. Negative attitudes create defensive listening, poor sending. Communication improvement requires self-awareness of perceptual filters.",star:true},
+{c:2,q:"Critical thinking in professional contexts means:",o:["Criticizing colleagues","The ability to analyze information objectively, evaluate evidence, identify assumptions, and reach well-reasoned conclusions","Accepting all information without question","Thinking negatively"],a:1,ex:"Critical thinking: question assumptions, evaluate source credibility, identify logical fallacies, distinguish fact from opinion, consider multiple perspectives, and reach evidence-based conclusions. Essential for technical decision-making.",star:true},
+{c:2,q:"A career plan is:",o:["Only a resume","A strategic roadmap identifying career goals, required skills, development activities, and timelines to achieve professional objectives","A list of jobs applied for","A salary negotiation document"],a:1,ex:"Career plan: (1) Self-assessment (skills, values, interests), (2) Career exploration, (3) Goal setting (short/long-term), (4) Development activities (courses, projects, mentoring), (5) Networking, (6) Regular review.",star:false},
+{c:2,q:"Growth mindset (Dweck) in professional development means believing that:",o:["Intelligence is fixed and cannot change","Abilities and intelligence can be developed through dedication, hard work, and learning from failure","Only talented people succeed","Effort doesn't matter"],a:1,ex:"Growth mindset: challenges are opportunities, effort leads to mastery, criticism is informative, others' success is inspiring. Contrasted with fixed mindset. Leads to higher achievement and resilience.",star:true},
+{c:2,q:"Work-life balance as a professional self-development goal involves:",o:["Working maximum hours always","Maintaining healthy boundaries between professional responsibilities and personal life for long-term well-being and performance","Ignoring personal life","Working only 4 hours daily"],a:1,ex:"Work-life balance: set boundaries (switch off work devices at home), prioritize personal time, practice stress management (exercise, mindfulness), maintain social connections, and recognize burnout warning signs.",star:false},
+{c:2,q:"Personal branding in professional development means:",o:["Company logo design","Intentionally communicating your unique professional identity, skills, values, and expertise to differentiate yourself","Social media addiction","Wearing branded clothes"],a:1,ex:"Personal branding: your professional reputation and identity. Includes LinkedIn profile, portfolio, communication style, expertise, and how others perceive you. Helps career advancement and professional opportunities.",star:true},
+{c:2,q:"Mentoring in professional development involves:",o:["Only formal classroom training","A more experienced professional guiding a less experienced one through advice, feedback, knowledge sharing, and career support","Peer competition","Only technical training"],a:1,ex:"Mentoring: long-term developmental relationship where mentor shares experience, knowledge, and networks. Different from coaching (performance-focused) and training (skill-focused). Accelerates career development.",star:false},
+{c:2,q:"Networking as a professional development strategy involves:",o:["Social media addiction","Building and maintaining mutually beneficial relationships with professionals in your field and related fields","Avoiding all social interactions","Only attending parties"],a:1,ex:"Professional networking: build relationships before you need them. Attend conferences, join professional associations, use LinkedIn, follow up after meetings, offer help. Strong network provides opportunities, information, and support.",star:true},
+{c:2,q:"Stress management techniques for professionals include:",o:["Ignoring all stress","Exercise, mindfulness meditation, time management, social support, proper sleep, and cognitive reframing","Working harder to forget stress","Avoiding all responsibilities"],a:1,ex:"Stress management: exercise reduces cortisol, mindfulness (focused breathing) calms nervous system, social support provides perspective, adequate sleep restores cognition, time management prevents deadline stress.",star:false},
+{c:2,q:"Assertiveness in professional communication means:",o:["Being aggressive and demanding","Expressing your thoughts, needs, and boundaries clearly and directly while respecting others' rights","Never disagreeing with anyone","Submitting to all requests"],a:1,ex:"Assertiveness: direct, honest, respectful communication. 'I feel…/I need…/I think…' statements. Different from aggressive (violates others' rights) and passive (violates own rights). Builds professional respect.",star:true},
+{c:2,q:"Lifelong learning in professional development refers to:",o:["Only formal education until graduation","Continuous, voluntary pursuit of knowledge and skills throughout one's career and life","Only online courses","Reading newspapers"],a:1,ex:"Lifelong learning: recognize learning doesn't end with degree. Continuously update skills (especially in technology), read industry publications, attend workshops, seek feedback, and embrace new experiences.",star:true},
+{c:2,q:"Interpersonal skills essential for self-development include:",o:["Technical programming skills only","Communication, empathy, conflict resolution, active listening, collaboration, and adaptability","Mathematical ability only","Typing speed"],a:1,ex:"Interpersonal skills (soft skills): the most in-demand professional skills. Include: clear communication, empathy, conflict management, teamwork, adaptability, leadership, and cross-cultural competence.",star:true},
+{c:2,q:"Values clarification exercise in self-development helps professionals to:",o:["Calculate salary","Identify and prioritize core personal and professional values to align career choices and behaviors","Learn software skills","Improve typing speed"],a:1,ex:"Values clarification: identify what matters most (e.g., creativity, security, family, achievement, service), rank them, and examine if current work aligns with values. Misalignment causes dissatisfaction and stress.",star:false},
+{c:2,q:"The Johari Window model in self-awareness training shows:",o:["Office layout","Four quadrants of self-knowledge: Open (known to self and others), Blind (known to others, not self), Hidden (known to self, not others), Unknown","Sales process","Computer interface"],a:1,ex:"Johari Window (Luft & Ingham): Open area (shared knowledge), Blind spot (feedback from others), Façade/Hidden (what you hide), Unknown (subconscious). Self-disclosure and feedback expand the Open area.",star:true},
+{c:2,q:"Resilience as a professional skill means:",o:["Avoiding all challenges","The ability to recover from setbacks, adapt to difficult circumstances, and keep going despite adversity","Never making mistakes","Perfectionism"],a:1,ex:"Resilience: bounce back from failures, rejection, criticism, and setbacks. Built through: growth mindset, strong social support, self-care, flexible thinking, and finding meaning in challenges. Critical for long-term career success.",star:true},
+{c:2,q:"Self-discipline in professional development involves:",o:["Extreme restriction","Consistently choosing behaviors aligned with your goals even when you don't feel motivated, and resisting distractions","Only exercise regimens","Working without breaks"],a:1,ex:"Self-discipline: do what needs to be done regardless of mood. Techniques: habit stacking, eliminating decision fatigue, environment design (remove distractions), reward systems, and starting with the hardest task.",star:false},
+{c:2,q:"Active listening as a self-development skill requires:",o:["Waiting for your turn to speak","Full attention to the speaker, understanding meaning, providing feedback, deferring judgment, and responding appropriately","Only nodding your head","Interrupting with questions"],a:1,ex:"Active listening: (1) Pay full attention (no phone), (2) Show you're listening (nodding, eye contact), (3) Provide feedback (paraphrase), (4) Defer judgment, (5) Respond appropriately. Builds trust and reduces misunderstandings.",star:true},
+
+/* ═══════════════════════════════════════════════
+   UNIT 4 — Communication Skills (30 Qs)
+═══════════════════════════════════════════════ */
+{c:3,q:"Public speaking anxiety (stage fright) can be managed by:",o:["Avoiding all public speaking","Preparation, practice, breathing exercises, positive visualization, and reframing anxiety as excitement","Memorizing every word exactly","Speaking very fast"],a:1,ex:"Managing stage fright: (1) Thorough preparation, (2) Practice (rehearse aloud), (3) Deep breathing, (4) Arrive early to get comfortable, (5) Focus on message not yourself, (6) Accept nervousness as normal.",star:true},
+{c:3,q:"Oral presentations in professional settings should be structured as:",o:["Random information sharing","Introduction (hook + preview), Body (3 key points), Conclusion (summary + call to action)","Only question-answer sessions","Reading from notes"],a:1,ex:"Presentation structure: Opening (grab attention, establish credibility, preview), Body (organize key points with evidence and examples), Close (summarize, memorable ending, call to action). 'Tell them what you'll tell, tell them, tell them what you told.'",star:true},
+{c:3,q:"An effective interview technique for job candidates includes:",o:["Saying 'I don't know' to all questions","Using STAR method (Situation, Task, Action, Result) to structure behavioral answers","Criticizing the previous employer","Giving very short one-word answers"],a:1,ex:"STAR technique: Situation (context), Task (your responsibility), Action (what you specifically did), Result (outcome with metrics). Converts abstract claims ('I'm a team player') into concrete evidence.",star:true},
+{c:3,q:"Graphic presentations (slides, charts) should follow the principle of:",o:["Maximum text per slide","One main idea per visual, simple design, appropriate chart type for data, and minimum text","Using decorative backgrounds","As many slides as possible"],a:1,ex:"Graphic presentation principles: (1) One idea per slide, (2) Appropriate chart type (pie for parts, bar for comparison, line for trend), (3) Clear labels, (4) Minimal text (6×6 rule or less), (5) Consistent design.",star:true},
+{c:3,q:"Presentation aids (visual aids) are most effective when they:",o:["Contain all the presenter's notes","Support and clarify the spoken message without distracting from it","Replace the presenter","Are read word for word"],a:1,ex:"Effective visual aids: supplement (don't replace) the speaker, add information words cannot convey well (data, diagrams), are visible to all, simple and uncluttered, and directly relevant to the point being made.",star:true},
+{c:3,q:"Personality development in professional communication refers to:",o:["Changing your identity","Developing qualities that enhance professional effectiveness: confidence, positive attitude, empathy, communication skills, and adaptability","Physical appearance change only","Learning new software"],a:1,ex:"Personality development: building traits that improve professional relationships and effectiveness — self-confidence, interpersonal warmth, professional communication, emotional regulation, leadership, and positive influence on others.",star:true},
+{c:3,q:"An effective oral presentation delivery involves:",o:["Reading entirely from notes","Appropriate pace, volume, pitch variation, eye contact with audience, purposeful gestures, and organized movement","Speaking as fast as possible","Avoiding eye contact"],a:1,ex:"Delivery skills: speak at 120-150 wpm (not too fast/slow), vary pitch to avoid monotone, make eye contact (3-5 seconds per person), use purposeful gestures, pause for emphasis, project voice clearly.",star:true},
+{c:3,q:"A group discussion (GD) in selection processes tests:",o:["Individual technical knowledge only","Communication skills, teamwork, leadership, critical thinking, and ability to express ideas under pressure","Typing skills","Memory only"],a:1,ex:"Group discussion evaluates: content quality, communication clarity, leadership (initiating, summarizing), listening and building on others' points, managing disagreements respectfully, and overall body language.",star:true},
+{c:3,q:"Non-verbal communication in oral presentations includes:",o:["Only voice quality","Facial expressions, gestures, posture, eye contact, proxemics (distance), appearance, and movement","Only written notes","Only PowerPoint"],a:1,ex:"Non-verbal communication: accounts for 55-93% of message impact (Mehrabian's research). Includes facial expressions (emotions), gestures (emphasis), posture (confidence/openness), eye contact (engagement), and proxemics.",star:true},
+{c:3,q:"The hook in a presentation opening serves to:",o:["End the presentation","Immediately capture audience attention and motivate them to listen (anecdote, question, statistic, quote)","Introduce the speaker's resume","List all slides"],a:1,ex:"Presentation hooks: startling statistic, provocative question, compelling story/anecdote, surprising fact, relevant quote, or dramatic demonstration. First 30 seconds establish whether audience will engage.",star:true},
+{c:3,q:"Telephone etiquette in professional communication requires:",o:["Speaking informally with anyone","Identifying yourself promptly, speaking clearly, listening actively, taking accurate messages, and ending politely","Keeping people on hold always","Speaking very loudly"],a:1,ex:"Phone etiquette: answer within 3 rings, identify yourself ('Good morning, ABC Company, Priya speaking'), use caller's name, speak clearly, avoid multitasking during call, take messages accurately, confirm before transfer.",star:true},
+{c:3,q:"Extempore speaking means:",o:["Reading from a prepared script","Speaking with little or no advance preparation on a topic given just before speaking","Refusing to speak","Memorized speech"],a:1,ex:"Extempore (impromptu) speaking: speaking with minimal preparation. Strategy: structure thoughts quickly (PREP: Point, Reason, Example, Point), buy time with 'That's an interesting question…', speak confidently.",star:false},
+{c:3,q:"The Q&A session after a presentation should be handled by:",o:["Ignoring questions","Listening to complete questions, pausing to think, answering concisely and honestly, admitting unknowns, and bridging back to main message","Giving very long answers","Criticizing questioners"],a:1,ex:"Q&A management: listen fully before answering, rephrase complex questions, give concise answers, say 'I'll find out and get back to you' for unknowns, keep all audience engaged, and manage time boundaries.",star:true},
+{c:3,q:"Cross-cultural communication awareness involves recognizing that:",o:["All cultures communicate identically","Communication styles, directness, non-verbal norms, hierarchy, time orientation, and formality vary significantly across cultures","Only language differs","Only food preferences differ"],a:1,ex:"Cultural communication differences: high-context vs. low-context cultures (implicit vs. explicit meaning), direct vs. indirect communication, different non-verbal norms (eye contact, touch, space), formal vs. informal hierarchies.",star:true},
+{c:3,q:"Barriers to effective oral communication include:",o:["Clear language use","Noise, language differences, emotional state, physical barriers, cultural differences, perceptual biases, and information overload","Good preparation","Active listening"],a:1,ex:"Communication barriers: physical (noise, distance), psychological (emotional state, biases), semantic (jargon, language), cultural (different norms), perceptual (selective attention), and physiological (hearing impairment).",star:true},
+{c:3,q:"The 7Cs of effective communication are:",o:["Color, Copy, Create, Communicate, Connect, Control, Complete","Clear, Concise, Concrete, Correct, Coherent, Complete, Courteous","Call, Check, Create, Consider, Communicate, Complete, Control","Chat, Comment, Connect, Copy, Create, Click, Confirm"],a:1,ex:"7 Cs: Clear (easy to understand), Concise (no waffle), Concrete (specific/tangible), Correct (accurate), Coherent (logical flow), Complete (all information), Courteous (respectful). Framework for effective professional communication.",star:true},
+{c:3,q:"Eye contact in oral presentations is important because it:",o:["Intimidates the audience","Establishes connection, shows confidence, indicates honesty, and enables the speaker to gauge audience reactions","Should be avoided","Only works in small groups"],a:1,ex:"Eye contact: establishes rapport, shows confidence, communicates sincerity, and allows you to observe audience comprehension (confusion, boredom, engagement). Aim for 3-5 seconds per person, moving around the room.",star:true},
+{c:3,q:"Feedback in communication is:",o:["Only written responses","The response (verbal/non-verbal) from the receiver to the sender, enabling the sender to know if the message was understood","Criticism only","Formal performance review"],a:1,ex:"Feedback: receiver's response to sender's message. Completes the communication loop. Can be verbal, non-verbal, immediate or delayed. Without feedback, communication is one-way broadcasting, not true communication.",star:true},
+{c:3,q:"A technical presentation to a non-technical audience should:",o:["Use maximum technical jargon","Minimize jargon, use analogies and real-world examples, focus on implications rather than technical details, and check comprehension","Be as short as possible","Use only numbers"],a:1,ex:"Presenting to non-technical audience: translate jargon to plain language, use analogies ('It's like…'), show impact/benefits rather than mechanisms, use concrete examples, and check understanding frequently.",star:true},
+{c:3,q:"Listening comprehension in professional communication involves:",o:["Only hearing words","Understanding content, identifying main ideas and supporting details, interpreting speaker's purpose, and evaluating information critically","Writing everything down","Nodding continuously"],a:1,ex:"Active listening: phonological (hearing), semantic (meaning), pragmatic (intent), and critical (evaluation) levels. Listening is the most used communication skill but least taught. Poor listening causes most workplace misunderstandings.",star:true},
+{c:3,q:"Proxemics in communication refers to:",o:["Communication through sounds","The study of how physical distance between people affects communication (intimate, personal, social, public zones)","Written communication","Communication through graphics"],a:1,ex:"Proxemics (Edward Hall): Intimate zone (0-45cm), Personal zone (45cm-1.2m), Social zone (1.2-3.5m), Public zone (3.5m+). Zone violations cause discomfort. Cultural differences significantly affect acceptable distances.",star:false},
+{c:3,q:"The primary purpose of an oral presentation's conclusion is to:",o:["Introduce new information","Summarize key points, reinforce the main message, and provide a clear, memorable ending with a call to action","Answer all possible questions","Repeat the introduction word for word"],a:1,ex:"Conclusion: 3 functions — (1) Signal ending, (2) Summarize key points, (3) Memorable close (call to action, circular reference to opening, inspiring quote, challenge). Avoid 'That's all' or trailing off.",star:true},
+{c:3,q:"Meetings in professional communication are most effective when:",o:["They have no agenda","They have clear purpose, agenda distributed in advance, time limits, designated facilitator, action items assigned, and follow-up minutes","Everyone talks simultaneously","They are unplanned"],a:1,ex:"Effective meetings: define purpose (is this meeting necessary?), distribute agenda in advance, start/end on time, keep on-topic, encourage participation, document decisions and action items, and circulate minutes.",star:true},
+{c:3,q:"Paralanguage in communication refers to:",o:["Speaking multiple languages","Vocal elements beyond words — tone, pitch, rate, volume, rhythm, and pauses — that modify meaning","Written communication codes","Body language only"],a:1,ex:"Paralanguage: how something is said, not what. Same words with different tone/pitch convey different meanings. 'Sure.' (enthusiastic vs. sarcastic). Includes filled pauses (um, uh), speed, and volume. Powerful communication channel.",star:true},
+{c:3,q:"A press conference requires which communication skills?",o:["Only reading from a prepared statement","Confident delivery, concise clear answers, handling hostile questions diplomatically, staying on-message, and media awareness","Avoiding all questions","Long complex answers"],a:1,ex:"Press conference: prepare key messages (3 max), anticipate difficult questions, use bridging ('That's an important point, what I can say is...'), control time, project confidence, and coordinate with PR team.",star:false},
+{c:3,q:"Persuasive communication in professional settings uses:",o:["Only emotional appeal (pathos)","Combination of ethos (credibility), pathos (emotion), and logos (logic/evidence) — Aristotle's rhetorical appeals","Only logical arguments","Only authority and threats"],a:1,ex:"Aristotle's rhetoric: Ethos (establish credibility), Pathos (emotional connection), Logos (logical evidence). Most persuasive: strong ethos + relevant data + emotional resonance. Used in proposals, sales, and advocacy.",star:true},
+{c:3,q:"The communication model by Shannon and Weaver shows communication as:",o:["A one-way process with no feedback","Source → Encoder → Channel → Decoder → Receiver, with noise affecting the process","A circular process only","A spoken-only process"],a:1,ex:"Shannon-Weaver model (1948): Information source → Encoder → Channel (with noise) → Decoder → Receiver. Originally for telecommunications. 'Noise' = any interference. Feedback loop added later by Schramm.",star:true},
+{c:3,q:"Kinesics in communication study refers to:",o:["Movement of planets","Body language — gestures, facial expressions, postures, and movements that communicate meaning","Sound communication","Written codes"],a:1,ex:"Kinesics (Ray Birdwhistell): study of body language. Includes gestures (emblems, illustrators, regulators, adaptors), facial expressions (universal: happiness, sadness, anger, fear, disgust, surprise), and posture.",star:false},
+{c:3,q:"A group presentation differs from an individual presentation in that:",o:["It is always better","It requires coordinated roles, smooth transitions between speakers, unified visual style, and rehearsal together as a team","Only one person presents","No planning is needed"],a:1,ex:"Group presentation requirements: assign clear roles (intro, body sections, conclusion, Q&A), agree on style and format, rehearse transitions, maintain consistent visual theme, and support each other during delivery.",star:false},
+{c:3,q:"Conflict resolution communication strategies include:",o:["Avoiding all conflict","Active listening, seeking common ground, using 'I' statements, focusing on issues not personalities, and finding win-win solutions","Always agreeing with others","Escalating to management immediately"],a:1,ex:"Conflict resolution: (1) Listen without interrupting, (2) Acknowledge feelings, (3) Identify common interests, (4) Use 'I feel…' not 'You always…', (5) Brainstorm solutions, (6) Agree on action plan. Collaborative approach = best outcome.",star:true},
+
+/* ═══════════════════════════════════════════════
+   UNIT 5 — Technical Writing Formats (30 Qs)
+═══════════════════════════════════════════════ */
+{c:4,q:"A technical report differs from a project report in that:",o:["They are identical","A technical report communicates findings/recommendations; a project report documents project activities, methodology, and outcomes"],a:1,ex:"Technical report: describes investigation, experiment, or design with findings, analysis, and recommendations. Project report: documents project background, objectives, methodology, progress, outcomes, and lessons learned.",star:true,o:["They are identical documents","A technical report communicates research findings and recommendations; a project report documents project activities, methodology, and outcomes","Technical reports have no conclusions","Project reports use no technical language"]},
+{c:4,q:"The executive summary in a technical report should:",o:["Be written first, before the full report","Be written last, summarize the entire document, and be understandable independently without reading the full report","Contain all raw data","Be only one sentence"],a:1,ex:"Executive summary: written LAST (after report is complete), summarizes all sections (problem, methodology, findings, conclusions, recommendations), 1-10% of report length. Decision-makers read only this — make it complete.",star:true},
+{c:4,q:"A project proposal differs from a project report in that:",o:["They are the same","A proposal argues for future action/funding; a report documents what has already been accomplished","Proposals are shorter","Reports have no conclusions"],a:1,ex:"Proposal: FUTURE — seeks approval and funding for planned work, argues for need and feasibility. Report: PAST/PRESENT — documents completed or ongoing work, presents findings. Different purpose, different tense.",star:true},
+{c:4,q:"A newsletter in an organization serves to:",o:["Replace formal reports","Share news, updates, events, and information with a specific community in an informal, engaging format","Only announce job openings","Serve as legal documentation"],a:1,ex:"Newsletter: periodic publication (weekly/monthly) sharing organizational news, achievements, upcoming events, and feature stories. Builds community, improves morale, and keeps stakeholders informed. Tone: warm and engaging.",star:false},
+{c:4,q:"A technical article for a professional journal typically includes:",o:["Creative fiction","Abstract, introduction, literature review, methodology, results, discussion, conclusion, and references in standard academic format","Informal blog-style writing","No citations"],a:1,ex:"Technical/research article structure: Abstract (summary), Introduction (background/problem), Literature Review, Methodology, Results (data), Discussion (interpretation), Conclusion, References. Must be peer-reviewed for journals.",star:true},
+{c:4,q:"A manual (user/technical) is designed to:",o:["Entertain users","Provide step-by-step instructions for operating equipment, using software, following procedures, or maintaining systems","Replace training courses entirely","Describe company history"],a:1,ex:"Manual types: User manual (operate product), Technical/Service manual (maintain/repair), Training manual (learn processes), Policy manual (rules/procedures). Must be task-oriented, clear, with numbered steps and visuals.",star:true},
+{c:4,q:"Official letters in professional communication require:",o:["Informal greeting like 'Hey'","Formal structure: letterhead, date, recipient address, salutation, body, complimentary close, signature, and appropriate formal tone","Only the writer's name","No subject line"],a:1,ex:"Official letter format: sender's address/letterhead, date, recipient's name and address, subject line, salutation (Dear Mr./Ms. X), body paragraphs, complimentary close (Yours sincerely/faithfully), signature.",star:true},
+{c:4,q:"A business letter should use which of these salutations when the recipient's name is unknown?",o:["Dear Friend","Dear Sir/Madam (or To Whom It May Concern)","Hey there","Greetings"],a:1,ex:"When recipient unknown: 'Dear Sir/Madam' or 'To Whom It May Concern.' When name is known: 'Dear Mr. Sharma' / 'Dear Dr. Patel.' Close with 'Yours faithfully' (name unknown) or 'Yours sincerely' (name known).",star:true},
+{c:4,q:"A memo (memorandum) in professional communication is:",o:["Same as a business letter","An internal document used for communication within an organization, with a standardized header: To, From, Date, Subject","An external legal document","A form of contract"],a:1,ex:"Memo: internal communication tool. Header: TO (recipients), FROM (sender), DATE, SUBJECT (RE:). No salutation, no complimentary close. Direct, concise, specific purpose. Often used for announcements, requests, policy updates.",star:true},
+{c:4,q:"A progress report communicates:",o:["Only project completion","The current status of an ongoing project — what has been accomplished, what is in progress, any problems, and what is planned next","Final results only","Budget information only"],a:1,ex:"Progress report: (1) Work completed since last report, (2) Work currently in progress, (3) Problems/risks encountered, (4) Planned work for next period, (5) Updated schedule/budget if needed. Frequency: weekly/monthly.",star:true},
+{c:4,q:"Minutes of meetings serve to:",o:["Replace the meeting","Create an official record of attendees, discussion points, decisions made, and action items assigned with responsible parties and deadlines","Only list attendees","Be sent before the meeting"],a:1,ex:"Meeting minutes: official record. Include: date/time/location, attendees, apologies, agenda items discussed, decisions made, action items (who/what/when), next meeting date. Distributed promptly after meeting.",star:true},
+{c:4,q:"An event report documents:",o:["Future events planned","What occurred during an event — objectives, activities, attendance, outcomes, feedback, and recommendations for future events","Social media posts","Expense claims"],a:1,ex:"Event report: prepared after an event. Includes: event overview, objectives vs. outcomes, attendance data, activities conducted, feedback summary, financial summary, lessons learned, and recommendations.",star:false},
+{c:4,q:"Formal reports contain which of the following front matter components?",o:["Only title page","Title page, letter of transmittal, table of contents, list of figures, and abstract/executive summary","Only abstract","Only bibliography"],a:1,ex:"Formal report front matter: Title page, Transmittal letter/memo, Abstract/Executive Summary, Table of Contents, List of Figures/Tables. Body: Introduction, Discussion, Conclusion, Recommendations. Back matter: Appendices, References, Glossary.",star:true},
+{c:4,q:"A letter of transmittal in a formal report:",o:["Is the main content","Formally presents the report to the recipient, briefly explains why it was written and highlights key findings","Contains all data","Is an internal memo"],a:1,ex:"Transmittal letter/memo: accompanies formal report. Formally presents it ('I am pleased to submit…'), briefly states report purpose and scope, highlights major findings or recommendations, and may acknowledge assistance.",star:true},
+{c:4,q:"Technical specifications (specs) are documents that:",o:["Tell a story about technology","Define detailed requirements, standards, materials, dimensions, performance criteria, and methods for products or processes","Are only used in software","Cannot use numbers or measurements"],a:1,ex:"Specifications: precise, detailed requirements for products, materials, systems, or processes. Types: product specs (describe what), process specs (describe how), performance specs (define measurable outcomes). Used in engineering and procurement.",star:true},
+{c:4,q:"A feasibility report analyzes:",o:["Only financial aspects","Whether a proposed project or solution is technically, financially, legally, and operationally viable","Historical records only","Employee performance"],a:1,ex:"Feasibility study: assesses Technical (can it be done?), Financial (is it cost-effective?), Legal (are there regulatory issues?), Operational (can the organization implement it?), and Schedule feasibility. Concludes with recommendation.",star:true},
+{c:4,q:"The body of a formal technical report typically contains:",o:["Only conclusions","Introduction, methodology/procedures, results/findings, analysis/discussion, conclusions, and recommendations","Only data tables","Only executive summary"],a:1,ex:"Report body: (1) Introduction (background, scope, purpose), (2) Methodology (how information was gathered), (3) Results/Findings (what was found, with tables/charts), (4) Discussion (analysis/interpretation), (5) Conclusions, (6) Recommendations.",star:true},
+{c:4,q:"The difference between conclusions and recommendations in a report:",o:["They mean the same","Conclusions: what the evidence shows (findings interpreted); Recommendations: what actions should be taken based on conclusions","Recommendations come before conclusions","Conclusions contain all raw data"],a:1,ex:"Conclusions: logical inferences drawn from the analysis — 'The data show that…' Recommendations: specific actions proposed — 'We recommend that the organization should…' Conclusions → Recommendations (logical sequence).",star:true},
+{c:4,q:"An abstract in a technical report differs from an executive summary in that:",o:["They are identical","An abstract is brief (150-300 words) and descriptive/informative; an executive summary is longer and includes enough detail for decision-making without reading the report","Abstracts are longer","Executive summaries don't include recommendations"],a:1,ex:"Abstract: 150-300 words, used in academic/scientific papers, summarizes what was done and found. Executive summary: 1-5 pages (10% of report), used in business reports, allows reader to make decisions without full report.",star:true},
+{c:4,q:"References and bibliography in a technical report serve to:",o:["Add page count","Acknowledge sources used, allow readers to verify information, and avoid plagiarism by crediting original authors","List all authors' contact information","Show the writer's reading speed"],a:1,ex:"References: sources actually cited in text. Bibliography: all sources consulted (may be broader). Use consistent citation style (APA, IEEE, Harvard). Plagiarism is serious academic/professional misconduct.",star:true},
+{c:4,q:"Appendices in a technical report contain:",o:["Summary of report","Supplementary material that supports the report but would interrupt flow if included in the body — raw data, detailed calculations, survey instruments","The main findings","The table of contents"],a:1,ex:"Appendices: placed after references. Include supporting material readers may need but which would disrupt reading flow — raw data tables, calculations, survey questionnaires, sample documents, detailed technical specifications.",star:false},
+{c:4,q:"An IEEE (Institute of Electrical and Electronics Engineers) citation style uses:",o:["Alphabetical reference list (APA style)","Numbered references in order of first citation in text, listed numerically in references section [1], [2], [3]...","Footnote citations","Author-date style (Harvard)"],a:1,ex:"IEEE style: citations appear as numbered references in order of first appearance [1]. References section lists all sources numerically in that order. Widely used in engineering and technical papers.",star:true},
+{c:4,q:"A white paper in technical communication is:",o:["A blank document","An authoritative, in-depth document presenting a problem and proposing a solution, often used in business and government to educate and influence decisions","An informal memo","A creative writing piece"],a:1,ex:"White paper: 5-50 pages, presents complex issue, educates reader about the problem, and advocates a specific solution. Used for thought leadership, policy influence, and B2B marketing. Evidence-based and authoritative.",star:true},
+{c:4,q:"Grant proposals in technical writing must include:",o:["Only the researcher's CV","Statement of need, project description, methodology, timeline, budget, evaluation plan, organizational qualifications, and sustainability plan","Only financial data","Only previous achievements"],a:1,ex:"Grant proposal structure: Executive summary, Problem/Need statement, Goals and objectives, Methodology, Evaluation plan, Timeline, Budget with justification, Organizational background, and Sustainability. Follows funder's specific guidelines.",star:false},
+{c:4,q:"A résumé (CV) in professional communication should:",o:["Include personal hobbies only","Clearly present education, experience, skills, and achievements in a clean format tailored to the specific job and employer","Be as long as possible","Include only name and phone number"],a:1,ex:"Résumé best practices: tailor to each job (use keywords from job posting), quantify achievements ('Increased sales by 30%'), use action verbs, reverse chronological order, clean formatting, 1-2 pages for most professionals.",star:true},
+{c:4,q:"A cover letter accompanying a job application should:",o:["Repeat the résumé word for word","Introduce the candidate, explain why they are interested in the role, highlight 2-3 key qualifications specific to the job, and request an interview","Be more than 3 pages","Discuss salary expectations only"],a:1,ex:"Cover letter: 3-4 paragraphs. Opening (position applying for + enthusiasm), Middle (2-3 specific qualifications aligned with job requirements + evidence), Closing (request interview + contact information). Customize each letter.",star:true},
+{c:4,q:"Technical writing for social media differs from traditional technical writing in that:",o:["Social media allows more complexity","Social media requires shorter content, conversational tone, hashtags, visual priority, and platform-specific conventions (character limits, formats)","They are identical","Social media avoids visuals"],a:1,ex:"Social media technical writing: shorter (Twitter 280 chars), visual-first (Instagram), platform-specific conventions, conversational but professional, engagement-focused, includes relevant hashtags, and prompt action.",star:false},
+{c:4,q:"A request for proposal (RFP) is a document that:",o:["Proposes a new policy","An organization issues to invite vendors to submit proposals for a specific project or service, specifying requirements and evaluation criteria","A job application","A progress report"],a:1,ex:"RFP: issued by buyer/client to potential vendors/contractors. Specifies: project scope, requirements, deliverables, timeline, budget range, and selection criteria. Vendors respond with their proposals/bids.",star:true},
+{c:4,q:"Standard Operating Procedures (SOPs) are:",o:["Informal guidelines","Step-by-step written instructions for routine operations to ensure consistency, quality, safety, and regulatory compliance","Only used in factories","Outdated management tools"],a:1,ex:"SOPs: documented procedures for routine tasks. Ensure consistency, reduce errors, facilitate training, support quality systems (ISO), and maintain regulatory compliance. Written in imperative voice with numbered steps.",star:true},
+{c:4,q:"A case study as a technical document format involves:",o:["Hypothetical scenarios only","An in-depth examination of a real-world situation, project, or problem — its context, approach, implementation, and outcomes","A creative story","A simple memo"],a:1,ex:"Case study: describes real situation in detail, analyzes what was done and why, presents results achieved, and extracts lessons/insights. Used in business, medicine, engineering, and education as evidence-based learning.",star:false},
+{c:4,q:"Documentation testing (doc testing) means:",o:["Testing the printer","Verifying that technical documentation is accurate, complete, and usable by having users attempt tasks using only the documents","Counting pages","Checking word count"],a:1,ex:"Documentation testing: subject matter experts verify technical accuracy; usability testers verify users can accomplish tasks. Also tests: accuracy of procedures, completeness, translation quality, and searchability.",star:false},
+
+/* ═══════════════════════════════════════════════
+   UNIT 6 — Ethics (30 Qs)
+═══════════════════════════════════════════════ */
+{c:5,q:"Business ethics refers to:",o:["Company financial strategies","The application of ethical principles and moral standards to business activities, decisions, and relationships","Legal compliance only","Accounting rules"],a:1,ex:"Business ethics: applying moral principles to business conduct — honesty, fairness, respect for stakeholders, environmental responsibility, and integrity. Goes beyond legal compliance to voluntary ethical conduct.",star:true},
+{c:5,q:"Professional ethics in engineering means:",o:["Only following employer orders","Commitment to public safety, honesty, competence, confidentiality, and avoiding conflicts of interest in engineering practice","Maximizing profit","Avoiding all regulations"],a:1,ex:"Engineering ethics: prioritize public health and safety, be honest and truthful, practice only within competence, maintain confidentiality, avoid conflicts of interest, and uphold the profession's honor (IEEE, NSPE codes).",star:true},
+{c:5,q:"Etiquette in social and office settings involves:",o:["Only table manners","Expected codes of social behavior — respectful interactions, appropriate dress, professional conduct, and consideration for others in both social and professional environments","Strict legal codes","Entertainment preferences"],a:1,ex:"Professional etiquette: punctuality, respectful address, active listening, appropriate dress, mobile phone courtesy, meeting behavior, introductions, and respecting diverse backgrounds. Etiquette builds trust and professional reputation.",star:true},
+{c:5,q:"Email etiquette in professional communication requires:",o:["Using all caps for emphasis","Professional subject line, proper salutation, clear and concise content, professional closing, and response within appropriate timeframe (24-48 hours)","Forwarding all emails to everyone","Using informal language always"],a:1,ex:"Email etiquette: clear subject line, appropriate greeting, concise body (one topic per email), professional closing signature, proofread before sending, reply within 24-48 hours, use Reply All only when necessary.",star:true},
+{c:5,q:"Telephone etiquette in professional settings includes:",o:["Answering with 'Yeah?'","Answering promptly, identifying yourself and organization, speaking clearly and courteously, actively listening, taking accurate messages, and following up as promised","Keeping people on hold indefinitely","Using slang and informal language"],a:1,ex:"Phone etiquette: answer within 3 rings, 'Good morning, ABC Co., [Name] speaking', use professional language, give caller full attention, ask permission before placing on hold, follow through on call-backs.",star:true},
+{c:5,q:"Engineering ethics violations can include:",o:["Providing safety-first designs","Falsifying test data, concealing known hazards, plagiarizing technical work, accepting bribes, and practicing outside competence","Following safety regulations","Maintaining client confidentiality"],a:1,ex:"Ethics violations: falsifying data (putting public at risk), concealing defects (Challenger disaster), accepting kickbacks, copying others' technical work without credit, and practicing beyond one's competence. All undermine public trust.",star:true},
+{c:5,q:"Managing time ethically in a professional context means:",o:["Always working overtime","Delivering work on agreed deadlines, being honest about progress, not claiming time not worked, and not wasting organizational resources","Billing more hours than worked","Avoiding all deadlines"],a:1,ex:"Ethical time management: meet commitments, inform stakeholders early if timeline is at risk, don't falsify time records, respect others' time (punctuality, efficient meetings), and use work time productively.",star:false},
+{c:5,q:"The role and responsibility of an engineer includes:",o:["Only technical calculations","Ensuring public safety in designs, providing honest advice, maintaining competence, respecting clients, and upholding the engineering code of conduct","Only following employer instructions","Maximizing corporate profit always"],a:1,ex:"Engineer's responsibilities: paramount duty to public health and safety, professional competence, honest and objective advice, environmental responsibility, confidentiality, avoiding conflicts of interest, and advancing the profession.",star:true},
+{c:5,q:"Work culture in organizations refers to:",o:["Office furniture","Shared values, beliefs, attitudes, behaviors, and norms that characterize how work is done and how people interact within an organization","Dress code only","Work hours only"],a:1,ex:"Work culture: includes values (what we care about), norms (how things are done), beliefs (what we assume to be true), communication style, leadership approach, and physical environment. Strong positive culture improves performance.",star:true},
+{c:5,q:"Personal memo in professional ethics involves:",o:["A formal report to management","An internal note to oneself documenting an ethical concern, observation, or decision for record-keeping and accountability","A social media post","A business letter"],a:1,ex:"Personal memo/record: document your observations of potential ethical violations, your decisions in grey areas, and communications about concerns. Important for professional protection and creating an ethical paper trail.",star:false},
+{c:5,q:"Plagiarism in technical communication means:",o:["Citing all sources correctly","Using someone else's work, ideas, or words without proper attribution — presenting them as your own","Paraphrasing with citation","Using publicly available information"],a:1,ex:"Plagiarism: copying text, ideas, code, data, or designs without attribution. Serious professional and academic offense — can result in termination, legal action, or professional censure. Always cite sources and get permissions.",star:true},
+{c:5,q:"Intellectual property rights in technical communication protect:",o:["Only physical products","Original creative works including writing, designs, software, inventions, and technical documents from unauthorized use","Common knowledge","Facts and data themselves"],a:1,ex:"IP in tech comm: copyright (writing, documents), patent (inventions), trademark (brand identity), trade secret (confidential methods). Technical writers must respect IP: get permissions, use licensed images, and protect company IP.",star:true},
+{c:5,q:"Whistleblowing in engineering ethics refers to:",o:["A sports signal","Reporting unethical, illegal, or dangerous activities within an organization to internal or external authorities for public protection","Informal gossip","Performance review"],a:1,ex:"Whistleblowing: reporting safety violations, fraud, environmental violations, or other unethical conduct. Engineers have ethical (and sometimes legal) obligation to report hazards to public safety. Protected by whistleblower laws in many countries.",star:true},
+{c:5,q:"Conflict of interest in professional ethics occurs when:",o:["Two colleagues disagree","A personal interest could improperly influence professional judgment or decision-making — financial interests, relationships, or outside activities","Normal business competition","Two contracts exist"],a:1,ex:"Conflict of interest: personal/financial interest that could bias professional judgment. Examples: approving a contract with a company you own stock in, hiring a family member without fair process, accepting gifts from vendors.",star:true},
+{c:5,q:"The principle of informed consent in engineering projects means:",o:["Employees sign any document requested","Stakeholders (clients, public) must be given complete, truthful information about risks before they can meaningfully agree to proceed","Only financial consent is needed","Management decides for all stakeholders"],a:1,ex:"Informed consent: people must fully understand what they are agreeing to — risks, benefits, alternatives — before consenting. Critical in research, medical devices, environmental projects, and construction affecting communities.",star:true},
+{c:5,q:"Environmental ethics in engineering requires engineers to:",o:["Prioritize profit over environment","Consider environmental impacts of designs, minimize pollution, conserve resources, design for sustainability, and protect ecosystems for future generations","Ignore environmental regulations","Outsource environmental concerns"],a:1,ex:"Environmental ethics: engineers have responsibility beyond client — to environment and future generations. Sustainable design, pollution prevention, lifecycle analysis, and compliance with environmental regulations are ethical obligations.",star:true},
+{c:5,q:"Professional confidentiality in technical communication means:",o:["Sharing company secrets with friends","Protecting proprietary client/employer information — technical specifications, business strategies, personnel matters — from unauthorized disclosure","Publishing all company information","Ignoring NDAs"],a:1,ex:"Confidentiality: technical writers and engineers handle proprietary information. Ethical and legal obligation to protect it — sign NDAs, limit sharing to need-to-know basis, secure documents, and maintain confidentiality after leaving organization.",star:true},
+{c:5,q:"The IEEE Code of Ethics requires engineers to:",o:["Prioritize employer profit over public safety","Hold public safety paramount, be honest, reject bribery, treat all persons fairly, and support colleagues' professional development","Keep all technical knowledge secret","Avoid all environmental considerations"],a:1,ex:"IEEE Code: (1) Public safety and well-being paramount, (2) Avoid real/perceived conflicts of interest, (3) Be honest and realistic, (4) Reject bribery, (5) Improve technology understanding publicly, (6) Maintain competence, (7) Treat all persons fairly.",star:true},
+{c:5,q:"Accessibility in technical communication ethics means:",o:["Easy physical access to buildings","Ensuring technical documents, products, and digital content are usable by people with diverse abilities including visual, hearing, motor, and cognitive disabilities","Premium pricing for accessibility features","Accessibility is optional"],a:1,ex:"Accessibility ethics: technical writers have responsibility to make content accessible — alt text for images, captions for videos, readable fonts, sufficient contrast, logical document structure for screen readers, and plain language.",star:true},
+{c:5,q:"Deceptive or misleading technical writing is unethical because:",o:["All writing is subjective","It can lead to serious consequences — unsafe product use, financial decisions based on false information, or damage to public trust","Technical writing is not held to ethical standards","Only legal accuracy matters"],a:1,ex:"Unethical technical writing: omitting known risks, exaggerating product capabilities, using misleading statistics, burying important warnings, or creating impossible-to-understand legal notices. Can harm users and damage organizational credibility.",star:true},
+{c:5,q:"Social responsibility of engineers means:",o:["Only corporate social responsibility programs","Using technical expertise and influence to contribute to society's well-being — safe infrastructure, clean technology, accessible design, and equitable solutions","Maximizing shareholder returns only","Avoiding public engagement"],a:1,ex:"Social responsibility: engineers' expertise gives them power to shape society. Ethical responsibility includes: building safe infrastructure for all, designing inclusive technology, advocating for sustainable practices, and using expertise for public good.",star:true},
+{c:5,q:"Work ethics in the workplace include:",o:["Working the minimum required hours","Punctuality, diligence, reliability, integrity, positive attitude, professional conduct, and taking pride in the quality of one's work","Criticizing management","Doing the minimum always"],a:1,ex:"Work ethics: strong work ethics = productive, reliable, honest, and professional behavior. Punctual, meets commitments, maintains quality standards, respects colleagues, takes initiative, and represents the organization positively.",star:true},
+{c:5,q:"Data privacy ethics in technical communication requires:",o:["Sharing all user data","Collecting only necessary data, protecting it securely, informing users about its use, obtaining consent, and complying with privacy regulations (GDPR, IT Act)","Selling user data for profit","Ignoring data breaches"],a:1,ex:"Data privacy: ethical principles — data minimization (collect only what's needed), purpose limitation (use only for stated purpose), transparency (inform users), security (protect against breaches), and compliance with privacy laws.",star:true},
+{c:5,q:"Diversity and inclusion in professional communication ethics means:",o:["Treating everyone identically regardless of need","Respecting and valuing differences in culture, gender, ethnicity, ability, and perspective, and ensuring communication is inclusive and equitable for all","Avoiding all cultural discussion","Only using English"],a:1,ex:"Inclusive communication: avoid stereotypes, use gender-neutral language (chairperson not chairman), respect cultural differences in communication styles, ensure accessibility, and create a safe space for diverse voices to be heard.",star:true},
+{c:5,q:"Copyright in technical documents means:",o:["Documents can be copied freely","The legal right of creators to control reproduction, distribution, and use of their original work, including technical documents","Only books are copyrighted","Copyright expires immediately"],a:1,ex:"Copyright: automatic protection for original written works including technical documents, user manuals, white papers, and technical articles. To reproduce, you need permission or must rely on fair use. Cite sources to avoid plagiarism.",star:true},
+{c:5,q:"Ethical use of AI tools in technical writing requires:",o:["Full AI-generated content without disclosure","Transparency about AI assistance, verification of AI-generated content for accuracy, maintaining human responsibility for final content, and respecting IP of training data sources","Never using AI tools","Only AI with no human editing"],a:1,ex:"AI ethics in writing: disclose use where appropriate, verify accuracy (AI can 'hallucinate'), take responsibility for final content, check for plagiarism in AI output, respect copyright of sources AI was trained on.",star:true},
+{c:5,q:"Non-disclosure agreements (NDAs) in professional communication are:",o:["Optional suggestions","Legal contracts requiring parties to keep specified information confidential, commonly used to protect trade secrets and proprietary information","Informal company policies","Only used for personal information"],a:1,ex:"NDA: legally binding contract protecting confidential business information — trade secrets, product plans, client information. Technical writers often sign NDAs because they access proprietary technical documentation. Breach = serious legal consequences.",star:true},
+{c:5,q:"Responsible use of sources in technical writing includes:",o:["Copying from the internet without credit","Properly citing all sources (APA, IEEE, Harvard), obtaining permissions for copyrighted material, and distinguishing between facts, opinions, and interpretation","Only citing famous authors","Citing without reading the source"],a:1,ex:"Source responsibility: read sources yourself (don't cite second-hand), verify currency and credibility, use proper citation style, obtain image permissions, distinguish between primary and secondary sources, and represent authors' views accurately.",star:true},
+{c:5,q:"Professional integrity in technical communication means:",o:["Telling employers only what they want to hear","Providing honest, accurate, and complete information even when it is inconvenient, maintaining truthfulness under pressure","Hiding problems in reports","Overestimating project capabilities"],a:1,ex:"Professional integrity: the foundation of technical communication's credibility. Means: report findings honestly (even bad news), don't overstate capabilities, acknowledge limitations and uncertainties, and resist pressure to alter facts for business convenience.",star:true},
+{c:5,q:"The ethical dimension of cross-cultural technical communication requires:",o:["Imposing home culture standards globally","Respecting cultural communication differences, avoiding ethnocentrism, adapting documents for cultural appropriateness, and ensuring translation accuracy","Using only one language","Ignoring cultural context"],a:1,ex:"Cross-cultural ethics: respect that communication norms differ. Avoid cultural stereotypes, don't assume Western styles are universal, work with cultural experts for translations, ensure local legal compliance, and test documents with local users.",star:true},
+];
+
+/* ─── ENGINE ─── */
+let sName='',sBranch='',sSem='',sCollege='';
+let activeQ=[],idx=0,score=0,skipped=0,uAns=[];
+let timerInterval=null,timeLeft=30,selChapter='all';
+
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function getRmk(p){
+  if(p>=90)return{e:'🏆',t:'Outstanding! ETC Champion!'};
+  if(p>=75)return{e:'🥇',t:'Excellent! Ready for exam!'};
+  if(p>=60)return{e:'🥈',t:'Good work! Keep practising!'};
+  if(p>=40)return{e:'🥉',t:'Fair attempt. Revise more!'};
+  return{e:'📖',t:'Keep studying! You can do it!'};
+}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sName=$('inputName').value.trim()||'Student';
+  sBranch=$('inputBranch').value.trim()||'N/A';
+  sSem=$('inputSem').value||'N/A';
+  sCollege=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+document.querySelectorAll('.chapter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');selChapter=btn.dataset.chapter;
+  });
+});
+
+$('startBtn').addEventListener('click',()=>{
+  activeQ=selChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selChapter));
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);
+  showScreen('screenQuiz');render();
+});
+
+$('backBtn').addEventListener('click',()=>{
+  if(confirm('Go back to intro? Progress will be lost.')){clearInterval(timerInterval);showScreen('screenIntro');}
+});
+
+function startTimer(){
+  clearInterval(timerInterval);timeLeft=30;updateTimerUI();
+  timerInterval=setInterval(()=>{timeLeft--;updateTimerUI();if(timeLeft<=0){clearInterval(timerInterval);autoSkip();}},1000);
+}
+function updateTimerUI(){
+  const tp=$('timerPill');tp.textContent=`⏳ ${timeLeft}s`;
+  tp.className='timer-pill'+(timeLeft<=10?' urgent':'')+(timeLeft<=5?' critical':'');
+}
+function autoSkip(){
+  if(uAns[idx]===-1){uAns[idx]=-2;skipped++;}
+  idx<activeQ.length-1?++idx&&render():showResult();
+}
+
+function render(){
+  const q=activeQ[idx];
+  $('progressText').textContent=`Question ${idx+1} of ${activeQ.length}`;
+  $('scoreText').textContent=`Score: ${score}`;
+  $('progressFill').style.width=`${(idx/activeQ.length)*100}%`;
+  $('qNum').textContent=`Q${idx+1}`;
+  const os=document.querySelector('.q-star');if(os)os.remove();
+  if(q.star){const s=document.createElement('div');s.className='q-star';s.textContent='⭐ Important';$('qNum').after(s);}
+  $('qText').textContent=q.q;
+  const ex=$('qExample');ex.style.display='none';
+  $('chapterBadge').textContent=`${CHAPTERS[q.c].icon} Unit ${q.c+1}: ${CHAPTERS[q.c].name}`;
+  const ol=$('optionsList');ol.innerHTML='';
+  ['A','B','C','D'].forEach((L,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${L}</div><div class="option-text">${q.o[i]}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));ol.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');$('explanationText').textContent='';
+  $('nextBtn').classList.remove('visible');$('skipBtn').style.display='inline-block';
+  $('autoAdvanceBar').classList.remove('show');$('autoNextHint').classList.remove('show');
+  startTimer();
+}
+
+function selectAnswer(chosen){
+  clearInterval(timerInterval);if(uAns[idx]!==-1)return;
+  uAns[idx]=chosen;const q=activeQ[idx];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('locked'));
+  opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';
+  if(chosen===q.a){score++;opts[chosen].querySelector('.option-radio').textContent='✓';}
+  else{opts[chosen].classList.add('wrong');opts[chosen].querySelector('.option-radio').textContent='✗';}
+  if(q.ex){$('explanationText').textContent=q.ex;$('explanationBox').classList.add('show');}
+  $('skipBtn').style.display='none';
+  if(chosen===q.a){
+    $('autoAdvanceBar').classList.add('show');
+    $('autoAdvanceFill').classList.remove('running');void $('autoAdvanceFill').offsetWidth;$('autoAdvanceFill').classList.add('running');
+    $('autoNextHint').classList.add('show');
+    setTimeout(()=>{idx<activeQ.length-1?++idx&&render():showResult();},1600);
+  }else $('nextBtn').classList.add('visible');
+}
+
+$('skipBtn').addEventListener('click',()=>{clearInterval(timerInterval);uAns[idx]=-2;skipped++;idx<activeQ.length-1?++idx&&render():showResult();});
+$('nextBtn').addEventListener('click',()=>{idx<activeQ.length-1?++idx&&render():showResult();});
+
+function showResult(){
+  clearInterval(timerInterval);
+  const tot=activeQ.length,wc=tot-score-skipped,pct=Math.round((score/tot)*100),rm=getRmk(pct);
+  $('resultEmoji').textContent=rm.e;$('scoreBig').textContent=score;$('scoreTotal').textContent=`/ ${tot}`;
+  $('resultPercent').textContent=pct+'%';$('remarkText').textContent=rm.t;
+  const meta=[sBranch!=='N/A'?sBranch:'',sSem!=='N/A'?sSem:''].filter(Boolean).join(' · ')||'ETC Quiz';
+  $('bannerName').textContent=sName;$('bannerMeta').textContent=meta;
+  $('remarkSub').textContent=`${score} correct · ${wc} wrong · ${skipped} skipped`;
+  $('pillCorrect').textContent=score;$('pillWrong').textContent=wc;$('pillSkip').textContent=skipped;
+  $('certBannerName').textContent=sName;$('certBannerMeta').textContent='ETC Quiz · StudyHub';
+  showScreen('screenResult');if(pct>=60)launchConfetti();buildReview();
+}
+
+function launchConfetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const P=Array.from({length:120},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,r:Math.random()*6+3,c:`hsl(${Math.random()*360},80%,60%)`,s:Math.random()*3+1,a:Math.random()*6.28}));
+  let fr=0;const anim=()=>{ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.y+=p.s;p.a+=.04;if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width;}ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);ctx.restore();});fr++;if(fr<220)requestAnimationFrame(anim);else ctx.clearRect(0,0,cv.width,cv.height);};anim();
+}
+
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  activeQ.forEach((q,i)=>{
+    const ua=uAns[i],sk=ua===-2,ok=ua===q.a;
+    const d=document.createElement('div');d.className=`review-item ${ok?'ri-correct':sk?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sk?'':'ri-wrong-ans'}">${sk?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);
+  });
+}
+
+$('reviewToggleBtn').addEventListener('click',()=>{
+  const l=$('reviewList'),b=$('reviewToggleBtn');l.classList.toggle('open');
+  b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';
+});
+
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCert(){
+  const tot=activeQ.length,pct=Math.round((score/tot)*100),rm=getRmk(pct),wc=tot-score-skipped;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r2=40;r2<=160;r2+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r2*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r2,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rr(ctx,22,22,W-44,H-44,22);ctx.stroke();
+  ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rr(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('✍️',sx,sy+9);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);
+  ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sName||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sBranch,sSem,sCollege].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rr(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 18px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Effective Technical Communication — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,sc=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=sc;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=sc;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${score}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=sc;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rr(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=sc;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:score,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:skipped,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const col=ii%2,row=~~(ii/2),sx2=440+col*230,sy3=sy2-46+row*68;rr(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rr(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sCollege&&sCollege!=='N/A')ctx.fillText(`🏛  ${sCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  ETC',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);return cv;
+}
+
+const quizURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/etcquiz.html';
+const shareText=()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct),wc=tot-score-skipped;return `${r.e} ETC Quiz — StudyHub\n\n${sName?'👤 '+sName+'\n':''}${sBranch&&sBranch!=='N/A'?'📘 '+sBranch+(sSem&&sSem!=='N/A'?' · '+sSem:'')+'\n':''}🏆 Score: ${score}/${tot} (${pct}%)\n${r.t}\n\n✅ ${score}  ❌ ${wc}  ⟫ ${skipped}\n\n📚 Try: ${quizURL()}\n\nStudyHub`;};
+
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=activeQ.length,pct=Math.round((score/tot)*100),sn=(sName||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_ETC_Certificate_${sn}_${score}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed — try another browser');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(quizURL()).then(()=>toast('🔗 Link copied!')).catch(()=>prompt('Copy:',quizURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *ETC Quiz — StudyHub*\n\n${sName?'👤 *'+sName+'*\n':''}🏆 Score: *${score}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${quizURL()}`)}`)});
+$('twitterBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${score}/${tot} (${pct}%) on ETC Quiz!\n${r.t}\nTry it: ${quizURL()} #ETC #BTech #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(shareText()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',shareText()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discrete Mathematics Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#7C3AED;--primary-light:#A855F7;--primary-dark:#5B21B6;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF0F5;--card:#FFFFFF;--text:#1E1B4B;--text-sub:#6B7280;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #D1D5DB,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #D1D5DB,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #D1D5DB,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,240,245,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(124,58,237,0.10);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow-raise-sm)}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(124,58,237,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(124,58,237,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,240,245,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.12);
+  flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(124,58,237,0.10);color:var(--primary)}
+/* LAYOUT */
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+/* TOAST */
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#1E1B4B;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.3);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+/* INFO SCREEN */
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(124,58,237,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+/* INTRO */
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(124,58,237,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(124,58,237,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+/* BUTTONS */
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+/* QUIZ SCREEN */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong)}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+/* AUTO ADVANCE */
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+/* QUESTION CARD */
+.question-card{background:linear-gradient(135deg,#5B21B6,#7C3AED);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(124,58,237,.3),8px 8px 16px #D1D5DB,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.25);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;
+  line-height:1.5;position:relative;z-index:1}
+/* OPTIONS */
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #C4C8D4,-6px -6px 14px #FFFFFF;border-color:rgba(124,58,237,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #D1D5DB;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);
+  box-shadow:0 0 0 3px rgba(22,163,74,.15),6px 6px 16px rgba(22,163,74,.1)}
+.option.correct .option-letter{background:var(--correct);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.4)}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);
+  box-shadow:0 0 0 3px rgba(220,38,38,.15),6px 6px 16px rgba(220,38,38,.1)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.4)}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+/* EXPLANATION */
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+/* ACTION */
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(124,58,237,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+/* RESULT */
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;
+  margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);
+  box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(124,58,237,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;
+  box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+/* CERT SECTION */
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#1E0A3C,#3B1A7A);
+  border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(168,85,247,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;
+  cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+/* SHARE PANEL */
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);
+  padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;
+  border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #C4C8D4,-8px -8px 18px #FFFFFF}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+/* REVIEW */
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(124,58,237,.3);background:var(--bg);color:var(--primary);
+  cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+/* ANIMATIONS */
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}.share-actions{gap:8px}.share-action-btn{min-width:68px;padding:12px 8px}
+}
+</style>
+</head>
+<body data-quiz="dm">
+<nav class="navbar">
+  <a href="https://erabhi.in/studyHub/" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://erabhi.in/studyHub/">Home</a></li>
+    <li><a href="quiz.html" class="active">Quizzes</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://erabhi.in/studyHub/">🏠 Home</a>
+  <a href="quiz.html" class="active">🧠 Quizzes</a>
+  <a href="about.html">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<!-- SCREEN 1: INFO -->
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. Computer Science" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option>
+            <option>3rd Semester</option><option>4th Semester</option>
+            <option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: INTRO -->
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">∑</span>
+    <div class="intro-title">Discrete Mathematics Quiz</div>
+    <div class="intro-sub">B.Tech Exam-Oriented MCQs — Sets, Logic, Proof Techniques, Algebra, Graph Theory & more. 180 questions across 6 units.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">180</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (180 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Sets, Relations & Functions</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Mathematical Induction</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Propositional Logic</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Proof Techniques</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Algebraic Structures</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Graphs and Trees</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: QUIZ -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 30</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏱ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">📐 Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: RESULT -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">Discrete Mathematics Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 30</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="quiz.html" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">Discrete Mathematics Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">Share on<br>WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Share on<br>Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Score<br>Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Sets, Relations & Functions",       icon:"🔢"},
+  {name:"Mathematical Induction",            icon:"📐"},
+  {name:"Propositional Logic",               icon:"⚖️"},
+  {name:"Proof Techniques",                  icon:"🔍"},
+  {name:"Algebraic Structures & Morphism",   icon:"🔣"},
+  {name:"Graphs and Trees",                  icon:"🌳"},
+];
+
+const ALL_QUESTIONS=[
+/* ═══════════════════════════════════════════
+   UNIT 1 — Sets, Relations & Functions (30)
+═══════════════════════════════════════════ */
+{c:0,q:"A set is a well-defined collection of distinct objects. Which of the following is NOT a valid set?",o:["Set of all even numbers","Set of all tall people","Set of vowels in English","Set of prime numbers less than 10"],a:1,ex:"'Tall people' is not a well-defined collection since 'tall' is subjective and not precise."},
+{c:0,q:"The set containing no elements is called:",o:["Universal Set","Singleton Set","Empty Set","Power Set"],a:2,ex:"The empty set (∅ or {}) contains no elements. It is also called the null set.",hint:"Example: {x : x is a prime number between 4 and 5} = ∅"},
+{c:0,q:"If A = {1,2,3} and B = {2,3,4}, what is A ∪ B?",o:["{2,3}","{1,2,3,4}","{1,4}","{1,2,3,4,5}"],a:1,ex:"Union A ∪ B contains all elements present in A or B or both. So A ∪ B = {1,2,3,4}."},
+{c:0,q:"If A = {1,2,3} and B = {2,3,4}, what is A ∩ B?",o:["{1,2,3,4}","{1,4}","{2,3}","{3}"],a:2,ex:"Intersection A ∩ B contains only elements present in both A and B. So A ∩ B = {2,3}."},
+{c:0,q:"The power set of A = {a, b} has how many elements?",o:["2","3","4","5"],a:2,ex:"Power set P(A) contains all subsets including ∅ and A itself. |P(A)| = 2² = 4. Subsets: ∅, {a}, {b}, {a,b}.",hint:"Formula: If |A| = n, then |P(A)| = 2ⁿ"},
+{c:0,q:"Which of the following represents the Cartesian product A × B for A={1,2}, B={a}?",o:["{(1,a),(2,a)}","{(a,1),(a,2)}","{1,2,a}","{(1,2),(a,a)}"],a:0,ex:"Cartesian product A × B = {(a,b) : a ∈ A, b ∈ B}. So A × B = {(1,a),(2,a)}."},
+{c:0,q:"A relation R on set A is said to be reflexive if:",o:["aRb implies bRa","aRb and bRc implies aRc","For all a ∈ A, aRa","There exists a ∈ A such that aRa"],a:2,ex:"A relation is reflexive if every element is related to itself: ∀a ∈ A, (a,a) ∈ R.",hint:"Example: R = {(1,1),(2,2),(3,3)} is reflexive on A={1,2,3}"},
+{c:0,q:"A relation R is symmetric if:",o:["aRb implies bRa","aRb and bRc implies aRc","aRa for all a","None of these"],a:0,ex:"Symmetric: if (a,b) ∈ R then (b,a) ∈ R. If a is related to b, then b is related to a.",hint:"Example: 'is sibling of' is symmetric"},
+{c:0,q:"A relation that is reflexive, symmetric, and transitive is called:",o:["Partial Order","Total Order","Equivalence Relation","Function"],a:2,ex:"An equivalence relation satisfies all three properties: reflexivity, symmetry, and transitivity.",hint:"Example: 'congruence modulo n' is an equivalence relation"},
+{c:0,q:"The number of elements in A ∪ B is given by the formula:",o:["|A| + |B|","|A| + |B| - |A ∩ B|","|A| × |B|","|A| - |B|"],a:1,ex:"By the inclusion-exclusion principle: |A ∪ B| = |A| + |B| - |A ∩ B|.",hint:"This avoids double-counting elements in A ∩ B"},
+{c:0,q:"Cantor's diagonal argument proves that:",o:["All sets are countable","The set of real numbers is uncountable","Every set has a power set","N and Z have the same cardinality"],a:1,ex:"Cantor's diagonal argument shows that the real numbers cannot be listed (enumerated), proving they are uncountable.",star:true},
+{c:0,q:"Two sets A and B are equal if:",o:["A ⊂ B","A ⊆ B and B ⊆ A","A and B have the same number of elements","A ∪ B = A ∩ B"],a:1,ex:"Two sets are equal when A ⊆ B and B ⊆ A, meaning they contain exactly the same elements."},
+{c:0,q:"A function f: A → B is called bijective if it is:",o:["Only injective","Only surjective","Both injective and surjective","Neither injective nor surjective"],a:2,ex:"A bijective function is both one-to-one (injective) and onto (surjective). Also called a one-to-one correspondence.",star:true},
+{c:0,q:"A function f: A → B is injective (one-to-one) if:",o:["f(a1) = f(a2) ⟹ a1 = a2","Every element of B has a preimage","f(a) = a for all a","Range of f = B"],a:0,ex:"Injective means distinct inputs give distinct outputs: f(a1) = f(a2) implies a1 = a2.",hint:"Example: f(x) = 2x is injective; f(x) = x² is NOT injective"},
+{c:0,q:"A function f: A → B is surjective (onto) if:",o:["Domain = Codomain","Every element of B has at least one preimage in A","f is one-to-one","f(a1) = f(a2) ⟹ a1 = a2"],a:1,ex:"Surjective: range of f = B. Every element in the codomain B is mapped to by at least one element in A.",hint:"Example: f(x) = x² from R to R is NOT surjective (negative numbers have no preimage)"},
+{c:0,q:"The complement of set A with respect to universal set U is:",o:["A ∪ U","A ∩ U","U − A","A − U"],a:2,ex:"The complement A' = U − A contains all elements in U that are not in A.",hint:"Example: If U={1,2,3,4,5} and A={1,2}, then A' = {3,4,5}"},
+{c:0,q:"De Morgan's Law states: (A ∪ B)' = ?",o:["A' ∪ B'","A' ∩ B'","A ∩ B","A ∪ B"],a:1,ex:"De Morgan's Law: (A ∪ B)' = A' ∩ B' and (A ∩ B)' = A' ∪ B'. The complement of a union is the intersection of complements.",star:true},
+{c:0,q:"The difference A − B (or A \\ B) contains:",o:["Elements in both A and B","Elements in A but not in B","Elements in B but not in A","Elements in neither A nor B"],a:1,ex:"A − B = {x : x ∈ A and x ∉ B}. It contains elements that belong to A but not to B.",hint:"Example: A={1,2,3}, B={2,3,4} → A−B = {1}"},
+{c:0,q:"The symmetric difference A △ B is defined as:",o:["(A ∪ B) − (A ∩ B)","(A ∩ B) − (A ∪ B)","A ∪ B","A ∩ B"],a:0,ex:"Symmetric difference A △ B = (A ∪ B) − (A ∩ B). It contains elements in exactly one of A or B, not both.",hint:"Example: A={1,2,3}, B={2,3,4} → A△B = {1,4}"},
+{c:0,q:"A partially ordered set (POSET) is a set with a relation that is:",o:["Reflexive and symmetric","Reflexive, antisymmetric, and transitive","Symmetric and transitive","Reflexive and transitive only"],a:1,ex:"A POSET requires the relation to be reflexive, antisymmetric (aRb and bRa ⟹ a=b), and transitive.",hint:"Example: (ℕ, ≤) is a POSET"},
+{c:0,q:"The Schröder-Bernstein theorem states that if |A| ≤ |B| and |B| ≤ |A|, then:",o:["|A| < |B|","|A| > |B|","|A| = |B|","A = B"],a:2,ex:"The Schröder-Bernstein theorem: if there exist injections from A to B and from B to A, then there exists a bijection between A and B, so |A| = |B|.",star:true},
+{c:0,q:"A set S is countably infinite if:",o:["|S| = n for some finite n","It can be put in bijection with ℕ","It is uncountable","It has more elements than ℕ"],a:1,ex:"A set is countably infinite if there exists a bijection between it and the natural numbers ℕ. Examples: ℤ, ℚ are countably infinite.",hint:"Example: Even numbers are countably infinite"},
+{c:0,q:"For sets A, B, C — the distributive law states A ∩ (B ∪ C) = ?",o:["(A ∪ B) ∩ (A ∪ C)","(A ∩ B) ∪ (A ∩ C)","A ∪ (B ∩ C)","(A ∩ B) ∩ (A ∩ C)"],a:1,ex:"Distributive law: A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C). Intersection distributes over union.",star:true},
+{c:0,q:"The image of a set A under function f is:",o:["The domain of f","f(A) = {f(a) : a ∈ A}","The codomain of f","The inverse of f"],a:1,ex:"The image (or range) of a set A under f is f(A) = {f(x) : x ∈ A}, i.e., all output values for inputs from A."},
+{c:0,q:"The composite function f∘g is defined as:",o:["f(x) + g(x)","f(g(x))","g(f(x))","f(x) × g(x)"],a:1,ex:"(f∘g)(x) = f(g(x)). First apply g, then apply f to the result.",hint:"Example: f(x)=x², g(x)=x+1 → (f∘g)(x)=(x+1)²"},
+{c:0,q:"Which of the following is an equivalence class?",o:["A subset of A with no repeated elements","The set of all elements related to a given element","A function from A to B","A binary relation that is only reflexive"],a:1,ex:"An equivalence class [a] = {x ∈ A : xRa} — the set of all elements equivalent to a under relation R.",hint:"Example: In mod 3, [0]={…,-3,0,3,6,…}"},
+{c:0,q:"How many functions are possible from A={1,2} to B={a,b,c}?",o:["6","9","8","4"],a:1,ex:"Number of functions from A to B = |B|^|A| = 3² = 9. Each element of A can independently map to any of 3 elements.",star:true},
+{c:0,q:"The inverse function f⁻¹ exists if and only if f is:",o:["Injective","Surjective","Bijective","Reflexive"],a:2,ex:"An inverse function exists only when f is bijective (one-to-one and onto). Then f⁻¹: B → A is well-defined.",hint:"Example: f(x)=x+3 is bijective, so f⁻¹(x)=x-3"},
+{c:0,q:"The sum of sizes of all equivalence classes of an equivalence relation on a set A equals:",o:["|A|²","2|A|","|A|","Number of relations"],a:2,ex:"Equivalence classes partition the set A, so the total number of elements across all classes equals |A|.",star:true},
+{c:0,q:"If |A| = 3 and |B| = 4, then |A × B| = ?",o:["7","12","81","64"],a:1,ex:"The Cartesian product A × B has |A| × |B| = 3 × 4 = 12 ordered pairs.",hint:"Example: {(a,b) : a∈A, b∈B} — one pair for each combination"},
+{c:0,q:"A bijective function from a set A to itself is called a:",o:["Homomorphism","Permutation","Partition","Projection"],a:1,ex:"A bijection from a set to itself is called a permutation. It is a rearrangement of all elements.",hint:"Example: Shuffling a deck of cards is a permutation"},
+
+/* ═══════════════════════════════════════════
+   UNIT 2 — Mathematical Induction (30)
+═══════════════════════════════════════════ */
+{c:1,q:"The Principle of Mathematical Induction requires which two steps?",o:["Guess and verify","Base case and inductive step","Hypothesis and conclusion","Direct proof and contradiction"],a:1,ex:"PMI requires: (1) Base case — prove P(1) is true; (2) Inductive step — assume P(k) is true and prove P(k+1) is true.",star:true},
+{c:1,q:"In the inductive step of PMI, we assume P(k) is true. This assumption is called:",o:["Base case","Inductive hypothesis","Conclusion","Theorem"],a:1,ex:"The assumption that P(k) is true during the inductive step is called the inductive hypothesis.",hint:"We assume P(k) and use it to prove P(k+1)"},
+{c:1,q:"Using induction, the sum 1+2+3+…+n equals:",o:["n(n+1)","n²","n(n+1)/2","(n+1)(n+2)/2"],a:2,ex:"By PMI, the sum of first n natural numbers = n(n+1)/2. This is verified by base case n=1: 1 = 1(2)/2 = 1 ✓",star:true,hint:"Example: 1+2+3+4+5 = 15 = 5×6/2"},
+{c:1,q:"The Well-Ordering Principle states that every non-empty subset of ℕ has:",o:["A maximum element","A minimum element","Both max and min","No particular property"],a:1,ex:"The Well-Ordering Principle: every non-empty set of natural numbers has a least (minimum) element. This is used to prove properties of natural numbers.",star:true},
+{c:1,q:"Strong induction (complete induction) assumes:",o:["P(1) is true","P(k) is true for a single k","P(j) is true for all j ≤ k, then proves P(k+1)","P(n) is false"],a:2,ex:"Strong induction assumes P(1), P(2), ..., P(k) are ALL true (not just P(k)) and uses this to prove P(k+1).",hint:"Used when proving P(k+1) requires more than just P(k)"},
+{c:1,q:"By induction, the sum of first n odd numbers 1+3+5+…+(2n-1) equals:",o:["n(n+1)/2","n²","2n-1","n(2n-1)"],a:1,ex:"The sum of first n odd numbers = n². Example: 1+3+5 = 9 = 3².",hint:"This is why perfect squares relate to odd numbers"},
+{c:1,q:"The base case in PMI is typically proved for n =",o:["0 or 1","k","n-1","Any value"],a:0,ex:"The base case is usually proved for n=0 or n=1, establishing that the statement holds for the starting value.",hint:"Some problems start at n=0, others at n=1 or even n=2"},
+{c:1,q:"The Euclidean Algorithm for GCD(a, b) where a > b is based on:",o:["GCD(a,b) = GCD(a-b, b)","GCD(a,b) = GCD(b, a mod b)","GCD(a,b) = a × b","GCD(a,b) = a + b"],a:1,ex:"Euclidean Algorithm: GCD(a,b) = GCD(b, a mod b). Repeatedly apply until remainder is 0.",star:true,hint:"Example: GCD(48,18)=GCD(18,12)=GCD(12,6)=GCD(6,0)=6"},
+{c:1,q:"By induction, the sum 1² + 2² + 3² + … + n² equals:",o:["n(n+1)/2","n(n+1)(2n+1)/6","n²(n+1)²/4","n(n+1)(n+2)/6"],a:1,ex:"Sum of squares formula: n(n+1)(2n+1)/6. Verified by PMI — base case n=1: 1 = 1×2×3/6 = 1 ✓",star:true},
+{c:1,q:"By induction, 4ⁿ - 1 is always divisible by:",o:["2","3","4","5"],a:1,ex:"4ⁿ - 1 = (4-1)(4ⁿ⁻¹ + 4ⁿ⁻² + ... + 1) = 3 × (something). So 4ⁿ - 1 is always divisible by 3.",hint:"Base case: 4¹-1=3 ✓ Inductive step: 4^(k+1)-1 = 4·4^k - 1 = 4(4^k-1)+3"},
+{c:1,q:"The Fundamental Theorem of Arithmetic states every integer > 1 can be written as:",o:["A sum of primes","A unique product of prime numbers","A multiple of 2","A power of a prime"],a:1,ex:"Every integer greater than 1 is either prime itself or can be uniquely factored as a product of primes (unique prime factorization).",star:true,hint:"Example: 12 = 2² × 3, uniquely"},
+{c:1,q:"GCD(12, 8) using the Euclidean Algorithm is:",o:["2","4","6","8"],a:1,ex:"GCD(12,8): 12 = 1×8+4, GCD(8,4): 8 = 2×4+0, GCD(4,0) = 4. So GCD(12,8) = 4.",hint:"Always divide and take remainder until 0"},
+{c:1,q:"GCD(a, 0) = ?",o:["0","1","a","Undefined"],a:2,ex:"By definition of the Euclidean Algorithm, GCD(a, 0) = a for any positive integer a. Zero divides into anything.",hint:"GCD(7,0)=7, GCD(15,0)=15"},
+{c:1,q:"The Division Algorithm states: for integers a, b with b>0, there exist unique q, r such that:",o:["a = bq + r, 0 ≤ r < b","a = bq + r, 0 ≤ r ≤ b","a = bq, r = 0","a = q/b"],a:0,ex:"Division Algorithm: a = bq + r where q is quotient, r is remainder, and 0 ≤ r < b. Both q and r are unique.",star:true},
+{c:1,q:"By PMI, for n ≥ 1, n! ≥ 1. Which base case value is correct?",o:["0! = 0","1! = 2","1! = 1","2! = 1"],a:2,ex:"1! = 1 ≥ 1 ✓. This is the base case for proving n! ≥ 1 for all n ≥ 1.",hint:"By definition, 0! = 1 and 1! = 1"},
+{c:1,q:"Basic counting technique: the number of ways to arrange n distinct objects is:",o:["n","n²","n!","2ⁿ"],a:2,ex:"The number of permutations (arrangements) of n distinct objects is n! (n factorial).",hint:"Example: 3 objects ABC can be arranged in 3!=6 ways: ABC,ACB,BAC,BCA,CAB,CBA"},
+{c:1,q:"The inclusion-exclusion principle for three sets A, B, C gives |A ∪ B ∪ C| as:",o:["|A|+|B|+|C|","|A|+|B|+|C|-|A∩B|-|B∩C|-|A∩C|+|A∩B∩C|","|A|+|B|+|C|-|A∩B∩C|","|A∩B∩C|"],a:1,ex:"|A∪B∪C| = |A|+|B|+|C| - |A∩B| - |B∩C| - |A∩C| + |A∩B∩C|. Add individuals, subtract pairwise, add triple.",star:true},
+{c:1,q:"The Pigeon-hole principle states: if n+1 objects are put into n boxes, then:",o:["All boxes are empty","At least one box has at least 2 objects","Each box has exactly 1 object","No box is empty"],a:1,ex:"If n+1 pigeons are placed in n holes, at least one hole contains 2 or more pigeons. Simple but powerful counting principle.",star:true,hint:"Example: 13 people → at least 2 share a birth month (12 months)"},
+{c:1,q:"The recursive definition of n! is:",o:["n! = n×(n-1)","n! = n×(n-1)!  and 0!=1","n! = (n+1)!/(n+1)","n! = 1 for all n"],a:1,ex:"Recursive: 0! = 1 (base case), n! = n × (n-1)! for n≥1. Example: 4! = 4×3! = 4×3×2×1 = 24.",hint:"n! = n × (n-1) × (n-2) × ... × 1"},
+{c:1,q:"The number of permutations of n objects taken r at a time is:",o:["n!/(n-r)!","n!/r!","n!/(r!(n-r)!)","n^r"],a:0,ex:"P(n,r) = n!/(n-r)!. Order matters in permutation.",hint:"P(5,2) = 5!/3! = 20. Choosing 2 from 5 with order"},
+{c:1,q:"The number of combinations of n objects taken r at a time is:",o:["n!/(n-r)!","n!/r!","n!/(r!(n-r)!)","n^r"],a:2,ex:"C(n,r) = n!/(r!(n-r)!). Order does NOT matter in combination.",star:true,hint:"C(5,2) = 5!/(2!3!) = 10. Choosing 2 from 5 without order"},
+{c:1,q:"The Fibonacci sequence is defined by:",o:["F(n) = 2F(n-1)","F(n) = F(n-1) + F(n-2), F(1)=F(2)=1","F(n) = n!","F(n) = F(n-1) × F(n-2)"],a:1,ex:"Fibonacci: 1, 1, 2, 3, 5, 8, 13, 21, ... Each term is the sum of the two preceding terms.",star:true,hint:"This is proven using strong induction"},
+{c:1,q:"By induction, 2ⁿ > n for all:",o:["n < 1","n ≥ 1","n ≤ 0","n = 2 only"],a:1,ex:"2ⁿ > n for all n ≥ 1. Base: 2¹=2>1. Inductive step: 2^(k+1) = 2·2^k > 2k > k+1 for k≥1.",hint:"This shows exponential growth beats linear"},
+{c:1,q:"The number of subsets of an n-element set is proved by induction to be:",o:["n²","2n","2ⁿ","n!"],a:2,ex:"By PMI: A set with n elements has 2ⁿ subsets. Adding one new element doubles the number of subsets.",star:true},
+{c:1,q:"GCD(a, b) × LCM(a, b) = ?",o:["a + b","a - b","a × b","a / b"],a:2,ex:"For any two positive integers a and b: GCD(a,b) × LCM(a,b) = a × b. This is a fundamental number theory result.",star:true,hint:"Example: GCD(4,6)=2, LCM(4,6)=12, 2×12=24=4×6 ✓"},
+{c:1,q:"The Greatest Common Divisor of two prime numbers p and q (p ≠ q) is:",o:["p","q","pq","1"],a:3,ex:"Two distinct prime numbers share no common factors other than 1. GCD(p, q) = 1 when p ≠ q are primes. They are coprime.",hint:"Example: GCD(5,7) = 1"},
+{c:1,q:"Recursive definition requires which two components?",o:["Loop and output","Base case(s) and recursive rule","Variables and constants","Proof and theorem"],a:1,ex:"A recursive definition needs: (1) Base case(s) — value for smallest input; (2) Recursive rule — how to compute f(n) from f(k) where k < n.",hint:"Example: Fibonacci has base cases F(1)=F(2)=1"},
+{c:1,q:"By induction, the sum 1/1×2 + 1/2×3 + ... + 1/n(n+1) equals:",o:["1 - 1/n","n/(n+1)","1/n","1/(n+1)"],a:1,ex:"This telescoping sum = 1 - 1/(n+1) = n/(n+1). Proved by PMI. Base: n=1: 1/1×2 = 1/2 = 1/(1+1) ✓",hint:"Partial fractions: 1/k(k+1) = 1/k - 1/(k+1)"},
+{c:1,q:"In Permutation and combination, C(n,0) = ?",o:["0","n","1","n!"],a:2,ex:"C(n,0) = n!/(0!×n!) = 1. There is exactly one way to choose 0 items from n items: choose nothing.",hint:"C(n,n) = 1 also, by same logic"},
+{c:1,q:"The number of ways to select a committee of 3 from 6 people is:",o:["18","20","120","15"],a:1,ex:"C(6,3) = 6!/(3!×3!) = 720/(6×6) = 20. Order does not matter in committee selection.",star:true},
+{c:1,q:"A prime number is a natural number greater than 1 that has exactly:",o:["One factor","Two factors (1 and itself)","Three factors","No factors"],a:1,ex:"A prime number has exactly two distinct positive divisors: 1 and itself. Examples: 2, 3, 5, 7, 11...",hint:"2 is the only even prime number"},
+
+/* ═══════════════════════════════════════════
+   UNIT 3 — Propositional Logic (30)
+═══════════════════════════════════════════ */
+{c:2,q:"A proposition is a statement that is:",o:["Always true","Always false","Either true or false, but not both","Neither true nor false"],a:2,ex:"A proposition (statement) has exactly one truth value: true (T) or false (F). Questions and commands are NOT propositions.",star:true,hint:"Example: '2+2=4' is a proposition (T). 'Is it raining?' is NOT."},
+{c:2,q:"The negation of proposition P is denoted ¬P. If P is true, then ¬P is:",o:["True","False","Undefined","Both true and false"],a:1,ex:"Negation reverses truth value. If P = T, then ¬P = F. If P = F, then ¬P = T.",hint:"Truth table: P=T → ¬P=F; P=F → ¬P=T"},
+{c:2,q:"P ∧ Q (P AND Q) is true only when:",o:["P is true","Q is true","Both P and Q are true","At least one of P,Q is true"],a:2,ex:"Conjunction P ∧ Q is true ONLY when both P and Q are true. Otherwise it is false.",star:true,hint:"Think of AND as requiring both conditions to be satisfied"},
+{c:2,q:"P ∨ Q (P OR Q) is false only when:",o:["Both P and Q are true","P is false","Q is false","Both P and Q are false"],a:3,ex:"Disjunction P ∨ Q is false ONLY when both P and Q are false. If either or both are true, P ∨ Q is true.",hint:"OR is true unless both are false"},
+{c:2,q:"The conditional P → Q is false only when:",o:["P is true and Q is true","P is false and Q is true","P is true and Q is false","P is false and Q is false"],a:2,ex:"P → Q is false ONLY when P is true (hypothesis met) but Q is false (conclusion fails). All other combinations are true.",star:true,hint:"'If I study, I pass' is only violated when you study but fail"},
+{c:2,q:"The biconditional P ↔ Q is true when:",o:["P is true","Q is false","P and Q have the same truth value","P is false"],a:2,ex:"P ↔ Q (P if and only if Q) is true when P and Q are both true or both false — same truth value.",hint:"Truth table: TT→T, TF→F, FT→F, FF→T"},
+{c:2,q:"Which logical connective has the highest precedence?",o:["∧ (AND)","∨ (OR)","→ (implies)","¬ (NOT)"],a:3,ex:"Precedence order (highest to lowest): ¬ (NOT) > ∧ (AND) > ∨ (OR) > → (implies) > ↔ (biconditional).",star:true,hint:"NOT binds most tightly, then AND, then OR"},
+{c:2,q:"A tautology is a proposition that is:",o:["Always false","Sometimes true","Always true regardless of truth values","Undefined"],a:2,ex:"A tautology is always true for all possible truth value assignments. Example: P ∨ ¬P is always true.",star:true,hint:"Example: 'It is raining or it is not raining' — always true"},
+{c:2,q:"A contradiction is a proposition that is:",o:["Always true","Sometimes true","Always false regardless of truth values","Undefined"],a:2,ex:"A contradiction is always false for all truth value assignments. Example: P ∧ ¬P is always false.",hint:"Opposite of tautology: P ∧ ¬P = F always"},
+{c:2,q:"The contrapositive of P → Q is:",o:["Q → P","¬P → ¬Q","¬Q → ¬P","P → ¬Q"],a:2,ex:"Contrapositive of P → Q is ¬Q → ¬P. It is logically equivalent to the original conditional.",star:true,hint:"'If it's a dog, it's an animal' ↔ 'If not an animal, not a dog'"},
+{c:2,q:"The converse of P → Q is:",o:["Q → P","¬P → ¬Q","¬Q → ¬P","P ∧ Q"],a:0,ex:"Converse of P → Q is Q → P. Note: The converse is NOT necessarily equivalent to the original.",hint:"'If P then Q' becomes 'If Q then P'"},
+{c:2,q:"The inverse of P → Q is:",o:["Q → P","¬P → ¬Q","¬Q → ¬P","¬P → Q"],a:1,ex:"Inverse of P → Q is ¬P → ¬Q. The inverse is equivalent to the converse, but not necessarily to the original.",hint:"'If P then Q' becomes 'If not P then not Q'"},
+{c:2,q:"Two propositions are logically equivalent if:",o:["They have the same connectives","They have the same truth values for all assignments","One implies the other","They are both tautologies"],a:1,ex:"Logical equivalence P ≡ Q means P ↔ Q is a tautology — same truth value for every combination of inputs.",star:true},
+{c:2,q:"Which law states P ∧ (Q ∨ R) ≡ (P ∧ Q) ∨ (P ∧ R)?",o:["Commutative Law","Associative Law","Distributive Law","De Morgan's Law"],a:2,ex:"Distributive Law: AND distributes over OR. P ∧ (Q ∨ R) ≡ (P ∧ Q) ∨ (P ∧ R). Similarly for OR over AND.",star:true},
+{c:2,q:"De Morgan's Law in logic states: ¬(P ∧ Q) ≡ ?",o:["¬P ∧ ¬Q","¬P ∨ ¬Q","P ∨ Q","¬P → ¬Q"],a:1,ex:"De Morgan's Laws: ¬(P ∧ Q) ≡ ¬P ∨ ¬Q  and  ¬(P ∨ Q) ≡ ¬P ∧ ¬Q. Complement flips AND/OR.",star:true},
+{c:2,q:"Which of the following is a valid rule of inference?",o:["Modus Ponens","Modus Tollens","Hypothetical Syllogism","All of these"],a:3,ex:"All three are valid rules of inference: Modus Ponens (P, P→Q ⊢ Q), Modus Tollens (¬Q, P→Q ⊢ ¬P), Hypothetical Syllogism (P→Q, Q→R ⊢ P→R).",star:true},
+{c:2,q:"Modus Ponens rule is: given P and P → Q, we can conclude:",o:["¬Q","Q","¬P","P ∧ Q"],a:1,ex:"Modus Ponens (affirming the antecedent): If P is true and P→Q is true, then Q must be true.",star:true,hint:"Example: P='It rains', P→Q='If rain, I take umbrella'. Conclusion: Q='I take umbrella'"},
+{c:2,q:"Modus Tollens rule is: given ¬Q and P → Q, we can conclude:",o:["Q","P","¬P","P ∧ Q"],a:2,ex:"Modus Tollens (denying the consequent): If Q is false and P→Q is true, then P must be false.",star:true,hint:"Example: P→Q='If raining, ground is wet'. ¬Q='Ground is dry'. Conclude: ¬P='Not raining'"},
+{c:2,q:"The universal quantifier ∀ means:",o:["There exists","For all","Not for all","There is at most one"],a:1,ex:"∀x P(x) means 'For all x, P(x) is true' — P holds for every element in the domain.",star:true,hint:"∀x(x²≥0) means every real number squared is non-negative"},
+{c:2,q:"The existential quantifier ∃ means:",o:["For all","There exists at least one","There is no","For exactly one"],a:1,ex:"∃x P(x) means 'There exists at least one x such that P(x) is true.'",hint:"∃x(x>5) means at least one number greater than 5 exists"},
+{c:2,q:"The negation of ∀x P(x) is:",o:["∀x ¬P(x)","∃x P(x)","∃x ¬P(x)","¬∀x ¬P(x)"],a:2,ex:"¬(∀x P(x)) ≡ ∃x ¬P(x). To negate 'all', you need 'there exists one that doesn't'.",star:true,hint:"Negating 'all cats are black' → 'some cat is not black'"},
+{c:2,q:"The negation of ∃x P(x) is:",o:["∃x ¬P(x)","∀x P(x)","∀x ¬P(x)","¬∃x P(x)"],a:2,ex:"¬(∃x P(x)) ≡ ∀x ¬P(x). To negate 'there exists', you need 'for all, it doesn't hold'.",hint:"Negating 'some student passed' → 'no student passed' i.e. 'all students failed'"},
+{c:2,q:"Logical Implication P ⟹ Q (semantic) means:",o:["P and Q are equivalent","Whenever P is true, Q is also true","P is true","Q is false"],a:1,ex:"Logical implication P ⟹ Q means P logically implies Q — in every model where P is true, Q is also true.",hint:"Stronger than P → Q which is just a formula"},
+{c:2,q:"P ↔ Q is equivalent to:",o:["(P → Q) ∧ (Q → P)","(P ∨ Q) ∧ (¬P ∨ ¬Q)","P ∧ Q","¬P ∨ Q"],a:0,ex:"Biconditional P ↔ Q ≡ (P → Q) ∧ (Q → P). It holds when both P implies Q AND Q implies P.",star:true},
+{c:2,q:"A truth table for a formula with 3 variables has how many rows?",o:["3","6","8","9"],a:2,ex:"With n variables, a truth table has 2ⁿ rows. For 3 variables: 2³ = 8 rows.",star:true,hint:"2 variables → 4 rows; 4 variables → 16 rows"},
+{c:2,q:"The Hypothetical Syllogism rule states: from P → Q and Q → R, we can conclude:",o:["P → R","Q → P","R → P","P ∧ R"],a:0,ex:"Hypothetical Syllogism: if P→Q and Q→R are both true, then P→R follows. Chain of implications.",hint:"'If A then B; If B then C' → 'If A then C'"},
+{c:2,q:"Which of these is logically equivalent to P → Q?",o:["P ∧ ¬Q","¬P ∨ Q","¬P ∧ Q","P ∨ Q"],a:1,ex:"P → Q ≡ ¬P ∨ Q. This is a fundamental equivalence: 'if P then Q' means 'either P is false, or Q is true'.",star:true},
+{c:2,q:"The rule of inference Disjunctive Syllogism says: from P ∨ Q and ¬P, conclude:",o:["P","¬Q","Q","P ∧ Q"],a:2,ex:"Disjunctive Syllogism: if P∨Q is true and P is false, then Q must be true.",hint:"'Either A or B; Not A; Therefore B'"},
+{c:2,q:"Which statement is a tautology?",o:["P ∧ ¬P","P ∨ Q","P ∨ ¬P","P → Q"],a:2,ex:"P ∨ ¬P is always true (Law of Excluded Middle) — a tautology. P is either true or not true.",star:true},
+{c:2,q:"Basic connectives in propositional logic are:",o:["AND, OR, NOT","NAND only","XOR only","NOR and NAND"],a:0,ex:"The three basic connectives are AND (∧), OR (∨), and NOT (¬). Other connectives can be derived from these.",hint:"NAND and NOR alone are universal gates (sufficient for all logic)"},
+
+/* ═══════════════════════════════════════════
+   UNIT 4 — Proof Techniques (30)
+═══════════════════════════════════════════ */
+{c:3,q:"In a direct proof of P → Q, we:",o:["Assume ¬P","Assume ¬Q","Assume P and derive Q","Assume P ∧ ¬Q and find contradiction"],a:2,ex:"Direct proof: Assume P (hypothesis) is true, then through logical steps, prove Q (conclusion) must be true.",star:true,hint:"Most straightforward proof method"},
+{c:3,q:"Proof by contradiction (Indirect proof) works by assuming:",o:["The hypothesis is true","The conclusion is true","The negation of the conclusion and deriving a contradiction","The negation of the hypothesis"],a:2,ex:"Proof by contradiction: Assume ¬Q (negation of conclusion). Show this leads to a contradiction (⊥). Therefore Q must be true.",star:true,hint:"Used to prove irrational numbers, infinitely many primes, etc."},
+{c:3,q:"To prove P → Q by contrapositive, we prove:",o:["Q → P","¬P → ¬Q","¬Q → ¬P","P ∧ Q"],a:2,ex:"Proof by contrapositive: prove ¬Q → ¬P instead of P → Q (they are logically equivalent). Often easier.",star:true},
+{c:3,q:"The classic proof that √2 is irrational uses which technique?",o:["Direct proof","Proof by induction","Proof by contradiction","Proof by contrapositive"],a:2,ex:"√2 is irrational: Assume √2 = p/q in lowest terms. Then 2 = p²/q², so p² = 2q² → p is even → p = 2k → q is even too → contradiction (not in lowest terms).",star:true},
+{c:3,q:"Proof by counterexample is used to:",o:["Prove a universal statement","Disprove a universal statement","Prove an existential statement","Prove a biconditional"],a:1,ex:"To disprove ∀x P(x), one counterexample suffices. Find one x₀ where P(x₀) is false.",star:true,hint:"Example: Disproving 'all primes are odd' → counterexample: 2 is prime and even"},
+{c:3,q:"A proof by cases divides the proof into:",o:["Inductive steps","Exhaustive cases covering all possibilities","Contradictions","Hypotheses"],a:1,ex:"Proof by cases: divide the domain into exhaustive, mutually exclusive cases and prove the statement for each case.",hint:"Example: prove for even n and odd n separately"},
+{c:3,q:"In proof by contradiction, after assuming ¬Q, we derive:",o:["Q","P","Both P and ¬P (a contradiction)","¬P"],a:2,ex:"Proof by contradiction derives both some statement and its negation (P ∧ ¬P), which is impossible, proving the original statement.",hint:"Finding 'P ∧ ¬P' or '0=1' is the contradiction we need"},
+{c:3,q:"A forward proof proceeds from:",o:["Conclusion to hypothesis","Hypothesis toward conclusion","A contradiction","An assumption"],a:1,ex:"Forward proof (direct reasoning): start from the hypothesis (what is given) and derive the conclusion through logical steps.",hint:"Most natural proof style — start from what you know"},
+{c:3,q:"To prove an 'if and only if' (biconditional) statement P ↔ Q, we must prove:",o:["P → Q only","Q → P only","Both P → Q and Q → P","¬P → ¬Q"],a:2,ex:"For P ↔ Q, prove both directions: (1) P → Q and (2) Q → P. Both implications must hold.",star:true},
+{c:3,q:"Which proof technique is most appropriate for proving divisibility properties for all n ∈ ℕ?",o:["Direct proof","Contradiction","Mathematical Induction","Proof by cases"],a:2,ex:"Mathematical induction is ideal for proving statements that hold for all natural numbers, especially divisibility and summation formulas.",hint:"Whenever you see 'for all n ∈ ℕ', think induction"},
+{c:3,q:"An existence proof shows that:",o:["For all x, P(x) holds","There exists an x such that P(x) holds","P(x) never holds","P(x) holds for no x"],a:1,ex:"An existence proof establishes ∃x P(x) — it demonstrates that at least one element satisfying P exists.",hint:"Either constructive (find the x) or non-constructive (indirect argument)"},
+{c:3,q:"A constructive existence proof:",o:["Proves existence indirectly","Actually constructs or exhibits the element","Uses contradiction","Uses induction only"],a:1,ex:"A constructive proof explicitly finds or constructs the element x satisfying P(x). More informative than non-constructive.",hint:"Example: proving √2 exists by constructing a right triangle with legs 1,1"},
+{c:3,q:"Proof by Contraposition of 'If n² is even, then n is even' proceeds by proving:",o:["If n is even, n² is even","If n is odd, n² is odd","If n² is odd, n is odd","If n is odd, n is not even"],a:2,ex:"Contrapositive of 'n² even ⟹ n even' is 'n odd ⟹ n² odd'. If n=2k+1, then n²=4k²+4k+1=2(2k²+2k)+1 (odd). ✓",star:true},
+{c:3,q:"Proof of Necessity and Sufficiency: 'P is sufficient for Q' means:",o:["Q → P","P → Q","P ↔ Q","¬P → ¬Q"],a:1,ex:"'P is sufficient for Q' means P → Q (P being true is enough to guarantee Q). 'P is necessary for Q' means Q → P.",star:true,hint:"Sufficient = implies. Necessary = required."},
+{c:3,q:"'P is necessary for Q' means:",o:["P → Q","Q → P","P ↔ Q","¬Q → P"],a:1,ex:"'P is necessary for Q' means Q cannot be true without P being true. So Q → P.",hint:"'Oxygen is necessary for fire' means 'if fire, then oxygen present'"},
+{c:3,q:"In an indirect proof, to prove P → Q, we can assume:",o:["P and ¬Q","¬P and Q","¬P and ¬Q","P and Q"],a:0,ex:"In indirect proof by contradiction: assume P (hypothesis) AND ¬Q (negation of conclusion), then derive a contradiction.",star:true},
+{c:3,q:"The proof that there are infinitely many prime numbers uses which technique?",o:["Direct proof","Induction","Contradiction","Contrapositive"],a:2,ex:"Euclid's proof: Assume finitely many primes p₁...pₙ. Then p₁p₂...pₙ+1 is either prime or has a prime factor not in our list — contradiction.",star:true},
+{c:3,q:"Proof by Exhaustion is valid when:",o:["The domain is infinite","The domain is finite and all cases are checked","Using induction","Using contradiction"],a:1,ex:"Proof by exhaustion works when there are finitely many cases that can all be verified individually.",hint:"Example: verifying a property for all days of the week (only 7 cases)"},
+{c:3,q:"A vacuous proof proves P → Q by showing:",o:["Q is true","P is false (making P→Q trivially true)","P → Q directly","By contradiction"],a:1,ex:"A vacuous proof: if P is always false, then P → Q is vacuously true regardless of Q. Example: 'All integers > 5 and < 3 are even' — no such integers exist.",hint:"'If 0=1, then 2+2=5' is vacuously true since 0≠1"},
+{c:3,q:"A trivial proof proves P → Q by showing:",o:["P is false","Q is true (making P→Q true regardless of P)","By induction","By contradiction"],a:1,ex:"A trivial proof: if Q is always true, then P → Q is trivially true regardless of P.",hint:"'If it rains, 2 is even' — trivially true since 2 is always even"},
+{c:3,q:"Two-column proof format lists:",o:["Statements and their reasons","Questions and answers","Assumptions only","Conclusions only"],a:0,ex:"Two-column proof: left column has numbered statements; right column has the reason/justification for each statement.",hint:"Common in high school geometry proofs"},
+{c:3,q:"Which is the key idea in proof by counterexample?",o:["Find an x where P(x) is true","Find an x where P(x) is false to disprove ∀x P(x)","Use induction for each x","Assume contradiction"],a:1,ex:"To disprove a universal statement ∀x P(x), one counterexample suffices: find x₀ with P(x₀) = false.",star:true},
+{c:3,q:"Proof strategies are chosen based on:",o:["Length of the proof","Structure of the statement to be proved","Random selection","Preference only"],a:1,ex:"Proof technique selection depends on the form of the statement: universal (induction), existential (constructive), conditional (direct/contrapositive/contradiction).",hint:"Practice recognizing statement structures"},
+{c:3,q:"'P if and only if Q' is equivalent to:",o:["P is sufficient for Q","P is necessary for Q","P is both necessary and sufficient for Q","P implies Q"],a:2,ex:"P ↔ Q means P is necessary AND sufficient for Q. P→Q (sufficient) and Q→P (necessary) both hold.",star:true},
+{c:3,q:"The proof method 'without loss of generality (WLOG)' means:",o:["We ignore special cases","The proof for one case covers all cases by symmetry","We use contradiction","We use exhaustion"],a:1,ex:"WLOG is used when cases are symmetric — proving for one representative case is enough for all similar cases.",hint:"WLOG assume a ≤ b when a and b are symmetric"},
+{c:3,q:"To prove 'there exists a real number x such that x² = 2', a constructive proof provides:",o:["x = √2","x = -1","x = 0","x = 2"],a:0,ex:"Constructive existence proof: exhibit x = √2. Then x² = (√2)² = 2. The element is explicitly constructed.",hint:"Non-constructive would argue indirectly without naming x"},
+{c:3,q:"Proof by counterexample CANNOT be used to:",o:["Disprove universal statements","Prove universal statements","Disprove existential statements","None of the above"],a:1,ex:"A single counterexample disproves universals (∀x P(x)) but cannot prove them. To prove ∀x P(x), all cases must be handled.",star:true},
+{c:3,q:"The statement 'If n is even, then n² is even' is most easily proved by:",o:["Contradiction","Counterexample","Direct proof","Exhaustion"],a:2,ex:"Direct proof: Let n = 2k. Then n² = (2k)² = 4k² = 2(2k²), which is even. Straightforward direct argument.",hint:"n=2k → n²=4k²=2(2k²) — clearly even"},
+{c:3,q:"In proof by strong induction, for showing P(k+1) we may use:",o:["Only P(k)","Only P(1)","All of P(1), P(2), ..., P(k)","None of P(1)...P(k)"],a:2,ex:"Strong induction allows using ALL previous cases P(1),...,P(k) to prove P(k+1). Weak induction uses only P(k).",hint:"Strong induction is equivalent to weak induction in power"},
+{c:3,q:"A lemma in mathematics is:",o:["A main theorem","A proven statement used as a stepping stone to prove a larger theorem","An unproven hypothesis","A counterexample"],a:1,ex:"A lemma is a proved result that is primarily used as a stepping stone in the proof of a larger, more important theorem.",hint:"Lemma < Theorem in importance, but proven result"},
+
+/* ═══════════════════════════════════════════
+   UNIT 5 — Algebraic Structures & Morphism (30)
+═══════════════════════════════════════════ */
+{c:4,q:"A binary operation on a set S is a function:",o:["S → S","S × S → S","S → S × S","S × S × S → S"],a:1,ex:"A binary operation takes two inputs from S and produces one output in S: ∗: S × S → S.",hint:"Example: addition on ℤ: (a,b) ↦ a+b"},
+{c:4,q:"A group (G, ∗) requires which four properties?",o:["Closure, commutativity, identity, inverse","Closure, associativity, identity, inverse","Closure, associativity, commutativity, inverse","Closure, identity, distributivity, inverse"],a:1,ex:"Group axioms: (1) Closure: a∗b ∈ G; (2) Associativity: (a∗b)∗c = a∗(b∗c); (3) Identity: ∃e, a∗e=a; (4) Inverse: ∃a⁻¹, a∗a⁻¹=e.",star:true},
+{c:4,q:"An Abelian (commutative) group additionally satisfies:",o:["Distributivity","Associativity","Commutativity: a∗b = b∗a","Idempotency"],a:2,ex:"An Abelian group is a group where the operation is also commutative: a∗b = b∗a for all a,b ∈ G.",star:true,hint:"Example: (ℤ, +) is Abelian because a+b = b+a"},
+{c:4,q:"A semi-group is a set with a binary operation that satisfies:",o:["Closure only","Closure and associativity","Closure, associativity, and identity","Closure, associativity, identity, and inverse"],a:1,ex:"A semi-group satisfies only closure and associativity. No identity or inverse element is required.",hint:"Group = Semigroup + Identity + Inverse"},
+{c:4,q:"A monoid is a semi-group with an additional:",o:["Inverse element","Commutative property","Identity element","Distributive property"],a:2,ex:"A monoid is a semigroup with an identity element e such that a∗e = e∗a = a for all a ∈ S.",hint:"Group = Monoid + Inverse elements"},
+{c:4,q:"The identity element e in a group satisfies:",o:["a∗e = e for all a","e∗e = e","a∗e = e∗a = a for all a","a∗e = 0 for all a"],a:2,ex:"The identity element e satisfies a∗e = e∗a = a for ALL elements a in the group.",star:true,hint:"Example: 0 is identity for addition; 1 is identity for multiplication"},
+{c:4,q:"In a group (G, ∗), every element a has a unique:",o:["Complement","Identity","Inverse a⁻¹ such that a∗a⁻¹ = e","Power"],a:2,ex:"Every group element a has a unique inverse a⁻¹ such that a∗a⁻¹ = a⁻¹∗a = e (identity).",hint:"Example: inverse of 5 in (ℤ,+) is -5; inverse of 2 in (ℚ*,×) is 1/2"},
+{c:4,q:"The order of a group G is:",o:["The largest element of G","The number of elements in G","The identity element","The number of subgroups"],a:1,ex:"The order |G| of a group is the cardinality (number of elements) of the group.",hint:"Example: |ℤ₅| = 5 (elements 0,1,2,3,4)"},
+{c:4,q:"A subgroup H of group G must satisfy:",o:["H is a subset of G","H is a subset of G and H is itself a group under the same operation","H contains the identity only","H has the same order as G"],a:1,ex:"A subgroup H ≤ G is a non-empty subset of G that is itself a group under the same binary operation of G.",star:true},
+{c:4,q:"Lagrange's theorem states: if H is a subgroup of finite group G, then |H|:",o:["Equals |G|","Divides |G|","Is greater than |G|","Is prime"],a:1,ex:"Lagrange's Theorem: The order of any subgroup H divides the order of the group G. |H| divides |G|.",star:true,hint:"Example: G has order 12 → subgroup orders can only be 1,2,3,4,6,12"},
+{c:4,q:"A ring (R, +, ×) requires:",o:["(R,+) is a group only","(R,+) is an Abelian group and (R,×) is associative with distributivity","(R,×) is a group","All of group axioms for both operations"],a:1,ex:"A ring requires: (1) (R,+) is an Abelian group; (2) × is associative; (3) × distributes over +.",star:true},
+{c:4,q:"A field is a ring where every non-zero element has a:",o:["Square root","Multiplicative inverse","Additive inverse","Complement"],a:1,ex:"A field is a commutative ring where every non-zero element has a multiplicative inverse. Examples: ℚ, ℝ, ℂ, ℤₚ (p prime).",star:true,hint:"ℤ is a ring but NOT a field (2 has no multiplicative inverse in ℤ)"},
+{c:4,q:"Boolean Algebra is a structure with two binary operations. The identity for + (OR) is:",o:["1","0","a","a'"],a:1,ex:"In Boolean Algebra, 0 is the identity for + (OR): a + 0 = a. Similarly, 1 is identity for · (AND): a · 1 = a.",star:true},
+{c:4,q:"In Boolean Algebra, the complement a' satisfies:",o:["a + a' = 1 and a · a' = 0","a + a' = 0 and a · a' = 1","a + a' = a","a · a' = a"],a:0,ex:"Complement law in Boolean Algebra: a + a' = 1 (OR with complement gives 1) and a · a' = 0 (AND with complement gives 0).",star:true},
+{c:4,q:"De Morgan's theorem in Boolean Algebra states (a · b)' = ?",o:["a' · b'","a + b","a' + b'","ab"],a:2,ex:"Boolean De Morgan: (a·b)' = a' + b' and (a+b)' = a'·b'. Complement of AND becomes OR of complements.",star:true},
+{c:4,q:"The Duality Principle in Boolean Algebra states:",o:["Every theorem has a dual obtained by swapping AND↔OR and 0↔1","Every element has a complement","Every set has a power set","Every Boolean expression is a tautology"],a:0,ex:"Duality Principle: any Boolean identity remains valid if AND and OR are swapped AND 0 and 1 are swapped.",star:true,hint:"Dual of a+0=a is a·1=a"},
+{c:4,q:"Disjunctive Normal Form (DNF) of a Boolean expression consists of:",o:["Product of sums","Sum of products (minterms)","Single literal","Complement of sum"],a:1,ex:"DNF (Sum of Products) expresses a Boolean function as an OR (sum) of AND (product) terms. Each AND term is a minterm.",star:true},
+{c:4,q:"A homomorphism from group (G,∗) to group (H,•) is a function f satisfying:",o:["f(a) = f(b)","f(a ∗ b) = f(a) • f(b)","f(a) + f(b) = f(a+b)","f(e) = 1"],a:1,ex:"A group homomorphism preserves the group operation: f(a∗b) = f(a)•f(b) for all a,b ∈ G.",star:true,hint:"Structure-preserving map between groups"},
+{c:4,q:"An isomorphism between two groups means they are:",o:["Different in structure","Structurally identical (same structure, different labels)","One is a subgroup of the other","Sharing the same identity"],a:1,ex:"An isomorphism is a bijective homomorphism. Isomorphic groups are structurally identical — they differ only in the names of elements.",star:true},
+{c:4,q:"The kernel of a homomorphism f: G → H is:",o:["f(G)","The range of f","{a ∈ G : f(a) = eH}","The identity of G"],a:2,ex:"The kernel ker(f) = {a ∈ G : f(a) = eH} — all elements mapped to the identity of H. The kernel is always a normal subgroup of G.",star:true},
+{c:4,q:"A normal subgroup N of G satisfies:",o:["N is any subgroup","gNg⁻¹ = N for all g ∈ G","N is the center of G","N has prime order"],a:1,ex:"N is normal in G if gNg⁻¹ = N (equivalently gN = Ng) for all g ∈ G. Normal subgroups are kernels of homomorphisms.",hint:"Every subgroup of an Abelian group is normal"},
+{c:4,q:"Free and cyclic monoids: a cyclic group is generated by:",o:["Two elements","A single element g: G = {gⁿ : n ∈ ℤ}","All elements","The identity only"],a:1,ex:"A cyclic group G = ⟨g⟩ = {gⁿ : n ∈ ℤ} is generated by a single element g, called the generator.",star:true,hint:"Example: ℤ₅ = {0,1,2,3,4} = ⟨1⟩ under addition mod 5"},
+{c:4,q:"Congruence relation on a group (G,∗): a ≡ b (mod H) means:",o:["a = b","a - b ∈ H (using additive notation)","a and b are in H","a ∗ b = e"],a:1,ex:"For a normal subgroup H, a ≡ b (mod H) iff a·b⁻¹ ∈ H. This defines a congruence relation compatible with the group operation.",star:true},
+{c:4,q:"Quotient structures (G/N): elements of the quotient group G/N are:",o:["Elements of G","Subgroups of G","Cosets of N in G","Elements of N"],a:2,ex:"The quotient group G/N = {gN : g ∈ G} — the elements are cosets of N in G, with operation (gN)(hN) = (gh)N.",star:true},
+{c:4,q:"Permutation groups: the symmetric group Sₙ has order:",o:["n","n²","2n","n!"],a:3,ex:"Sₙ is the group of all permutations of {1,2,...,n}. It has n! elements (all possible rearrangements).",star:true,hint:"S₃ has 3!=6 elements: all permutations of {1,2,3}"},
+{c:4,q:"Boolean Algebra satisfies the Idempotent law:",o:["a + a = 2a","a + a = a and a · a = a","a + 0 = a","a · 1 = 1"],a:1,ex:"Idempotent law in Boolean Algebra: a + a = a and a · a = a. Boolean values are only 0 and 1, so repeating makes no difference.",hint:"Regular algebra: a+a=2a; Boolean: a+a=a (since 1+1=1 in Boolean)"},
+{c:4,q:"An integral domain is a commutative ring with unity that has no:",o:["Identity element","Zero divisors","Inverse elements","Commutative property"],a:1,ex:"An integral domain is a commutative ring with 1 where a·b=0 implies a=0 or b=0 (no zero divisors).",star:true,hint:"ℤ is an integral domain; ℤ₆ is not (2·3=0 mod 6)"},
+{c:4,q:"Representation of Boolean functions: a minterm is a product term where each variable appears:",o:["Once in complemented form","Once in uncomplemented form","Exactly once (either complemented or uncomplemented)","Twice"],a:2,ex:"A minterm contains every variable exactly once, either as the variable or its complement. For n variables, there are 2ⁿ minterms.",hint:"For 2 variables A,B: minterms are A'B', A'B, AB', AB"},
+{c:4,q:"Rings: in a ring (R,+,×), multiplication distributes over addition means:",o:["a×b = b×a","a×(b+c) = a×b + a×c","a+b = b+a","a×0 = a"],a:1,ex:"Distributivity: a×(b+c) = a×b + a×c and (a+b)×c = a×c + b×c. This links the two operations of the ring.",star:true},
+{c:4,q:"Semi-groups: the set of positive integers under multiplication forms a:",o:["Group","Semigroup","Field","Ring"],a:1,ex:"(ℤ⁺,×) is a semigroup: closed and associative. It has identity (1) so it's actually a monoid, but semigroup is also correct.",hint:"No inverse for most elements (2 has no multiplicative inverse in ℤ⁺), so not a group"},
+{c:4,q:"The identities of Boolean Algebra: a + 1 = ?",o:["a","0","1","a+0"],a:2,ex:"Boolean Algebra identity: a + 1 = 1. OR-ing any value with 1 always gives 1 (domination law).",star:true},
+
+/* ═══════════════════════════════════════════
+   UNIT 6 — Graphs and Trees (30)
+═══════════════════════════════════════════ */
+{c:5,q:"A graph G = (V, E) consists of:",o:["Vertices only","Edges only","A set of vertices V and a set of edges E","A matrix and a vector"],a:2,ex:"A graph G = (V, E) has V = set of vertices (nodes) and E = set of edges (connections between vertices).",star:true},
+{c:5,q:"The degree of a vertex v in an undirected graph is:",o:["The number of vertices","The number of edges incident to v","The weight of v","The number of paths from v"],a:1,ex:"Degree of v (deg(v)) = number of edges incident to (connected to) vertex v. Self-loops count twice.",star:true,hint:"Example: In K₃, each vertex has degree 2"},
+{c:5,q:"The Handshaking Lemma states that for any graph G = (V,E):",o:["Σdeg(v) = |E|","Σdeg(v) = 2|E|","Σdeg(v) = |V|","Σdeg(v) = |V|²"],a:1,ex:"Handshaking Lemma: Σdeg(v) = 2|E|. Every edge contributes 2 to the total degree sum (one for each endpoint).",star:true,hint:"This implies the number of odd-degree vertices is always even"},
+{c:5,q:"A simple graph has:",o:["Multiple edges between pairs","Self-loops","No multiple edges and no self-loops","Directed edges only"],a:2,ex:"A simple graph has no multiple edges (at most one edge between any pair of vertices) and no self-loops.",hint:"Most graph problems deal with simple graphs"},
+{c:5,q:"A complete graph Kₙ has edges:",o:["n","n-1","n(n-1)/2","n²"],a:2,ex:"Complete graph Kₙ: every pair of vertices is connected. Number of edges = C(n,2) = n(n-1)/2.",star:true,hint:"K₄ has 4×3/2 = 6 edges; K₅ has 10 edges"},
+{c:5,q:"An Eulerian circuit in a graph exists if and only if:",o:["All vertices have odd degree","Exactly two vertices have odd degree","All vertices have even degree","The graph is connected only"],a:2,ex:"Eulerian circuit (visits every edge exactly once, returns to start) exists iff graph is connected and every vertex has even degree.",star:true,hint:"Euler solved the famous 7 Bridges of Königsberg problem"},
+{c:5,q:"An Eulerian path (not circuit) exists if and only if:",o:["All vertices have even degree","Exactly two vertices have odd degree (start and end)","All vertices have odd degree","No vertex has even degree"],a:1,ex:"Eulerian path exists iff the graph is connected and has exactly two vertices of odd degree (the start and end of the path).",star:true},
+{c:5,q:"A Hamiltonian path visits:",o:["Every edge exactly once","Every vertex exactly once","Every vertex and edge exactly once","Only even-degree vertices"],a:1,ex:"A Hamiltonian path visits every vertex exactly once. Unlike Eulerian (edges), Hamiltonian focuses on vertices.",star:true,hint:"No simple necessary and sufficient conditions known (NP-complete problem)"},
+{c:5,q:"Graph coloring assigns colors to vertices such that:",o:["Every vertex gets a different color","Adjacent vertices get different colors","All vertices get the same color","Each component has one color"],a:1,ex:"Graph coloring: assign colors to vertices so that no two adjacent vertices (connected by an edge) share the same color.",star:true},
+{c:5,q:"The chromatic number χ(G) of a graph is:",o:["The maximum number of colors used","The minimum number of colors needed to properly color G","The number of vertices","The number of edges"],a:1,ex:"The chromatic number χ(G) is the minimum number of colors required for a proper vertex coloring of G.",star:true,hint:"χ(Kₙ) = n; χ(bipartite) = 2; χ(odd cycle) = 3"},
+{c:5,q:"The Four Color Theorem states that any planar map can be colored with at most:",o:["3 colors","4 colors","5 colors","6 colors"],a:1,ex:"Four Color Theorem (proved 1976): any planar map (graph) can be colored using at most 4 colors such that no adjacent regions share a color.",star:true},
+{c:5,q:"A planar graph is one that can be drawn in the plane:",o:["With crossings","Without edge crossings","Only with straight edges","Only with curved edges"],a:1,ex:"A planar graph can be drawn in the 2D plane with no edges crossing each other.",star:true,hint:"K₄ is planar; K₅ and K₃,₃ are NOT planar"},
+{c:5,q:"Euler's formula for connected planar graphs states: V - E + F = ?",o:["0","1","2","3"],a:2,ex:"Euler's Planar Graph Formula: V - E + F = 2, where V=vertices, E=edges, F=faces (including the outer infinite face).",star:true,hint:"Cube: V=8, E=12, F=6: 8-12+6=2 ✓"},
+{c:5,q:"A tree is a connected graph with:",o:["Cycles","No cycles (acyclic)","Multiple edges","Self-loops"],a:1,ex:"A tree is a connected acyclic graph. It has exactly n-1 edges for n vertices.",star:true,hint:"Every two vertices in a tree are connected by exactly one path"},
+{c:5,q:"A spanning tree of a graph G is a subgraph that:",o:["Contains all vertices and is a tree","Contains all edges","Is a complete graph","Contains only even-degree vertices"],a:0,ex:"A spanning tree includes ALL vertices of G with exactly n-1 edges (tree structure), covering the entire vertex set.",star:true},
+{c:5,q:"A rooted tree has a special vertex called the root. The vertices with no children are called:",o:["Internal nodes","Root","Leaves","Siblings"],a:2,ex:"Leaves (external nodes) are vertices with no children in a rooted tree. They are at the ends of branches.",hint:"Internal nodes have at least one child"},
+{c:5,q:"The height of a rooted tree is:",o:["The number of leaves","The number of edges in the longest path from root to a leaf","The number of vertices","The degree of the root"],a:1,ex:"Height of a tree = length (number of edges) of the longest path from the root to any leaf.",star:true,hint:"A tree with only a root has height 0"},
+{c:5,q:"A binary tree is a rooted tree where each node has at most:",o:["1 child","2 children","3 children","Unlimited children"],a:1,ex:"In a binary tree, each node has at most 2 children, called the left child and right child.",star:true,hint:"Used in binary search trees, heaps, expression trees"},
+{c:5,q:"The number of edges in a tree with n vertices is:",o:["n","n+1","n-1","n²"],a:2,ex:"A tree with n vertices has exactly n-1 edges. This follows from the definition of a tree (connected acyclic graph).",star:true,hint:"5-vertex tree has exactly 4 edges"},
+{c:5,q:"An isomorphism between two graphs G and H is a bijection f: V(G) → V(H) such that:",o:["f maps edges to vertices","u-v is an edge in G iff f(u)-f(v) is an edge in H","f is a homomorphism only","All degrees are equal"],a:1,ex:"Graph isomorphism: f preserves adjacency. u,v adjacent in G iff f(u),f(v) adjacent in H. Isomorphic graphs are structurally identical.",star:true},
+{c:5,q:"The shortest path between two vertices in an unweighted graph is found by:",o:["DFS (Depth First Search)","BFS (Breadth First Search)","Dijkstra's algorithm","Prim's algorithm"],a:1,ex:"BFS finds shortest paths in unweighted graphs. Dijkstra's finds shortest paths in weighted graphs with non-negative weights.",star:true},
+{c:5,q:"Connectivity: a graph is connected if:",o:["It has no cycles","There is a path between every pair of vertices","All vertices have the same degree","It has no self-loops"],a:1,ex:"A graph is connected iff there exists a path between every pair of vertices. Disconnected graphs have isolated components.",star:true},
+{c:5,q:"A bipartite graph has vertices that can be divided into two sets such that:",o:["All edges are within one set","Every edge connects a vertex in one set to a vertex in the other set","Both sets are of equal size","The graph is planar"],a:1,ex:"Bipartite graph: V = V₁ ∪ V₂ (disjoint), and every edge goes between V₁ and V₂. No edges within the same set.",star:true,hint:"Example: scheduling problems; check by 2-coloring"},
+{c:5,q:"A graph G is bipartite if and only if it has:",o:["No odd-length cycles","No even-length cycles","Only cycles of length 4","At least one cycle"],a:0,ex:"A graph is bipartite iff it contains no odd-length cycles. Even cycles are allowed.",star:true,hint:"Trees are always bipartite (no cycles at all)"},
+{c:5,q:"Weighted graphs assign _______ to edges:",o:["Colors","Labels","Numerical values (weights)","Directions"],a:2,ex:"In a weighted graph, each edge has a numerical weight (cost, distance, capacity). Used in shortest path and minimum spanning tree problems.",hint:"Example: road network with distances as weights"},
+{c:5,q:"Articulation points in a graph are:",o:["Vertices with maximum degree","Vertices whose removal disconnects the graph","Leaves of a spanning tree","Vertices in a cycle"],a:1,ex:"An articulation point (cut vertex) is a vertex whose removal (along with its edges) disconnects the graph into more components.",star:true},
+{c:5,q:"The minimum spanning tree of a weighted connected graph has:",o:["Maximum total weight","Minimum total weight among all spanning trees","All edges of the original graph","Only vertices of degree 1"],a:1,ex:"A minimum spanning tree (MST) is a spanning tree with minimum total edge weight. Algorithms: Kruskal's and Prim's.",star:true,hint:"MST connects all vertices with minimum total cost"},
+{c:5,q:"Prefix codes (Huffman coding) are represented using:",o:["Cycle graphs","Binary trees","Complete graphs","Directed graphs"],a:1,ex:"Huffman codes use binary trees where each leaf represents a character. No code is a prefix of another, enabling unambiguous decoding.",star:true},
+{c:5,q:"The number of spanning trees in Kₙ (complete graph on n vertices) is given by:",o:["n!","n²","nⁿ⁻²","2ⁿ"],a:2,ex:"Cayley's Formula: number of spanning trees of Kₙ = nⁿ⁻². For K₃: 3³⁻² = 3 spanning trees.",star:true,hint:"K₄ has 4²=16 spanning trees"},
+{c:5,q:"Sub-graph isomorphism means:",o:["G is isomorphic to H","Some subgraph of G is isomorphic to H","G and H have same number of vertices","G and H have same edges"],a:1,ex:"Sub-graph isomorphism: a subgraph of G is isomorphic to H. This is computationally harder than graph isomorphism (NP-complete in general).",hint:"Used in pattern matching in graphs"},
+{c:5,q:"Depth First Search (DFS) of a graph uses which data structure?",o:["Queue","Stack","Priority Queue","Heap"],a:1,ex:"DFS uses a stack (or recursion which uses the call stack) to explore as deep as possible before backtracking.",star:true,hint:"BFS uses Queue; DFS uses Stack"},
+];
+
+/* ═══════════════════════════════════════════
+   STATE & HELPERS
+═══════════════════════════════════════════ */
+let activeQuestions=[],currentIndex=0,score=0,skipped=0,userAnswers=[];
+let isAnswered=false,timerInterval=null,timeLeft=30,selectedChapter='all';
+let autoAdvanceTimer=null;
+let studentName='',studentBranch='',studentSem='',studentCollege='';
+const TIMER_SECS=30,AUTO_ADVANCE_DELAY=1500,LETTERS=['A','B','C','D'];
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function getRemark(pct){
+  if(pct>=90)return{emoji:'🏆',title:"Outstanding! You're a genius!",sub:"Exceptional performance! You've mastered Discrete Mathematics."};
+  if(pct>=75)return{emoji:'🌟',title:"Excellent Work! Almost Perfect!",sub:"Great score! A little more practice and you'll ace the exam."};
+  if(pct>=60)return{emoji:'👍',title:"Good Job! Keep Practicing!",sub:"Solid performance. Review the topics you missed."};
+  if(pct>=40)return{emoji:'📚',title:"Not Bad! Review & Retry",sub:"You're getting there. Focus on units you struggled with."};
+  if(pct>=20)return{emoji:'💪',title:"Keep Going! Practice Makes Perfect",sub:"Don't give up! Review basics and try again."};
+  return{emoji:'🎯',title:"Don't Give Up! Back to Basics",sub:"Start fresh! Review study material and give it another shot."};
+}
+
+/* INFO SCREEN */
+document.getElementById('infoNextBtn').addEventListener('click',()=>{
+  const name=document.getElementById('inputName').value.trim();
+  if(!name){showToast('⚠️ Please enter your name to continue');document.getElementById('inputName').focus();return}
+  studentName=name;studentBranch=document.getElementById('inputBranch').value.trim()||'N/A';
+  studentSem=document.getElementById('inputSem').value||'N/A';
+  studentCollege=document.getElementById('inputCollege').value.trim()||'';
+  showScreen('screenIntro');
+});
+
+/* CHAPTER SELECTOR */
+document.querySelectorAll('.chapter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');selectedChapter=btn.dataset.chapter;
+  });
+});
+
+/* START */
+document.getElementById('startBtn').addEventListener('click',()=>{
+  activeQuestions=selectedChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selectedChapter));
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');renderQuestion();
+});
+
+/* RENDER */
+function renderQuestion(){
+  isAnswered=false;clearAutoAdvance();
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('explanationBox').classList.remove('show');
+  document.getElementById('skipBtn').style.display='';
+  document.getElementById('autoAdvanceBar').classList.remove('show');
+  document.getElementById('autoNextHint').classList.remove('show');
+  document.getElementById('autoAdvanceFill').classList.remove('running');
+
+  const q=activeQuestions[currentIndex],total=activeQuestions.length;
+  document.getElementById('progressText').textContent=`Question ${currentIndex+1} of ${total}`;
+  document.getElementById('scoreText').textContent=`Score: ${score}`;
+  document.getElementById('progressFill').style.width=((currentIndex/total)*100)+'%';
+  document.getElementById('chapterBadge').textContent=`${CHAPTERS[q.c].icon} ${CHAPTERS[q.c].name}`;
+  document.getElementById('qNum').textContent=`Q${currentIndex+1}`;
+  document.getElementById('qText').textContent=q.q;
+
+  let starEl=document.querySelector('.q-star');if(starEl)starEl.remove();
+  if(q.star){const sb=document.createElement('div');sb.className='q-star';sb.textContent='★ Important';document.getElementById('qNum').after(sb);}
+
+  const exEl=document.getElementById('qExample');
+  if(q.hint){exEl.textContent=q.hint;exEl.style.display='';}else{exEl.style.display='none';}
+
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${LETTERS[i]}</div><div class="option-text">${opt}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));list.appendChild(li);
+  });
+  startTimer();
+}
+
+/* TIMER */
+function startTimer(){clearInterval(timerInterval);timeLeft=TIMER_SECS;updateTimerDisplay();timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);timeUp();}},1000);}
+function updateTimerDisplay(){const pill=document.getElementById('timerPill');pill.textContent=`⏱ ${timeLeft}s`;pill.className='timer-pill';if(timeLeft<=5)pill.classList.add('critical');else if(timeLeft<=10)pill.classList.add('urgent');}
+function timeUp(){if(isAnswered)return;isAnswered=true;showToast('⏰ Time Up! Correct answer revealed.');lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');}
+
+/* SELECT ANSWER WITH AUTO-ADVANCE */
+function selectAnswer(idx){
+  if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);
+  userAnswers[currentIndex]=idx;const q=activeQuestions[currentIndex];
+  lockOptions();const options=document.querySelectorAll('.option');
+  if(idx===q.a){
+    options[idx].classList.add('correct');options[idx].querySelector('.option-radio').textContent='✓';
+    score++;document.getElementById('scoreText').textContent=`Score: ${score}`;
+    showExplanation();document.getElementById('skipBtn').style.display='none';
+    startAutoAdvance();
+  }else{
+    options[idx].classList.add('wrong');options[idx].querySelector('.option-radio').textContent='✕';
+    highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';
+    document.getElementById('nextBtn').classList.add('visible');
+  }
+}
+
+/* AUTO-ADVANCE */
+function startAutoAdvance(){
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  fill.classList.remove('running');void fill.offsetWidth;
+  fill.style.animationDuration=AUTO_ADVANCE_DELAY+'ms';
+  bar.classList.add('show');hint.classList.add('show');fill.classList.add('running');
+  autoAdvanceTimer=setTimeout(()=>{bar.classList.remove('show');hint.classList.remove('show');fill.classList.remove('running');goNext();},AUTO_ADVANCE_DELAY);
+}
+function clearAutoAdvance(){
+  if(autoAdvanceTimer){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=null;}
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  if(bar)bar.classList.remove('show');if(hint)hint.classList.remove('show');if(fill)fill.classList.remove('running');
+}
+function lockOptions(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function highlightCorrect(){const q=activeQuestions[currentIndex];const opts=document.querySelectorAll('.option');opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';}
+function showExplanation(){document.getElementById('explanationText').textContent=activeQuestions[currentIndex].ex;document.getElementById('explanationBox').classList.add('show');}
+
+document.getElementById('skipBtn').addEventListener('click',()=>{
+  if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);
+  userAnswers[currentIndex]=-1;skipped++;lockOptions();highlightCorrect();showExplanation();
+  document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');
+  showToast('⟫ Skipped — correct answer shown.');
+});
+document.getElementById('nextBtn').addEventListener('click',()=>{clearAutoAdvance();goNext();});
+function goNext(){currentIndex++;if(currentIndex>=activeQuestions.length)showResult();else renderQuestion();}
+document.getElementById('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Your progress will be lost.')){clearInterval(timerInterval);clearAutoAdvance();showScreen('screenIntro');}});
+
+/* RESULT */
+function showResult(){
+  clearInterval(timerInterval);
+  const total=activeQuestions.length,wrong=total-score-skipped,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  document.getElementById('resultEmoji').textContent=remark.emoji;
+  document.getElementById('scoreBig').textContent=score;
+  document.getElementById('scoreTotal').textContent='/ '+total;
+  document.getElementById('resultPercent').textContent=pct+'%';
+  document.getElementById('remarkText').textContent=remark.title;
+  document.getElementById('remarkSub').textContent=remark.sub;
+  document.getElementById('pillCorrect').textContent=score;
+  document.getElementById('pillWrong').textContent=wrong;
+  document.getElementById('pillSkip').textContent=skipped;
+  document.getElementById('bannerName').textContent=studentName||'Student';
+  const parts=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');
+  document.getElementById('bannerMeta').textContent=parts.join(' · ')||'Discrete Mathematics Quiz';
+  document.getElementById('certBannerName').textContent=studentName||'Your';
+  document.getElementById('certBannerMeta').textContent='Discrete Mathematics Quiz · '+pct+'% · StudyHub';
+  let cnt=0;const el=document.getElementById('scoreBig');el.textContent='0';
+  const inc=setInterval(()=>{cnt++;el.textContent=cnt;if(cnt>=score)clearInterval(inc);},Math.max(20,800/(score||1)));
+  showScreen('screenResult');if(pct>=75)launchConfetti();buildReview();
+}
+
+/* CONFETTI */
+function launchConfetti(){
+  const canvas=document.getElementById('confettiCanvas'),ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+  const pieces=[],colors=['#7C3AED','#EA580C','#16A34A','#F59E0B','#3B82F6','#EC4899'];
+  for(let i=0;i<80;i++)pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,w:Math.random()*10+5,h:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,rot:Math.random()*360,rSpeed:Math.random()*5-2.5});
+  let frames=0;
+  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frames/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.rSpeed;});frames++;if(frames<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}draw();
+}
+
+/* REVIEW */
+function buildReview(){
+  const list=document.getElementById('reviewList');list.innerHTML='';
+  activeQuestions.forEach((q,i)=>{
+    const ua=userAnswers[i],isCorrect=ua===q.a,isSkip=ua===-1;
+    const div=document.createElement('div');div.className=`review-item ${isCorrect?'ri-correct':isSkip?'ri-skip':'ri-wrong'}`;
+    div.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${isCorrect?'ri-correct-ans':isSkip?'':'ri-wrong-ans'}">${isSkip?'Skipped':q.o[ua]}</span>${!isCorrect?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(div);
+  });
+}
+document.getElementById('reviewToggleBtn').addEventListener('click',()=>{
+  const list=document.getElementById('reviewList'),btn=document.getElementById('reviewToggleBtn');
+  list.classList.toggle('open');btn.textContent=list.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';
+});
+
+/* RETRY */
+document.getElementById('retryBtn').addEventListener('click',()=>{
+  document.getElementById('reviewList').classList.remove('open');
+  document.getElementById('reviewToggleBtn').textContent='📖 Review Answers';
+  document.getElementById('sharePanel').classList.remove('open');
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');renderQuestion();
+});
+
+/* CERTIFICATE */
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCertificate(){
+  const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  const wrongCount=total-score-skipped,dateStr=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const canvas=document.getElementById('certCanvas'),W=960,H=680;
+  canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
+  const bgG=ctx.createLinearGradient(0,0,W,H);bgG.addColorStop(0,'#0F0520');bgG.addColorStop(0.5,'#2A0F5E');bgG.addColorStop(1,'#0F0520');
+  ctx.fillStyle=bgG;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(124,58,237,0.18)');rg.addColorStop(1,'transparent');
+  ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(168,85,247,0.07)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(168,85,247,${Math.max(0.05,0.25-r*0.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,0.85)';ctx.lineWidth=3.5;roundRect(ctx,22,22,W-44,H-44,22);ctx.stroke();
+  ctx.strokeStyle='rgba(168,85,247,0.45)';ctx.lineWidth=1.2;roundRect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  function hLine(y){const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(0.3,'rgba(234,88,12,0.9)');g.addColorStop(0.7,'rgba(234,88,12,0.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;}
+  ctx.fillStyle=hLine(58);ctx.fillRect(80,58,W-160,2.5);
+  const sX=W/2,sY=96,sg=ctx.createRadialGradient(sX,sY,0,sX,sY,34);sg.addColorStop(0,'#A855F7');sg.addColorStop(1,'#5B21B6');
+  ctx.beginPath();ctx.arc(sX,sY,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('∑',sX,sY+10);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#C084FC';ctx.fillText('S T U D Y H U B',W/2,sY+52);
+  ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sY+74);
+  const divG=ctx.createLinearGradient(120,150,W-120,150);divG.addColorStop(0,'transparent');divG.addColorStop(0.3,'rgba(234,88,12,0.7)');divG.addColorStop(0.7,'rgba(234,88,12,0.7)');divG.addColorStop(1,'transparent');
+  ctx.strokeStyle=divG;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('This certifies that',W/2,183);
+  const dName=studentName||'Student';
+  ctx.font=`bold ${dName.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(168,85,247,0.85)';ctx.shadowBlur=22;ctx.fillText(dName,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dName).width,ulx=W/2-nw/2;
+  const ulG=ctx.createLinearGradient(ulx,245,ulx+nw,245);ulG.addColorStop(0,'rgba(168,85,247,0)');ulG.addColorStop(0.5,'rgba(168,85,247,0.8)');ulG.addColorStop(1,'rgba(168,85,247,0)');
+  ctx.strokeStyle=ulG;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ulx,245);ctx.lineTo(ulx+nw,245);ctx.stroke();
+  const details=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');
+  if(details.length){ctx.font='13px Arial';ctx.fillStyle='rgba(192,132,252,0.85)';ctx.fillText(details.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  roundRect(ctx,W/2-260,304,520,44,22);
+  const qnG=ctx.createLinearGradient(W/2-260,316,W/2+260,316);qnG.addColorStop(0,'rgba(234,88,12,0.18)');qnG.addColorStop(1,'rgba(124,58,237,0.18)');
+  ctx.fillStyle=qnG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 20px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Discrete Mathematics Quiz — StudyHub',W/2,332);
+  const dG2=ctx.createLinearGradient(120,370,W-120,370);dG2.addColorStop(0,'transparent');dG2.addColorStop(0.5,'rgba(234,88,12,0.7)');dG2.addColorStop(1,'transparent');
+  ctx.strokeStyle=dG2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sY2=420,rX=190,rR=60,scoreColor=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rX,sY2,rR,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rX,sY2,rR-8,-Math.PI/2,-Math.PI/2+(2*Math.PI*pct/100));ctx.strokeStyle=scoreColor;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=scoreColor;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.fillText(`${score}/${total}`,rX,sY2+8);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('SCORE',rX,sY2+26);
+  ctx.font='bold 14px Arial';ctx.fillStyle=scoreColor;ctx.fillText(pct+'%',rX,sY2+46);
+  const grade=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  roundRect(ctx,rX+80,sY2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();
+  ctx.font='bold 36px Arial';ctx.fillStyle=scoreColor;ctx.fillText(grade,rX+125,sY2+10);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('GRADE',rX+125,sY2+30);
+  [{icon:'✅',label:'CORRECT',val:score,color:'#22C55E'},{icon:'❌',label:'WRONG',val:wrongCount,color:'#F87171'},{icon:'⟫',label:'SKIPPED',val:skipped,color:'#FBBF24'},{icon:'📊',label:'ACCURACY',val:pct+'%',color:'#A78BFA'}].forEach((s,i)=>{
+    const col=i%2,row=Math.floor(i/2),sx=440+col*230,sy=sY2-46+row*68;
+    roundRect(ctx,sx,sy,210,56,10);ctx.fillStyle='rgba(255,255,255,0.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.stroke();
+    ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.icon,sx+12,sy+28);
+    ctx.font='bold 20px Arial';ctx.fillStyle=s.color;ctx.fillText(String(s.val),sx+42,sy+28);
+    ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(s.label,sx+12,sy+46);
+  });
+  const bY=516;roundRect(ctx,W/2-230,bY-24,460,40,20);
+  const rmG=ctx.createLinearGradient(W/2-230,bY,W/2+230,bY);rmG.addColorStop(0,'rgba(234,88,12,0.15)');rmG.addColorStop(1,'rgba(124,58,237,0.15)');
+  ctx.fillStyle=rmG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.45)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${remark.emoji}  ${remark.title}`,W/2,bY+4);
+  const botG=ctx.createLinearGradient(120,548,W-120,548);botG.addColorStop(0,'transparent');botG.addColorStop(0.5,'rgba(234,88,12,0.7)');botG.addColorStop(1,'transparent');
+  ctx.strokeStyle=botG;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${dateStr}`,80,572);
+  if(studentCollege)ctx.fillText(`🏛  ${studentCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#A855F7';ctx.fillText('StudyHub  ✦  DMSourceCode',W-80,567);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.32)';ctx.fillText('erabhi.in/studyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);
+  ctx.fillStyle=hLine(H-55);ctx.fillRect(80,H-55,W-160,1.5);
+  ctx.textAlign='left';return canvas;
+}
+
+/* SHARE SYSTEM */
+function getQuizURL(){return window.location.href!=='about:blank'?window.location.href:'https://erabhi.in/studyHub/quiz/dmquiz.html';}
+function buildShareText(){
+  const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct),wrongCount=total-score-skipped;
+  const nameStr=studentName?`👤 ${studentName}\n`:'',metaStr=(studentBranch&&studentBranch!=='N/A')?`📘 ${studentBranch}${studentSem&&studentSem!=='N/A'?' · '+studentSem:''}\n`:'';
+  return `${remark.emoji} Discrete Mathematics Quiz — StudyHub\n\n${nameStr}${metaStr}🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${wrongCount}  ⟫ Skipped: ${skipped}\n\n📚 Try this quiz: ${getQuizURL()}\n\nPowered by StudyHub — erabhi.in/studyHub/`;
+}
+document.getElementById('shareBtn').addEventListener('click',()=>{const panel=document.getElementById('sharePanel');panel.classList.toggle('open');if(panel.classList.contains('open'))panel.scrollIntoView({behavior:'smooth',block:'nearest'});});
+document.getElementById('downloadCertBtn').addEventListener('click',()=>{
+  showToast('🎨 Generating certificate…');
+  setTimeout(()=>{try{const canvas=drawCertificate();const link=document.createElement('a');const total=activeQuestions.length,pct=Math.round((score/total)*100);const safeName=(studentName||'Student').replace(/[^a-zA-Z0-9]/g,'_');link.download=`StudyHub_DM_Certificate_${safeName}_${score}_${total}_${pct}pct.png`;link.href=canvas.toDataURL('image/png');link.click();showToast('✅ Certificate downloaded!');document.getElementById('downloadCertBtn').classList.add('done');}catch(e){showToast('⚠️ Download failed — try another browser');}},200);
+});
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(getQuizURL()).then(()=>showToast('🔗 Quiz link copied!')).catch(()=>prompt('Copy this link:',getQuizURL()));});
+document.getElementById('whatsappBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const msg=`${remark.emoji} *Discrete Mathematics Quiz — StudyHub*\n\n${studentName?'👤 *'+studentName+'*\n':''}🏆 Score: *${score}/${total}* (${pct}%)\n${remark.title}\n\n📚 Try: ${getQuizURL()}`;window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');});
+document.getElementById('twitterBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const tweet=`${remark.emoji} Just scored ${score}/${total} (${pct}%) on the Discrete Mathematics Quiz on StudyHub!\n\n${remark.title}\n\nTry it 👇\n${getQuizURL()}\n\n#DiscreteMath #DM #StudyHub #BTech #MathQuiz`;window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`,'_blank');});
+document.getElementById('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(buildShareText()).then(()=>showToast('📋 Score text copied!')).catch(()=>prompt('Copy:',buildShareText()));});
+
+/* HAMBURGER */
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formal Language & Automata Theory Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">🤖</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<!-- INFO SCREEN -->
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / ECE / IT" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">🤖</span>
+    <div class="intro-title">FLAT Quiz</div>
+    <div class="intro-sub">Formal Language & Automata Theory — 180 VVI MCQs covering Regular Languages, CFG, PDA, Turing Machines & Undecidability. B.Tech Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">180</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (180 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Introduction</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Regular Languages & Finite Automata</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Context-Free Languages & PDA</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Context-Sensitive Languages</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Turing Machines</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Undecidability</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 180</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">🤖 Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">FLAT Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 180</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">FLAT Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Introduction",                                    icon:"📘"},
+  {name:"Regular Languages & Finite Automata",             icon:"🔵"},
+  {name:"Context-Free Languages & PDA",                    icon:"🌳"},
+  {name:"Context-Sensitive Languages",                     icon:"🟣"},
+  {name:"Turing Machines",                                 icon:"⚙️"},
+  {name:"Undecidability",                                  icon:"🚫"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════════
+   UNIT 1 — Introduction (30 Qs)
+══════════════════════════════════════════ */
+{c:0,q:"An alphabet Σ in formal language theory is defined as:",o:["A set of infinite symbols","A finite non-empty set of symbols","A set of strings","An empty set"],a:1,ex:"An alphabet Σ is a finite, non-empty set of symbols (characters). For example, Σ = {0,1} is the binary alphabet. All strings and languages are built over this alphabet.",star:true},
+{c:0,q:"A string over an alphabet Σ is:",o:["Only infinite sequence of symbols","A finite sequence of symbols from Σ","A set of alphabets","A grammar rule"],a:1,ex:"A string (word) is a finite sequence of zero or more symbols from Σ. The empty string ε has length 0. Length of string w is denoted |w|.",star:true},
+{c:0,q:"The empty string is denoted by:",o:["Φ","λ or ε","0","NULL"],a:1,ex:"The empty string is conventionally denoted ε (epsilon) or λ (lambda). It has length 0 and is a member of every language (or not, depending on the language definition).",star:true},
+{c:0,q:"A formal language L over alphabet Σ is:",o:["Must be infinite set of strings","Any subset of Σ* (finite or infinite)","Only finite subset of Σ*","A grammar only"],a:1,ex:"A formal language L is any subset of Σ* where Σ* is the set of all possible strings over Σ including ε. L can be finite (e.g., {ab, ba}) or infinite (e.g., all even-length strings).",star:true},
+{c:0,q:"Σ* (Kleene star of Σ) represents:",o:["Only non-empty strings over Σ","The set of all finite strings over Σ including ε","Infinite strings over Σ","Only strings of length 1"],a:1,ex:"Σ* = Σ0 ∪ Σ1 ∪ Σ2 ∪ … = all finite strings over Σ including the empty string ε. Σ+ = Σ* − {ε} excludes the empty string.",star:true},
+{c:0,q:"Chomsky hierarchy classifies grammars into how many types?",o:["2","3","4","5"],a:2,ex:"Noam Chomsky proposed 4 types: Type 0 (Unrestricted/Recursively Enumerable), Type 1 (Context-Sensitive), Type 2 (Context-Free), Type 3 (Regular). Each type is a subset of the previous.",star:true},
+{c:0,q:"In Chomsky hierarchy, which type is the most restrictive?",o:["Type 0","Type 1","Type 2","Type 3"],a:3,ex:"Type 3 (Regular Grammar) is the most restrictive. It generates regular languages recognizable by finite automata. Type 0 is the least restrictive (most powerful), generating all recursively enumerable languages.",star:true},
+{c:0,q:"A production rule in a grammar is of the form:",o:["String → String","Variable → String of terminals and variables","Terminal → Variable","Language → Automaton"],a:1,ex:"A production (rewriting rule) is α → β where α ∈ (V ∪ T)+ and β ∈ (V ∪ T)*. It replaces the left-hand side with the right-hand side during a derivation.",star:true},
+{c:0,q:"The start symbol in a grammar is:",o:["Any terminal","A special non-terminal from which derivations begin","Any non-terminal","The empty string"],a:1,ex:"The start symbol S ∈ V is a designated non-terminal from which all derivations must begin. Every string in the language must be derivable from S using the grammar's production rules.",star:false},
+{c:0,q:"Concatenation of two languages L1 and L2 is:",o:["L1 ∩ L2","L1 ∪ L2","{xy | x∈L1 and y∈L2}","L1 − L2"],a:2,ex:"Concatenation L1·L2 = {xy | x ∈ L1, y ∈ L2}. For example, if L1={a,b} and L2={c}, then L1·L2={ac,bc}. It is associative but generally not commutative.",star:false},
+{c:0,q:"The Kleene closure L* of a language L is:",o:["L ∪ {ε}","L concatenated with itself once","Union of L^n for all n≥0 including {ε}","L concatenated with L"],a:2,ex:"L* = L0 ∪ L1 ∪ L2 ∪ … where L0 = {ε}. It includes all finite concatenations of strings from L, including the empty string. L+ = L* − {ε}.",star:true},
+{c:0,q:"Which of the following is NOT a regular operation on languages?",o:["Union","Concatenation","Kleene Star","Complement of context-free language"],a:3,ex:"Union, concatenation, and Kleene star are the three regular operations. Complement of a context-free language is not a regular operation — in fact CFL is not closed under complement.",star:false},
+{c:0,q:"A grammar G is formally represented as a 4-tuple:",o:["(V, T, P, S)","(Q, Σ, δ, q0, F)","(V, Σ, δ, S)","(T, V, S, P)"],a:0,ex:"G = (V, T, P, S) where V = set of variables (non-terminals), T = set of terminals, P = set of production rules, S = start symbol. This is standard notation.",star:true},
+{c:0,q:"The language generated by a grammar G is:",o:["All strings derivable from any non-terminal","All terminal strings derivable from start symbol S","All strings in Σ*","Only the empty string"],a:1,ex:"L(G) = {w ∈ T* | S ⇒* w} — the set of all terminal strings (containing only terminal symbols) that can be derived from the start symbol S using zero or more production rule applications.",star:true},
+{c:0,q:"A sentential form in grammar is:",o:["A string of only terminals","Any string of terminals and/or non-terminals derivable from S","A production rule","The set of all derivable strings"],a:1,ex:"A sentential form is any string α ∈ (V∪T)* such that S ⇒* α. It may contain both variables and terminals. A sentence is a sentential form containing only terminals.",star:false},
+{c:0,q:"What is the relation between Type 3 and Type 2 languages?",o:["Type 3 ⊃ Type 2","Type 3 ⊂ Type 2","Type 3 = Type 2","No relationship"],a:1,ex:"The Chomsky hierarchy is strictly nested: Regular (Type 3) ⊂ CFL (Type 2) ⊂ CSL (Type 1) ⊂ RE (Type 0). Every regular language is context-free but not vice versa.",star:true},
+{c:0,q:"Which machine recognizes Type 0 languages?",o:["Finite Automaton","Pushdown Automaton","Linear Bounded Automaton","Turing Machine"],a:3,ex:"Type 0 (unrestricted/recursively enumerable) languages are recognized by Turing Machines. Type 1 by LBA, Type 2 by PDA, Type 3 by Finite Automata.",star:true},
+{c:0,q:"The complement of a language L over Σ is:",o:["L itself","Σ* − L","L ∪ {ε}","L ∩ Σ"],a:1,ex:"The complement of L (denoted L̄ or Lc) = Σ* − L, the set of all strings over Σ that are NOT in L. Regular languages are closed under complement; CFLs are not.",star:false},
+{c:0,q:"The reversal of string w = a1a2…an is:",o:["Same string w","an…a2a1","Empty string","a1an"],a:1,ex:"The reversal (reverse) of w = a1a2…an is wR = an…a2a1. For example, (abc)R = cba. Reversal of ε is ε. Regular and CF languages are closed under reversal.",star:false},
+{c:0,q:"A language is recursively enumerable (RE) if:",o:["Some DFA accepts it","Some TM accepts (halts and accepts) all strings in L","Some TM accepts strings in L (may loop on strings not in L)","Some PDA accepts it"],a:2,ex:"RE languages: there exists a TM that accepts every string in L (but may loop indefinitely on strings not in L). Recursive (decidable) languages have TMs that always halt.",star:true},
+{c:0,q:"Which of the following is true about a finite language?",o:["Always infinite","Always regular","Cannot be described by a grammar","May not be recognized by DFA"],a:1,ex:"Every finite language is regular because it can be represented by a finite automaton (just build a trie/tree for all strings). Finite languages ⊂ Regular ⊂ CFL ⊂ CSL ⊂ RE.",star:false},
+{c:0,q:"The principle of structural induction is used in formal languages to:",o:["Build automata","Prove properties of strings and languages by induction on string length or structure","Design grammars only","Convert NFA to DFA"],a:1,ex:"Structural induction: prove base case (e.g., ε), then inductive step (if property holds for shorter strings, it holds for longer ones). Used to prove language membership, grammar correctness, etc.",star:false},
+{c:0,q:"Which of the following statements is TRUE about Σ+?",o:["Σ+ includes the empty string","Σ+ = Σ* − {ε}","Σ+ is always finite","Σ+ = Σ*"],a:1,ex:"Σ+ is the set of all non-empty strings over Σ. Σ+ = Σ* − {ε} = Σ1 ∪ Σ2 ∪ … It does NOT include the empty string ε.",star:false},
+{c:0,q:"A derivation in a grammar is:",o:["Direct application of one production","A sequence of production applications from the start symbol","Parsing of a string","Construction of parse tree"],a:1,ex:"A derivation is a sequence S ⇒ α1 ⇒ α2 ⇒ … ⇒ w, where each step applies exactly one production rule. ⇒* denotes derivation in zero or more steps.",star:false},
+{c:0,q:"The length |w| of string w = aababc is:",o:["3","5","6","7"],a:2,ex:"|aababc| = 6. The length of a string is the total count of symbols in it. |ε| = 0. Length counts each occurrence of each symbol.",star:false},
+{c:0,q:"Which of the following best describes a 'word problem' in formal language theory?",o:["Finding shortest path","Determining if a given string belongs to a given language","Enumerating all strings","Converting grammar to automaton"],a:1,ex:"The word/membership problem: given a language L and string w, does w ∈ L? For regular languages it is always decidable (DFA); for CFL (PDA); undecidable for some RE languages.",star:false},
+{c:0,q:"Productions of the form A → α where A is a single non-terminal belong to which grammar type at minimum?",o:["Type 0","Type 1","Type 2","Type 3"],a:2,ex:"Productions of the form A → α where A ∈ V and α ∈ (V∪T)* define context-free grammars (Type 2). There is no context — A can be replaced by α anywhere.",star:false},
+{c:0,q:"In formal language theory, a 'language class' is:",o:["A specific finite language","A set of languages sharing common properties/recognition mechanism","A grammar","An automaton"],a:1,ex:"A language class is a collection of languages characterized by a common property, e.g., Regular languages (recognized by FA), Context-Free (by PDA), etc. Each class forms a level in the Chomsky hierarchy.",star:false},
+{c:0,q:"The intersection of two regular languages is:",o:["Always context-free but not regular","Always regular","May or may not be regular","Always empty"],a:1,ex:"Regular languages are closed under intersection. If L1 and L2 are regular, then L1 ∩ L2 is also regular. This can be shown by constructing a product automaton of the two DFAs.",star:true},
+{c:0,q:"A homomorphism h on strings is a function that:",o:["Maps each string to its reverse","Maps each symbol to a string such that h(xy)=h(x)h(y)","Deletes all occurrences of a symbol","Maps strings to numbers"],a:1,ex:"A string homomorphism h: Σ* → Δ* is defined by mapping each symbol a ∈ Σ to h(a) ∈ Δ*, then extended to h(xy) = h(x)h(y). Regular and CF languages are closed under homomorphism.",star:false},
+
+/* ══════════════════════════════════════════
+   UNIT 2 — Regular Languages & Finite Automata (35 Qs)
+══════════════════════════════════════════ */
+{c:1,q:"A Deterministic Finite Automaton (DFA) is defined as a 5-tuple:",o:["(Q, Σ, δ, q0, F)","(V, T, P, S)","(Q, Γ, δ, q0, F, Z0)","(Q, Σ, Γ, δ, q0, F)"],a:0,ex:"DFA M = (Q, Σ, δ, q0, F) where Q = finite set of states, Σ = input alphabet, δ: Q×Σ→Q = transition function, q0 = start state, F ⊆ Q = set of accept states.",star:true},
+{c:1,q:"In a DFA, from any state on any input symbol, there is:",o:["Zero or more transitions","Exactly one transition","At most one transition","Multiple transitions possible"],a:1,ex:"DFA is deterministic: δ(q, a) gives exactly one next state for every state q ∈ Q and symbol a ∈ Σ. Total function — every combination of (state, symbol) maps to exactly one state.",star:true},
+{c:1,q:"An NFA differs from a DFA in that:",o:["NFA has no accept states","NFA can have multiple transitions on one input or ε-transitions","NFA cannot process strings","NFA uses a stack"],a:1,ex:"NFA: δ: Q×(Σ∪{ε})→2^Q — each (state, symbol) can lead to a set of states (0 or more), and ε-transitions (moves without consuming input) are allowed.",star:true},
+{c:1,q:"Every NFA can be converted to an equivalent DFA using the:",o:["CYK algorithm","Subset construction (powerset) algorithm","Pumping lemma","Myhill-Nerode theorem"],a:1,ex:"Subset construction: states of the DFA are subsets of NFA states. The resulting DFA may have at most 2^n states for an n-state NFA, but often fewer. They accept identical languages.",star:true},
+{c:1,q:"ε-closure of a state q in an NFA is:",o:["The set of states reachable from q on exactly one ε-transition","The set of all states reachable from q using zero or more ε-transitions","The set of states reachable on any symbol","The start state only"],a:1,ex:"ε-closure(q) = all states reachable from q by following only ε-transitions (including q itself). Used in NFA-to-DFA subset construction and NFA simulation.",star:true},
+{c:1,q:"A regular expression (a+b)* denotes:",o:["All strings over {a,b} of even length","All strings over {a,b} including ε","Only strings starting with a","Only strings containing both a and b"],a:1,ex:"(a+b)* = (a|b)* denotes all finite strings over {a,b} including ε (Kleene star of {a,b}). It is the set Σ* when Σ={a,b}.",star:true},
+{c:1,q:"Which of the following is a regular expression for all binary strings ending in 1?",o:["(0+1)*0","(0+1)*1","1(0+1)*","0*(1)*"],a:1,ex:"(0+1)*1: any string of 0s and 1s (including ε) followed by exactly one 1. This matches all binary strings ending in 1, e.g., 1, 01, 001, 101, 111.",star:true},
+{c:1,q:"The Pumping Lemma for regular languages states that for any regular language L, there exists p (pumping length) such that any string w ∈ L with |w| ≥ p can be written as xyz where:",o:["|xy| ≤ p, |y| ≥ 1, and xy^i z ∈ L for all i ≥ 0","|xyz| ≤ p, |y| ≥ 1","y = x","x = z"],a:0,ex:"Pumping Lemma conditions: (1) |xy| ≤ p, (2) |y| ≥ 1, (3) xy^i z ∈ L for all i ≥ 0. Used to PROVE a language is NOT regular by showing no valid decomposition exists.",star:true},
+{c:1,q:"The language L = {a^n b^n | n ≥ 0} is:",o:["Regular","Context-free but not regular","Context-sensitive but not CF","Undecidable"],a:1,ex:"L = {ε, ab, aabb, aaabbb, …} is the classic context-free language. It is NOT regular (proved by pumping lemma) because finite automata cannot count and match equal numbers of a's and b's.",star:true},
+{c:1,q:"Which of the following operations is NOT closed for regular languages?",o:["Union","Intersection","Concatenation","Complement of CFL"],a:3,ex:"Regular languages are closed under union, intersection, concatenation, complement, difference, reversal, Kleene star, and homomorphism. 'Complement of CFL' is not a closure property of regular languages.",star:false},
+{c:1,q:"The Myhill-Nerode theorem states that a language L is regular if and only if:",o:["Its DFA has at most n states","The relation ~L has finitely many equivalence classes","Its grammar has no recursion","The pumping lemma holds"],a:1,ex:"Myhill-Nerode: define x ~L y if ∀z, xz∈L ↔ yz∈L. L is regular iff this relation has finitely many equivalence classes. The number of classes equals the number of states in the minimal DFA.",star:true},
+{c:1,q:"The minimal DFA for a language has:",o:["Maximum number of states","The minimum number of states among all equivalent DFAs","No dead states","Only one accept state"],a:1,ex:"The minimal DFA (unique up to isomorphism) has the minimum number of states. It is obtained by merging indistinguishable states. The Myhill-Nerode theorem characterizes it.",star:true},
+{c:1,q:"Two states p and q in a DFA are distinguishable if:",o:["They have the same transitions","There exists some string w such that exactly one of δ*(p,w), δ*(q,w) is an accept state","They both are accept states","They have the same outgoing transitions"],a:1,ex:"States p and q are distinguishable if ∃w such that δ*(p,w)∈F XOR δ*(q,w)∈F. Indistinguishable states can be merged in DFA minimization (table-filling algorithm).",star:true},
+{c:1,q:"A regular grammar (Type 3) has productions of the form:",o:["A → α (any string)","A → aB or A → a (right-linear) or A → Ba or A → a (left-linear)","A → BC","S → aSb"],a:1,ex:"Right-linear: A → aB or A → a (or A → ε). Left-linear: A → Ba or A → a. A grammar is regular if it is consistently right-linear OR consistently left-linear (mixing is not regular).",star:true},
+{c:1,q:"Thompson's construction is used to convert:",o:["DFA to NFA","Regular Expression to NFA (ε-NFA)","NFA to DFA","Regular Grammar to DFA"],a:1,ex:"Thompson's construction builds an ε-NFA from a regular expression recursively. Each RE operator (union, concatenation, star) corresponds to a specific NFA gadget. Result is equivalent NFA.",star:true},
+{c:1,q:"The language accepted by a DFA is the set of all strings that:",o:["Are processed by the DFA without rejection","Lead the DFA from the start state to any state","Lead the DFA from the start state to an accept state","Have length less than number of states"],a:2,ex:"L(M) = {w ∈ Σ* | δ*(q0, w) ∈ F}. A string w is accepted iff processing it from start state q0 ends in an accept state (final state) in F.",star:true},
+{c:1,q:"Which algorithm converts an NFA with ε-transitions to an equivalent DFA?",o:["Subset construction with ε-closure computation","CYK algorithm","Pumping lemma","Minimization algorithm"],a:0,ex:"Subset construction with ε-closure: start with ε-closure({q0}), then for each symbol, compute ε-closure(δ(S, a)) for each state subset S. This creates equivalent DFA states.",star:true},
+{c:1,q:"The complement of a regular language is:",o:["Always context-free","Always regular","Not always regular","Context-sensitive"],a:1,ex:"Regular languages are closed under complement. Given DFA M for L, swap accept and non-accept states to get DFA for L̄ = Σ* − L. This works only for complete DFAs.",star:true},
+{c:1,q:"The language {w | w contains substring 'ab'} is:",o:["Not regular","Regular","Context-free only","Context-sensitive"],a:1,ex:"This language is regular. Regex: (a+b)*ab(a+b)*. DFA: states track whether 'a' was last seen, and transitions to accept once 'ab' is found. All substring-pattern languages are regular.",star:false},
+{c:1,q:"In a DFA state diagram, a dead state (trap state) is:",o:["The start state","A non-accepting state from which no accept state is reachable","An accept state","A state with no outgoing transitions"],a:1,ex:"A dead/sink/trap state is a non-accepting state with all transitions looping back to itself. Once entered, the DFA can never reach an accept state. Used to make δ a total function.",star:false},
+{c:1,q:"The number of states in the NFA produced by Thompson's construction for RE (a|b)*a is approximately:",o:["2","3","6","10"],a:2,ex:"Thompson's construction produces small NFAs. For (a|b)*: about 4 states; for the final 'a': 2 more states; total roughly 6 states with ε-transitions. Exact count depends on implementation.",star:false},
+{c:1,q:"Kleene's theorem states that:",o:["Every regular language has a unique DFA","A language is regular iff it is described by a regular expression iff it is accepted by a finite automaton","All CFLs are also regular","Regular expressions cannot describe infinite languages"],a:1,ex:"Kleene's theorem: the three formalisms — DFA, NFA, and regular expressions — all describe exactly the same class of languages: the regular languages. They are equivalent in expressive power.",star:true},
+{c:1,q:"The language L = {w ∈ {a,b}* | |w| is even} is:",o:["Not regular","Regular — DFA with 2 states","Context-free only","Context-sensitive"],a:1,ex:"L is regular. DFA: q0 (start, accept — even length) and q1 (odd length). δ(q0,a)=q1, δ(q0,b)=q1, δ(q1,a)=q0, δ(q1,b)=q0. Only 2 states needed.",star:false},
+{c:1,q:"Which of the following regular expressions matches exactly the string 'aa'?",o:["a*","a+","aa","a?a?"],a:2,ex:"'aa' is the concatenation of two 'a' symbols, matching exactly the string aa. a* matches zero or more a's; a+ matches one or more; a?a? matches ε, a, or aa.",star:false},
+{c:1,q:"The Generalized NFA (GNFA) is used in:",o:["Converting DFA to NFA","Converting NFA/DFA to Regular Expression (state elimination method)","Minimizing DFA","Proving pumping lemma"],a:1,ex:"GNFA has transitions labeled with regular expressions. State elimination: remove states one by one, updating regex on remaining transitions, until only start and accept states remain with a single RE.",star:false},
+{c:1,q:"In DFA minimization using the table-filling algorithm, initially which pairs of states are marked as distinguishable?",o:["All pairs","Pairs where both are non-accepting","Pairs where exactly one is an accepting state","Pairs with same transitions"],a:2,ex:"Initial marking: pairs (p,q) where p∈F and q∉F (or vice versa) are immediately distinguishable because they differ on the empty string ε. Then propagate to find more distinguishable pairs.",star:true},
+{c:1,q:"A language is NOT regular if:",o:["It has finite strings","It can be described by a regex","It fails the pumping lemma conditions for all pumping lengths","It is accepted by a DFA"],a:2,ex:"To prove non-regularity: use pumping lemma. For every p, find a string w∈L with |w|≥p such that for ALL ways of splitting w=xyz satisfying |xy|≤p and |y|≥1, some xy^iz ∉ L.",star:true},
+{c:1,q:"The product construction of two DFAs M1 and M2 is used to:",o:["Create NFA from regex","Build DFA for L1 ∩ L2 or L1 ∪ L2","Minimize a DFA","Convert DFA to grammar"],a:1,ex:"Product (cross-product) construction: states are pairs (q1,q2)∈Q1×Q2. δ((q1,q2),a)=(δ1(q1,a), δ2(q2,a)). Accept states chosen for ∩ (both accept) or ∪ (either accepts).",star:true},
+{c:1,q:"An ε-NFA has ε-transitions which:",o:["Consume an input symbol ε","Allow state transitions without consuming any input symbol","Are always cyclic","Go to the start state"],a:1,ex:"ε-transitions (or λ-transitions) allow the automaton to change state spontaneously without reading any input character. They add non-determinism but do not increase language recognition power.",star:true},
+{c:1,q:"The right quotient of L with respect to R (L/R) is:",o:["L ∪ R","L ∩ R","{x | ∃y∈R such that xy∈L}","L − R"],a:2,ex:"Right quotient: L/R = {x | ∃y∈R, xy∈L}. If L is regular and R is regular, then L/R is regular. Similarly for left quotient R\\L = {y | ∃x∈R, xy∈L}.",star:false},
+{c:1,q:"Which statement about regular languages is FALSE?",o:["They are closed under union","They are closed under intersection","They are closed under complement","They are NOT closed under complementation"],a:3,ex:"Regular languages ARE closed under complement (swap accepting/non-accepting states in DFA). Statement 'NOT closed under complementation' is FALSE. All other closure properties listed are TRUE.",star:false},
+{c:1,q:"The number of states in the minimal DFA for the language of all binary strings ending in '01' is:",o:["2","3","4","5"],a:1,ex:"Minimal DFA for strings ending in '01' has 3 states: q0 (start, no progress), q1 (seen '0'), q2 (accept: seen '01'). Transitions handle each case carefully.",star:true},
+{c:1,q:"A finite automaton can recognize the language of all strings with equal number of 0s and 1s?",o:["Yes","No — this requires unbounded memory (stack)","Yes, with enough states","Only NFA can"],a:1,ex:"No DFA or NFA (finite automata) can recognize {0^n 1^n | n≥0} or equal-count languages. These require a stack (PDA/CFL). Finite memory of FA cannot track arbitrarily large counts.",star:true},
+{c:1,q:"The star height of a regular expression is:",o:["The number of alphabets","The nesting depth of Kleene star operators","The number of states in equivalent DFA","The length of the longest string"],a:1,ex:"Star height measures the nesting depth of Kleene star (*) operations. (a*)* has star height 2. Minimizing star height is a classical problem in regular expression theory.",star:false},
+{c:1,q:"Which of the following is the regular expression for the set of all strings over {a,b} that start and end with the same symbol?",o:["a(a+b)*a + b(a+b)*b","(a+b)*","a(a+b)*b","a*b*"],a:0,ex:"a(a+b)*a matches strings starting and ending with 'a' (length ≥ 2); b(a+b)*b for 'b'. Also need single characters: add +a+b. Full: a(a+b)*a + b(a+b)*b + a + b.",star:false},
+
+/* ══════════════════════════════════════════
+   UNIT 3 — Context-Free Languages & PDA (35 Qs)
+══════════════════════════════════════════ */
+{c:2,q:"A Context-Free Grammar (CFG) has productions of the form:",o:["αAβ → αγβ where A is non-terminal","A → α where A is a single non-terminal","A → aB only","Only A → ε"],a:1,ex:"CFG production: A → α where A ∈ V (single non-terminal) and α ∈ (V∪T)*. The non-terminal A can be replaced by α regardless of context (no surrounding symbols needed).",star:true},
+{c:2,q:"The language L = {a^n b^n | n ≥ 1} can be generated by which grammar?",o:["S → aSb | ab","S → aS | bS | ε","S → ab | a | b","S → aSb | ε"],a:0,ex:"S → aSb | ab: base case ab (n=1), recursive case aSb adds one a before and one b after. Derivation: S ⇒ aSb ⇒ aaSbb ⇒ … ⇒ a^n b^n.",star:true},
+{c:2,q:"A Pushdown Automaton (PDA) extends NFA by adding:",o:["A queue","An infinite tape","A stack","Additional states"],a:2,ex:"PDA = NFA + stack. The stack provides unbounded memory (LIFO), allowing PDAs to count and match brackets, making them capable of recognizing context-free languages.",star:true},
+{c:2,q:"A PDA accepts by empty stack when:",o:["The input is consumed and the PDA is in a final state","The input is consumed and the stack is empty","The stack has only the bottom marker","Any string is processed"],a:1,ex:"Acceptance by empty stack: PDA accepts w if starting from (q0, w, Z0), it can reach configuration (q, ε, ε) — all input consumed AND stack is empty. Equivalent in power to acceptance by final state.",star:true},
+{c:2,q:"Chomsky Normal Form (CNF) requires all productions to be of the form:",o:["A → BC or A → a","A → aB or A → a","A → α (any)","A → BCD"],a:0,ex:"CNF: every production is either A → BC (two non-terminals) or A → a (one terminal). Except S → ε if ε ∈ L(G). Every CFG can be converted to CNF. CNF is needed for CYK algorithm.",star:true},
+{c:2,q:"Greibach Normal Form (GNF) requires productions of the form:",o:["A → BC","A → aα where a is terminal and α ∈ V*","A → a only","A → aB only"],a:1,ex:"GNF: A → aα where a∈T and α∈V*. Every production begins with exactly one terminal followed by zero or more non-terminals. Useful for eliminating left recursion.",star:true},
+{c:2,q:"The CYK (Cocke-Younger-Kasami) algorithm is used for:",o:["Converting NFA to DFA","Parsing/membership testing in CFGs in CNF","Converting CFG to PDA","Minimizing PDA"],a:1,ex:"CYK is a dynamic programming algorithm for parsing. Given a grammar in CNF and a string w of length n, it determines if w∈L(G) in O(n³ |G|) time using a triangular table.",star:true},
+{c:2,q:"Which of the following is NOT a context-free language?",o:["{ a^n b^n | n≥0 }","{ w | w is a palindrome over {a,b} }","{ a^n b^n c^n | n≥1 }","{ a^i b^j | i≤j }"],a:2,ex:"{a^n b^n c^n} is NOT context-free — proved using pumping lemma for CFLs. It requires counting three equal quantities simultaneously, which no PDA (single stack) can do.",star:true},
+{c:2,q:"The Pumping Lemma for CFLs states that for sufficiently long strings w in a CFL, w can be written as uvxyz where:",o:["|vxy|≤p, |vy|≥1, uv^i xy^i z∈L for all i≥0","v=y=ε","u=y=ε","Only v is pumped"],a:0,ex:"CFL Pumping Lemma: ∃p such that any w∈L with |w|≥p can be written as uvxyz where |vxy|≤p, |vy|≥1, and uv^i xy^i z∈L for all i≥0. Used to prove non-CFL.",star:true},
+{c:2,q:"An ambiguous grammar is one where:",o:["It generates no strings","Some string has two or more distinct parse trees (leftmost derivations)","It has left recursion","It is in CNF"],a:1,ex:"A CFG G is ambiguous if ∃w∈L(G) with two or more distinct leftmost derivations (equivalently, two distinct parse trees). Ambiguity is undesirable in programming language grammars.",star:true},
+{c:2,q:"A language is inherently ambiguous if:",o:["It has an ambiguous grammar","Every CFG that generates it is ambiguous","It cannot be generated by any CFG","Its PDA is non-deterministic"],a:1,ex:"A CFL is inherently ambiguous if EVERY CFG for it is ambiguous. Example: L = {a^i b^j c^k | i=j or j=k}. Some CFLs are inherently ambiguous; all regular languages are unambiguous.",star:true},
+{c:2,q:"The class of CFLs is closed under which of the following operations?",o:["Intersection","Complement","Union","Intersection with regular language"],a:2,ex:"CFLs are closed under: union, concatenation, Kleene star, reversal, homomorphism, and intersection with regular languages. They are NOT closed under intersection or complement (in general).",star:true},
+{c:2,q:"The intersection of a CFL and a regular language is:",o:["Always regular","Always context-free","May not be context-free","Always empty"],a:1,ex:"If L is CFL and R is regular, then L∩R is context-free. Proved by running PDA for L and DFA for R simultaneously (product construction). This closure property is very useful.",star:true},
+{c:2,q:"A Deterministic PDA (DPDA) accepts by:",o:["Only final state","Only empty stack","Final state or empty stack (both equivalent for DPDA)","Infinite loops"],a:2,ex:"For DPDA, acceptance by final state and acceptance by empty stack are equivalent. However, DPDA is strictly less powerful than NPDA — not all CFLs can be recognized by DPDAs.",star:false},
+{c:2,q:"The grammar S → SS | (S) | ε generates:",o:["All strings of balanced parentheses (Dyck language)","All strings over {(,)}","Only empty string","Strings with odd number of brackets"],a:0,ex:"This is the Dyck language — all strings of properly nested/balanced parentheses: ε, (), (()), ()(), ((())) etc. It is the canonical example of a CFL generated by a recursive grammar.",star:true},
+{c:2,q:"Left recursion in a CFG is a production of the form:",o:["A → Bα","A → Aα (A derives a string beginning with A)","A → αB","A → ε"],a:1,ex:"Left recursion: A → Aα | β. It causes infinite loops in top-down parsers. Can be eliminated by converting to: A → βA', A' → αA' | ε. GNF also eliminates left recursion.",star:true},
+{c:2,q:"Which normal form is used by the CYK parsing algorithm?",o:["GNF","CNF","Both CNF and GNF","Neither"],a:1,ex:"CYK algorithm requires the grammar to be in Chomsky Normal Form (CNF). In CNF, every production is A → BC or A → a. The algorithm fills a table bottom-up.",star:true},
+{c:2,q:"The number of productions in the worst case when converting to CNF from a grammar with n productions is:",o:["O(n)","O(n²)","O(n log n)","Exponential"],a:1,ex:"CNF conversion steps (UNIT, BIN, START, DEL, TERM) can at most square the number of productions in some steps (e.g., eliminating unit productions can multiply rules). Generally O(n²) bound.",star:false},
+{c:2,q:"A useful variable in a CFG is one that:",o:["Appears in some production","Can derive a terminal string AND appears in a derivation from S","Has self-referential productions","Is the start symbol"],a:1,ex:"Useful variables must be: (1) generating — can derive some terminal string, AND (2) reachable — appear in some derivation from S. Useless variables can be eliminated.",star:false},
+{c:2,q:"Unit productions in a CFG are of the form:",o:["A → ε","A → B where A and B are non-terminals","A → aB","A → BC"],a:1,ex:"Unit productions: A → B where A, B ∈ V. They are eliminated in CNF conversion by substituting the productions of B for A → B. Elimination avoids infinite derivation chains.",star:false},
+{c:2,q:"ε-productions (nullable productions) in a CFG are of the form:",o:["A → BC","A → a","A → ε","A → AB"],a:2,ex:"Nullable production: A → ε. A variable is nullable if it can derive ε. Elimination: for each production containing a nullable variable, add a version with that variable removed. Keep S→ε only if ε∈L.",star:false},
+{c:2,q:"Which of the following best describes a parse tree for a CFG?",o:["A graph where nodes are terminals","A tree where internal nodes are non-terminals, leaves are terminals/ε, root is S","A linear derivation","A state transition diagram"],a:1,ex:"Parse tree: root = start symbol S; internal nodes = non-terminals; leaf nodes = terminals or ε; each node's children correspond to the RHS of the applied production. Captures structure of derivation.",star:true},
+{c:2,q:"Top-down parsing corresponds to:",o:["Reduction of sentential forms","Expanding non-terminals from the start symbol toward the input string","Reading input from right to left","Building parse tree bottom-up"],a:1,ex:"Top-down parsing: start with S, expand non-terminals using productions to match input (leftmost derivation). Recursive descent parsers are top-down. LL(k) grammars support top-down parsing.",star:false},
+{c:2,q:"Bottom-up parsing corresponds to:",o:["Expanding S to string","Reducing input string back to S using productions in reverse","Left-to-right reading only","Leftmost derivation"],a:1,ex:"Bottom-up: start with input string, apply productions in reverse (reduce) until S is reached. LR parsers are bottom-up. Corresponds to rightmost derivation in reverse.",star:false},
+{c:2,q:"The language {w w^R | w ∈ {a,b}*} (even-length palindromes) is:",o:["Regular","Context-free","Context-sensitive only","Not recursively enumerable"],a:1,ex:"Even-length palindromes are CFL. Grammar: S → aSa | bSb | ε. PDA: push first half onto stack, pop while matching second half. Not regular (proven by pumping lemma).",star:true},
+{c:2,q:"A non-deterministic PDA (NPDA) is more powerful than a DPDA because:",o:["NPDA has more states","NPDA can recognize all CFLs while DPDA recognizes only deterministic CFLs","NPDA has a larger stack","NPDA uses two stacks"],a:1,ex:"NPDA = all CFLs; DPDA = deterministic CFLs (strict subset). For example, the language of palindromes {ww^R} is CFL but not DCFL — no DPDA can recognize it.",star:true},
+{c:2,q:"In PDA notation, a transition (q, a, A) → (p, γ) means:",o:["In state q, read a, pop A, push γ, go to state p","In state p, push a and A","In state q, read γ, push A","All of the above"],a:0,ex:"PDA transition: in state q, reading input symbol a (or ε), if top of stack is A, then pop A, push string γ onto stack (leftmost symbol of γ goes on top), and move to state p.",star:true},
+{c:2,q:"The Earley parsing algorithm can parse:",o:["Only LL(k) grammars","Only LR(k) grammars","Any context-free grammar in O(n³) time","Only regular grammars"],a:2,ex:"Earley's algorithm handles any CFG (including ambiguous ones) in O(n³) time in general, O(n²) for unambiguous, and O(n) for LR(k). It is a chart parsing algorithm.",star:false},
+{c:2,q:"Which of the following is a DCFL (Deterministic CFL)?",o:["{ w w^R | w∈{a,b}* }","{ a^n b^n | n≥0 }","{ a^n b^n c^n | n≥1 }","All palindromes"],a:1,ex:"{a^n b^n} is a DCFL — a DPDA pushes all a's, then pops one for each b. Palindromes {ww^R} require guessing the middle, so they're CFL but not DCFL.",star:true},
+{c:2,q:"The complement of a DCFL is:",o:["Always regular","Not always a CFL","Always a DCFL","Always empty"],a:2,ex:"DCFLs are closed under complement (unlike general CFLs). This is because DPDA determinism allows a clean complement construction by swapping accept/reject. DCFLs are also closed under complement but NOT under union or intersection.",star:true},
+{c:2,q:"Ogden's lemma is a generalization of:",o:["Myhill-Nerode theorem","Pumping lemma for CFLs","Pumping lemma for regular languages","CYK algorithm"],a:1,ex:"Ogden's lemma strengthens the CFL pumping lemma: in a long string, we can mark positions, and the pumped portions v and y must each contain at least one marked position. More powerful for proving non-CFL.",star:false},
+{c:2,q:"Context-free grammars are used in:",o:["Networking protocols only","Programming language syntax specification (BNF/EBNF) and compiler front-ends","Operating system scheduling","Database queries only"],a:1,ex:"CFGs (expressed as BNF — Backus-Naur Form) define programming language syntax. Compilers use CFG-based parsers (LL, LR, Earley) to build parse trees/ASTs from source code.",star:true},
+{c:2,q:"Which of the following shows that CFLs are NOT closed under intersection?",o:["Any two CFLs have CF intersection","L1={a^n b^n c^m} and L2={a^m b^n c^n} are CFLs but L1∩L2={a^n b^n c^n} is not CFL","CFL∩Regular is always CFL","CFLs are closed under complement"],a:1,ex:"Classic proof: L1={a^n b^n c^m|n,m≥1} and L2={a^m b^n c^n|n,m≥1} are both CFLs. But L1∩L2={a^n b^n c^n|n≥1} is NOT a CFL. Hence CFLs not closed under intersection.",star:true},
+{c:2,q:"Which of the following language operations preserves context-free languages?",o:["Intersection of two CFLs","Complement of a CFL","Reversal of a CFL","Difference of two CFLs"],a:2,ex:"CFLs are closed under reversal: if L is CFL with grammar G, then L^R is CFL (reverse all productions). They are NOT closed under intersection, complement, or difference (in general).",star:true},
+
+/* ══════════════════════════════════════════
+   UNIT 4 — Context-Sensitive Languages (25 Qs)
+══════════════════════════════════════════ */
+{c:3,q:"A Context-Sensitive Grammar (CSG) has productions of the form:",o:["A → α","αAβ → αγβ where |αγβ| ≥ |αAβ|","A → BC","A → a or A → aB"],a:1,ex:"CSG production: αAβ → αγβ where γ ≠ ε (context α,β may be empty, but γ must be non-empty). This means the string cannot shrink: |RHS| ≥ |LHS|. Exception: S → ε if S doesn't appear on RHS.",star:true},
+{c:3,q:"Context-Sensitive Languages (CSLs) are recognized by:",o:["Finite Automata","Pushdown Automata","Linear Bounded Automata (LBA)","Turing Machines without restriction"],a:2,ex:"CSLs are exactly the languages recognized by Linear Bounded Automata (LBA) — Turing Machines whose tape is limited to cn cells (c×input length). This provides bounded memory.",star:true},
+{c:3,q:"A Linear Bounded Automaton (LBA) is a Turing Machine where:",o:["The tape is infinite","The tape is limited to a linear function of the input length","The tape has no write capability","The head moves only right"],a:1,ex:"LBA: a TM whose tape is bounded by c×|w| for some constant c. The head cannot move beyond the input boundaries (marked with endmarkers). LBAs recognize exactly the context-sensitive languages.",star:true},
+{c:3,q:"The language { a^n b^n c^n | n ≥ 1 } is:",o:["Regular","Context-Free","Context-Sensitive but not CF","Undecidable"],a:2,ex:"{a^n b^n c^n} is context-sensitive (CSL). CSG: S→aSBC|aBC, CB→BC, aB→ab, bB→bb, bC→bc, cC→cc. Not CFL (pumping lemma). Recognizable by LBA.",star:true},
+{c:3,q:"Every context-free language is also:",o:["Context-sensitive","Regular","Undecidable","Type 0 only"],a:0,ex:"Chomsky hierarchy: Regular ⊆ CFL ⊆ CSL ⊆ RE. Every CFL is a CSL. This is because every CFG production A→α can be written as εAε→εαε (trivial context). ε-productions need special handling.",star:true},
+{c:3,q:"Context-sensitive languages are closed under which of the following?",o:["Union only","Intersection only","Union, intersection, concatenation, complement, and Kleene star","Only complement"],a:2,ex:"CSLs are closed under: union, intersection, concatenation, complement, and Kleene star. Unlike CFLs, they ARE closed under complement — a significant difference. The complement of a CSL is a CSL.",star:true},
+{c:3,q:"The membership problem for CSLs is:",o:["Undecidable","Decidable but PSPACE-complete","Always solvable in polynomial time","Undecidable for all cases"],a:1,ex:"Membership for CSLs is decidable (since LBA always halts — bounded tape). However, it is PSPACE-complete, meaning it may require exponential time but polynomial space. LBA halts because tape is finite.",star:true},
+{c:3,q:"A non-contracting grammar is one where:",o:["|RHS| < |LHS| for all productions","|RHS| ≥ |LHS| for all productions except possibly S → ε","Productions are only A → a","No recursion allowed"],a:1,ex:"Non-contracting: |α| ≤ |β| for every production α→β, except S→ε. Context-sensitive grammars are non-contracting. Non-contracting grammars and CSGs generate the same class of languages.",star:true},
+{c:3,q:"Which of the following is NOT recognized by an LBA?",o:["{ a^n b^n c^n | n≥1 }","{ ww | w∈{a,b}* }","{ a^(2^n) | n≥1 }","The halting problem"],a:3,ex:"The halting problem is undecidable — no TM can decide it, hence no LBA can either (LBA ⊂ TM in power). The other languages {a^nb^nc^n}, {ww}, {a^(2^n)} are all CSLs recognizable by LBA.",star:true},
+{c:3,q:"The language { ww | w ∈ {a,b}* } is:",o:["Regular","Context-Free","Context-Sensitive","Undecidable"],a:2,ex:"{ww} (copy language) is CSL but not CFL. An LBA can check w=w by marking and comparing. Proof that it's not CFL: pumping lemma shows contradiction. Classic CSL example.",star:true},
+{c:3,q:"The halting problem for LBAs is:",o:["Decidable","Undecidable","Trivially solvable","Same as TM halting problem"],a:1,ex:"Whether an LBA halts on all inputs is undecidable (similar to TM halting). However, whether an LBA accepts a specific input IS decidable (finite configurations = must halt). These are different questions.",star:false},
+{c:3,q:"Kuroda's normal form for CSGs requires productions to be of the form:",o:["AB → CD or A → a","A → BC or A → a","αAβ → αγβ","A → aB"],a:0,ex:"Kuroda normal form: every CSG can be converted to use only: A→a (terminal), A→B (variable), A→BC (two variables), or AB→CD (two-to-two). This is analogous to CNF for CFGs.",star:false},
+{c:3,q:"The relationship between DCSL and CSL (deterministic vs non-deterministic LBA) is:",o:["They are equal","DCSL ⊂ CSL","CSL ⊂ DCSL","No relationship"],a:0,ex:"Whether deterministic LBA = non-deterministic LBA is an OPEN PROBLEM in theoretical computer science! This is the LBA problem, analogous to P vs NP. Currently believed equal but unproven.",star:true},
+{c:3,q:"Context-sensitive languages can describe:",o:["Only finite languages","Syntax of natural languages partially (agreement, cross-serial dependencies)","Only programming language syntax","No natural language feature"],a:1,ex:"CSLs (and mildly context-sensitive formalisms) better model natural language than CFLs. Cross-serial dependencies in Dutch, Swiss German word order require at least mildly context-sensitive power.",star:false},
+{c:3,q:"The complement of a context-sensitive language is:",o:["Always regular","Context-sensitive","Context-free","May not exist"],a:1,ex:"CSLs are closed under complement. If L is CSL, then L̄ is CSL. This contrasts with CFLs which are NOT closed under complement. Proof uses the fact that LBA configurations are bounded.",star:true},
+{c:3,q:"In a CSG, why is the restriction |γ| ≥ 1 (in αAβ → αγβ) important?",o:["To allow ε-productions","To ensure the derived string never shrinks (non-contracting property)","To limit recursion","To enable pumping"],a:1,ex:"If γ could be ε, then αAβ → αβ would shorten the string — no bound on derivation length, making membership undecidable. Non-contracting ensures derivations are bounded, keeping CSLs decidable.",star:true},
+{c:3,q:"Which machine model exactly characterizes the power of context-sensitive grammars?",o:["DFA","NPDA","Nondeterministic LBA","Deterministic TM"],a:2,ex:"Nondeterministic LBA (NLBA) exactly recognizes context-sensitive languages. This was proved by Landweber (1963). NLBA = CSG power. Note: DLBA vs NLBA equality is an open problem.",star:true},
+{c:3,q:"The language L = { a^(2^n) | n ≥ 0 } is:",o:["Regular","Context-Free","Context-Sensitive","Not recursive"],a:2,ex:"{a, aa, aaaa, aaaaaaaa, …} (lengths 1,2,4,8,…) is CSL. LBA can square-count using markers. Not CFL (exponential growth cannot be captured by PDA). Recursive — TM always halts.",star:false},
+{c:3,q:"Context-sensitive languages form which level in Chomsky hierarchy?",o:["Level 0 (most general)","Level 1","Level 2","Level 3 (most restrictive)"],a:1,ex:"Chomsky hierarchy: Type 0 (RE) ⊃ Type 1 (CSL/LBA) ⊃ Type 2 (CFL/PDA) ⊃ Type 3 (Regular/FA). CSL is Type 1, between unrestricted and context-free.",star:true},
+{c:3,q:"An LBA is formally defined as a TM where:",o:["Tape is unlimited but head is bounded","Tape is bounded by a linear function of input length and endmarkers prevent going outside","Only right moves allowed","Head can only read, not write"],a:1,ex:"LBA = TM with left endmarker ⊢ and right endmarker ⊣ placed around input. The head cannot move past these markers. Tape usable = input length (or constant multiple). A 2-way, read-write, bounded TM.",star:true},
+{c:3,q:"The emptiness problem for CSLs is:",o:["Decidable","Undecidable","Same as membership problem","Always empty"],a:1,ex:"The emptiness problem (does L(G)=∅?) for CSLs is UNDECIDABLE. This contrasts with CFLs where emptiness IS decidable. This is another key difference between CSL and CFL classes.",star:true},
+{c:3,q:"Which grammar type allows the most general form of productions?",o:["Type 3","Type 2","Type 1","Type 0"],a:3,ex:"Type 0 (unrestricted grammar) allows any production α → β where α ∈ (V∪T)+ and β ∈ (V∪T)*. No restrictions on α or β. Generates all recursively enumerable languages.",star:true},
+{c:3,q:"The word problem (membership) for context-sensitive languages is solved by:",o:["DFA simulation","PDA simulation","LBA simulation (decidable in PSPACE)","TM that may not halt"],a:2,ex:"Membership for CSLs: simulate LBA on input w. Since LBA tape is bounded (|w| cells), configurations are finite, so the LBA must halt. Membership is decidable, but PSPACE-hard.",star:true},
+{c:3,q:"A grammar that generates L = {a^n b^n c^n d^n | n≥1} requires at minimum:",o:["Regular grammar","Context-free grammar","Context-sensitive grammar","Unrestricted grammar"],a:2,ex:"{a^n b^n c^n d^n} requires a CSG — four equal groups cannot be handled by a PDA (one stack). It is context-sensitive, recognizable by LBA. Can be shown non-CFL by pumping lemma for CFLs.",star:false},
+{c:3,q:"How does LBA differ from an unrestricted TM?",o:["LBA cannot write","LBA has bounded tape (linear in input length) while TM has unlimited tape","LBA has fewer states","LBA processes only context-sensitive inputs"],a:1,ex:"Key difference: TM has unlimited tape (can use as much space as needed); LBA tape is bounded by c×|w|. This restriction means LBA cannot decide all RE languages — only CSLs.",star:true},
+
+/* ══════════════════════════════════════════
+   UNIT 5 — Turing Machines (30 Qs)
+══════════════════════════════════════════ */
+{c:4,q:"A Turing Machine is formally defined as a 7-tuple:",o:["(Q, Σ, Γ, δ, q0, qaccept, qreject)","(Q, Σ, δ, q0, F)","(Q, Σ, Γ, δ, q0, F, Z0)","(V, T, P, S)"],a:0,ex:"TM = (Q, Σ, Γ, δ, q0, qacc, qrej): Q=states, Σ=input alphabet, Γ=tape alphabet (Σ⊆Γ, blank ∈Γ), δ:Q×Γ→Q×Γ×{L,R}=transition, q0=start, qacc=accept, qrej=reject states.",star:true},
+{c:4,q:"The tape alphabet Γ of a TM differs from input alphabet Σ in that:",o:["Γ = Σ","Γ ⊇ Σ and includes at least the blank symbol ⊔","Γ ⊂ Σ","Γ has no special symbols"],a:1,ex:"Γ (tape alphabet) ⊇ Σ (input alphabet). Γ must include the blank symbol ⊔ (not in Σ) and may include other work symbols. The TM reads/writes symbols from Γ on its tape.",star:true},
+{c:4,q:"A Turing Machine halts and accepts string w if:",o:["It loops forever","It reaches the reject state","It reaches the accept state after processing w","It processes all blank symbols"],a:2,ex:"TM accepts w iff it eventually enters qacc (accept state). TM rejects w if it enters qrej. TM may also loop (never halt) on some inputs — this is the key difference from DFA/PDA.",star:true},
+{c:4,q:"A language is Turing-decidable (recursive) if:",o:["Some TM accepts all strings in L","Some TM accepts all strings in L and rejects all strings not in L (always halts)","No TM can decide it","A DFA accepts it"],a:1,ex:"Decidable/recursive language: ∃ TM M that always halts — accepts w∈L and rejects w∉L. TM is a decider. Contrast with recognizable: TM may loop on strings not in L.",star:true},
+{c:4,q:"A language is Turing-recognizable (recursively enumerable/RE) if:",o:["No TM can process it","Some TM accepts all strings in L (may loop on strings not in L)","Every TM recognizes it","Only DFA can recognize it"],a:1,ex:"RE language: ∃ TM that accepts every w∈L, but for w∉L the TM may reject OR loop forever. Decidable languages are a strict subset of recognizable languages.",star:true},
+{c:4,q:"The Church-Turing Thesis states:",o:["All languages are decidable","Any effectively computable function can be computed by a Turing Machine","TMs are more powerful than all other models","DFA and TM are equivalent"],a:1,ex:"Church-Turing Thesis (not a theorem, a thesis/hypothesis): every algorithmically computable function is TM-computable. It equates informal 'algorithm' with formal TM. Widely accepted, cannot be proved formally.",star:true},
+{c:4,q:"A Universal Turing Machine (UTM) is:",o:["A TM that accepts all strings","A TM that simulates any other TM given its encoding and input","A TM with unlimited states","A non-deterministic TM"],a:1,ex:"UTM U: given encoded TM ⟨M⟩ and input w on its tape, U simulates M on w. UTM is the theoretical basis for stored-program computers. It shows a single TM can compute any TM-computable function.",star:true},
+{c:4,q:"A Multi-tape TM has the same computational power as a single-tape TM because:",o:["Multi-tape TM is more powerful","Single-tape TM can simulate multi-tape TM (with polynomial time overhead)","Multi-tape TM cannot simulate single-tape TM","They accept different languages"],a:1,ex:"Multi-tape TMs and single-tape TMs are equivalent in language recognition power. A single tape can simulate k tapes by interleaving tracks. Time: O(t²) for t steps of k-tape TM. Space remains same class.",star:true},
+{c:4,q:"A Non-deterministic TM (NTM) accepts a string w if:",o:["All computation branches accept","Some branch of computation accepts","No branch rejects","The TM always halts"],a:1,ex:"NTM accepts w iff at least one branch of its non-deterministic computation accepts. NTM = DTM in language recognition power (both recognize RE languages). NTM may be exponentially faster.",star:true},
+{c:4,q:"The class of languages decidable by a TM is called:",o:["RE (Recursively Enumerable)","Recursive languages","Regular languages","Context-sensitive languages"],a:1,ex:"Recursive languages = decidable languages = class of all languages for which a TM decider exists (always halts). Strictly contained in RE: Recursive ⊂ RE. Example: all regular languages are recursive.",star:true},
+{c:4,q:"The halting problem is the problem of determining whether:",o:["A DFA halts on all inputs","A given TM M halts (accepts or rejects) on a given input w","A grammar is ambiguous","A PDA accepts a string"],a:1,ex:"Halting problem: HALT_TM = {⟨M,w⟩ | TM M halts on input w}. Turing proved this is UNDECIDABLE (1936) by diagonalization. No TM can decide for all (M,w) pairs.",star:true},
+{c:4,q:"The diagonalization argument used to prove halting problem undecidability involves:",o:["Constructing a TM that accepts all strings","Assuming a decider H exists and constructing a TM D that contradicts H's decision","Building a grammar","Using pumping lemma"],a:1,ex:"Diagonalization: Assume H decides HALT. Construct D: if H says M(M) halts, loop; if H says M(M) loops, halt. D(D): if H says D(D) halts → D loops; if H says D(D) loops → D halts. Contradiction!",star:true},
+{c:4,q:"Reductions are used in computability theory to:",o:["Speed up algorithms","Show that if L1 reduces to L2 and L2 is decidable, then L1 is decidable","Prove languages are regular","Build parse trees"],a:1,ex:"Reduction A ≤m B (mapping/many-one reduction): if A reduces to B and B is decidable, then A is decidable. Contrapositive: if A is undecidable and A ≤m B, then B is undecidable. Key tool for undecidability proofs.",star:true},
+{c:4,q:"The Acceptance Problem A_TM = {⟨M, w⟩ | M is a TM and M accepts w} is:",o:["Decidable","Recognizable but not decidable","Not recognizable","Context-sensitive"],a:1,ex:"A_TM is Turing-recognizable (RE) but NOT decidable. RE: UTM recognizes it. Not decidable: if it were, HALT_TM would be decidable (contradiction). A_TM is the canonical undecidable RE language.",star:true},
+{c:4,q:"Rice's theorem states that for any non-trivial property P of the language of a TM:",o:["P is always decidable","The problem of deciding whether L(M) has property P is undecidable","P can be checked in polynomial time","P is decidable for finite languages"],a:1,ex:"Rice's Theorem: any non-trivial semantic property of TM languages is undecidable. Non-trivial: some TMs have it, some don't. Examples: 'L(M) is empty', 'L(M) is regular', 'L(M) contains ε' — all undecidable.",star:true},
+{c:4,q:"The complement of a decidable language is:",o:["Always undecidable","Always decidable","Context-sensitive","May be undecidable"],a:1,ex:"Recursive (decidable) languages are closed under complement. If M decides L, swap accept/reject states to decide L̄. In contrast, RE languages are NOT closed under complement.",star:true},
+{c:4,q:"The complement of a Turing-recognizable (RE) language is called:",o:["Decidable","Co-RE","Regular","Context-free"],a:1,ex:"Co-RE = {L̄ | L is RE}. A language is co-RE if its complement is RE. A language is decidable iff it is both RE and co-RE. The complement of A_TM is co-RE but not RE.",star:true},
+{c:4,q:"A TM that is guaranteed to halt on all inputs is called:",o:["Recognizer","Decider","Enumerator","Simulator"],a:1,ex:"A TM decider always halts (either in accept or reject state) for every input string. A recognizer may loop. This distinction is fundamental to the theory of computation.",star:true},
+{c:4,q:"An enumerator is a TM that:",o:["Decides a language","Outputs all strings in a language L one by one (possibly without halting)","Has no accept state","Processes inputs from a stack"],a:1,ex:"An enumerator TM: has a printer (output tape) and outputs (enumerates) all strings of a language. A language is RE iff some enumerator enumerates it. Deciders enumerate recursive languages in lexicographic order.",star:true},
+{c:4,q:"The Post Correspondence Problem (PCP) is:",o:["Decidable","Undecidable","Context-sensitive","A problem about regular languages"],a:1,ex:"PCP: given pairs (u1,v1),…,(uk,vk), does there exist a sequence of indices i1,…,im such that ui1…uim = vi1…vim? PCP is undecidable. It's a useful tool for proving other problems undecidable.",star:true},
+{c:4,q:"A TM with a two-way infinite tape is equivalent to:",o:["A weaker model","A standard single-tape TM (same language class)","A PDA","A stronger model than standard TM"],a:1,ex:"Two-way infinite tape TM = standard TM in power. We can simulate two-way infinite tape on one-way tape by interleaving positive/negative positions. Same RE/decidable language classes.",star:false},
+{c:4,q:"The time complexity of a TM is measured by:",o:["Number of states","Maximum number of transitions on any input of length n","Memory usage","Number of tape alphabets"],a:1,ex:"Time complexity T(n): maximum number of steps (transitions) on any input of length n in the worst case. This defines complexity classes: P = polynomial time, EXPTIME = exponential time, etc.",star:false},
+{c:4,q:"The space complexity of a TM is measured by:",o:["Number of steps","Maximum tape cells used on any input of length n","Number of states","Input length only"],a:1,ex:"Space complexity S(n): maximum number of tape cells used (written or read beyond input) on any input of length n. L = log space, PSPACE = polynomial space. PSPACE contains NP and P.",star:false},
+{c:4,q:"A TM can simulate a PDA because:",o:["TM has a stack","TM's tape can simulate a stack — push by moving right, pop by tracking position","PDA is stronger than TM","TM cannot simulate PDA"],a:1,ex:"TM ≥ PDA in power. TM can use its tape as a stack (use one region as stack). Every CFL is a decidable language. TM strictly more powerful: decides languages no PDA can recognize.",star:false},
+{c:4,q:"Which of the following problems is decidable?",o:["Does a given TM accept a given string (A_TM)?","Does a given DFA accept a given string?","Is a given TM's language empty (E_TM)?","Does a given TM halt on all inputs?"],a:1,ex:"A_DFA = {⟨M,w⟩ | DFA M accepts w} is decidable — simply simulate DFA. A_TM, E_TM, HALT_TM are all undecidable. Questions about DFA/NFA/CFG behavior are generally decidable.",star:true},
+{c:4,q:"The equivalence problem for DFAs (do two DFAs accept the same language?) is:",o:["Undecidable","Decidable","Context-sensitive","Depends on input"],a:1,ex:"EQ_DFA = {⟨M1,M2⟩ | L(M1)=L(M2)} is decidable. Use symmetric difference: L(M1) △ L(M2) = (L(M1)∩L̄(M2)) ∪ (L̄(M1)∩L(M2)). Check if this is empty (decidable for DFAs).",star:true},
+{c:4,q:"The equivalence problem for TMs (EQ_TM) is:",o:["Decidable","Undecidable","RE but not decidable","Co-RE"],a:1,ex:"EQ_TM = {⟨M1,M2⟩ | L(M1)=L(M2)} is neither RE nor co-RE — it's outside both classes! This makes it 'more undecidable' than A_TM. Proved by reduction from non-RE problems.",star:true},
+{c:4,q:"Savitch's theorem states:",o:["NSPACE(f(n)) ⊆ DSPACE(f(n)²) for f(n)≥log n","P = NP","Every NTM is equivalent to DTM in time","Space and time are equivalent"],a:0,ex:"Savitch's theorem: NSPACE(f(n)) ⊆ DSPACE(f(n)²). Consequence: NPSPACE = PSPACE (since PSPACE = DSPACE(n^k) and squaring polynomial stays polynomial). Key result relating deterministic/non-deterministic space.",star:false},
+{c:4,q:"The number of configurations of a TM on input of length n with s states and t tape symbols is at most:",o:["n × s","s × t^n × n","s × n","t^n"],a:1,ex:"A TM configuration is (state, tape contents, head position). With s states, tape content up to n cells uses t^n combinations, head can be at n positions. So ≤ s × t^n × n configurations.",star:false},
+{c:4,q:"Which property allows us to conclude that recursive languages are closed under complement?",o:["Decidability means TM always halts, so we can swap accept/reject","RE closure properties","Pumping lemma","Church-Turing thesis"],a:0,ex:"If TM M decides L (always halts), construct M': run M, if M accepts → reject, if M rejects → accept. M' decides L̄. This works ONLY because M always halts — key property of deciders.",star:true},
+
+/* ══════════════════════════════════════════
+   UNIT 6 — Undecidability (25 Qs)
+══════════════════════════════════════════ */
+{c:5,q:"The halting problem (HALT_TM) is undecidable means:",o:["No TM exists","There is no Turing Machine that always correctly determines whether any TM halts on any input","All TMs loop forever","DFAs cannot solve it"],a:1,ex:"HALT_TM undecidability: NO decider exists for the halting problem. For every TM H, there exists some (M,w) pair on which H gives the wrong answer. Proven by contradiction/diagonalization.",star:true},
+{c:5,q:"The proof that A_TM is undecidable uses:",o:["Pumping lemma","Rice's theorem","Diagonalization — assume decider H for A_TM, construct D that contradicts H","Induction"],a:2,ex:"Diagonalization proof: Suppose H decides A_TM. Define D(⟨M⟩): run H on ⟨M,⟨M⟩⟩; if H accepts, D rejects; if H rejects, D accepts. Run D(⟨D⟩) — contradiction in both cases.",star:true},
+{c:5,q:"A problem is said to be undecidable if:",o:["It takes exponential time","No Turing Machine can decide it (no algorithm always gives correct yes/no)","It requires a PDA","It cannot be encoded"],a:1,ex:"Undecidable: no algorithm (TM decider) exists that always correctly answers the problem for all instances. Note: undecidable ≠ not solvable for specific instances; just no universal algorithm.",star:true},
+{c:5,q:"Which of the following is a decidable problem?",o:["Does TM M accept string w? (A_TM)","Is language L(M) empty? (E_TM)","Do DFA M1 and M2 accept the same language? (EQ_DFA)","Does TM M halt on all inputs? (ALL_TM)"],a:2,ex:"EQ_DFA is decidable (check if symmetric difference is empty — DFA operations are decidable). A_TM, E_TM (emptiness of TM languages), and ALL_TM (does TM accept Σ*?) are all undecidable.",star:true},
+{c:5,q:"Rice's Theorem applies to:",o:["All properties of TM descriptions","Non-trivial semantic properties about the language recognized by a TM","Only halting problem","Only regular language properties"],a:1,ex:"Rice's Theorem: for any non-trivial property P of TM languages (∃TM with P and ∃TM without P), the problem 'does L(M) have property P?' is undecidable. Semantic = about L(M), not about M itself.",star:true},
+{c:5,q:"Which of the following properties of TM languages is decidable by Rice's Theorem?",o:["Is L(M) empty?","Is L(M) regular?","Is L(M) decidable?","None of the above (all are undecidable by Rice's)"],a:3,ex:"All three — L(M) empty, L(M) regular, L(M) decidable — are non-trivial semantic properties, hence all undecidable by Rice's theorem. NO non-trivial semantic property of L(M) is decidable.",star:true},
+{c:5,q:"The universal language (A_TM) is Turing-recognizable because:",o:["DFA can decide it","A Universal TM can simulate any TM on any input and accept if that TM accepts","It is finite","All TMs accept it"],a:1,ex:"A_TM = {⟨M,w⟩ | M accepts w} is recognized by UTM. UTM simulates M on w; if M accepts, UTM accepts. If M rejects, UTM rejects. If M loops, UTM loops. UTM recognizes (but cannot decide) A_TM.",star:true},
+{c:5,q:"A language is NOT Turing-recognizable (not RE) if:",o:["It is infinite","No TM accepts all strings in L","It is the complement of a decidable language","It is context-sensitive"],a:1,ex:"A language L is not RE if no TM accepts exactly the strings in L. Equivalently, L is not RE iff L̄ is not co-RE iff L is more complex than RE. Example: complement of A_TM (Ā_TM) is not RE.",star:true},
+{c:5,q:"The complement of A_TM (i.e., Ā_TM) is:",o:["Decidable","RE but not decidable","Not RE (not Turing-recognizable)","Context-sensitive"],a:2,ex:"Ā_TM is not RE. If both A_TM and Ā_TM were RE, then A_TM would be decidable (co-RE ∩ RE = decidable). But A_TM is undecidable. So Ā_TM cannot be RE.",star:true},
+{c:5,q:"Mapping reducibility (many-one reduction) A ≤m B means:",o:["A is harder than B","There is a computable function f such that w∈A ↔ f(w)∈B","A and B are equivalent","B decides A directly"],a:1,ex:"A ≤m B: ∃ computable total function f s.t. ∀w, w∈A ↔ f(w)∈B. Consequence: if B is decidable then A is decidable; if A is undecidable then B is undecidable. Maps instances of A to instances of B.",star:true},
+{c:5,q:"To show a language B is undecidable using reduction from A_TM, we:",o:["Show B decides A_TM","Show A_TM ≤m B: if B were decidable, we could decide A_TM (contradiction)","Show B is context-sensitive","Show B is recognizable"],a:1,ex:"To prove B undecidable: assume B is decidable. Use B's decider to build a decider for A_TM (known undecidable). This means A_TM ≤m B. Since A_TM is undecidable, B must be undecidable too.",star:true},
+{c:5,q:"The emptiness problem for TMs (E_TM = {⟨M⟩ | L(M) = ∅}) is:",o:["Decidable","RE but not decidable","Not RE (not Turing-recognizable)","Co-decidable"],a:2,ex:"E_TM is not RE (and not decidable). Proved by showing Ā_TM ≤m E_TM (or by Rice's theorem: emptiness is non-trivial semantic property). Neither E_TM nor Ē_TM is recognizable.",star:true},
+{c:5,q:"The Post Correspondence Problem (PCP) is useful in undecidability proofs because:",o:["It is decidable","It is a simple undecidable problem that many other problems can be reduced to","It solves the halting problem","It is context-sensitive"],a:1,ex:"PCP is a canonical undecidable problem (proved by reducing halting problem to it). Many other undecidability results (especially about CFGs and grammars) are proved by reduction from PCP.",star:true},
+{c:5,q:"Which of the following problems about CFGs is undecidable?",o:["Is L(G) empty?","Is w ∈ L(G)?","Is L(G1) ∩ L(G2) empty (intersection emptiness for two CFGs)?","Is L(G) finite?"],a:2,ex:"Intersection emptiness for two CFGs is undecidable (using PCP reduction). Emptiness, membership, and finiteness for individual CFGs are all decidable. Ambiguity is also undecidable.",star:true},
+{c:5,q:"Whether a given CFG is ambiguous is:",o:["Always decidable","Undecidable","Context-sensitive","Decidable using CYK"],a:1,ex:"The ambiguity problem for CFGs is undecidable. There is no algorithm that determines for all CFGs G whether G is ambiguous. Proved by reduction from PCP.",star:true},
+{c:5,q:"The class of problems NOT solvable by any algorithm is called:",o:["P","NP","Undecidable","RE"],a:2,ex:"Undecidable problems have no algorithm (TM decider) that always gives the correct answer. Examples: HALT_TM, A_TM, E_TM, PCP. These are outside the class of recursive (decidable) languages.",star:true},
+{c:5,q:"Which of the following is a correct statement about the relationship of language classes?",o:["Regular = CFL","Recursive ⊃ RE","Recursive ⊂ RE ⊂ All Languages","RE = All Languages"],a:2,ex:"Strict containments: Regular ⊂ CFL ⊂ CSL ⊂ Recursive ⊂ RE ⊂ All Languages. RE is a proper subset of all languages. Many languages are not even RE (e.g., complement of A_TM).",star:true},
+{c:5,q:"An oracle TM is a TM that:",o:["Decides all undecidable problems","Can query an external oracle (black box) to decide membership in some fixed language in one step","Has infinite states","Uses two tapes"],a:1,ex:"Oracle TM: TM augmented with an oracle for language O. Can query 'is w∈O?' in one step. Used to define reducibility and complexity hierarchies (like polynomial hierarchy). Not a physical model.",star:false},
+{c:5,q:"Which of the following is TRUE about Turing-recognizable languages?",o:["They are all decidable","They are closed under union and intersection but NOT complement","They are closed under complement","They are the same as recursive languages"],a:1,ex:"RE languages are closed under: union (run both TMs in parallel/dovetailing), intersection (run sequentially). NOT closed under complement — if they were, all RE languages would be decidable.",star:true},
+{c:5,q:"The diagonalization method was first used by Cantor to show:",o:["All sets are finite","The real numbers are uncountable (more reals than naturals)","NFA and DFA are equivalent","All languages are decidable"],a:1,ex:"Cantor's diagonalization (1891): the set of real numbers is uncountably infinite. Turing adapted this technique to prove the halting problem is undecidable. The core idea: any presumed listing has a diagonal that differs.",star:true},
+{c:5,q:"If A is decidable and A ≤m B, what can we conclude about B?",o:["B is undecidable","B may or may not be decidable","B is decidable","B is RE"],a:1,ex:"A ≤m B and A decidable gives NO information about B! Reduction goes the wrong way. The useful direction: A ≤m B and B decidable → A decidable; OR A undecidable and A ≤m B → B undecidable.",star:true},
+{c:5,q:"The 10th Hilbert Problem (does a Diophantine equation have an integer solution?) is:",o:["Decidable","Undecidable — proved by Matiyasevich 1970","Context-sensitive","RE but not decidable"],a:1,ex:"Hilbert's 10th problem: given a polynomial equation with integer coefficients, does it have an integer solution? Proved undecidable by Matiyasevich (1970), using MRDP theorem. Classic application of computability theory.",star:false},
+{c:5,q:"A problem is semi-decidable (recognizable) if:",o:["A TM always halts on it","A TM always accepts members of the language; for non-members it rejects or loops","Only DFA can solve it","It is in class P"],a:1,ex:"Semi-decidable = Turing-recognizable. A TM accepts every string in L; for strings not in L, TM may reject or loop forever. Cannot guarantee halting on all inputs. This is the definition of RE.",star:true},
+{c:5,q:"Which of the following is correct about the P vs NP problem?",o:["It is solved — P = NP","It is solved — P ≠ NP","It remains an open problem — one of the most famous unsolved problems in CS","It has been shown undecidable"],a:2,ex:"P vs NP is the greatest open problem in theoretical CS (Clay Millennium Problem). P = problems solvable in polynomial time; NP = verifiable in polynomial time. Most believe P ≠ NP but it's unproven.",star:true},
+{c:5,q:"The totality problem (ALL_TM = {⟨M⟩ | M accepts all strings}) is:",o:["Decidable","RE but not decidable","Not RE","Co-RE"],a:2,ex:"ALL_TM is neither RE nor co-RE. It's outside both. Proved: Ā_TM ≤m E_TM ≤m ALL_TM. ALL_TM is more complex than A_TM — it requires checking all possible inputs, not just a given one.",star:true},
+{c:5,q:"The concept of 'reduction' in undecidability is analogous to which concept in complexity theory?",o:["Simulation","Polynomial-time reduction (used to show NP-hardness/completeness)","Regular expressions","Pumping lemma"],a:1,ex:"Polynomial-time reductions (Cook/Karp reductions) in complexity theory are analogous to mapping reductions in computability. Both show relative difficulty: if A reduces to B and B is 'easy', A is 'easy'; if A is 'hard', B is 'hard'.",star:false},
+];
+
+let sName='',sBranch='',sSem='',sCollege='';
+let activeQ=[],idx=0,score=0,skipped=0,uAns=[];
+let timerInterval=null,timeLeft=30;
+let selChapter='all';
+
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+function getRmk(pct){
+  if(pct>=90)return{e:'🏆',t:'Outstanding! FLAT Champion!'};
+  if(pct>=75)return{e:'🥇',t:'Excellent! Ready for exam!'};
+  if(pct>=60)return{e:'🥈',t:'Good work! Keep practising!'};
+  if(pct>=40)return{e:'🥉',t:'Fair attempt. Revise more!'};
+  return{e:'📖',t:'Keep studying! You can do it!'};
+}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sName=$('inputName').value.trim()||'Student';
+  sBranch=$('inputBranch').value.trim()||'N/A';
+  sSem=$('inputSem').value||'N/A';
+  sCollege=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+document.querySelectorAll('.chapter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selChapter=btn.dataset.chapter;
+  });
+});
+
+$('startBtn').addEventListener('click',()=>{
+  activeQ=selChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selChapter));
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);
+  showScreen('screenQuiz');render();
+});
+
+$('backBtn').addEventListener('click',()=>{
+  if(confirm('Go back to intro? Current progress will be lost.')){
+    clearInterval(timerInterval);showScreen('screenIntro');
+  }
+});
+
+function startTimer(){
+  clearInterval(timerInterval);timeLeft=30;updateTimerUI();
+  timerInterval=setInterval(()=>{
+    timeLeft--;updateTimerUI();
+    if(timeLeft<=0){clearInterval(timerInterval);autoSkip();}
+  },1000);
+}
+
+function updateTimerUI(){
+  const tp=$('timerPill');
+  tp.textContent=`⏳ ${timeLeft}s`;
+  tp.className='timer-pill'+(timeLeft<=10?' urgent':'')+(timeLeft<=5?' critical':'');
+}
+
+function autoSkip(){
+  if(uAns[idx]===-1){uAns[idx]=-2;skipped++;}
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+}
+
+function render(){
+  const q=activeQ[idx];
+  $('progressText').textContent=`Question ${idx+1} of ${activeQ.length}`;
+  $('scoreText').textContent=`Score: ${score}`;
+  $('progressFill').style.width=`${((idx)/activeQ.length)*100}%`;
+  $('qNum').textContent=`Q${idx+1}`;
+  if(q.star){let s=document.createElement('div');s.className='q-star';s.textContent='⭐ Important';$('qNum').after(s);}
+  else{const old=document.querySelector('.q-star');if(old)old.remove();}
+  $('qText').textContent=q.q;
+  const ex=$('qExample');
+  if(q.hint){ex.textContent='💡 Hint: '+q.hint;ex.style.display='block';}
+  else{ex.style.display='none';}
+  const chInfo=CHAPTERS[q.c];
+  $('chapterBadge').textContent=`${chInfo.icon} Unit ${q.c+1}: ${chInfo.name}`;
+  const ol=$('optionsList');ol.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${letters[i]}</div><div class="option-text">${opt}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));
+    ol.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');
+  $('explanationText').textContent='';
+  $('nextBtn').classList.remove('visible');
+  $('skipBtn').style.display='inline-block';
+  $('autoAdvanceBar').classList.remove('show');
+  $('autoNextHint').classList.remove('show');
+  startTimer();
+}
+
+function selectAnswer(chosen){
+  clearInterval(timerInterval);
+  if(uAns[idx]!==-1)return;
+  uAns[idx]=chosen;
+  const q=activeQ[idx];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('locked'));
+  opts[q.a].classList.add('correct');
+  opts[q.a].querySelector('.option-radio').textContent='✓';
+  if(chosen===q.a){score++;opts[chosen].querySelector('.option-radio').textContent='✓';}
+  else{opts[chosen].classList.add('wrong');opts[chosen].querySelector('.option-radio').textContent='✗';}
+  if(q.ex){$('explanationText').textContent=q.ex;$('explanationBox').classList.add('show');}
+  $('skipBtn').style.display='none';
+  if(chosen===q.a){
+    $('autoAdvanceBar').classList.add('show');
+    $('autoAdvanceFill').classList.remove('running');
+    void $('autoAdvanceFill').offsetWidth;
+    $('autoAdvanceFill').classList.add('running');
+    $('autoNextHint').classList.add('show');
+    setTimeout(()=>{if(idx<activeQ.length-1){idx++;render();}else{showResult();}},1600);
+  } else {
+    $('nextBtn').classList.add('visible');
+  }
+}
+
+$('skipBtn').addEventListener('click',()=>{
+  clearInterval(timerInterval);
+  uAns[idx]=-2;skipped++;
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+});
+
+$('nextBtn').addEventListener('click',()=>{
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+});
+
+function showResult(){
+  clearInterval(timerInterval);
+  const tot=activeQ.length,wc=tot-score-skipped,pct=Math.round((score/tot)*100),rm=getRmk(pct);
+  $('resultEmoji').textContent=rm.e;
+  $('scoreBig').textContent=score;
+  $('scoreTotal').textContent=`/ ${tot}`;
+  $('resultPercent').textContent=pct+'%';
+  $('remarkText').textContent=rm.t;
+  const meta=[sBranch!=='N/A'?sBranch:'',sSem!=='N/A'?sSem:''].filter(Boolean).join(' · ')||'FLAT Quiz';
+  $('bannerName').textContent=sName;$('bannerMeta').textContent=meta;
+  $('remarkSub').textContent=`${score} correct · ${wc} wrong · ${skipped} skipped`;
+  $('pillCorrect').textContent=score;$('pillWrong').textContent=wc;$('pillSkip').textContent=skipped;
+  $('certBannerName').textContent=sName;
+  $('certBannerMeta').textContent='FLAT Quiz · StudyHub';
+  showScreen('screenResult');
+  if(pct>=60)launchConfetti();
+  buildReview();
+}
+
+function launchConfetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');
+  cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const P=Array.from({length:120},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,r:Math.random()*6+3,c:`hsl(${Math.random()*360},80%,60%)`,s:Math.random()*3+1,a:Math.random()*6.28}));
+  let frame=0;
+  const anim=()=>{ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.y+=p.s;p.a+=0.04;if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width;}ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);ctx.restore();});frame++;if(frame<220)requestAnimationFrame(anim);else ctx.clearRect(0,0,cv.width,cv.height);};
+  anim();
+}
+
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  activeQ.forEach((q,i)=>{
+    const ua=uAns[i],sk=ua===-2,ok=ua===q.a;
+    const d=document.createElement('div');
+    d.className=`review-item ${ok?'ri-correct':sk?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sk?'':'ri-wrong-ans'}">${sk?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);
+  });
+}
+
+$('reviewToggleBtn').addEventListener('click',()=>{
+  const l=$('reviewList'),b=$('reviewToggleBtn');
+  l.classList.toggle('open');
+  b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';
+});
+
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCert(){
+  const tot=activeQ.length,pct=Math.round((score/tot)*100),rm=getRmk(pct),wc=tot-score-skipped;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rr(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rr(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('🤖',sx,sy+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);
+  ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sName||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sBranch,sSem,sCollege].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rr(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 18px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Formal Language & Automata Theory — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,sc=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=sc;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=sc;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${score}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=sc;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rr(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=sc;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:score,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:skipped,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const col=ii%2,row=~~(ii/2),sx2=440+col*230,sy3=sy2-46+row*68;rr(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rr(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sCollege&&sCollege!=='N/A')ctx.fillText(`🏛  ${sCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  FLAT',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+
+const quizURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/flatquiz.html';
+const shareText=()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct),wc=tot-score-skipped;return `${r.e} FLAT Quiz — StudyHub\n\n${sName?'👤 '+sName+'\n':''}${sBranch&&sBranch!=='N/A'?'📘 '+sBranch+(sSem&&sSem!=='N/A'?' · '+sSem:'')+'\n':''}🏆 Score: ${score}/${tot} (${pct}%)\n${r.t}\n\n✅ ${score}  ❌ ${wc}  ⟫ ${skipped}\n\n📚 Try: ${quizURL()}\n\nStudyHub`;};
+
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=activeQ.length,pct=Math.round((score/tot)*100),sn=(sName||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_FLAT_Certificate_${sn}_${score}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed — try another browser');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(quizURL()).then(()=>toast('🔗 Link copied!')).catch(()=>prompt('Copy:',quizURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *FLAT Quiz — StudyHub*\n\n${sName?'👤 *'+sName+'*\n':''}🏆 Score: *${score}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${quizURL()}`)}`)});
+$('twitterBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${score}/${tot} (${pct}%) on FLAT Quiz!\n${r.t}\nTry it: ${quizURL()} #FLAT #BTech #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(shareText()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',shareText()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

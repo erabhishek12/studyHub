@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Organisation & Architecture Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">🖥️</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<!-- INFO SCREEN -->
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / ECE / IT" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">🖥️</span>
+    <div class="intro-title">COA Quiz</div>
+    <div class="intro-sub">Computer Organisation & Architecture — 200 VVI MCQs covering CPU, ALU, Memory, I/O, Pipelining & Cache. B.Tech Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">200</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: CPU & Functional Blocks</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Data Representation & Arithmetic</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: CPU Design & Memory System</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: I/O Organisation</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Pipelining</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Memory Organisation</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 200</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">🖥️ Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">COA Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 200</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">COA Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"CPU & Functional Blocks",              icon:"🖥️"},
+  {name:"Data Representation & Arithmetic",     icon:"🔢"},
+  {name:"CPU Design & Memory System",           icon:"⚙️"},
+  {name:"I/O Organisation",                     icon:"🔌"},
+  {name:"Pipelining",                           icon:"🚀"},
+  {name:"Memory Organisation",                  icon:"🗄️"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════════
+   UNIT 1 — CPU & Functional Blocks (34 Qs)
+══════════════════════════════════════════ */
+{c:0,q:"The basic functional blocks of a computer are:",o:["CPU, Memory, I/O only","CPU (ALU+CU), Memory Unit, and Input/Output subsystems","ALU, Register, Cache","CPU and Hard Disk only"],a:1,ex:"Von Neumann architecture: CPU (Control Unit + ALU), Memory Unit, and I/O subsystems connected by a bus. All modern computers are based on this architecture.",star:true,hint:"Von Neumann model: CPU + Memory + I/O"},
+{c:0,q:"The ALU (Arithmetic Logic Unit) performs:",o:["Only arithmetic operations","Only logical operations","Both arithmetic (add, subtract, multiply) and logical (AND, OR, NOT, compare) operations","Memory management"],a:2,ex:"ALU executes arithmetic operations (addition, subtraction, multiplication, division) and logical operations (AND, OR, NOT, XOR, compare). It is the computational core of the CPU.",star:true},
+{c:0,q:"The Control Unit (CU) of a CPU is responsible for:",o:["Storing data","Performing calculations","Fetching, decoding instructions and generating control signals to coordinate all operations","Managing secondary storage"],a:2,ex:"CU fetches instructions from memory, decodes them, and generates timed control signals that direct the ALU, registers, memory, and I/O to execute each instruction in the correct sequence.",star:true},
+{c:0,q:"Registers in a CPU are:",o:["Slow external storage","Very fast, small storage locations within the CPU itself used to hold operands and intermediate results","Secondary memory","Cache memory"],a:1,ex:"Registers are the fastest storage in the memory hierarchy — they are inside the CPU chip. They hold the current instruction, addresses, operands, and results. Access time: ~1 clock cycle.",star:true,hint:"Speed: Registers > Cache > RAM > Disk"},
+{c:0,q:"The Program Counter (PC) register holds:",o:["The current instruction being executed","The address of the next instruction to be fetched","The result of the last operation","The stack pointer value"],a:1,ex:"PC (also called Instruction Pointer in x86) always holds the memory address of the NEXT instruction to fetch. After each fetch, PC is incremented; on branch/jump, PC is loaded with new address.",star:true},
+{c:0,q:"The Instruction Register (IR) holds:",o:["The next instruction address","The current instruction being decoded and executed","Data operands","Memory address for stack"],a:1,ex:"IR holds the instruction fetched from memory that is currently being decoded and executed by the control unit. It is separate from the PC which holds the address of the NEXT instruction.",star:true},
+{c:0,q:"The Memory Address Register (MAR) holds:",o:["Data being read from or written to memory","The address of the memory location currently being accessed","The instruction being executed","The program counter value"],a:1,ex:"MAR is connected to the address bus and holds the memory address to be read from or written to. Before any memory access, the CPU loads MAR with the target address.",star:true},
+{c:0,q:"The Memory Buffer Register (MBR/MDR) holds:",o:["The instruction pointer","Data being transferred between the CPU and memory","The control signal","The interrupt vector"],a:1,ex:"MBR (Memory Buffer Register) or MDR (Memory Data Register) holds data that is being written to or read from memory. It acts as a buffer between CPU and memory.",star:true},
+{c:0,q:"The instruction cycle (fetch-decode-execute) describes:",o:["Memory allocation process","The sequence the CPU follows to process each instruction: fetch from memory, decode, execute","The boot sequence","The I/O process"],a:1,ex:"Instruction cycle: 1) Fetch — read instruction from address in PC, 2) Decode — CU interprets opcode, 3) Execute — ALU/CU performs operation, 4) Write back result. Repeats for every instruction.",star:true},
+{c:0,q:"The fetch phase of the instruction cycle involves:",o:["Executing the ALU operation","Reading the instruction from the memory address stored in PC into IR; then incrementing PC","Writing result to register","Decoding the opcode"],a:1,ex:"Fetch: 1) MAR ← PC, 2) Memory read: MBR ← M[MAR], 3) IR ← MBR, 4) PC ← PC+1 (or +instruction_length). Now IR has the instruction and PC points to next.",star:true},
+{c:0,q:"RTL (Register Transfer Language/Level) is used to:",o:["Write high-level programs","Describe the detailed transfer of data between registers during each micro-operation of an instruction","Design printed circuit boards","Measure CPU clock speed"],a:1,ex:"RTL describes hardware operations in terms of data transfers between registers. Example: fetch step: MAR←PC; MBR←M[MAR]; IR←MBR; PC←PC+1. Used for hardware design and formal CPU description.",star:true},
+{c:0,q:"An addressing mode defines:",o:["The clock speed of the CPU","How the operand or its effective address is specified within an instruction","The instruction word length","The number of CPU registers"],a:1,ex:"Addressing modes specify how to compute the effective address (EA) of an operand. Different modes provide flexibility for programming: accessing variables, arrays, structures, and stack frames.",star:true},
+{c:0,q:"In Immediate Addressing mode:",o:["Operand is in a register","Operand is a constant value embedded directly in the instruction itself","Operand is at the given memory address","Operand address is in a register"],a:1,ex:"Immediate mode: operand is part of the instruction. Example: ADD R1, #5 — adds constant 5 to R1. No memory access needed for operand. Fast but limited to small constants.",star:true,hint:"Immediate = value IS in the instruction"},
+{c:0,q:"In Direct (Absolute) Addressing mode:",o:["Operand is in the instruction","The effective address is the address field in the instruction — one memory access for operand","Address of address is in the instruction","Operand is in a register"],a:1,ex:"Direct addressing: EA = address field in instruction. Memory[address] gives operand. Simple but address field must be large enough for full address space. One memory reference after fetch.",star:true},
+{c:0,q:"In Indirect Addressing mode:",o:["Operand is in the instruction","Address field points to a memory location which contains the effective address (address of address)","Operand is in a register","Effective address = base + offset"],a:1,ex:"Indirect: EA = Memory[address]. Two memory accesses for operand. Allows dynamic address computation. Pointer-based access. Example: if Mem[100]=200, operand is at Mem[200].",star:true},
+{c:0,q:"In Register Addressing mode:",o:["Operand is in main memory","Operand is contained in a CPU register specified in the instruction","Address of operand is in a register","Operand is in the instruction"],a:1,ex:"Register mode: operand is in a CPU register. Example: ADD R1, R2. No memory access needed. Fastest operand access. Code density limited by number of registers (3-5 bits for register field).",star:true},
+{c:0,q:"In Register Indirect Addressing mode:",o:["Operand is in a register","Register holds the effective address; memory[register] gives the operand","Operand is immediate","Two registers hold the address"],a:1,ex:"Register Indirect: EA = R[register]. The CPU register holds the memory address of the operand. Like C pointers: *ptr. More flexible than direct; one memory access.",star:true},
+{c:0,q:"In Indexed Addressing mode, the effective address is:",o:["Address in instruction only","EA = base address in instruction + content of index register","EA = register only","EA = PC + offset"],a:1,ex:"Indexed: EA = A + XR, where A is the address field and XR is the index register. Allows easy traversal of arrays: base address + index. Index register auto-increments in some architectures.",star:true},
+{c:0,q:"In Relative Addressing mode, the effective address is:",o:["Base + Index","EA = PC + displacement (offset in instruction)","Direct address","Register content"],a:1,ex:"Relative: EA = PC + offset. PC-relative addressing is compact (small offset) and position-independent code. Used for branch instructions and PIC (Position Independent Code) in shared libraries.",star:true},
+{c:0,q:"The instruction set of a computer is:",o:["The set of all software programs","The complete set of binary instructions the CPU hardware can directly understand and execute","The set of high-level language statements","The set of OS commands"],a:1,ex:"Instruction Set Architecture (ISA) is the complete set of machine language instructions the CPU can execute. Defines opcodes, formats, addressing modes, data types, registers. ISA is the hardware/software interface.",star:true},
+{c:0,q:"RISC (Reduced Instruction Set Computer) is characterized by:",o:["Many complex instructions, variable length","Small set of simple fixed-length instructions, load/store architecture, large register file, pipelining","Complex addressing modes","Microcode-based execution"],a:1,ex:"RISC principles: few instruction types, fixed instruction width, load/store only memory access, large register file (≥32), single-cycle execution, hardwired control, deep pipelining. Examples: ARM, MIPS, RISC-V.",star:true},
+{c:0,q:"CISC (Complex Instruction Set Computer) is characterized by:",o:["Simple uniform instructions","Many complex variable-length instructions, multiple addressing modes, microcoded control, memory-to-memory operations","Only register-to-register operations","Fixed 32-bit instruction width"],a:1,ex:"CISC: large instruction set, variable length instructions, complex addressing modes, fewer registers, microcoded CU, memory operands possible. Examples: x86, x86-64. One instruction can do multiple operations.",star:true},
+{c:0,q:"A hardwired control unit generates control signals using:",o:["Stored microprogram in ROM","Combinational logic circuits (flip-flops, gates) based on instruction opcode and timing","Software subroutines","Main memory"],a:1,ex:"Hardwired CU: fixed logic gates/FSM decode instructions and generate control signals. Fast but inflexible (hard to modify). Used in RISC CPUs for high performance.",star:true},
+{c:0,q:"A microprogrammed control unit generates control signals using:",o:["Combinational logic only","A microprogram (sequence of microinstructions) stored in control memory (ROM/RAM)","Main memory fetch","ALU output directly"],a:1,ex:"Microprogrammed CU: each machine instruction is implemented as a sequence of microinstructions stored in control store. Flexible (easy to fix/change), slower than hardwired. Used in CISC CPUs (x86).",star:true},
+{c:0,q:"What is a microinstruction?",o:["A high-level language statement","A binary word stored in control memory that specifies the control signals to be activated in one clock cycle","A machine language instruction","An assembly language instruction"],a:1,ex:"A microinstruction is an entry in the control memory. It contains bits that directly control CPU components (ALU operation, register select, memory read/write, branch conditions) for one micro-operation.",star:true},
+{c:0,q:"In a Von Neumann architecture, data and instructions are stored:",o:["In separate memories","In the same memory — the stored-program concept","Only on disk","In CPU registers only"],a:1,ex:"Von Neumann's key insight: both programs (instructions) and data share the same memory. Harvard architecture separates instruction and data memories. Von Neumann bottleneck: single bus limits bandwidth.",star:true},
+{c:0,q:"The Harvard architecture differs from Von Neumann in that:",o:["It uses a different CPU","It has separate memory spaces and buses for instructions and data — allows simultaneous fetch and access","It has no ALU","It has no cache"],a:1,ex:"Harvard architecture: separate instruction memory (IM) and data memory (DM) with separate buses. Allows simultaneous instruction fetch and data access, improving throughput. Used in DSPs, microcontrollers, modern CPUs with split L1 cache.",star:true},
+{c:0,q:"The bus in a computer system is:",o:["A physical vehicle","A shared set of wires (address, data, control lines) for transferring information between components","A type of CPU","A memory type"],a:1,ex:"A bus is a shared communication channel: Address bus (memory location), Data bus (transfers data), Control bus (read/write/interrupt signals). Width determines bandwidth. Shared bus = simpler but limited bandwidth.",star:true},
+{c:0,q:"The accumulator register in early computers was:",o:["General-purpose register","A special-purpose register that holds one operand and the result of ALU operations","A memory address register","An instruction register"],a:1,ex:"Accumulator (ACC): implied operand register in accumulator-based ISAs. Operations: ACC ← ACC op M[address]. Single accumulator limits parallelism. Modern CPUs replaced it with general-purpose register files.",star:true},
+{c:0,q:"The stack pointer (SP) register points to:",o:["The next instruction address","The top of the stack (current top of runtime stack in memory)","The base of the data segment","The interrupt vector"],a:1,ex:"SP always holds the address of the top of the stack in memory. PUSH decrements SP and stores data; POP reads data and increments SP. Used for subroutine calls, local variables, and context saving.",star:true},
+{c:0,q:"A subroutine call in a computer typically:",o:["Halts the CPU","Saves the return address (usually on stack), transfers control to subroutine; RET restores return address to PC","Copies all memory","Resets all registers"],a:1,ex:"CALL: pushes PC (return address) onto stack, loads PC with subroutine address. RET: pops return address from stack into PC. Parameters passed via registers or stack. Enables code reuse.",star:true},
+{c:0,q:"Input-output subsystems in a computer are responsible for:",o:["Internal CPU calculations","Transferring data between the computer and external devices (keyboard, display, disk, network)","Memory management","Clock synchronization"],a:1,ex:"I/O subsystems connect the computer to the outside world. They handle data transfer to/from peripherals through I/O controllers, ports, and interfaces using programmed I/O, interrupt-driven I/O, or DMA.",star:true},
+{c:0,q:"The function of a decoder in a CPU's control unit is to:",o:["Add numbers","Interpret the opcode field of the instruction and activate corresponding control signals","Store instructions","Manage memory address calculation"],a:1,ex:"The instruction decoder reads the opcode bits from IR and activates the appropriate control signals for that instruction type (ADD, LOAD, BRANCH, etc.). It's a many-input to many-output combinational circuit.",star:true},
+{c:0,q:"What is the role of the system clock in a CPU?",o:["Provides the current time","Provides a synchronized timing signal that coordinates all operations — all events happen on clock edges","Powers the CPU","Controls memory size"],a:1,ex:"System clock generates a square wave signal. CPU operations are synchronized to rising/falling edges. Clock frequency (GHz) determines how many operations per second. One instruction may take multiple clock cycles.",star:true},
+
+/* ═══════════════════════════════════════════════════
+   UNIT 2 — Data Representation & Arithmetic (34 Qs)
+═══════════════════════════════════════════════════ */
+{c:1,q:"The range of an 8-bit unsigned integer is:",o:["0 to 127","0 to 255","−128 to 127","-255 to 255"],a:1,ex:"Unsigned n-bit: 0 to 2ⁿ−1. For n=8: 0 to 255. Signed 2's complement 8-bit: −128 to +127. Unsigned is used when values are always non-negative.",star:true,hint:"Unsigned: 0 to 2ⁿ-1 | Signed 2's comp: -2ⁿ⁻¹ to 2ⁿ⁻¹-1"},
+{c:1,q:"In 2's complement representation, the most significant bit (MSB) is:",o:["Always 0","The sign bit: 0 = positive, 1 = negative","Ignored","Used for parity"],a:1,ex:"In 2's complement, MSB is the sign bit. If MSB=0, number is positive (same as normal binary). If MSB=1, number is negative. 2's complement: invert all bits and add 1.",star:true},
+{c:1,q:"The 2's complement of the 8-bit number 00110100 is:",o:["11001011","11001100","00110100","11111100"],a:1,ex:"Step 1: 1's complement of 00110100 = 11001011. Step 2: Add 1: 11001011+1 = 11001100. Verify: 00110100+11001100 = 100000000 (9-bit, overflow discarded = 00000000). Correct.",star:true},
+{c:1,q:"Signed magnitude representation stores a negative number as:",o:["2's complement of the magnitude","The magnitude bits with the sign bit set to 1","1's complement","All bits inverted"],a:1,ex:"Signed magnitude: MSB is sign (0=+, 1=−), remaining bits are magnitude. +5 = 00000101, −5 = 10000101. Disadvantage: two representations of zero (+0 and −0), complex arithmetic circuits.",star:true},
+{c:1,q:"The 1's complement of 10110011 is:",o:["10110011","01001101","01001100","01001110"],a:1,ex:"1's complement: invert every bit. 10110011 → 01001100. Wait: 1→0, 0→1, 1→0, 1→0, 0→1, 0→1, 1→0, 1→0 = 01001100. To get 2's complement, add 1: 01001101.",star:true},
+{c:1,q:"Fixed-point representation stores real numbers by:",o:["Using floating point exponent","Assuming a fixed radix point position — integer part and fractional part fixed","Using BCD","Using IEEE 754 standard"],a:1,ex:"Fixed-point: radix point is fixed (e.g., 8 integer bits + 8 fractional bits). Simple hardware, limited range. For scientific computing, floating-point is preferred (larger dynamic range).",star:true},
+{c:1,q:"In IEEE 754 single-precision floating point (32-bit), the format is:",o:["16 exp + 16 mantissa","1 sign + 8 exponent (biased-127) + 23 mantissa (hidden bit)","1 sign + 7 exponent + 24 mantissa","2 sign + 8 exponent + 22 mantissa"],a:1,ex:"IEEE 754 single (32-bit): 1 sign bit + 8 exponent bits (bias = 127) + 23 fraction/mantissa bits (24-bit precision with hidden bit). Value = (−1)^s × 2^(exp−127) × 1.mantissa",star:true,hint:"Single: 1+8+23=32. Double: 1+11+52=64. Bias=127 (single), 1023 (double)"},
+{c:1,q:"The bias in IEEE 754 single-precision exponent is:",o:["128","127","255","64"],a:1,ex:"Biased exponent: stored exponent = actual exponent + 127. This allows comparison of floats as integers. Exponent 0 (actual −127) and 255 are reserved for special values (denormals, ±∞, NaN).",star:true},
+{c:1,q:"Character representation using ASCII uses:",o:["4 bits","7 bits (128 characters) or 8 bits (extended)","16 bits","32 bits"],a:1,ex:"ASCII: 7-bit encoding (0–127), representing 128 characters (letters, digits, punctuation, control chars). Extended ASCII: 8-bit (0–255). Unicode (UTF-8/16/32) extends to all world languages.",star:true},
+{c:1,q:"BCD (Binary Coded Decimal) represents each decimal digit using:",o:["2 bits","4 bits (0000 to 1001)","8 bits","16 bits"],a:1,ex:"BCD: each decimal digit (0–9) encoded in 4 binary bits. 345 in BCD = 0011 0100 0101. Codes 1010–1111 are invalid. Used in financial/decimal arithmetic to avoid binary-decimal conversion errors.",star:true},
+{c:1,q:"In binary addition, what is 1 + 1 + 1 (with carry in)?",o:["10","11 (sum=1, carry=1)","01","00"],a:1,ex:"Binary addition: 1+1+1 = 3 = 11₂. Sum bit = 1, Carry out = 1. Full adder truth table: A=1,B=1,Cin=1 → Sum=1, Cout=1.",star:true},
+{c:1,q:"A ripple carry adder adds two n-bit numbers by:",o:["Using a lookup table","Chaining n full adders where carry out of each stage feeds carry in of next — carry ripples through all stages","Using all parallel carry computation","Using subtraction"],a:1,ex:"Ripple Carry Adder: simple, n full adders in series. Disadvantage: carry must propagate from LSB to MSB — delay = n × (one full adder delay). For 64-bit: slow. Carry-lookahead is faster.",star:true,hint:"Ripple adder delay = O(n); Carry-lookahead = O(log n)"},
+{c:1,q:"A carry-lookahead adder (CLA) improves speed by:",o:["Using fewer adders","Computing all carry bits simultaneously in parallel using generate (G) and propagate (P) functions","Adding from MSB to LSB","Using subtraction"],a:1,ex:"CLA: Gi = Ai AND Bi (generate). Pi = Ai XOR Bi (propagate). Ci+1 = Gi + Pi×Ci. All carries computed simultaneously → O(log n) delay instead of O(n). Much faster for wide operands.",star:true},
+{c:1,q:"Subtraction in computers using 2's complement is performed as:",o:["Direct subtraction circuit","A − B = A + (2's complement of B) — adds A to the 2's complement of B","B − A only","Using BCD subtraction"],a:1,ex:"Key advantage of 2's complement: subtraction = addition. Hardware only needs an adder + inverter. A−B = A + (−B) = A + (~B + 1). One ALU handles both add and subtract.",star:true},
+{c:1,q:"The Booth's multiplication algorithm efficiently handles:",o:["Only unsigned multiplication","Signed multiplication in 2's complement, also handles runs of 1s efficiently by replacing them with add-subtract pairs","Only positive numbers","Division only"],a:1,ex:"Booth's algorithm: for each bit of multiplier, check current and previous bit. 10→subtract multiplicand, 01→add multiplicand, 00/11→no operation (shift only). Reduces partial products for strings of 1s.",star:true},
+{c:1,q:"In non-restoring division of binary numbers:",o:["The remainder is always restored after each step","The remainder is NOT restored if negative — a corrective addition is done only at the final step","Only unsigned division is supported","A lookup table is used"],a:1,ex:"Non-restoring division: never restores the partial remainder. If remainder<0, shift and add divisor next step. If ≥0, shift and subtract divisor. More efficient than restoring (fewer operations).",star:true},
+{c:1,q:"Floating point addition requires:",o:["No alignment","Alignment of exponents (shift significand of smaller number) before adding significands, then normalize result","Only mantissa addition","Exponent subtraction only"],a:1,ex:"Floating-point add steps: 1) Compare exponents; 2) Shift smaller significand right by exponent difference; 3) Add/subtract significands; 4) Normalize result (adjust exponent, shift mantissa); 5) Round.",star:true},
+{c:1,q:"Overflow in arithmetic operations occurs when:",o:["Result is zero","Result exceeds the representable range of the data type","Division by zero","Carry out of MSB occurs in unsigned addition"],a:1,ex:"Overflow: result too large/small for the fixed word size. For signed: overflow when carry into MSB ≠ carry out of MSB. For unsigned: carry out of MSB = overflow. Must be detected and handled.",star:true},
+{c:1,q:"The excess-3 code for decimal digit 5 is:",o:["0101","0111","1000","0110"],a:2,ex:"Excess-3: add 3 to each decimal digit, encode in 4 bits. 5+3=8 → 1000. Excess-3 is self-complementing: 9's complement of digit → 1's complement of code. Used in BCD arithmetic.",star:true},
+{c:1,q:"Gray code differs from normal binary in that:",o:["It uses base 3","Adjacent values differ by only 1 bit — minimizes errors in physical encoders and analog-digital converters","It has more bits than binary","It cannot represent negative numbers"],a:1,ex:"Gray code (reflected binary): only 1 bit changes between consecutive values. Useful in shaft encoders (position sensors) to prevent spurious values during transitions when multiple bits would change simultaneously.",star:true},
+{c:1,q:"What is the hexadecimal equivalent of binary 10111101?",o:["BC","BD","BE","BA"],a:1,ex:"Split into nibbles: 1011 = B, 1101 = D → BD₁₆. Check: B=11, D=13. 11×16+13 = 176+13 = 189₁₀. Binary 10111101 = 189₁₀ = BD₁₆. ✓",star:true},
+{c:1,q:"In IEEE 754, the special value NaN (Not a Number) is represented by:",o:["All zeros","Exponent = all 1s (255) with non-zero mantissa","Exponent = all 0s","Sign bit = 1 with mantissa = 0"],a:1,ex:"IEEE 754 special values: exp=255, mantissa=0 → ±Infinity. exp=255, mantissa≠0 → NaN (result of 0/0, √−1, etc.). exp=0, mantissa≠0 → denormalized numbers. exp=0, mantissa=0 → ±zero.",star:true},
+{c:1,q:"The Hamming code is used for:",o:["Efficient floating point","Error detection and correction by adding redundant parity bits at positions that are powers of 2","Data compression","Encryption"],a:1,ex:"Hamming code: redundancy bits (r) at positions 2⁰,2¹,2²... can detect and correct 1-bit errors. With r parity bits: can protect 2^r − r − 1 data bits. Hamming distance between codewords ≥ 3 for single-bit correction.",star:true},
+{c:1,q:"Carry-save adder (CSA) is used to:",o:["Subtract numbers","Speed up multiplication by accumulating partial products without propagating carry until the final add","Add fractions","Store carry in a register"],a:1,ex:"CSA adds three numbers A, B, C to produce two outputs (Sum, Carry) without carry propagation. Used in multiplier arrays: accumulate many partial products quickly; final CPA (carry-propagate adder) used at end.",star:true},
+{c:1,q:"The number +127 in 8-bit 2's complement binary is:",o:["10000000","01111111","11111111","00000001"],a:1,ex:"8-bit 2's complement: MSB=0 for positive, remaining = magnitude. +127 = 01111111. Largest positive 8-bit 2's complement. +128 cannot be represented (would require 01000000 in 2's complement for 9 bits).",star:true},
+{c:1,q:"What is -1 in 8-bit 2's complement?",o:["10000001","11111110","11111111","10000000"],a:2,ex:"-1 in 2's complement: start with +1 = 00000001, invert = 11111110, add 1 = 11111111. Check: 11111111 + 00000001 = 100000000 (carry discarded) = 0. Correct. All 1s = -1 in any width 2's complement.",star:true},
+{c:1,q:"Addition of +70 and +80 in 8-bit signed arithmetic causes:",o:["Correct result 150","Overflow — result 150 exceeds +127 (max 8-bit 2's complement value)","Underflow","Carry only, no overflow"],a:1,ex:"70+80=150. But 8-bit signed max = +127. 150 > 127 → overflow. Binary: 01000110+01010000 = 10010110 = −106 in 2's complement (wrong sign → overflow detected). Carry in MSB ≠ carry out.",star:true},
+{c:1,q:"The floating point number representation with hidden bit means:",o:["An extra sign bit","The leading 1 in normalized scientific notation (1.xxx × 2^e) is not stored, giving 1 extra bit of precision","The exponent is hidden","The mantissa is stored backwards"],a:1,ex:"Hidden bit: normalized IEEE 754 numbers always have form 1.fraction × 2^e. The leading 1 is implicit (not stored). 23 stored bits → 24 bits of precision. Denormalized numbers (exp=0) have no hidden bit.",star:true},
+{c:1,q:"Integer multiplication of two 8-bit numbers produces a result that needs:",o:["8 bits","16 bits (double width)","32 bits","4 bits"],a:1,ex:"Multiplying two n-bit numbers: result can have up to 2n bits. 8×8 → up to 16-bit result. ALU typically uses double-width result registers (e.g., 16-bit DX:AX in x86 for 8-bit MUL).",star:true},
+{c:1,q:"Which number system is most convenient for representing large binary numbers compactly?",o:["Decimal","Hexadecimal — each hex digit represents exactly 4 binary bits","Octal","BCD"],a:1,ex:"Hex is natural for binary: each hex digit = 4 bits. 32-bit value needs 8 hex digits vs 32 binary or ~10 decimal digits. Memory dumps, machine code are always shown in hex by programmers.",star:true},
+{c:1,q:"The purpose of normalization in floating-point representation is:",o:["To make numbers smaller","To ensure a unique representation with maximum precision by adjusting mantissa to form 1.xxx × 2^exp","To convert to integer","To reduce exponent bits"],a:1,ex:"Normalization ensures the leading bit is 1 (hence always 1.xxx in IEEE 754), providing the maximum number of significant bits. Every non-zero FP number has exactly one normalized form.",star:true},
+{c:1,q:"Booth's recoding converts the multiplier to reduce:",o:["Number of adders","Number of partial products by replacing strings of 1s with a subtract at start and add at end","Number of registers","Number of bits"],a:1,ex:"Modified Booth's algorithm (radix-4): examines 3 multiplier bits at a time, choosing from {0, ±1, ±2} multiples. Halves the number of partial products → faster multiplier. Used in modern CPUs.",star:true},
+{c:1,q:"In floating-point, 'denormalized' (subnormal) numbers have:",o:["Exponent = 255 (all ones)","Exponent = 0 — represents numbers smaller than the minimum normal, filling the gap near zero","Mantissa = all zeros","Both exponent and mantissa = all ones"],a:1,ex:"Denormals (IEEE 754): exponent field = 0, implicit leading bit = 0 (not 1). Value = (−1)^s × 0.fraction × 2^(−126). Allows gradual underflow — numbers smaller than 1.0×2^(−126) are representable.",star:true},
+
+/* ═══════════════════════════════════════
+   UNIT 3 — CPU Design & Memory (34 Qs)
+═══════════════════════════════════════ */
+{c:2,q:"A simple hypothetical CPU (like a single-bus accumulator machine) processes instructions by:",o:["Parallel processing all instructions","Sequentially fetching, decoding, and executing one instruction at a time using registers and ALU","Using only cache memory","Running on two CPUs simultaneously"],a:1,ex:"A simple CPU: one instruction at a time through the fetch-decode-execute cycle. Single bus connects CPU registers, ALU, and memory. Each micro-operation transfers data between two registers per cycle.",star:true},
+{c:2,q:"The CPU control unit design can be classified as:",o:["Only hardwired","Hardwired (combinational logic, FSM) or Microprogrammed (control store with microinstructions)","Only microprogrammed","Only PLA-based"],a:1,ex:"Two main approaches: 1) Hardwired: combinational/sequential circuits, fast, inflexible. 2) Microprogrammed: control memory stores microinstructions, flexible (easy to modify), slower. Wilkes proposed microprogramming in 1951.",star:true},
+{c:2,q:"The micro-programmed approach of CPU control uses:",o:["ROM only for data","A control memory (ROM or RAM) storing microinstructions, a microinstruction register, and a microprogram counter","A separate processor","Only flip-flops"],a:1,ex:"Microprogrammed CU components: Control Address Register (CAR), Control Memory (stores microinstructions), Control Data Register/μIR (current microinstruction), Sequencer (next address logic). Each machine instruction → sequence of microinstructions.",star:true},
+{c:2,q:"x86 architecture is an example of:",o:["RISC architecture","CISC architecture with variable-length instructions and many addressing modes","Harvard architecture","Stack-based architecture"],a:1,ex:"x86 is the quintessential CISC: variable instruction length (1-15 bytes), many complex addressing modes, memory operands, few general registers. Internally modern x86 CPUs decode CISC to RISC-like micro-ops.",star:true},
+{c:2,q:"The 'case study of a simple CPU' in COA typically demonstrates:",o:["Only memory design","The complete fetch-decode-execute cycle, register transfers (RTL), and control signal generation for a set of instructions","GPU design","Network interface design"],a:1,ex:"A simple CPU case study shows: PC, MAR, MBR, IR, AC registers; fetch, decode, execute phases in RTL; how control unit generates signals for ADD, LOAD, STORE, BRANCH instructions; timing diagram.",star:true},
+{c:2,q:"Semiconductor memory is classified as:",o:["Only RAM types","RAM (volatile: SRAM, DRAM) and ROM (non-volatile: ROM, PROM, EPROM, EEPROM, Flash)","Only magnetic types","Only optical types"],a:1,ex:"Semiconductor memory: RAM (Random Access Memory) — volatile: SRAM (flip-flops, fast, cache), DRAM (capacitors, needs refresh, main memory). ROM — non-volatile: Flash (USB/SSD), EEPROM, BIOS ROM.",star:true,hint:"SRAM: fast, expensive, cache. DRAM: slow(er), cheap, main memory"},
+{c:2,q:"SRAM (Static RAM) stores bits using:",o:["Capacitors","Flip-flops (cross-coupled inverters) — data held as long as power is on, no refresh needed","Magnetic domains","Phase change material"],a:1,ex:"SRAM: 6 transistors per bit cell (cross-coupled inverters + access transistors). Holds state indefinitely with power. Fast (1-10 ns), but large and expensive. Used for CPU cache (L1/L2/L3).",star:true},
+{c:2,q:"DRAM (Dynamic RAM) stores bits using:",o:["Flip-flops","A single capacitor and transistor per bit — must be periodically refreshed (every ~64ms) as capacitors leak","Magnetic film","Optical pit"],a:1,ex:"DRAM: 1 transistor + 1 capacitor per bit. Very dense and cheap (used for main memory). Disadvantage: capacitor leaks → must refresh every row every ~64ms. Access time ~50-100ns (slower than SRAM).",star:true},
+{c:2,q:"Memory organization: the term 'word' in computer architecture refers to:",o:["A text processing unit","The natural unit of data for the CPU — typically the width of data bus or general register (e.g., 32-bit or 64-bit)","Always 8 bits","A fixed 16 bits in all computers"],a:1,ex:"Word = CPU's natural data size. 16-bit CPU: 16-bit word. 32-bit CPU: 32-bit word. 64-bit CPU: 64-bit word. Memory capacity in words × word size = total bits. Byte-addressable memory is most common.",star:true},
+{c:2,q:"Memory interleaving is used to:",o:["Reduce memory size","Allow multiple memory modules to be accessed in parallel to increase effective memory bandwidth","Increase cache size","Reduce power consumption"],a:1,ex:"Interleaving: divide memory into n banks. Consecutive addresses go to different banks. While bank 0 completes access, bank 1 can start. Effective bandwidth approaches n × single bank bandwidth. Used in DRAM systems.",star:true},
+{c:2,q:"The purpose of cache memory is to:",o:["Store the OS permanently","Bridge the speed gap between fast CPU and slow main memory by holding frequently/recently accessed data","Replace main memory","Provide secondary storage"],a:1,ex:"Cache exploits temporal locality (recently used data used again soon) and spatial locality (nearby data used soon). CPU checks cache first (hit: fast), else goes to main memory (miss: slow + cache fill).",star:true},
+{c:2,q:"The principle of locality used in cache design states:",o:["Data is always accessed randomly","Temporal: recently accessed data likely accessed again; Spatial: nearby data likely accessed next","Only large files are cached","Cache always fails"],a:1,ex:"Locality: Temporal — if Mem[X] accessed now, likely accessed again soon (loops, repeated variables). Spatial — if Mem[X] accessed, Mem[X+1] likely accessed soon (arrays, sequential code). Cache blocks exploit both.",star:true},
+{c:2,q:"Direct-mapped cache maps each memory block to:",o:["Any cache line (fully flexible)","Exactly one specific cache line determined by: index = block address mod (number of cache lines)","Two possible cache lines","A random cache line"],a:1,ex:"Direct-mapped: block i → cache line (i mod N). Simple, fast, but suffers conflict misses (two frequently used blocks mapping to same line thrash). Tag must be checked on every access to confirm correct block.",star:true},
+{c:2,q:"Fully associative cache allows a memory block to be placed:",o:["Only in one specific line","In any cache line","Only in two specific lines","Only in even-numbered lines"],a:1,ex:"Fully associative: maximum flexibility — block can go in any cache line. Best hit rate, but requires parallel comparison of all tags (expensive for large caches). Used for small TLBs and victim caches.",star:true},
+{c:2,q:"Set-associative cache is a compromise between:",o:["RAM and ROM","Direct-mapped (simple, conflict misses) and fully associative (flexible, expensive hardware)","L1 and L2 cache","SRAM and DRAM"],a:1,ex:"k-way set-associative: N lines divided into N/k sets of k lines each. Block maps to one set (set = address mod N/k), can go in any of the k lines in that set. Common: 2-way, 4-way, 8-way. Best balance.",star:true},
+{c:2,q:"The LRU (Least Recently Used) replacement policy in cache replaces:",o:["The most recently used block","The block that has not been used for the longest time","A random block","The block with the lowest address"],a:1,ex:"LRU replaces the cache line that was accessed least recently. Exploits temporal locality. Widely used in 2-way/4-way set-associative caches. True LRU hardware is expensive; pseudo-LRU is used in practice.",star:true},
+{c:2,q:"Cache write policies: write-through means:",o:["Write only to cache, write to memory later","Every write to cache also immediately writes to main memory — always consistent but slower writes","Write to memory only","Write to disk directly"],a:1,ex:"Write-through: cache and main memory always consistent. Simpler but generates more memory traffic. Often combined with write buffer to avoid CPU stall. Good for I/O coherency.",star:true},
+{c:2,q:"Cache write policy: write-back means:",o:["Write to main memory immediately","Write only to cache; dirty block is written to main memory only when evicted (dirty bit tracks modifications)","Write to both simultaneously","Write to disk only"],a:1,ex:"Write-back: writes go to cache only. Dirty bit set when cache line modified. When evicted, dirty line is written back to memory. Less memory traffic, higher performance. More complex coherency in multi-processor systems.",star:true},
+{c:2,q:"Cache miss types — a compulsory (cold) miss occurs when:",o:["Two blocks map to same line","A block is accessed for the very first time — inevitable regardless of cache size or policy","Cache is full","Wrong replacement policy"],a:1,ex:"3C misses: Compulsory (cold) — first access always misses. Capacity — cache too small to hold working set. Conflict — multiple blocks map to same set in set-associative/direct-mapped. Coherency — for multiprocessor.",star:true},
+{c:2,q:"The hit rate and miss rate in cache are defined as:",o:["Hit rate = cache size / memory size","Hit rate = (cache hits)/(total accesses), Miss rate = 1 − Hit rate","Miss rate = cache size / miss count","Hit rate = 100% always"],a:1,ex:"Hit rate = number of cache hits / total memory accesses. Miss rate = misses/total = 1 − hit_rate. Average memory access time (AMAT) = hit_time + miss_rate × miss_penalty. Goal: maximize hit rate.",star:true,hint:"AMAT = Tcache + Miss_rate × Tmemory"},
+{c:2,q:"Memory organization: byte-addressable memory means:",o:["Each address references one bit","Each address references one byte (8 bits)","Each address references one word","Each address references 4 bytes"],a:1,ex:"Byte-addressable: every address identifies one byte. A 32-bit address space → 2³² bytes = 4 GB addressable. Word-addressable: each address identifies one word (wastes address space if word > 1 byte).",star:true},
+{c:2,q:"Big-endian byte order stores:",o:["Least significant byte at the lowest address","Most significant byte at the lowest (starting) address","Bytes in random order","Only in cache"],a:1,ex:"Big-endian (e.g., SPARC, network byte order): MSB at lowest address. Little-endian (x86): LSB at lowest address. Example: 0x12345678 at address 100 — big-endian: 12 at 100, 34 at 101. Little-endian: 78 at 100.",star:true},
+{c:2,q:"The memory hierarchy is ordered from fastest/smallest to slowest/largest as:",o:["Disk → RAM → Cache → Register","Register → Cache (L1,L2,L3) → Main Memory (DRAM) → Secondary Storage (SSD/HDD)","RAM → Cache → Register → Disk","Cache → Register → RAM → Disk"],a:1,ex:"Memory hierarchy: Registers (fastest, ~1 cycle, bytes) → L1 cache (~4 cycles, KB) → L2 cache (~10 cycles, MB) → L3 cache (~40 cycles, MB) → DRAM (~200 cycles, GB) → SSD/HDD (ms, TB).",star:true},
+{c:2,q:"Virtual memory allows:",o:["Only physical memory to be used","Programs to use more address space than physical RAM — OS maps virtual addresses to physical pages, using disk as extension","Direct disk access","Faster CPU operation"],a:1,ex:"Virtual memory: every process has its own large virtual address space. OS+MMU translate virtual→physical addresses using page tables. Pages swapped to disk when RAM full. Provides isolation, larger effective memory.",star:true},
+{c:2,q:"A TLB (Translation Lookaside Buffer) is:",o:["A type of main memory","A small fast cache of recent virtual-to-physical address translations — avoids full page table walk on most accesses","A disk buffer","A register file"],a:1,ex:"TLB is a fully-associative or set-associative cache for page table entries (PTE). TLB hit: address translation in 1 cycle. TLB miss: page table walk (multiple memory accesses). TLB hit rate typically >99%.",star:true},
+{c:2,q:"Page fault occurs when:",o:["TLB is full","Accessed page is not in physical memory — OS must bring it from disk to RAM, then resume execution","Cache is full","Register overflow"],a:1,ex:"Page fault: virtual page not in physical memory (page-not-present bit in PTE). OS handles: finds victim page (evict if dirty→write back), loads requested page from disk, updates PTE, resumes process. Very slow (~ms).",star:true},
+{c:2,q:"What is the purpose of a memory controller?",o:["Execute CPU instructions","Manage communication between CPU and DRAM: handle read/write requests, refresh, timing, bank selection","Store programs","Perform floating-point operations"],a:1,ex:"Memory controller (DRAM controller) handles: row/column address multiplexing (RAS/CAS), refresh scheduling, bank management, command queuing, timing compliance (tRCD, tRP, tCL). Modern: integrated in CPU die.",star:true},
+{c:2,q:"ROM (Read-Only Memory) is characterized by:",o:["Can be freely written at any time","Non-volatile — retains data without power. Factory-programmed (mask ROM) or field-programmable (PROM/EPROM/EEPROM/Flash). Used for BIOS, firmware","Fastest memory type","Part of the CPU"],a:1,ex:"ROM types: Mask ROM (programmed at manufacture), PROM (one-time programmable), EPROM (UV-erasable), EEPROM (electrically erasable byte-by-byte), Flash (block erasable, NOR/NAND). Flash is in SSDs/USB drives.",star:true},
+{c:2,q:"Address decoding in memory organization is used to:",o:["Decode CPU instructions","Select the specific memory chip/bank from which data is read or to which data is written, based on the address","Convert binary to decimal","Increase clock speed"],a:1,ex:"Address decoding: higher address bits select memory bank/chip (using decoders/comparators), lower bits address location within chip. Example: 64K system with 16K chips needs 2-bit decoder for chip select.",star:true},
+{c:2,q:"The memory bandwidth is defined as:",o:["Memory access time in nanoseconds","Maximum rate at which data can be transferred to/from memory: bandwidth = bus_width × bus_frequency","Number of memory chips","Cache hit rate"],a:1,ex:"Memory bandwidth = data width × transfer rate. DDR4-3200: 64-bit bus × 3200 MT/s = 25.6 GB/s. Higher bandwidth reduces memory bottleneck. Critical for GPU-heavy and multi-core systems.",star:true},
+{c:2,q:"Writable control store (WCS) in microprogrammed CPUs allows:",o:["Writing to main memory faster","The microprogram to be modified dynamically — enables emulation of different ISAs and field-patching of bugs","Larger register file","Faster arithmetic"],a:1,ex:"WCS replaces ROM control store with RAM. Allows: loading different microprograms, emulating different instruction sets, patching microcode bugs (Intel does this via microcode updates). Slower than ROM but flexible.",star:true},
+
+/* ═══════════════════════
+   UNIT 4 — I/O Org (34 Qs)
+═══════════════════════ */
+{c:3,q:"Peripheral devices include:",o:["Only the CPU and RAM","Input devices (keyboard, mouse, scanner), output devices (monitor, printer), and storage devices (HDD, SSD)","Only storage devices","Only network cards"],a:1,ex:"Peripherals: I/O devices connected to CPU/memory via buses and controllers. Input: keyboard, mouse, microphone. Output: monitor, printer, speakers. Storage: HDD, SSD, optical. Network: NIC, modem.",star:true},
+{c:3,q:"I/O device interface provides:",o:["CPU arithmetic capabilities","The connection logic between the CPU/memory bus and the I/O device — handles timing, data buffering, and control","Direct CPU-to-device wiring","Memory storage"],a:1,ex:"I/O interface: data register (holds data), status register (device state: ready/busy/error), control register (commands to device). CPU accesses via I/O port addresses or memory-mapped I/O.",star:true},
+{c:3,q:"Programmed I/O (polling) works by:",o:["Device interrupts the CPU","CPU continuously checks (polls) the device status register in a loop until device is ready — wastes CPU cycles","DMA handles all transfers","CPU never checks device"],a:1,ex:"Programmed I/O: CPU busy-waits in a polling loop checking device status. Simple, no interrupt hardware needed. Major disadvantage: CPU wastes cycles waiting, cannot do other work. Suitable only for very fast devices.",star:true,hint:"Polling = CPU wastes time waiting. Interrupt = CPU free to do other work"},
+{c:3,q:"Interrupt-driven I/O works by:",o:["CPU polls device continuously","Device sends an interrupt signal to CPU when ready; CPU suspends current task, saves context, runs ISR, restores context","DMA handles the transfer","CPU never communicates with device"],a:1,ex:"Interrupt I/O: CPU starts I/O, continues other work. Device interrupts when done → CPU saves PC+registers (context), branches to ISR (Interrupt Service Routine), processes data, restores context, resumes. Much more efficient than polling.",star:true},
+{c:3,q:"DMA (Direct Memory Access) allows:",o:["CPU to access cache directly","I/O device controller to transfer data directly to/from memory without continuous CPU involvement — CPU only involved at start and end","CPU to bypass ALU","Devices to execute programs"],a:1,ex:"DMA: CPU programs DMAC with source, destination, count. DMAC performs block transfer using bus cycles (cycle stealing or burst mode). CPU interrupted when complete. CPU free during transfer. Used for disk/network/USB.",star:true},
+{c:3,q:"Cycle stealing in DMA means:",o:["DMA steals CPU cycles by running programs","DMAC takes one bus cycle from the CPU to transfer one word — CPU waits one cycle but continues normally otherwise","DMAC runs simultaneously on another bus","Cache is bypassed"],a:1,ex:"Cycle stealing: DMAC requests bus, CPU suspends for ONE clock cycle while DMAC transfers one word, then CPU resumes. Slower than burst but doesn't halt CPU for long. Used for devices with moderate data rates.",star:true},
+{c:3,q:"Burst mode DMA transfers:",o:["One byte at a time","An entire block of data in one continuous operation — CPU released from bus entirely until transfer complete","Only during idle time","One word per interrupt"],a:1,ex:"Burst DMA: DMAC holds bus and transfers entire block without releasing it. CPU cannot access memory during burst. Fastest for large transfers. CPU may execute from cache during burst. Used in high-speed transfers.",star:true},
+{c:3,q:"An interrupt vector table (IVT) contains:",o:["CPU registers","Starting addresses (vectors) of Interrupt Service Routines for different interrupt types","Memory addresses for programs","Cache contents"],a:1,ex:"IVT (or IDT in x86): array of interrupt vectors (ISR addresses). When interrupt N occurs, CPU indexes IVT[N] to find ISR address, jumps there. Allows different interrupts to have different handlers.",star:true},
+{c:3,q:"Privileged instructions are:",o:["All instructions","CPU instructions that can only be executed in kernel (supervisor) mode — not available to user programs","Instructions for floating point","Fast instructions"],a:1,ex:"Privileged instructions: directly control hardware (I/O operations, interrupt enable/disable, page table changes, halt). If user program tries to execute one → trap to OS. Basis of hardware protection in modern OSes.",star:true},
+{c:3,q:"Software interrupts (traps/syscalls) are used for:",o:["Hardware error handling only","Intentional interrupts generated by software instructions (INT, SVC) to request OS services without violating protection boundary","DMA transfers","Cache management"],a:1,ex:"Software interrupts: INT instruction (x86), SVC (ARM), SYSCALL. User program deliberately calls OS kernel for services (open file, allocate memory, network I/O) while CPU switches to privileged mode safely.",star:true},
+{c:3,q:"The difference between an interrupt and an exception is:",o:["No difference","Interrupt: asynchronous (from hardware/external); Exception: synchronous (from current instruction — division by zero, page fault, illegal instruction)","Exception is faster","Interrupt is software-generated"],a:1,ex:"Interrupts (IRQ): asynchronous external events (timer, I/O device). Exceptions: synchronous — caused by current instruction (divide by zero, overflow, illegal instruction, page fault, protection fault).",star:true},
+{c:3,q:"I/O port addressing (isolated I/O) vs memory-mapped I/O:",o:["Both use same address space","Isolated I/O: separate I/O address space + special IN/OUT instructions; Memory-mapped I/O: I/O registers in normal memory address space — accessed with regular load/store","No difference in hardware","Isolated I/O has larger address space"],a:1,ex:"Isolated I/O (x86): 16-bit I/O port address space, IN/OUT instructions, separate bus signals (M/IO#). Memory-mapped I/O (ARM, most RISC): I/O registers appear as memory addresses, accessed with LDR/STR. Simpler hardware for MM I/O.",star:true},
+{c:3,q:"USB (Universal Serial Bus) is:",o:["A type of CPU","A standard serial bus interface for connecting peripherals; supports hot-plugging, up to 127 devices via hubs, various speeds (USB 1.1 to USB4)","A memory type","A CPU instruction set"],a:1,ex:"USB: hot-pluggable, host-controlled serial bus. Versions: USB 1.1 (12 Mbps), USB 2.0 (480 Mbps), USB 3.x (5-20 Gbps), USB4 (40 Gbps). Supports power delivery. Replaced most legacy connectors (PS/2, serial, parallel).",star:true},
+{c:3,q:"SCSI (Small Computer System Interface) is used for:",o:["CPU-to-CPU communication","Connecting storage devices and peripherals (HDDs, tape drives, scanners) via a parallel or serial bus supporting multiple devices","Cache management","Network communication"],a:1,ex:"SCSI: parallel (traditional) or serial (SAS — Serial Attached SCSI) interface for storage. Supports up to 15 devices per bus. Higher throughput and reliability than early ATA. Used in servers and workstations.",star:true},
+{c:3,q:"An I/O channel is:",o:["A single register","A specialized I/O processor that handles I/O operations independently, executing I/O programs (channel programs) to free the main CPU","A type of cache","A bus signal line"],a:1,ex:"I/O channel: a dedicated processor for I/O (used in mainframes). CPU issues I/O command, channel executes a channel program (list of I/O commands), CPU continues processing, channel interrupts when done. Maximum CPU efficiency.",star:true},
+{c:3,q:"Interrupt priority determines:",o:["CPU speed","Which interrupt is serviced first when multiple interrupts occur simultaneously — higher priority interrupts preempt lower priority ones","Memory allocation order","Program execution order"],a:1,ex:"Interrupt priority: fixed priority (hardware-wired) or programmable. Daisy-chaining (single line, priority by position) or priority encoder. Non-maskable interrupts (NMI) have highest priority (power fail, hardware error).",star:true},
+{c:3,q:"Interrupt latency is defined as:",o:["Time to execute the ISR","Time from interrupt signal to first instruction of ISR — must be minimized for real-time systems","Time to generate interrupt","Memory access time"],a:1,ex:"Interrupt latency = interrupt response time = time from interrupt assertion to ISR execution start. Includes: finishing current instruction, saving context, fetching ISR address, jumping to ISR. Critical in real-time/embedded systems.",star:true},
+{c:3,q:"The role of device drivers in I/O:",o:["Execute user applications","Software module in OS that provides abstract interface to hardware devices — translates OS generic I/O calls to device-specific commands","Store user data","Replace the CPU"],a:1,ex:"Device driver: OS software layer between application I/O requests (read/write) and hardware-specific device controller commands. Hides hardware details. Loaded as OS kernel modules. Vendor-provided for each device.",star:true},
+{c:3,q:"Buffering in I/O is used to:",o:["Increase CPU speed","Compensate for speed mismatch between producer and consumer — data stored temporarily in buffer while being transferred","Reduce memory size","Speed up cache"],a:1,ex:"I/O buffering: single buffer, double buffer, circular buffer. Hides I/O latency by allowing CPU and I/O to overlap. Example: disk reads ahead and buffers data; write buffer absorbs CPU writes while memory performs write-back.",star:true},
+{c:3,q:"Memory-mapped I/O benefits include:",o:["Requires separate I/O instructions","Same instructions used for both memory and I/O access — simpler programming, can use C pointers, any addressing mode works on I/O registers","Larger address space for I/O","Faster than isolated I/O always"],a:1,ex:"Memory-mapped I/O advantages: any load/store instruction can access I/O registers, all CPU addressing modes available for I/O, no special IN/OUT instructions needed, can be C-programmed. Disadvantage: reduces available memory address space.",star:true},
+{c:3,q:"The handshaking protocol in I/O is used to:",o:["Increase clock speed","Synchronize data transfer between devices of different speeds — sender signals data ready, receiver acknowledges","Encrypt data","Resolve bus conflicts"],a:1,ex:"Handshaking: DATA READY signal from source, ACKNOWLEDGE from destination. Ensures reliable data transfer regardless of speed mismatch. Used in parallel ports, SPI, I2C, and UART flow control.",star:true},
+{c:3,q:"An interrupt acknowledge cycle:",o:["Resets all interrupts","CPU signals to the interrupting device (via bus) that interrupt is accepted; device then places its interrupt vector on data bus","Executes the ISR","Loads the program counter"],a:1,ex:"Intel 8086 interrupt acknowledge: CPU asserts /INTA signal twice. First cycle: device knows interrupt accepted. Second cycle: device places vector number (0-255) on data bus → CPU reads vector, indexes IVT.",star:true},
+{c:3,q:"I/O transfers using interrupts vs DMA: which is preferred for large block transfers?",o:["Polling","Interrupt-driven (one word per interrupt)","DMA — one interrupt for entire block, minimal CPU involvement during transfer","Programmed I/O"],a:2,ex:"DMA: for large transfers (disk blocks, network packets), DMA is far superior. One setup + one completion interrupt for the whole block. Interrupt-driven I/O requires one interrupt per word → too many interrupts for large transfers.",star:true},
+{c:3,q:"Privileged and non-privileged instructions: user programs can execute:",o:["All CPU instructions","Only non-privileged instructions — privileged ones cause protection fault if attempted in user mode","Privileged instructions via special flag","No instructions"],a:1,ex:"CPU modes: user mode (restricted) and kernel/supervisor mode (all instructions). User programs only execute non-privileged instructions. OS runs in kernel mode. Mode bit in CPU status register (e.g., CPL in x86).",star:true},
+{c:3,q:"Software interrupts and exceptions differ from hardware interrupts in that:",o:["They have lower priority","They are synchronous — triggered by specific instruction execution, not external hardware events; used for OS services and error handling","They are handled faster","They cannot be masked"],a:1,ex:"Software interrupts (INT n, SYSCALL) and exceptions are synchronous with the instruction stream. Hardware interrupts are asynchronous. Software interrupts deliberately invoke kernel services; exceptions signal error conditions.",star:true},
+{c:3,q:"The I/O processor (IOP) concept:",o:["Replaces the main CPU","A separate processor dedicated to managing I/O operations autonomously, running channel programs, allowing main CPU to focus on computation","A GPU","A cache controller"],a:1,ex:"IOP/channel: used in IBM mainframes. Main CPU sends channel address word (CAW) to IOP. IOP executes channel command words (CCW) to handle I/O. IOP has own memory access. When done, interrupts main CPU.",star:true},
+{c:3,q:"Program controlled I/O (busy-wait) is suitable for:",o:["All I/O operations","Simple embedded systems or very fast devices where polling overhead is acceptable and multitasking is not needed","High-performance servers","All operating systems"],a:1,ex:"Programmed I/O (polling): appropriate when device is very fast (response in few CPU cycles), system is dedicated (embedded), no OS, or overhead of interrupt setup exceeds transfer benefit. Common in bootloaders/firmware.",star:true},
+{c:3,q:"The system bus consists of:",o:["Only address lines","Address bus (memory location), Data bus (transfers data), Control bus (read/write/interrupt/clock signals)","Only data lines","CPU registers only"],a:1,ex:"System bus: Address bus (unidirectional, determines addressable memory), Data bus (bidirectional, carries actual data), Control bus (read, write, interrupt request/acknowledge, bus request/grant, clock signals).",star:true},
+{c:3,q:"Bus arbitration is needed because:",o:["CPU is slow","Only one device (bus master) can use the bus at a time — when multiple devices want bus simultaneously, arbitration selects the winner","Memory is too large","Cache is too small"],a:1,ex:"Bus arbitration: centralized (single bus arbiter, priority scheme) or distributed (daisy chain, collision detect). Methods: round-robin, priority, first-come-first-served. Ensures fair access and prevents conflicts.",star:true},
+
+/* ═══════════════════════
+   UNIT 5 — Pipelining (32 Qs)
+═══════════════════════ */
+{c:4,q:"Pipelining in CPU design is analogous to:",o:["Parallel processing on multiple CPUs","An assembly line — different stages of instruction execution overlap in time, increasing throughput","Running one instruction faster","Reducing instruction count"],a:1,ex:"Pipeline: like a car assembly line — while stage 5 executes instruction n, stage 4 fetches operands for n+1, stage 3 decodes n+2, etc. All stages work simultaneously on different instructions → higher throughput.",star:true,hint:"Pipelining increases throughput (instructions/second), NOT latency of single instruction"},
+{c:4,q:"A classic 5-stage RISC pipeline consists of:",o:["Fetch, Decode, Execute only","IF (Instruction Fetch), ID (Instruction Decode/Register Read), EX (Execute/ALU), MEM (Memory Access), WB (Write Back)","Fetch, ALU, Write only","Fetch, Cache, Execute, Write"],a:1,ex:"5-stage RISC pipeline (MIPS-style): IF→ID→EX→MEM→WB. Each stage takes one clock cycle. With N stages, peak throughput = 1 instruction per clock cycle (IPC=1). CPI approaches 1 for ideal pipeline.",star:true},
+{c:4,q:"Speedup of an ideal n-stage pipeline over non-pipelined execution is:",o:["n² times","n times (pipeline CPI = 1 vs non-pipeline CPI = n)","n/2 times","1 (no speedup)"],a:1,ex:"Ideal pipeline speedup = n (number of stages). Non-pipelined: n cycles per instruction. Pipelined: 1 cycle per instruction (after fill). But hazards reduce actual speedup below n.",star:true},
+{c:4,q:"Pipeline hazards are:",o:["Physical damage to CPU","Situations that prevent the next instruction from executing in the next pipeline stage — reduce pipeline efficiency","Power supply problems","Cache misses only"],a:1,ex:"Hazards: Structural (resource conflict), Data (RAW, WAR, WAW — dependency conflicts), Control (branch — unknown next instruction). Hazards cause stalls (bubbles), reducing CPI > 1.",star:true},
+{c:4,q:"A structural hazard occurs when:",o:["Two instructions need the same data","Two instructions need the same hardware resource simultaneously — e.g., only one memory port for both IF and MEM stages","A branch is taken","An arithmetic overflow occurs"],a:1,ex:"Structural hazard: hardware resource used by two pipeline stages simultaneously. Example: single memory → IF and MEM both need it. Solution: separate instruction and data memories (Harvard) or stall pipeline.",star:true},
+{c:4,q:"A data hazard RAW (Read After Write) occurs when:",o:["A register is read before being written by a previous instruction — incorrect old value would be read","Writing twice to same register","Reading the same register twice","No register is involved"],a:0,ex:"RAW (true dependency): instruction i writes a register; instruction i+1 reads it before i's write completes (in WB stage). Most common hazard. Solution: forwarding (bypassing) or stall (insert NOPs).",star:true,hint:"RAW = true dependency. WAR = anti dependency. WAW = output dependency"},
+{c:4,q:"Forwarding (bypassing) in pipelining solves:",o:["Control hazards","RAW data hazards by routing the result from a later pipeline stage directly to an earlier stage input — avoids waiting for WB","Structural hazards","Cache misses"],a:1,ex:"Forwarding: result from EX or MEM stage forwarded directly to EX stage input of a dependent instruction. Avoids most RAW stalls. Load-use hazard: MEM result not available until after MEM stage → one stall still needed.",star:true},
+{c:4,q:"A load-use hazard is a specific case of:",o:["Control hazard","RAW hazard — a LOAD instruction is followed immediately by an instruction that uses the loaded data, requiring a one-cycle stall even with forwarding","Structural hazard","WAW hazard"],a:1,ex:"Load-use: LOAD R1, Mem[addr] followed by ADD R2, R1, R3. Data available after MEM stage, but needed by ADD's EX stage. Even with forwarding, one bubble required. Compiler can insert independent instruction to hide this stall.",star:true},
+{c:4,q:"A control hazard (branch hazard) occurs because:",o:["Branch takes too long to execute","When a branch is encountered, the CPU doesn't know the next instruction address until the branch condition is resolved — intervening instructions may be wrong","Register file is busy","Cache miss on branch instruction"],a:1,ex:"Branch hazard: CPU fetches instructions after branch (PC+1, +2...) while evaluating branch. If branch taken, these are wrong → must flush (squash). Branch penalty = number of stages between IF and branch resolution.",star:true},
+{c:4,q:"Branch prediction is used to:",o:["Reduce arithmetic errors","Guess which instructions to fetch after a branch, reducing branch penalty — static or dynamic prediction","Detect memory errors","Increase register count"],a:1,ex:"Branch prediction: predict taken/not-taken to keep pipeline filled. Static: always not-taken or backward-taken. Dynamic: 1-bit or 2-bit saturating counter based on branch history. 2-bit predictor correctly predicts most loops.",star:true},
+{c:4,q:"A 2-bit branch predictor uses:",o:["2 instructions for prediction","A 2-bit saturating counter (states: strongly not-taken, weakly not-taken, weakly taken, strongly taken) per branch address","2 registers","2 pipeline stages"],a:1,ex:"2-bit predictor: needs 2 mispredictions to change prediction direction. This tolerates one anomalous branch result. States cycle: SN→WN→WT→ST. Modern CPUs use 2-bit+ predictors with >95% accuracy.",star:true},
+{c:4,q:"Delayed branching is a technique where:",o:["Branch is executed slowly","The instruction(s) immediately following a branch (branch delay slot) are always executed regardless of branch — compiler fills delay slot with useful work","Branch is never taken","Branch uses cache"],a:1,ex:"Delayed branch (MIPS, SPARC): 1-cycle branch delay slot. Compiler moves an independent instruction into slot. Branch resolves while slot instruction executes → no wasted cycle. Complicates exception handling.",star:true},
+{c:4,q:"Instruction level parallelism (ILP) refers to:",o:["Using multiple CPUs","The degree to which instructions in a program can be executed in parallel — limited by data, control, and structural dependencies","Number of pipeline stages","Number of registers"],a:1,ex:"ILP: superscalar CPUs issue multiple instructions per cycle. Out-of-order execution reorders instructions to avoid stalls. Dynamic scheduling (Tomasulo), register renaming, speculative execution all increase ILP.",star:true},
+{c:4,q:"A superscalar processor:",o:["Has more transistors only","Fetches, decodes, and issues multiple instructions per clock cycle to multiple functional units — CPI < 1 (IPC > 1)","Has a longer pipeline","Uses a single ALU"],a:1,ex:"Superscalar: issue 2-8+ instructions per cycle to parallel functional units (multiple ALUs, FPUs, load/store units). Requires complex dependency checking. Modern Intel/AMD CPUs are 4-8 wide superscalar.",star:true},
+{c:4,q:"Out-of-order (OOO) execution allows:",o:["CPU to execute instructions in random order always","Instructions to be executed in a different order than the program order, as long as data dependencies and correctness are maintained — hides latency","Only parallel programs to be faster","Cache to be bypassed"],a:1,ex:"OOO: CPU finds independent instructions and executes them early while waiting for slow operations (cache miss, FP divide). Requires: instruction window (reorder buffer), dependency tracking, precise exception support.",star:true},
+{c:4,q:"Register renaming in OOO CPUs eliminates:",o:["True data hazards (RAW)","False data hazards — WAR (write after read) and WAW (write after write) — by mapping architected registers to larger physical register file","Structural hazards","Control hazards"],a:1,ex:"Register renaming: each write to register Ri gets a new physical register. Eliminates WAR and WAW antidependencies (false dependencies). Combined with Tomasulo's algorithm for maximum ILP.",star:true},
+{c:4,q:"A pipeline stall (bubble) is inserted to handle:",o:["Power issues","Hazards that cannot be resolved by forwarding or prediction — pipeline is halted for one or more cycles, wasting throughput","Cache fills","Register file access"],a:1,ex:"Stall (bubble/NOP): hazard detection unit detects unresolvable hazard → inserts NOP into pipeline (ID/EX register zeroed), repeats the stalled instruction, holds PC. Each stall cycle reduces effective IPC.",star:true},
+{c:4,q:"Throughput vs. latency in pipelining:",o:["Pipelining improves both equally","Pipelining increases throughput (instructions/second) but does not reduce (may slightly increase) single instruction latency due to pipeline register overhead","Pipelining only improves latency","Pipelining has no effect on throughput"],a:1,ex:"Key distinction: latency = time for ONE instruction (n cycles in n-stage pipeline). Throughput = instructions per second (approaches 1 IPC with ideal pipeline). Pipelining optimizes throughput, not single instruction latency.",star:true},
+{c:4,q:"Pipeline depth (number of stages) is limited by:",o:["Available memory","Pipeline hazards, overhead of pipeline registers, power consumption, and diminishing returns as deeper pipelines have higher branch penalties","Number of CPU registers","Cache size"],a:1,ex:"More stages → higher clock frequency (each stage simpler) but higher branch penalty and more hazards. Intel Pentium 4 had 31-stage Prescott pipeline (high GHz, but high power, high penalty). Modern: 14-20 stages balanced.",star:true},
+{c:4,q:"WAR (Write After Read) hazard is also called:",o:["True dependency","Anti-dependency — instruction j writes to a register that earlier instruction i has not yet read","Output dependency","No-dependency"],a:1,ex:"WAR: instruction i reads register R, and later instruction j writes R. If j writes before i reads (in OOO), i gets wrong value. WAR is a false dependency eliminated by register renaming or sequential execution.",star:true},
+{c:4,q:"WAW (Write After Write) hazard:",o:["Occurs when reading same register twice","Occurs when two instructions write to the same register — if second writes before first, final value may be the first's (wrong) value","Cannot occur in pipelines","Only in memory operations"],a:1,ex:"WAW: instruction i and instruction j both write register R. In OOO, if i completes after j, i's (stale) value overwrites j's. Eliminated by register renaming or ensuring original order of writes to architected state.",star:true},
+{c:4,q:"The CPI (Cycles Per Instruction) of a pipeline with hazards is:",o:["Always 1","Greater than 1 — CPI = 1 + stall_cycles_per_instruction (due to data hazards, control hazards, structural hazards)","Less than 1","Equal to number of stages"],a:1,ex:"Actual CPI = ideal CPI (1) + structural stalls + data stalls + control stalls. AMAT (average memory access time) also contributes. Goal: reduce stalls to bring CPI as close to 1 as possible.",star:true},
+{c:4,q:"Speculative execution in modern CPUs:",o:["Executes instructions randomly","Executes instructions along predicted path (past branches) before knowing if prediction is correct — squashes work if mispredicted","Only executes one instruction at a time","Always predicts not-taken"],a:1,ex:"Speculative execution: CPU predicts branch/value, executes speculatively. If correct: instructions committed (no penalty). If wrong: squash speculative work, refetch from correct path. Powers superscalar performance.",star:true},
+{c:4,q:"Tomasulo's algorithm provides:",o:["Static scheduling","Dynamic out-of-order issue with register renaming via reservation stations — eliminates structural and false hazards dynamically","Branch prediction","Cache management"],a:1,ex:"Tomasulo (IBM 360/91, 1967): reservation stations buffer instructions, rename registers using station tags, broadcast results on common data bus (CDB). Eliminates WAR/WAW, enables OOO execution. Foundation of modern OOO design.",star:true},
+{c:4,q:"Branch delay slots (as used in MIPS) mean the instruction after a branch:",o:["Is never executed","Is always executed regardless of whether branch is taken — hardware always executes it before redirecting PC","Is the branch target","Is repeated"],a:1,ex:"MIPS branch delay slot: BRANCH always followed by one instruction that executes before branch takes effect. Compiler should put useful work there (NOPed if none found). Simplifies pipeline, complicates exception handling.",star:true},
+{c:4,q:"The branch target buffer (BTB) is used to:",o:["Store branch instruction opcodes","Cache branch target addresses so the CPU can speculatively fetch from the target before resolving the branch","Store registers","Buffer data between stages"],a:1,ex:"BTB: small cache indexed by branch PC. Stores predicted target address. On fetch, if PC hits BTB → speculatively fetch from stored target. Combined with direction predictor for full branch prediction.",star:true},
+{c:4,q:"Parallel processors (multi-core/SMP) achieve speedup by:",o:["Running one program faster on one core","Running multiple threads/processes on separate cores simultaneously — increases throughput for parallel workloads","Deeper pipeline on one core","Larger cache only"],a:1,ex:"Parallel processors: SMP (shared memory multiprocessor), NUMA (non-uniform memory), GPU (1000s of simple cores). Speed up applications that can be parallelized. Amdahl's law limits speedup based on serial fraction.",star:true},
+{c:4,q:"Amdahl's Law states that the maximum speedup of parallelization is limited by:",o:["Number of processors","The serial (non-parallelizable) fraction of the program: Speedup = 1/(S + (1-S)/N) where S = serial fraction, N = processors","Amount of memory","Cache size"],a:1,ex:"Amdahl's Law: if 5% of program is serial, max speedup with ∞ processors = 1/0.05 = 20×. Even 99% parallel code: max speedup = 100×. Serial bottleneck fundamentally limits parallel speedup.",star:true},
+{c:4,q:"Concurrent access to memory and cache coherency in multiprocessors refers to:",o:["Multiple CPUs sharing one core","Ensuring all processors see a consistent view of memory — if one core modifies a cache line, others must see the update (MESI protocol, snooping, directory)","Single-threaded programs","Disk access coordination"],a:1,ex:"Cache coherency: each core has its own L1/L2 cache. If Core 0 writes X and Core 1 has X cached (stale copy), Core 1 must be notified. MESI protocol (Modified, Exclusive, Shared, Invalid) maintains coherency.",star:true},
+
+/* ══════════════════════════════
+   UNIT 6 — Memory Organisation (32 Qs)
+══════════════════════════════ */
+{c:5,q:"Memory interleaving increases effective memory bandwidth by:",o:["Making memory chips larger","Distributing consecutive memory addresses across multiple independent memory banks that can be accessed in parallel","Using faster memory chips only","Increasing word size"],a:1,ex:"Interleaving: n memory banks, bank i contains addresses where address mod n = i. CPU can access bank 0 while bank 1 completes previous request. Effective bandwidth ≈ n × single bank bandwidth for sequential access.",star:true},
+{c:5,q:"Low-order interleaving (interleaved banking) assigns addresses to banks using:",o:["High-order bits of address","Low-order bits of address for bank selection, high-order bits for row within bank — adjacent addresses in different banks","Randomly","By page number"],a:1,ex:"Low-order interleaving: bank = address mod N (using N low-order address bits). Consecutive addresses spread across N banks → burst access to sequential memory is fully pipelined. Ideal for cache line fills.",star:true,hint:"Low-order interleaving: best for sequential access (cache fills). High-order: each bank is independent large block"},
+{c:5,q:"High-order interleaving assigns memory to banks using:",o:["Low-order address bits","High-order address bits — each bank contains a contiguous block of addresses","Middle address bits","Tag bits only"],a:1,ex:"High-order interleaving: bank = high-order bits of address → each bank is a contiguous chunk. Less conflict between unrelated accesses but sequential cache fills access only one bank. Used for independent DRAM modules.",star:true},
+{c:5,q:"Cache memory concept: what is a cache block (line)?",o:["Individual byte in cache","Fixed-size unit of data transfer between cache and main memory, typically 32-128 bytes","The entire cache","A cache tag"],a:1,ex:"Cache block/line: the unit of transfer. When data fetched from memory, an entire block (e.g., 64 bytes) is brought into cache, exploiting spatial locality. Block size is a key design parameter.",star:true},
+{c:5,q:"Cache size vs. block size tradeoff: larger block size means:",o:["Always better performance","Better spatial locality exploitation but higher miss penalty and potential internal fragmentation (less useful data per block for random access patterns)","Smaller cache","More cache sets"],a:1,ex:"Block size tradeoff: larger → fewer blocks in cache (more capacity misses), higher miss penalty (more bytes to transfer), better spatial locality for sequential. Too large → wastes bandwidth. Typical: 32-128 bytes.",star:true},
+{c:5,q:"The concept of hierarchical memory organization is based on:",o:["Using all memory at equal speed","Trade-off: fast memory is small/expensive; slow memory is large/cheap — hierarchy provides illusion of large, fast memory at low cost","Using only cache","Using only RAM"],a:1,ex:"Memory hierarchy: exploits locality to provide near-register speed at hard-disk capacity and cost. Each level is bigger, slower, and cheaper than the one above. Management is automatic (cache controller, OS virtual memory).",star:true},
+{c:5,q:"Cache miss penalty is:",o:["Time to check cache for a hit","Extra cycles needed to fetch missing data from the next memory level (main memory or lower cache) when a cache miss occurs","Time to evict a block","Cache write time"],a:1,ex:"Miss penalty = time to service a cache miss (load block from lower memory). DRAM latency ~100ns = 200-300 CPU cycles at 3GHz. Reducing miss penalty: prefetching, out-of-order execution, multi-level cache.",star:true},
+{c:5,q:"Cache mapping: in direct-mapped cache, the number of index bits for a cache with 2ⁿ lines is:",o:["1 bit","n bits (to select one of 2ⁿ cache lines)","n+1 bits","n/2 bits"],a:1,ex:"Direct-mapped cache with 2ⁿ lines: index field = n bits (address bits [log2(N)+log2(B)-1 : log2(B)]). Tag = remaining high-order bits. Offset = log2(block_size) bits.",star:true},
+{c:5,q:"A cache replacement policy is needed for:",o:["Direct-mapped caches","Set-associative and fully-associative caches — when a set is full and a new block must be loaded, one existing block must be evicted","Read operations only","Cache hit operations"],a:1,ex:"Replacement needed when set is full (all k ways occupied in k-way set-associative). Policies: LRU (most effective, most complex), FIFO (simple, fair), Random (simple, near-LRU performance), LFU (least frequently used).",star:true},
+{c:5,q:"The FIFO (First In First Out) cache replacement policy evicts:",o:["Most recently loaded block","Least recently used block","The block that has been in cache the longest (first loaded)","Random block"],a:1,ex:"FIFO: evict block that has been in cache longest, regardless of recent use. Simple to implement (circular queue). Not always optimal — Belady's anomaly: more cache frames can cause more misses with FIFO.",star:true},
+{c:5,q:"Optimal (Belady's) replacement policy evicts:",o:["Least recently used","The block that will not be used for the longest time in the future — theoretical minimum miss rate, not implementable in practice","Most recently used","Random block"],a:1,ex:"Belady's optimal algorithm: replace block whose next use is farthest in the future. Minimum possible miss rate. Not practical (requires future knowledge) but used as benchmark to evaluate other policies.",star:true},
+{c:5,q:"Mapping functions in cache (direct, set-associative, fully-associative) affect:",o:["Only cache size","Where in cache a memory block can be placed — affects miss rate, hardware cost, and replacement complexity","Only miss penalty","Only write policy"],a:1,ex:"Mapping function determines placement flexibility: direct (1 possible location, fast, conflict misses), set-associative (k possible locations per set, balanced), fully associative (any location, best hit rate, expensive).",star:true},
+{c:5,q:"Block size (line size) in cache is typically:",o:["1 byte","32 to 128 bytes (must be a power of 2) — balance between spatial locality exploitation and bandwidth/internal fragmentation","1 MB","Same as page size"],a:1,ex:"Modern L1 cache: 64-byte blocks (64 bytes = 512 bits, 8 × 64-bit words). Block size = power of 2: offset field = log2(block_size) address bits. 32 bytes: too small. 256 bytes: too large for L1.",star:true},
+{c:5,q:"Write allocate policy (fetch on write) in cache means:",o:["Write goes directly to memory only","On a write miss, the block is first loaded from memory into cache, then the write is performed — suitable for write-back caches","Write is always to cache only","No write policy needed"],a:1,ex:"Write allocate: write miss → load block to cache first, then update. Assumes more writes to same block will follow. Combined with write-back. Alternative: no-write-allocate (write directly to memory, don't load to cache) — used with write-through.",star:true},
+{c:5,q:"No-write-allocate policy is typically used with:",o:["Write-back caches","Write-through caches — write miss goes directly to memory without loading block into cache","LRU replacement","Fully associative caches"],a:1,ex:"Write-through + no-write-allocate: writes always go to memory (through cache), misses don't allocate cache lines. Simple but generates memory traffic. Good when written data is not soon re-read.",star:true},
+{c:5,q:"The tag in a cache memory address is used to:",o:["Select the cache set","Identify which memory block is currently stored in a cache line — compared against stored tags to determine hit or miss","Determine the byte offset","Select the bank"],a:1,ex:"Tag = remaining high-order address bits after removing index and offset. Each cache line stores its tag. On access: tag(address) compared to stored tag → hit (equal) or miss (different). Tag width = address_bits - index_bits - offset_bits.",star:true},
+{c:5,q:"L1, L2, L3 cache hierarchy in modern CPUs:",o:["L1 is largest and slowest","L1: smallest, fastest (private per core, ~32KB, ~4 cycles). L2: medium (~256KB-1MB, ~10-20 cycles). L3: shared by all cores, largest (~4-32MB, ~40-60 cycles)","All same size and speed","L3 is on separate chip"],a:1,ex:"Modern CPU cache: L1-I (instruction) + L1-D (data) per core, split 32-64KB, 4-5 cycle latency. L2: unified, 256KB-1MB, ~12 cycles, per core. L3: unified, shared, 4-64MB, ~40 cycles. L4 (eDRAM) on some CPUs.",star:true},
+{c:5,q:"Prefetching in memory systems is used to:",o:["Clean dirty cache lines","Speculatively load data into cache before it is actually needed by the CPU — hides memory latency","Delete unused cache lines","Map virtual to physical addresses"],a:1,ex:"Prefetching: hardware (stride detector, next-line) or software (prefetch instruction) loads cache lines before CPU requests them. Effective for regular access patterns (sequential, stride). Useless/harmful for random access.",star:true},
+{c:5,q:"The concept of 'working set' in memory management refers to:",o:["The entire main memory","The set of pages/blocks a process is actively using in a given time window — working set theory guides memory/cache allocation","The OS kernel pages","The stack memory"],a:1,ex:"Working set W(t,Δ): set of distinct pages accessed in the most recent Δ time units. If working set fits in memory → good performance. Thrashing: working set > available memory → constant page faults.",star:true},
+{c:5,q:"Cache coherency problem in multiprocessors arises because:",o:["Caches are too small","Multiple processors each with private caches may have stale copies of the same memory location — writes by one processor not seen by others","Main memory is too slow","Caches use different block sizes"],a:1,ex:"Cache coherency: Core 0 has X=5 cached, Core 1 writes X=10 to its cache. Core 0 still sees X=5 (stale). Solution: snooping protocols (MESI, MOESI) or directory-based protocols ensure all caches see consistent values.",star:true},
+{c:5,q:"The MESI cache coherence protocol uses four states:",o:["More, Equal, Shared, Invalid","Modified (dirty, only copy), Exclusive (clean, only copy), Shared (clean, multiple copies), Invalid (not valid)","Master, Exclusive, Simple, Include","Modified, Empty, Shared, Inactive"],a:1,ex:"MESI: Modified (cache has only valid copy, dirty), Exclusive (clean, only copy — can write without notification), Shared (clean, ≥2 caches have copy), Invalid (must fetch from memory). Transitions triggered by read/write/snoop operations.",star:true},
+{c:5,q:"Thrashing in virtual memory/cache occurs when:",o:["Memory is too large","Working set exceeds available memory/cache size — system spends more time handling misses than doing useful work","CPU is too fast","Cache is too large"],a:1,ex:"Virtual memory thrashing: process constantly page-faults because pages keep being evicted before being reused. Solution: increase physical memory, reduce degree of multiprogramming, use working set model. Cache thrashing: similar, two competing blocks map to same set.",star:true},
+{c:5,q:"Write buffer in cache hierarchy is used to:",o:["Double the cache size","Hold evicted dirty blocks temporarily so CPU doesn't stall waiting for memory write to complete","Store instructions only","Buffer register values"],a:1,ex:"Write buffer: FIFO queue between cache and memory. When dirty block evicted from write-back cache → placed in write buffer. CPU continues without waiting for slow DRAM write. Write buffer drains to memory in background.",star:true},
+{c:5,q:"Virtual cache uses virtual addresses for cache indexing, while physical cache uses:",o:["Logical addresses","Physical addresses — physical cache indexed after address translation (slower, requires TLB first), virtual cache faster but has aliasing problems","Register addresses","Symbolic addresses"],a:1,ex:"VIVT (virtual index, virtual tag): fast (no TLB needed), but aliasing (two virtual addresses → same physical page → two cache entries). PIPT (physical index, physical tag): safe, but TLB must be checked first. VIPT: common compromise.",star:true},
+{c:5,q:"Memory organization: the term 'page' in virtual memory refers to:",o:["A physical memory chip","A fixed-size block of virtual address space (typically 4KB-2MB) that is the unit of transfer between disk and RAM","A cache line","A cache set"],a:1,ex:"Page: fixed-size virtual memory unit. Physical equivalent = frame. Page table maps virtual page numbers to physical frame numbers. Page size: 4KB (most common), 2MB, 1GB (huge pages). Larger pages = less TLB pressure.",star:true},
+{c:5,q:"The effective access time (EAT) with virtual memory is:",o:["Just the RAM access time","EAT = (1 - p) × memory_access_time + p × page_fault_time, where p = page fault rate","Just the disk access time","Equal to cache access time"],a:1,ex:"EAT = TLB_hit_rate × (TLB_time + mem_time) + TLB_miss_rate × (TLB_time + 2×mem_time) for two-level page table. Page fault penalty (~ms) dominates when p is significant. Must minimize page faults.",star:true},
+];
+
+/* ─── QUIZ ENGINE ─── */
+let sName='',sBranch='',sSem='',sCollege='';
+let activeQ=[],idx=0,score=0,skipped=0,uAns=[];
+let timerInt=null,timeLeft=30,answered=false,advTimer=null;
+const TSEC=30,ADEL=1500;
+
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sName=$('inputName').value.trim();
+  if(!sName){toast('⚠️ Please enter your name.');$('inputName').focus();return;}
+  sBranch=$('inputBranch').value.trim()||'N/A';
+  sSem=$('inputSem').value||'N/A';
+  sCollege=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+let selCh='all';
+$('chapterGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.chapter-btn');if(!b)return;
+  document.querySelectorAll('.chapter-btn').forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');selCh=b.dataset.chapter;
+});
+
+$('startBtn').addEventListener('click',()=>{
+  activeQ=selCh==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selCh));
+  for(let i=activeQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);
+  showScreen('screenQuiz');render();
+});
+
+function startTimer(){
+  clearInterval(timerInt);timeLeft=TSEC;
+  const p=$('timerPill');p.className='timer-pill';p.textContent='⏳ '+timeLeft+'s';
+  timerInt=setInterval(()=>{
+    timeLeft--;p.textContent='⏳ '+timeLeft+'s';
+    if(timeLeft<=10&&timeLeft>5)p.className='timer-pill urgent';
+    if(timeLeft<=5)p.className='timer-pill critical';
+    if(timeLeft<=0){clearInterval(timerInt);if(!answered){answered=true;uAns[idx]=-1;skipped++;lockOpts();showCorrect();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⏰ Time up! Answer shown.');}}
+  },1000);
+}
+
+function render(){
+  answered=false;clearAdv();clearInterval(timerInt);
+  const q=activeQ[idx],tot=activeQ.length;
+  $('progressText').textContent=`Question ${idx+1} of ${tot}`;
+  $('scoreText').textContent=`Score: ${score}`;
+  $('progressFill').style.width=`${(idx/tot)*100}%`;
+  $('qNum').textContent=`Q${idx+1}`;
+  const os=$('qStar');if(os)os.remove();
+  if(q.star){const s=document.createElement('div');s.id='qStar';s.className='q-star';s.textContent='⭐ VVI';$('qNum').insertAdjacentElement('afterend',s);}
+  $('qText').textContent=q.q;
+  const ex=$('qExample');
+  if(q.hint){ex.textContent='💡 '+q.hint;ex.style.display='block';}else{ex.style.display='none';}
+  $('chapterBadge').textContent=CHAPTERS[q.c].icon+' '+CHAPTERS[q.c].name;
+  const list=$('optionsList');list.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${l}</div><div class="option-text">${q.o[i]}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>pick(i));list.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');
+  $('nextBtn').classList.remove('visible');
+  $('skipBtn').style.display='';
+  startTimer();
+}
+
+function pick(i){
+  if(answered)return;answered=true;clearInterval(timerInt);
+  uAns[idx]=i;const q=activeQ[idx];lockOpts();
+  const opts=document.querySelectorAll('.option');
+  if(i===q.a){score++;opts[i].classList.add('correct');opts[i].querySelector('.option-radio').textContent='✓';showExp();$('skipBtn').style.display='none';startAdv();}
+  else{opts[i].classList.add('wrong');opts[i].querySelector('.option-radio').textContent='✗';showCorrect();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');}
+}
+
+function startAdv(){
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  f.classList.remove('running');void f.offsetWidth;f.classList.add('running');b.classList.add('show');h.classList.add('show');
+  advTimer=setTimeout(()=>{b.classList.remove('show');h.classList.remove('show');f.classList.remove('running');next();},ADEL);
+}
+function clearAdv(){if(advTimer){clearTimeout(advTimer);advTimer=null;}
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  if(b)b.classList.remove('show');if(h)h.classList.remove('show');if(f)f.classList.remove('running');}
+function lockOpts(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function showCorrect(){const q=activeQ[idx];const opts=document.querySelectorAll('.option');opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';}
+function showExp(){$('explanationText').textContent=activeQ[idx].ex;$('explanationBox').classList.add('show');}
+
+$('skipBtn').addEventListener('click',()=>{if(answered)return;answered=true;clearInterval(timerInt);uAns[idx]=-1;skipped++;lockOpts();showCorrect();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⟫ Skipped — correct answer shown.');});
+$('nextBtn').addEventListener('click',()=>{clearAdv();next();});
+function next(){idx++;if(idx>=activeQ.length)result();else render();}
+$('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Progress will be lost.')){clearInterval(timerInt);clearAdv();showScreen('screenIntro');}});
+
+const RMK=[
+  {min:95,e:'🏆',t:'Outstanding! Perfect Score!',s:'You have mastered COA! Exceptional performance.'},
+  {min:80,e:'🥇',t:'Excellent Performance!',s:'Strong command of Computer Architecture. Well prepared!'},
+  {min:65,e:'🥈',t:'Good Job!',s:'Solid performance! A bit more revision will make you perfect.'},
+  {min:50,e:'🥉',t:'Above Average!',s:'You are on the right track. Keep practicing!'},
+  {min:35,e:'📚',t:'Keep Practicing!',s:'Revisit all units and attempt more questions. You can do it!'},
+  {min:0,e:'💪',t:"Don't Give Up!",s:'Every expert was once a beginner. Study hard and try again!'},
+];
+function getRmk(p){return RMK.find(r=>p>=r.min)||RMK[RMK.length-1];}
+
+function result(){
+  clearInterval(timerInt);
+  const tot=activeQ.length,wrong=tot-score-skipped,pct=Math.round((score/tot)*100),r=getRmk(pct);
+  $('resultEmoji').textContent=r.e;$('scoreBig').textContent=score;$('scoreTotal').textContent='/ '+tot;
+  $('resultPercent').textContent=pct+'%';$('remarkText').textContent=r.t;$('remarkSub').textContent=r.s;
+  $('pillCorrect').textContent=score;$('pillWrong').textContent=wrong;$('pillSkip').textContent=skipped;
+  $('bannerName').textContent=sName||'Student';
+  const pts=[sBranch,sSem,sCollege].filter(v=>v&&v!=='N/A');
+  $('bannerMeta').textContent=pts.join(' · ')||'COA Quiz';
+  $('certBannerName').textContent=sName||'Your';$('certBannerMeta').textContent='COA Quiz · '+pct+'% · StudyHub';
+  let c=0;const el=$('scoreBig');el.textContent='0';
+  const inc=setInterval(()=>{c++;el.textContent=c;if(c>=score)clearInterval(inc);},Math.max(15,800/(score||1)));
+  showScreen('screenResult');if(pct>=75)confetti();buildReview();
+}
+
+function confetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const ps=[],cols=['#0F4C81','#EA580C','#16A34A','#F59E0B','#1E88E5','#EC4899'];
+  for(let i=0;i<80;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*-cv.height,w:Math.random()*10+5,h:Math.random()*6+3,c:cols[~~(Math.random()*cols.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,r:Math.random()*360,rs:Math.random()*5-2.5});
+  let f=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.r*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,1-f/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.r+=p.rs;});f++;if(f<130)requestAnimationFrame(draw);}());
+}
+
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  activeQ.forEach((q,i)=>{const ua=uAns[i],ok=ua===q.a,sk=ua===-1;
+    const d=document.createElement('div');d.className=`review-item ${ok?'ri-correct':sk?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sk?'':'ri-wrong-ans'}">${sk?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);});
+}
+$('reviewToggleBtn').addEventListener('click',()=>{const l=$('reviewList'),b=$('reviewToggleBtn');l.classList.toggle('open');b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCert(){
+  const tot=activeQ.length,pct=Math.round((score/tot)*100),rm=getRmk(pct),wc=tot-score-skipped;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rr(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rr(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('🖥️',sx,sy+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);
+  ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sName||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sBranch,sSem,sCollege].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rr(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 18px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Computer Organisation & Architecture — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,sc=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=sc;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=sc;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${score}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=sc;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rr(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=sc;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:score,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:skipped,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const col=ii%2,row=~~(ii/2),sx2=440+col*230,sy3=sy2-46+row*68;rr(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rr(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sCollege&&sCollege!=='N/A')ctx.fillText(`🏛  ${sCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  COA',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+
+const quizURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/coaquiz.html';
+const shareText=()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct),wc=tot-score-skipped;return `${r.e} COA Quiz — StudyHub\n\n${sName?'👤 '+sName+'\n':''}${sBranch&&sBranch!=='N/A'?'📘 '+sBranch+(sSem&&sSem!=='N/A'?' · '+sSem:'')+'\n':''}🏆 Score: ${score}/${tot} (${pct}%)\n${r.t}\n\n✅ ${score}  ❌ ${wc}  ⟫ ${skipped}\n\n📚 Try: ${quizURL()}\n\nStudyHub`;};
+
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=activeQ.length,pct=Math.round((score/tot)*100),sn=(sName||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_COA_Certificate_${sn}_${score}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed — try another browser');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(quizURL()).then(()=>toast('🔗 Link copied!')).catch(()=>prompt('Copy:',quizURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *COA Quiz — StudyHub*\n\n${sName?'👤 *'+sName+'*\n':''}🏆 Score: *${score}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${quizURL()}`)}`)});
+$('twitterBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${score}/${tot} (${pct}%) on COA Quiz!\n${r.t}\nTry it: ${quizURL()} #COA #BTech #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(shareText()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',shareText()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

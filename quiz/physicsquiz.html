@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Physics Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);
+  flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+/* INFO */
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+/* INTRO */
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+/* QUIZ */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong)}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);
+  box-shadow:0 0 0 3px rgba(22,163,74,.15),6px 6px 16px rgba(22,163,74,.1)}
+.option.correct .option-letter{background:var(--correct);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.4)}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);
+  box-shadow:0 0 0 3px rgba(220,38,38,.15),6px 6px 16px rgba(220,38,38,.1)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.4)}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+/* RESULT */
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;
+  margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);
+  box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;
+  box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);
+  border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;
+  cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);
+  padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;
+  border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #B8C8D8,-8px -8px 18px #FFFFFF}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);
+  cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}.share-actions{gap:8px}.share-action-btn{min-width:68px;padding:12px 8px}
+}
+</style>
+</head>
+<body data-quiz="physics">
+<nav class="navbar">
+  <a href="https://erabhi.in/studyHub/" class="nav-brand">
+    <div class="nav-logo">⚡</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://erabhi.in/studyHub/">Home</a></li>
+    <li><a href="quiz.html" class="active">Quizzes</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://erabhi.in/studyHub/">🏠 Home</a>
+  <a href="quiz.html" class="active">🧠 Quizzes</a>
+  <a href="about.html">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. Computer Science" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option>
+            <option>3rd Semester</option><option>4th Semester</option>
+            <option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">⚛️</span>
+    <div class="intro-title">Engineering Physics Quiz</div>
+    <div class="intro-sub">B.Tech Exam-Oriented MCQs — Oscillations, Optics, Quantum Mechanics, Electrostatics, Magnetism & Semiconductors. 180 questions across 6 units.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">180</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (180 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Oscillations & Optics</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Wave Optics & Lasers</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Quantum Mechanics</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Electrostatics & Fields</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Magnetostatics & EMI</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Solids & Semiconductors</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 30</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏱ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">⚡ Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">Engineering Physics Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 30</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="quiz.html" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">Engineering Physics Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">Share on<br>WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Share on<br>Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Score<br>Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Oscillations & Wave Optics",      icon:"〰️"},
+  {name:"Lasers & Optics",                 icon:"🔴"},
+  {name:"Quantum Mechanics",               icon:"⚛️"},
+  {name:"Vector Calculus & Electrostatics",icon:"⚡"},
+  {name:"Magnetostatics & Electrodynamics",icon:"🧲"},
+  {name:"Solids & Semiconductors",         icon:"💎"},
+];
+
+const ALL_QUESTIONS=[
+/* ═══ UNIT 1: Oscillations & Wave Optics (30) ═══ */
+{c:0,q:"In Simple Harmonic Motion (SHM), the restoring force is:",o:["Proportional to velocity","Proportional to displacement and directed away from equilibrium","Proportional to displacement and directed toward equilibrium","Constant"],a:2,ex:"SHM condition: F = -kx. The restoring force is directly proportional to displacement and opposes it (negative sign), always directed toward equilibrium.",star:true,hint:"F = -kx; negative sign means force opposes displacement"},
+{c:0,q:"The time period of a simple pendulum of length L is:",o:["T = 2π√(g/L)","T = 2π√(L/g)","T = π√(L/g)","T = 2√(L/g)"],a:1,ex:"T = 2π√(L/g), where L is length and g is acceleration due to gravity. Period is independent of mass and amplitude (for small oscillations).",star:true,hint:"Longer pendulum → longer period. Moon has lower g → longer period"},
+{c:0,q:"In a critically damped oscillator:",o:["System oscillates with decreasing amplitude","System returns to equilibrium as fast as possible without oscillating","System never reaches equilibrium","System oscillates with constant amplitude"],a:1,ex:"Critical damping (γ = ω₀) gives the fastest return to equilibrium without oscillation. Used in door closers and measuring instruments.",star:true},
+{c:0,q:"The condition for resonance in a driven oscillator is:",o:["Driving frequency equals natural frequency","Driving frequency is zero","Amplitude is minimum","Damping is maximum"],a:0,ex:"Resonance occurs when the driving frequency equals the natural frequency of the system. Amplitude becomes maximum at resonance.",star:true,hint:"Tacoma Narrows Bridge collapse is a famous resonance example"},
+{c:0,q:"In an overdamped oscillator, the system:",o:["Oscillates with exponentially decreasing amplitude","Returns to equilibrium slowly without oscillating","Oscillates indefinitely","Oscillates faster than natural frequency"],a:1,ex:"Overdamped system (γ > ω₀): returns to equilibrium exponentially without oscillation, but slower than critically damped.",hint:"Think of a door in thick oil — slowly closes without swinging"},
+{c:0,q:"The inertial frame of reference is a frame in which:",o:["Every body is at rest","Newton's laws hold without pseudo-forces","Every body accelerates","Gravity is absent"],a:1,ex:"An inertial frame is one in which Newton's first law holds — a body at rest stays at rest and a moving body continues moving unless acted upon by a force.",star:true},
+{c:0,q:"Centripetal acceleration for circular motion of radius r with speed v is:",o:["v²r","v/r","v²/r","vr"],a:2,ex:"Centripetal acceleration a = v²/r, directed toward the center of the circle. It changes direction of velocity, not magnitude.",hint:"Also written as ω²r where ω is angular velocity"},
+{c:0,q:"Coriolis acceleration arises in:",o:["Inertial frames","Rotating (non-inertial) frames","Frames moving at constant velocity","Frames at rest"],a:1,ex:"The Coriolis effect is a pseudo-force appearing in rotating reference frames. It affects wind patterns, ocean currents, and projectile motion on Earth.",star:true},
+{c:0,q:"A harmonic oscillator has total energy E. If amplitude A doubles, the new total energy is:",o:["E","2E","4E","8E"],a:2,ex:"Total energy of SHM: E = ½kA². If A doubles, E becomes ½k(2A)² = 4×½kA² = 4E. Energy is proportional to square of amplitude.",star:true},
+{c:0,q:"The velocity of a particle in SHM is maximum at:",o:["Extreme positions","Mean (equilibrium) position","Any position","Quarter amplitude"],a:1,ex:"In SHM, v = ω√(A²-x²). Velocity is maximum (v = ωA) at x = 0 (mean position) and zero at extremes (x = ±A).",star:true},
+{c:0,q:"Huygens' Principle states that every point on a wavefront acts as:",o:["A point absorber","A source of secondary spherical wavelets","A reflector only","A single slit"],a:1,ex:"Huygens' Principle: every point on a wavefront acts as a new source of secondary spherical wavelets. The envelope of these wavelets gives the new wavefront.",star:true},
+{c:0,q:"Coherent sources for interference must have:",o:["Same amplitude only","Same frequency and constant phase difference","Different frequencies","Random phase differences"],a:1,ex:"For sustained interference, sources must be coherent — same frequency, same or constant phase difference, and preferably same amplitude.",star:true},
+{c:0,q:"In Young's Double Slit Experiment, the fringe width β is:",o:["β = λd/D","β = λD/d","β = dD/λ","β = λ/dD"],a:1,ex:"Fringe width β = λD/d, where λ = wavelength, D = distance to screen, d = slit separation. Wider fringes with smaller slit separation.",star:true,hint:"Remember: D on top, d at bottom — bigger screen distance → wider fringes"},
+{c:0,q:"In thin film interference, the condition for destructive interference (for reflected light from air-glass-air) is:",o:["2μt = nλ","2μt = (2n-1)λ/2","2μt = (2n+1)λ/2","μt = nλ"],a:0,ex:"For reflected light, if there is a phase change at only one surface (air-denser): constructive = 2μt = (2n-1)λ/2; destructive = 2μt = nλ.",hint:"Soap bubble colors and oil on water use thin film interference"},
+{c:0,q:"Newton's rings are formed due to:",o:["Diffraction","Interference between light reflected from plano-convex lens and flat glass plate","Polarization","Refraction"],a:1,ex:"Newton's rings are concentric circular fringes formed by interference between light reflected from the bottom of a plano-convex lens and a flat glass surface.",star:true},
+{c:0,q:"The diameter of the nth dark ring in Newton's rings is:",o:["Dn = √(nλR)","Dn = 2√(nλR)","Dn = nλR","Dn = √(nλ/R)"],a:1,ex:"Diameter of nth dark ring: Dn = 2√(nλR), where R is radius of curvature of lens and λ is wavelength.",star:true,hint:"Dark rings: Rn = nλR (radii); Dn = 2Rn"},
+{c:0,q:"Michelson Interferometer is used to measure:",o:["Frequency of light only","Wavelength of light, refractive index, small distances","Temperature","Magnetic field"],a:1,ex:"Michelson Interferometer measures wavelengths of light, refractive index of gases, small displacements, and was used to disprove the ether theory.",star:true},
+{c:0,q:"Fraunhofer diffraction occurs when the source and screen are at:",o:["Finite distances","Infinite distances (parallel rays, using lenses)","Equal distances","Zero distance"],a:1,ex:"Fraunhofer (far-field) diffraction: source and screen at effectively infinite distance — achieved using converging lenses. Fresnel = finite distances.",hint:"Fraunhofer = far-field = uses lenses for parallel rays"},
+{c:0,q:"For a single slit of width 'a', the first minimum in Fraunhofer diffraction occurs at:",o:["sin θ = λ/2a","sin θ = λ/a","sin θ = 2λ/a","sin θ = aλ"],a:1,ex:"First minimum for single slit: a sin θ = λ, or sin θ = λ/a. Central maximum is twice as wide as secondary maxima.",star:true},
+{c:0,q:"The resolving power of an optical instrument is:",o:["Its magnifying power","Its ability to distinguish two closely spaced objects as separate","Its light-gathering ability","Its focal length"],a:1,ex:"Resolving power is the ability of an optical instrument to distinguish two closely spaced points as separate, not just magnify them.",star:true},
+{c:0,q:"Rayleigh's criterion for just resolving two sources states:",o:["Central maximum of one coincides with first maximum of other","Central maximum of one coincides with first minimum of other","Maxima of both overlap completely","Both minima coincide"],a:1,ex:"Rayleigh criterion: two sources are just resolved when the central maximum of one diffraction pattern coincides with the first minimum of the other.",star:true},
+{c:0,q:"The quality factor Q of a damped oscillator is defined as:",o:["Q = ω₀/2γ","Q = 2γ/ω₀","Q = ω₀γ","Q = ω₀+γ"],a:0,ex:"Q = ω₀/(2γ), where ω₀ is natural frequency and γ is damping coefficient. High Q means less damping and more oscillations before dying out.",star:true},
+{c:0,q:"Amplitude resonance occurs at driving frequency:",o:["ω = ω₀","ω = √(ω₀²-2γ²)","ω = ω₀+γ","ω = ω₀/2"],a:1,ex:"Amplitude resonance frequency ωr = √(ω₀²-2γ²), slightly less than natural frequency ω₀. For small damping, ωr ≈ ω₀.",hint:"In light damping, amplitude and velocity resonance frequencies are approximately equal"},
+{c:0,q:"In SHM, the phase difference between displacement and velocity is:",o:["0","π/4","π/2","π"],a:2,ex:"Displacement x = A cos(ωt); velocity v = -Aω sin(ωt) = Aω cos(ωt + π/2). So velocity leads displacement by π/2 (90°).",star:true},
+{c:0,q:"Lissajous figures are obtained when two SHMs are:",o:["Parallel","Perpendicular to each other","Opposite","In the same direction"],a:1,ex:"Lissajous figures are the resultant motion when two perpendicular SHMs are combined. Shape depends on frequency ratio and phase difference.",hint:"Used to compare frequencies and phases in electronics"},
+{c:0,q:"In interference, the principle of superposition states that:",o:["Waves destroy each other","Resultant displacement = algebraic sum of individual displacements","Intensity doubles at every point","Waves cannot interfere"],a:1,ex:"Superposition Principle: when two waves overlap, the resultant displacement at any point equals the algebraic sum of displacements of individual waves.",star:true},
+{c:0,q:"For constructive interference, the path difference must be:",o:["λ/2, 3λ/2, 5λ/2...","0, λ, 2λ, 3λ...","λ/4, 3λ/4...","Any value"],a:1,ex:"Constructive interference: path difference = nλ (n=0,1,2...). Destructive interference: path difference = (2n-1)λ/2.",star:true},
+{c:0,q:"The Michelson-Morley experiment was designed to detect:",o:["Gravitational waves","The luminiferous ether","Speed of light","Photoelectric effect"],a:1,ex:"The Michelson-Morley experiment (1887) tried to detect the ether — the supposed medium for light propagation. Result: null, leading to Special Relativity.",star:true},
+{c:0,q:"Phase velocity of a wave is defined as:",o:["vp = ω/k","vp = dω/dk","vp = k/ω","vp = ωk"],a:0,ex:"Phase velocity vp = ω/k (ω = angular frequency, k = wave number). Group velocity vg = dω/dk. For non-dispersive media, vp = vg.",star:true},
+{c:0,q:"Damped oscillation has amplitude that varies as:",o:["A = A₀e^(γt)","A = A₀e^(-γt)","A = A₀sin(γt)","A = A₀/t"],a:1,ex:"In damped oscillation, amplitude decays exponentially: A(t) = A₀e^(-γt), where γ is the damping coefficient.",star:true},
+{c:0,q:"The condition for sustained oscillation (undamped) requires:",o:["γ > ω₀","γ = ω₀","γ = 0","γ > 2ω₀"],a:2,ex:"For undamped oscillation, the damping coefficient γ = 0. In practice, energy input equals energy dissipated for sustained oscillation.",hint:"Ideal pendulum in vacuum has γ = 0"},
+
+/* ═══ UNIT 2: Lasers & Optics (30) ═══ */
+{c:1,q:"LASER stands for:",o:["Light Amplification by Stimulated Emission of Radiation","Light Amplification by Spontaneous Emission of Radiation","Large Amplitude Stimulated Electromagnetic Radiation","Light Absorption by Stimulated Emission of Radiation"],a:0,ex:"LASER = Light Amplification by Stimulated Emission of Radiation. Key process is stimulated emission where one photon causes another identical photon to be emitted.",star:true},
+{c:1,q:"In stimulated emission, the emitted photon is:",o:["Random in direction and phase","Identical to the incident photon (same frequency, phase, direction, polarization)","Of higher energy","Of lower energy"],a:1,ex:"Stimulated emission produces a photon identical to the incident photon — same frequency, phase, direction, and polarization. This is why laser light is coherent.",star:true},
+{c:1,q:"Population inversion is a condition where:",o:["Ground state has more atoms than excited state","Excited state has more atoms than lower state","All atoms are in ground state","Equal populations in all states"],a:1,ex:"Population inversion is a non-equilibrium state where more atoms are in an excited state than in a lower energy state. It is essential for laser action.",star:true,hint:"Without population inversion, stimulated emission < absorption — no amplification"},
+{c:1,q:"The process of achieving population inversion is called:",o:["Lasing","Pumping","Stimulated emission","Spontaneous emission"],a:1,ex:"Pumping is the process of supplying energy to achieve population inversion. Methods include optical pumping (using light), electrical pumping, and chemical pumping.",star:true},
+{c:1,q:"In a 3-level laser system (like Ruby laser), lasing occurs between:",o:["Ground state and first excited state","Metastable state and ground state","Two excited states","Ground state and metastable state"],a:1,ex:"In Ruby laser (3-level): atoms pump from ground → upper level → metastable state. Lasing occurs from metastable state back to ground state at 694.3 nm.",star:true},
+{c:1,q:"The He-Ne laser operates at wavelength:",o:["694.3 nm (red)","532 nm (green)","632.8 nm (red-orange)","1064 nm (infrared)"],a:2,ex:"He-Ne laser emits at 632.8 nm (red-orange). It's a 4-level gas laser using helium-neon mixture. Most common type for laboratory use.",star:true},
+{c:1,q:"Ruby laser emits at wavelength:",o:["632.8 nm","694.3 nm","1064 nm","514 nm"],a:1,ex:"Ruby laser emits at 694.3 nm (deep red). It's a solid-state 3-level laser using chromium ions in aluminum oxide crystal.",star:true},
+{c:1,q:"Nd:YAG laser emits primarily at:",o:["694.3 nm","632.8 nm","1064 nm","488 nm"],a:2,ex:"Nd:YAG (Neodymium-doped Yttrium Aluminum Garnet) laser emits at 1064 nm (near-infrared). Can be frequency-doubled to 532 nm green.",star:true},
+{c:1,q:"Semiconductor (diode) lasers use which process for pumping?",o:["Optical pumping","Electrical current injection (forward biased p-n junction)","Chemical reaction","Nuclear excitation"],a:1,ex:"Semiconductor lasers use electrical current injection — forward-biased p-n junction causes electron-hole recombination, emitting photons. Very efficient and compact.",star:true},
+{c:1,q:"The coherence of laser light refers to:",o:["High intensity only","Fixed phase relationship between photons (temporal and spatial coherence)","Monochromaticity only","Directionality only"],a:1,ex:"Laser coherence: temporal coherence (constant phase difference over time) and spatial coherence (constant phase across beam cross-section). Enables interference from single source.",star:true},
+{c:1,q:"Laser light is monochromatic means:",o:["It is very bright","It has a very narrow, well-defined wavelength (single color)","It travels in straight lines","It cannot be reflected"],a:1,ex:"Monochromatic: laser emits a single wavelength (or very narrow bandwidth). This contrasts with white light which contains all visible wavelengths.",star:true},
+{c:1,q:"The divergence of a laser beam is:",o:["Very large","Very small (nearly parallel, low divergence)","Same as ordinary light","100 degrees"],a:1,ex:"Laser beams have extremely low divergence — they remain nearly parallel over large distances. This is due to spatial coherence and the optical resonator design.",star:true},
+{c:1,q:"Holography uses which property of laser light?",o:["High intensity","Coherence (both temporal and spatial)","Monochromaticity only","High directionality only"],a:1,ex:"Holography records both amplitude and phase information of light using coherent laser sources. The coherence of laser is essential for forming interference patterns on the holographic film.",star:true},
+{c:1,q:"Young's double slit experiment first demonstrated:",o:["Particle nature of light","Wave nature of light through interference","Photoelectric effect","Polarization"],a:1,ex:"Young's double slit experiment (1801) demonstrated the wave nature of light by showing interference fringes — constructive and destructive interference patterns.",star:true},
+{c:1,q:"Diffraction grating equation is:",o:["d sin θ = nλ","d cos θ = nλ","nd = λ sin θ","d = nλ sin θ"],a:0,ex:"Diffraction grating: d sin θ = nλ, where d = grating spacing, θ = diffraction angle, n = order, λ = wavelength. Used to separate wavelengths.",star:true,hint:"More slits → sharper, brighter maxima"},
+{c:1,q:"The resolving power of a diffraction grating with N slits and order n is:",o:["R = N/n","R = nN","R = n+N","R = n/N"],a:1,ex:"Resolving power R = nN, where n = order of diffraction and N = total number of slits. More slits and higher order → better resolution.",star:true},
+{c:1,q:"Polarization of light proves that light is:",o:["Longitudinal wave","Transverse wave","Particle","Sound-like"],a:1,ex:"Polarization demonstrates that light is a transverse wave — electric field oscillates perpendicular to the direction of propagation. Longitudinal waves cannot be polarized.",star:true},
+{c:1,q:"Malus's Law states that when polarized light passes through an analyzer, the intensity is:",o:["I = I₀/cos θ","I = I₀ cos²θ","I = I₀ sin²θ","I = I₀ tan θ"],a:1,ex:"Malus's Law: I = I₀ cos²θ, where θ is angle between polarizer and analyzer axes. At θ=0, I=I₀; at θ=90°, I=0 (crossed polarizers).",star:true,hint:"Sunglasses use polarization to reduce glare"},
+{c:1,q:"The Brewster's angle θB is given by:",o:["tan θB = 1/μ","tan θB = μ","sin θB = μ","cos θB = μ"],a:1,ex:"At Brewster's angle: tan θB = μ (refractive index). At this angle, reflected light is completely plane-polarized (only s-polarization remains).",star:true},
+{c:1,q:"Superposition of waves and interference: which condition leads to maximum constructive interference?",o:["Phase difference = π","Phase difference = 2π (or 0)","Phase difference = π/2","Phase difference = 3π/2"],a:1,ex:"Constructive interference: phase difference = 0, 2π, 4π... (equivalent to path difference = 0, λ, 2λ...). Destructive: phase difference = π, 3π... (path diff = λ/2, 3λ/2...)",star:true},
+{c:1,q:"Einstein's coefficients A and B relate to:",o:["Photoelectric effect","Rates of spontaneous emission (A) and stimulated emission and absorption (B)","Compton scattering","X-ray diffraction"],a:1,ex:"Einstein's A coefficient = spontaneous emission rate. B coefficient relates to stimulated emission and absorption. Ratio A/B ∝ ω³ — high frequency favors spontaneous emission.",star:true},
+{c:1,q:"Population inversion theory: for a two-level system, population inversion is:",o:["Easily achievable","Impossible to achieve by optical pumping alone","Always maintained","Independent of pumping rate"],a:1,ex:"In a two-level system, population inversion is impossible — as you pump atoms to excited state, they immediately stimulate emission back. Need at least 3 levels.",star:true},
+{c:1,q:"Different types of lasers — Semiconductor laser advantages include:",o:["Very large size","High efficiency, small size, low cost, direct electrical pumping","High threshold current only","Poor beam quality only"],a:1,ex:"Semiconductor (diode) lasers are highly efficient (>50%), very compact (mm size), low cost, and directly pumped by electrical current — ideal for CD players, fiber optics, pointers.",star:true},
+{c:1,q:"Fraunhofer diffraction from a single slit: central maximum has angular width of:",o:["λ/a","2λ/a","λ/(2a)","4λ/a"],a:1,ex:"Central maximum half-width: sin θ = λ/a. Full angular width of central maximum = 2λ/a (from -λ/a to +λ/a). It is twice as wide as secondary maxima.",star:true},
+{c:1,q:"Einstein's theory of radiation: stimulated emission is the basis for which technology?",o:["Solar cells","Lasers and masers","Photodetectors","X-ray machines"],a:1,ex:"Stimulated emission (Einstein, 1917) is the fundamental physics behind lasers (Light) and masers (Microwave). Einstein predicted it before lasers were invented.",star:true},
+{c:1,q:"Neon laser in He-Ne system: the energy transfer from He to Ne is by:",o:["Photon emission","Resonant collision (collisional energy transfer)","Thermal conduction","Electrical arcing"],a:1,ex:"In He-Ne laser, helium atoms (excited by electrical discharge) transfer energy to neon atoms through resonant collisions — the energy levels of He* and Ne match closely.",star:true},
+{c:1,q:"Amplitude splitting in thin film interference is done by:",o:["Slits","Partially reflective surfaces","Prisms only","Gratings"],a:1,ex:"Thin film interference uses amplitude division — the incident beam is split at each surface by partial reflection and transmission, creating two beams that interfere.",hint:"Examples: anti-reflection coatings, soap films, Newton's rings"},
+{c:1,q:"The Michelson interferometer splits the beam using:",o:["Double slits","A beam splitter (half-silvered mirror)","A grating","A prism"],a:1,ex:"Michelson interferometer uses a beam splitter (half-silvered mirror) to divide the beam into two paths, which are reflected back and recombined to interfere.",star:true},
+{c:1,q:"Applications of lasers include all EXCEPT:",o:["Surgery (laser cutting)","Fiber optic communications","Measuring distances (LIDAR)","Converting AC to DC"],a:3,ex:"Lasers are used in surgery, fiber optics, LIDAR, barcode scanners, CD/DVD, welding, holography. Converting AC to DC is done by rectifiers, not lasers.",star:true},
+{c:1,q:"Laser light has much smaller divergence than ordinary light because:",o:["It has higher intensity","It emerges from an optical cavity which selects modes with near-zero divergence","It has longer wavelength","It is polarized"],a:1,ex:"The optical resonator (cavity mirrors) selects only those modes propagating nearly parallel to the axis, resulting in minimal divergence — all photons travel in essentially the same direction.",star:true},
+
+/* ═══ UNIT 3: Quantum Mechanics (30) ═══ */
+{c:2,q:"de Broglie's hypothesis states that matter has:",o:["Only particle nature","Only wave nature","Both wave and particle (dual) nature","Neither wave nor particle nature"],a:2,ex:"de Broglie (1924): matter has wave-particle duality. Every particle has an associated wavelength λ = h/p = h/mv, where h is Planck's constant.",star:true},
+{c:2,q:"The de Broglie wavelength λ of a particle of momentum p is:",o:["λ = hp","λ = h/p","λ = p/h","λ = h²/p"],a:1,ex:"de Broglie wavelength: λ = h/p = h/mv. Larger momentum → shorter wavelength. Explains why macroscopic objects don't show wave behavior.",star:true,hint:"λ = h/mv; for an electron: λ ≈ 1.2 nm/√(V) where V is accelerating voltage"},
+{c:2,q:"Heisenberg's Uncertainty Principle states:",o:["Δx·Δp ≥ h/4π (= ℏ/2)","Δx·Δp = 0","Δx = Δp","Δx·Δp ≤ ℏ"],a:0,ex:"Heisenberg Uncertainty Principle: Δx·Δp ≥ ℏ/2 (where ℏ = h/2π). Cannot simultaneously know exact position and momentum. Also ΔE·Δt ≥ ℏ/2.",star:true},
+{c:2,q:"The physical interpretation of wave function ψ(x,t) is that |ψ|² represents:",o:["Energy of particle","Probability density of finding the particle at position x at time t","Velocity of particle","Momentum of particle"],a:1,ex:"Born interpretation: |ψ(x,t)|² is the probability density. The probability of finding the particle in dx is |ψ|²dx. Total probability = ∫|ψ|²dx = 1 (normalization).",star:true},
+{c:2,q:"The time-independent Schrödinger equation is:",o:["Hψ = Eψ where H is Hamiltonian","Hψ = iℏ∂ψ/∂t","ψ = e^(-iEt/ℏ)","∇²ψ = 0"],a:0,ex:"Time-independent Schrödinger equation: Ĥψ = Eψ (eigenvalue equation). H = -ℏ²/2m ∇² + V. Solutions give stationary states with definite energy E.",star:true},
+{c:2,q:"For a particle in a 1D infinite potential well of width L, the energy levels are:",o:["En = nℏ²/2mL²","En = n²π²ℏ²/2mL²","En = nπℏ/L","En = n²ℏ/mL"],a:1,ex:"Particle in a box: En = n²π²ℏ²/(2mL²) = n²h²/(8mL²). Quantized energies — n = 1,2,3... Zero-point energy E₁ > 0 (cannot be at rest).",star:true,hint:"Energy ∝ n² and ∝ 1/L² — smaller box → higher energies"},
+{c:2,q:"The zero-point energy of a particle in a box is:",o:["Zero","E₁ = π²ℏ²/2mL²","Infinite","E₁ = ℏ²/mL²"],a:1,ex:"Zero-point energy (n=1 ground state): E₁ = π²ℏ²/(2mL²). It is NOT zero — uncertainty principle forbids a particle from being at rest in a confined space.",star:true},
+{c:2,q:"Normalization condition for wave function ψ requires:",o:["∫ψdx = 0","∫|ψ|²dx = 1","ψ = 0 everywhere","∫ψdx = ∞"],a:1,ex:"Normalization: ∫|ψ(x)|²dx = 1 (integrated over all space). This ensures the total probability of finding the particle somewhere = 1.",star:true},
+{c:2,q:"Wave packets are formed by superposition of waves with different wavelengths. The group velocity vg is:",o:["vg = ω/k","vg = dω/dk","vg = k/ω","vg = 2ω/k"],a:1,ex:"Group velocity vg = dω/dk. It represents the velocity of the wave packet envelope and corresponds to the particle velocity. Phase velocity vp = ω/k.",star:true},
+{c:2,q:"Schrödinger's wave equation for a free particle (V=0) gives solutions that are:",o:["Decaying exponentials","Plane waves e^(ikx) with any real k","Only sine functions","Bound states"],a:1,ex:"Free particle (V=0): solutions are plane waves ψ = Ae^(ikx), where k = p/ℏ can take any real value — energy is continuous (not quantized).",star:true},
+{c:2,q:"The expectation value ⟨x⟩ of position in quantum mechanics is:",o:["x of maximum probability","⟨x⟩ = ∫ψ*xψ dx","⟨x⟩ = x at ψ=0","⟨x⟩ = L/2 always"],a:1,ex:"Expectation value ⟨x⟩ = ∫ψ*(x)·x·ψ(x)dx — the quantum mechanical average of position over many measurements.",star:true},
+{c:2,q:"Eigenfunctions and Eigenvalues: if Âψ = aψ, then ψ is an eigenfunction of Â with eigenvalue:",o:["ψ","Â","a","Âψ"],a:2,ex:"If operator Â acting on ψ gives aψ (where a is a constant), then ψ is an eigenfunction of Â with eigenvalue a. Observable measurements give eigenvalues.",star:true},
+{c:2,q:"The quantum number n for a particle in a 1D box must be:",o:["Any real number","Any positive integer (n = 1,2,3...)","Only n = 0","Any integer including negative"],a:1,ex:"n must be a positive integer (n = 1,2,3...). n = 0 gives ψ = 0 (no particle). Negative n gives same wavefunctions as positive n.",star:true},
+{c:2,q:"Quantum tunneling refers to:",o:["Particles jumping over a barrier","Particles penetrating through a classically forbidden potential barrier","Waves being absorbed","Particles reflecting from all barriers"],a:1,ex:"Quantum tunneling: particles can pass through a potential barrier even when their energy is less than the barrier height. Impossible classically, but quantum mechanically ψ ≠ 0 inside barrier.",star:true,hint:"Applications: tunnel diode, scanning tunneling microscope, nuclear fusion in stars"},
+{c:2,q:"For an electron in a hydrogen atom, the de Broglie wavelength fits into the orbit as:",o:["Random wavelengths","nλ = 2πr (Bohr's quantization via de Broglie)","λ = r only","2λ = πr"],a:1,ex:"de Broglie's standing wave condition: nλ = 2πr, i.e., an integer number of wavelengths fit around the orbit. This derives Bohr's angular momentum quantization L = nℏ.",star:true},
+{c:2,q:"The Uncertainty principle: minimum uncertainty in energy ΔE of a state that lives for time Δt is:",o:["ΔE = ℏ/Δt","ΔE ≥ ℏ/(2Δt)","ΔE = ΔtΩ","ΔE = 0"],a:1,ex:"Energy-time uncertainty: ΔE·Δt ≥ ℏ/2. Short-lived excited states (small Δt) have large energy uncertainty ΔE → spectral line broadening.",star:true},
+{c:2,q:"Probability current density J in quantum mechanics describes:",o:["Charge current","Flow of probability density (particle current)","Mass flow","Energy flow"],a:1,ex:"Probability current J = (ℏ/2mi)(ψ*∇ψ - ψ∇ψ*). Continuity equation: ∂|ψ|²/∂t + ∇·J = 0. Represents flow of probability.",star:true},
+{c:2,q:"The phase velocity of de Broglie waves vp = ω/k for a free particle equals:",o:["Particle velocity v","v/2","2v","c²/v"],a:3,ex:"Phase velocity vp = E/p = mc²/(mv) = c²/v > c for v < c. Group velocity vg = dE/dp = v (particle velocity). Note vp · vg = c² for relativistic case.",star:true},
+{c:2,q:"Schrödinger's time-dependent equation is:",o:["ĤΨ = iℏ∂Ψ/∂t","ĤΨ = EΨ","∇²Ψ = 0","Ψ = e^(-Et)"],a:0,ex:"Time-dependent Schrödinger equation: iℏ∂Ψ/∂t = ĤΨ = [-ℏ²/2m∇² + V]Ψ. Governs time evolution of quantum states.",star:true},
+{c:2,q:"Application of Schrödinger equation: for a particle at an energy barrier E < V₀, the wavefunction inside the barrier is:",o:["Sinusoidal","Zero","Exponentially decaying (evanescent)","Constant"],a:2,ex:"Inside classically forbidden region (E < V₀): ψ = Ae^(-κx) where κ = √(2m(V₀-E))/ℏ. Exponential decay — but nonzero, enabling tunneling!",star:true},
+{c:2,q:"The Davisson-Germer experiment confirmed:",o:["Photoelectric effect","Wave nature of electrons (electron diffraction)","Rutherford model","Nuclear structure"],a:1,ex:"Davisson-Germer experiment (1927): electron beam reflected from nickel crystal showed diffraction pattern, directly confirming de Broglie's hypothesis of matter waves.",star:true},
+{c:2,q:"For a harmonic oscillator, the energy levels are:",o:["En = nℏω","En = (n+½)ℏω","En = n²ℏω","En = nℏω/2"],a:1,ex:"Quantum harmonic oscillator: En = (n+½)ℏω, n = 0,1,2... Zero-point energy E₀ = ½ℏω. Equally spaced energy levels — very different from particle in a box.",star:true},
+{c:2,q:"The wave function must satisfy boundary conditions: it must be:",o:["Infinite at infinity","Discontinuous at boundaries","Single-valued, continuous, and vanishing at infinity","Negative everywhere"],a:2,ex:"Valid wave function conditions: (1) single-valued, (2) continuous, (3) finite (→0 at ±∞), (4) square-integrable (normalizable). Also dψ/dx must be continuous.",star:true},
+{c:2,q:"The Bohr model quantization rule nλ = 2πr emerges from:",o:["Classical mechanics","de Broglie's matter wave hypothesis","Uncertainty principle only","Special relativity"],a:1,ex:"de Broglie: electron in a Bohr orbit is a standing wave. For constructive interference: circumference = integer number of wavelengths: nλ = 2πr → L = nℏ.",star:true},
+{c:2,q:"The Compton effect shows that photons have:",o:["No momentum","Momentum p = h/λ","Infinite mass","Zero energy"],a:1,ex:"Compton effect (1923): X-ray photon scatters from electron, losing energy and changing wavelength. Proves photons carry momentum p = h/λ = E/c.",star:true},
+{c:2,q:"Photoelectric effect establishes which nature of light?",o:["Wave nature","Particle (photon) nature","Neither","Both simultaneously"],a:1,ex:"Photoelectric effect: photon of energy hf strikes metal, ejecting electron. Shows light behaves as particles (photons) — wave model cannot explain threshold frequency or instantaneous emission.",star:true},
+{c:2,q:"The de Broglie wavelength of a 1 eV electron is approximately:",o:["1.23 μm","1.23 nm","0.123 nm","12.3 nm"],a:1,ex:"λ = h/√(2mE). For 1 eV electron: λ = 1.226/√1 nm = 1.226 nm ≈ 1.23 nm. This is comparable to X-ray wavelengths and explains electron diffraction.",star:true},
+
+/* ═══ UNIT 4: Vector Calculus & Electrostatics (30) ═══ */
+{c:3,q:"The divergence of a vector field F = (Fx, Fy, Fz) is:",o:["∂Fx/∂y + ∂Fy/∂z","∂Fx/∂x + ∂Fy/∂y + ∂Fz/∂z","∂Fz/∂x - ∂Fx/∂z","F·F"],a:1,ex:"Divergence: ∇·F = ∂Fx/∂x + ∂Fy/∂y + ∂Fz/∂z. It measures the 'source strength' or outward flux per unit volume at a point.",star:true},
+{c:3,q:"The curl of a vector field F represents:",o:["Source density","Rotation/circulation per unit area at a point","Scalar potential","Gradient"],a:1,ex:"Curl: ∇×F measures the rotational tendency of the field. If ∇×F = 0, field is irrotational (conservative). Used in defining magnetic fields from currents.",star:true},
+{c:3,q:"Gauss's Divergence theorem states:",o:["∮F·dS = ∮F·dl","∮F·dS = ∫∫∫∇·F dV","∮F·dl = ∫∫∇×F·dS","∇·F = 0"],a:1,ex:"Gauss's Divergence Theorem: ∯F·dS = ∭∇·F dV. Converts surface integral to volume integral. Fundamental in deriving Gauss's law in electrostatics.",star:true},
+{c:3,q:"Stokes' theorem relates:",o:["Volume integral to surface integral","Line integral around closed curve to surface integral of curl","Gradient to divergence","Two surface integrals"],a:1,ex:"Stokes' Theorem: ∮F·dl = ∬(∇×F)·dS. Converts line integral around closed curve to surface integral of curl. Used to derive Faraday's and Ampere's laws.",star:true},
+{c:3,q:"Gauss's Law in electrostatics states that the total electric flux through a closed surface equals:",o:["ε₀ times enclosed charge","Enclosed charge divided by ε₀","Zero always","Enclosed charge times μ₀"],a:1,ex:"Gauss's Law: ∯E·dS = Q_enc/ε₀. Total electric flux = enclosed free charge/permittivity. Equivalent to Coulomb's law for symmetric charge distributions.",star:true},
+{c:3,q:"The electric field E inside a conductor in electrostatic equilibrium is:",o:["Maximum","Equal to surface field","Zero","Uniform"],a:2,ex:"Inside a conductor: E = 0 in electrostatic equilibrium. Free charges redistribute on the surface until internal field is zero. Faraday cage works on this principle.",star:true},
+{c:3,q:"Poisson's equation in electrostatics is:",o:["∇²V = 0","∇²V = -ρ/ε₀","∇²V = ρε₀","∇V = -ρ/ε₀"],a:1,ex:"Poisson's equation: ∇²V = -ρ/ε₀. Where ρ is charge density and V is electric potential. Reduces to Laplace's equation (∇²V=0) in charge-free regions.",star:true},
+{c:3,q:"Laplace's equation ∇²V = 0 applies in regions:",o:["With charges","Free of charges (ρ = 0)","With conductors only","With dielectrics only"],a:1,ex:"Laplace's equation: ∇²V = 0 in charge-free regions. Solutions give unique potential distribution given boundary conditions. Used in capacitor design and electron optics.",star:true},
+{c:3,q:"The electric potential V due to a point charge Q at distance r is:",o:["V = Q/4πε₀r²","V = Q/4πε₀r","V = Q·r/4πε₀","V = Qr/2ε₀"],a:1,ex:"Electric potential: V = Q/(4πε₀r). Unlike field E = Q/(4πε₀r²), potential is a scalar. Work done W = q·V to bring charge q from infinity to that point.",star:true},
+{c:3,q:"The relationship between electric field E and potential V is:",o:["E = ∇V","E = -∇V","E = V/d","V = -∫E²dr"],a:1,ex:"E = -∇V = -(∂V/∂x î + ∂V/∂y ĵ + ∂V/∂z k̂). Field points from high to low potential. The negative sign: E opposes increasing V.",star:true},
+{c:3,q:"A dielectric material has polarization P. The bound surface charge density σb is:",o:["σb = P·n̂","σb = -P·n̂","σb = ε₀P","σb = P/ε₀"],a:0,ex:"Bound surface charge: σb = P·n̂ (polarization dotted with outward normal). Bound volume charge: ρb = -∇·P. These arise from alignment of dipoles.",star:true},
+{c:3,q:"The electric displacement field D in a dielectric is defined as:",o:["D = ε₀E","D = ε₀E + P","D = E/ε₀","D = P only"],a:1,ex:"D = ε₀E + P. For linear dielectrics: D = εE = ε₀εrE. Gauss's law with D: ∇·D = ρ_free (only free charges). D eliminates bound charge complications.",star:true},
+{c:3,q:"Boundary conditions at dielectric interface: normal component of D satisfies:",o:["D₁n = D₂n (continuous if no free surface charge)","D₁n ≠ D₂n always","D₁n = 0","D is tangential only"],a:0,ex:"Normal D is continuous across the interface if there's no free surface charge: D₁n - D₂n = σ_free. Tangential E is always continuous: E₁t = E₂t.",star:true},
+{c:3,q:"Polarization of a dielectric: electric susceptibility χe is defined by:",o:["P = χeE","P = ε₀χeE","P = E/χe","P = χe/ε₀"],a:1,ex:"P = ε₀χeE, where χe is electric susceptibility. Relative permittivity εr = 1 + χe. Susceptibility measures how easily a material polarizes.",star:true},
+{c:3,q:"The capacitance of a parallel plate capacitor with dielectric εr is:",o:["C = ε₀A/d","C = εrε₀A/d","C = ε₀d/A","C = εr/A"],a:1,ex:"C = εrε₀A/d = ε₀A/d × εr. Inserting a dielectric increases capacitance by factor εr. Dielectric reduces internal field, allowing more charge storage.",star:true},
+{c:3,q:"Coulomb's Law gives the force between two charges Q₁ and Q₂ separated by r as:",o:["F = Q₁Q₂/4πε₀r","F = Q₁Q₂/4πε₀r²","F = 4πε₀Q₁Q₂/r²","F = Q₁Q₂r/4πε₀"],a:1,ex:"Coulomb's Law: F = Q₁Q₂/(4πε₀r²). Like charges repel, unlike attract. Inverse square law, similar to Newton's gravity.",star:true},
+{c:3,q:"Line, surface, and volume integrals in electrostatics: work done W in moving charge q from A to B is:",o:["W = q∫B→A E·dl","W = -q∫A→B E·dl","W = q∫A→B E·dl","W = ∫E²dl"],a:1,ex:"Work done by external agent: W = -q∫E·dl = q(VB-VA) = q·ΔV. Negative because E is conservative and we move against it.",star:true},
+{c:3,q:"Gauss's law applied to infinite line charge λ gives electric field at distance r:",o:["E = λ/2πε₀r²","E = λ/2πε₀r","E = λr/2πε₀","E = 2λ/ε₀r"],a:1,ex:"Using cylindrical Gaussian surface: E = λ/(2πε₀r). Field falls off as 1/r (not 1/r² as for point charge). Direction is radially outward.",star:true},
+{c:3,q:"An electric dipole in a uniform field E experiences:",o:["Translational force only","Torque τ = p×E but zero net force","Zero torque","Both force and torque"],a:1,ex:"In uniform field: net force = 0 (equal and opposite forces cancel). Torque τ = p×E = pE sin θ. Dipole tends to align with field.",star:true},
+{c:3,q:"Electric flux Φ through a surface S is defined as:",o:["Φ = ∫E·dl","Φ = ∫E·dS = ∫E cos θ dS","Φ = E×S","Φ = E/S"],a:1,ex:"Electric flux: Φ = ∫E·dS = ∫E cos θ dS. It is the number of field lines passing through a surface. Unit: N·m²/C or V·m.",star:true},
+{c:3,q:"Energy stored in an electric field E in volume V is:",o:["U = ε₀E²V","U = ε₀E²V/2","U = ε₀E·V","U = ε₀V/E²"],a:1,ex:"Energy density in electric field: u = ε₀E²/2. Total energy U = (ε₀/2)∫E²dV. Same result from U = Q²/2C = CV²/2.",star:true},
+{c:3,q:"The electric field just outside a conductor surface is:",o:["E = 0","E = σ/ε₀ (perpendicular to surface)","E = σ/2ε₀","E parallel to surface"],a:1,ex:"Just outside conductor: E = σ/ε₀ perpendicular to surface (σ = surface charge density). Field is normal to the surface. Inside: E = 0.",star:true},
+{c:3,q:"For a spherical shell of charge Q and radius R, the field at r > R is same as:",o:["A point charge Q at center","Shell of radius 2R","Zero everywhere","Uniform field"],a:0,ex:"Shell theorem: for r > R, field = Q/(4πε₀r²) — identical to point charge Q at center. For r < R: E = 0 (field inside spherical shell is zero).",star:true},
+{c:3,q:"Divergence of E equals ρ/ε₀. This is the differential form of:",o:["Faraday's law","Gauss's law for electricity","Ampere's law","Biot-Savart law"],a:1,ex:"∇·E = ρ/ε₀ is the differential (point) form of Gauss's law. It states that electric field diverges from positive charges and converges to negative charges.",star:true},
+
+/* ═══ UNIT 5: Magnetostatics & Electrodynamics (30) ═══ */
+{c:4,q:"Biot-Savart law gives the magnetic field dB due to current element Idl as:",o:["dB = μ₀Idl/4πr","dB = μ₀I dl×r̂/4πr²","dB = Idl×r̂/4πε₀r²","dB = μ₀Idl/r²"],a:1,ex:"Biot-Savart Law: dB = (μ₀/4π)(Idl×r̂)/r². The magnetic field element is perpendicular to both current direction and the radial vector.",star:true},
+{c:4,q:"Ampere's circuital law (static case) states:",o:["∮B·dl = μ₀ε₀∂E/∂t","∮B·dl = μ₀I_enc","∮E·dl = -dΦB/dt","∮B·dS = 0"],a:1,ex:"Ampere's law: ∮B·dl = μ₀I_enclosed. The line integral of B around a closed path equals μ₀ times the current enclosed.",star:true},
+{c:4,q:"The Lorentz force on a charge q moving with velocity v in fields E and B is:",o:["F = q(E + v·B)","F = q(E + v×B)","F = qE + qvB","F = q(v×B) only"],a:1,ex:"Lorentz force: F = q(E + v×B). Electric force qE and magnetic force q(v×B). The magnetic force is perpendicular to both velocity and B field.",star:true},
+{c:4,q:"The divergence of magnetic field ∇·B equals:",o:["μ₀ρm","ρm/ε₀","0 (always)","μ₀I"],a:2,ex:"∇·B = 0 always — there are no magnetic monopoles. Magnetic field lines always form closed loops. This is one of Maxwell's equations.",star:true},
+{c:4,q:"The magnetic vector potential A is defined by:",o:["B = ∇×A","B = ∇·A","B = ∇A","E = ∇×A"],a:0,ex:"Magnetic vector potential A: B = ∇×A. Since ∇·B = 0, we can always write B as curl of some vector A. The gauge can be chosen conveniently.",star:true},
+{c:4,q:"Faraday's law of electromagnetic induction states:",o:["EMF = +dΦB/dt","EMF = -dΦB/dt (Faraday-Lenz law)","EMF = B·l·v²","EMF = BIl"],a:1,ex:"Faraday's Law: EMF = -dΦB/dt. The negative sign represents Lenz's law — induced EMF opposes the change in flux. Basis of generators and transformers.",star:true},
+{c:4,q:"Lenz's law states that the induced current:",o:["Aids the change causing it","Opposes the change in magnetic flux causing it","Is always in the same direction","Is proportional to resistance"],a:1,ex:"Lenz's law: induced current creates magnetic field opposing the flux change. It is a consequence of energy conservation and Newton's third law.",star:true},
+{c:4,q:"Self-inductance L of a coil is defined by:",o:["V = LI","V = L dI/dt","V = I/L","L = V/I"],a:1,ex:"Self-inductance: V = L(dI/dt). EMF is induced opposing change in current. Energy stored in inductor: U = LI²/2. Unit: Henry (H).",star:true},
+{c:4,q:"Mutual inductance M between two coils: if current I₁ changes in coil 1, EMF in coil 2 is:",o:["ε₂ = MI₁","ε₂ = -M dI₁/dt","ε₂ = M/I₁","ε₂ = I₁/M"],a:1,ex:"Mutual inductance: ε₂ = -M(dI₁/dt). M = N₂Φ₂₁/I₁. Transformers use mutual inductance. M₁₂ = M₂₁ (reciprocity theorem).",star:true},
+{c:4,q:"Maxwell's equations — the displacement current was added by Maxwell to:",o:["Faraday's law","Ampere's law to make it consistent with charge conservation","Gauss's law","Biot-Savart law"],a:1,ex:"Maxwell added displacement current ε₀∂E/∂t to Ampere's law: ∇×B = μ₀J + μ₀ε₀∂E/∂t. This predicted electromagnetic waves and conservation of charge.",star:true},
+{c:4,q:"The speed of electromagnetic waves in vacuum predicted by Maxwell's equations is:",o:["c = √(μ₀/ε₀)","c = 1/√(μ₀ε₀)","c = μ₀ε₀","c = √(ε₀μ₀)"],a:1,ex:"c = 1/√(μ₀ε₀) = 3×10⁸ m/s. Maxwell derived this from his equations and recognized light as an electromagnetic wave — a landmark discovery.",star:true},
+{c:4,q:"Magnetic materials: a paramagnetic material has relative permeability μr:",o:["μr < 1","μr > 1 (slightly)","μr >> 1","μr = 0"],a:1,ex:"Paramagnetic: μr slightly > 1 (e.g., 1.00001). Weakly attracted to magnets. Diamagnetic: μr slightly < 1. Ferromagnetic: μr >> 1 (Fe, Ni, Co).",star:true},
+{c:4,q:"Magnetization M of a material is defined as:",o:["Magnetic moment per unit mass","Magnetic dipole moment per unit volume","Susceptibility × H","B/μ₀"],a:1,ex:"Magnetization M = (magnetic dipole moment)/(volume). Units: A/m. Relation: B = μ₀(H + M) = μ₀(1 + χm)H = μ₀μrH.",star:true},
+{c:4,q:"Magnetic susceptibility χm for a ferromagnetic material is:",o:["Very small negative","Very small positive","Very large positive (thousands to millions)","Zero"],a:2,ex:"Ferromagnetic susceptibility χm >> 1 (can be 10⁴ to 10⁶). Strongly magnetizable. Examples: iron (χm ≈ 5000), nickel, cobalt, and their alloys.",star:true},
+{c:4,q:"The continuity equation in electromagnetism ∂ρ/∂t + ∇·J = 0 expresses:",o:["Energy conservation","Conservation of electric charge","Magnetic flux conservation","Faraday's induction"],a:1,ex:"Continuity equation: ∂ρ/∂t + ∇·J = 0 (conservation of charge). Rate of decrease of charge density = divergence of current density (charge flowing out).",star:true},
+{c:4,q:"Poynting vector S = (E×B)/μ₀ represents:",o:["Momentum of EM wave","Energy flux density (power per unit area) of electromagnetic field","Electric flux","Magnetic flux"],a:1,ex:"Poynting vector S = E×B/μ₀ = E×H. It gives the direction and magnitude of electromagnetic power flow (W/m²). |S| = energy per unit time per unit area.",star:true},
+{c:4,q:"Electromagnetic wave propagation: in a transverse EM wave, E and B are:",o:["Parallel to each other and to propagation direction","Perpendicular to each other and both perpendicular to propagation direction","B is along propagation direction","E is along propagation direction"],a:1,ex:"In EM waves: E ⊥ B ⊥ k (wave vector). Both E and B are transverse. E and B are in phase and related by |E| = c|B|.",star:true},
+{c:4,q:"Boundary conditions for magnetic fields: tangential component of H satisfies:",o:["H₁t = H₂t always","H₁t - H₂t = K (surface current)","H₁t + H₂t = 0","H₁t = 0"],a:1,ex:"Boundary condition: H₁t - H₂t = K (surface current density K). For no surface current: H₁t = H₂t. Normal B: B₁n = B₂n always.",star:true},
+{c:4,q:"Ohm's law in microscopic form (vector form) is:",o:["J = σE","J = E/σ","E = J/σ²","J = σ/E"],a:0,ex:"Microscopic Ohm's law: J = σE, where J is current density (A/m²), σ is conductivity (S/m), and E is electric field. Macroscopic V = IR follows from this.",star:true},
+{c:4,q:"Energy stored in a magnetic field B in volume V is:",o:["U = B²V/2μ₀","U = μ₀B²V/2","U = B²/2μ₀V","U = BV/2μ₀"],a:0,ex:"Magnetic energy density: u = B²/(2μ₀). Total energy: U = ∫B²/(2μ₀)dV. For inductor: U = LI²/2 (equivalent expression).",star:true},
+{c:4,q:"The EMF induced by motional EMF (rod of length L moving with velocity v in field B) is:",o:["EMF = BLv²","EMF = BLv","EMF = BL/v","EMF = B/Lv"],a:1,ex:"Motional EMF = BLv (when B, L, v are mutually perpendicular). Force on charge q: F = qv×B. This drives current in external circuit.",star:true},
+{c:4,q:"Ampere's law with Maxwell's correction (full form) is:",o:["∇×B = μ₀J","∇×B = μ₀J + μ₀ε₀∂E/∂t","∇×B = ε₀∂E/∂t","∇×E = -∂B/∂t"],a:1,ex:"Full Ampere-Maxwell law: ∇×B = μ₀J + μ₀ε₀∂E/∂t. Second term (displacement current) is needed for consistency with charge conservation and predicts EM waves.",star:true},
+{c:4,q:"The four Maxwell's equations in differential form include all EXCEPT:",o:["∇·E = ρ/ε₀","∇·B = 0","∇×E = -∂B/∂t","∇·J = 0"],a:3,ex:"Maxwell's 4 equations: (1)∇·E=ρ/ε₀, (2)∇·B=0, (3)∇×E=-∂B/∂t, (4)∇×B=μ₀J+μ₀ε₀∂E/∂t. ∇·J=0 is a special case of continuity equation, not Maxwell's equation.",star:true},
+{c:4,q:"Force per unit length between two parallel wires carrying currents I₁ and I₂ separated by d is:",o:["F/L = μ₀I₁I₂/4πd","F/L = μ₀I₁I₂/2πd","F/L = I₁I₂/2πd","F/L = μ₀I₁I₂/πd"],a:1,ex:"Force per unit length: F/L = μ₀I₁I₂/(2πd). Parallel currents (same direction) attract; antiparallel currents repel. Used to define the ampere.",star:true},
+{c:4,q:"For a magnetic dipole m in a uniform B field, the potential energy is:",o:["U = m·B","U = -m·B","U = m×B","U = m/B"],a:1,ex:"Potential energy: U = -m·B = -mB cos θ. Minimum energy when m parallel to B (stable); maximum when antiparallel (unstable). Torque τ = m×B.",star:true},
+
+/* ═══ UNIT 6: Solids & Semiconductors (30) ═══ */
+{c:5,q:"Free electron theory of metals assumes that conduction electrons are:",o:["Bound to specific atoms","Completely free, moving like a classical ideal gas","Localized in the valence band","Not present in metals"],a:1,ex:"Free electron (Drude) model: conduction electrons move freely like an ideal gas. Explains electrical and thermal conductivity qualitatively but fails for some properties.",star:true},
+{c:5,q:"The Fermi energy EF is defined as the energy of the highest filled state at:",o:["Room temperature","Absolute zero temperature (0 K)","The Fermi temperature","The melting point"],a:1,ex:"Fermi energy EF = energy of highest occupied electron state at absolute zero (0 K). At T=0, all states below EF are filled, all above are empty.",star:true},
+{c:5,q:"Fermi-Dirac distribution function f(E) gives the probability of occupation of state E:",o:["f(E) = 1/(e^(E/kT)+1)","f(E) = 1/(e^((E-EF)/kT)+1)","f(E) = e^(-E/kT)","f(E) = (E-EF)/kT"],a:1,ex:"Fermi-Dirac: f(E) = 1/(e^((E-EF)/kT)+1). At T=0: f=1 for E<EF, f=0 for E>EF. At E=EF: f=0.5 always.",star:true},
+{c:5,q:"Bloch's theorem for electrons in a periodic crystal potential states that the wavefunction is:",o:["A plane wave e^(ik·r)","ψk(r) = uk(r)e^(ik·r) where uk has the crystal periodicity","A constant","An exponential decay"],a:1,ex:"Bloch's theorem: ψk(r) = uk(r)e^(ik·r), where uk(r) has the periodicity of the crystal lattice. Solutions are Bloch waves — plane waves modulated by lattice periodicity.",star:true},
+{c:5,q:"The Kronig-Penney model shows that electron energy in a crystal is:",o:["Continuous for all values","Quantized into discrete levels","Quantized into allowed bands separated by forbidden gaps","Uniform throughout"],a:2,ex:"Kronig-Penney model: periodic square-wave potential → allowed energy bands separated by forbidden energy gaps (band gaps). Basis of semiconductor band theory.",star:true},
+{c:5,q:"Origin of energy band gaps in crystalline solids is due to:",o:["Random thermal motion","Bragg reflection of electron waves at zone boundaries due to periodic lattice potential","Impurities only","Free electron motion"],a:1,ex:"Band gaps arise from Bragg reflection of electron matter waves at Brillouin zone boundaries. Standing waves formed have different energies → energy gap.",star:true},
+{c:5,q:"The Fermi level in a pure (intrinsic) semiconductor at T=0 lies:",o:["In the conduction band","In the valence band","In the middle of the band gap","Below the valence band"],a:2,ex:"In intrinsic semiconductor at 0 K: EF lies exactly in the middle of the band gap (midway between valence band maximum and conduction band minimum).",star:true},
+{c:5,q:"Carrier concentration in intrinsic semiconductor: ni =",o:["n + p","np product","√(np) = √(NcNv)e^(-Eg/2kT)","n - p"],a:2,ex:"Intrinsic carrier concentration: ni = √(NcNv) exp(-Eg/2kT). Increases strongly with temperature and decreases with larger bandgap. ni = n = p for intrinsic semiconductor.",star:true},
+{c:5,q:"In an n-type semiconductor, the majority carriers are:",o:["Holes","Electrons","Both equally","Positive ions"],a:1,ex:"n-type: majority carriers are electrons (from donor impurities). Minority carriers are holes. Donors (e.g., P, As in Si) have 5 valence electrons, provide extra electron.",star:true},
+{c:5,q:"In a p-type semiconductor, the majority carriers are:",o:["Electrons","Holes (from acceptor impurities)","Both equally","None"],a:1,ex:"p-type: majority carriers are holes (from acceptor impurities). Minority carriers are electrons. Acceptors (e.g., B, Al in Si) have 3 valence electrons, create hole.",star:true},
+{c:5,q:"The law of mass action in semiconductors states:",o:["n + p = ni","np = ni²","n - p = ni","np = 2ni²"],a:1,ex:"Law of mass action: np = ni². This holds for both intrinsic and extrinsic semiconductors in thermal equilibrium. If n increases (n-type), p decreases.",star:true},
+{c:5,q:"P-N junction in forward bias:",o:["Potential barrier increases, current flows minimally","Potential barrier decreases, large current flows","No change in barrier","Reverse current flows"],a:1,ex:"Forward bias: external voltage reduces the built-in potential barrier, allowing majority carriers to diffuse across. Exponential increase in current with voltage.",star:true},
+{c:5,q:"The built-in potential V₀ of a P-N junction is:",o:["Zero","V₀ = (kT/e)ln(NaNd/ni²)","V₀ = ni²","V₀ = kT only"],a:1,ex:"Built-in potential: V₀ = (kT/e)ln(NaNd/ni²). Typically 0.6-0.7V for silicon. Created by charge depletion region that forms when P and N regions are joined.",star:true},
+{c:5,q:"Metals have high conductivity because:",o:["No free electrons","Partially filled conduction band with many free electrons at EF","Completely empty conduction band","Large band gap"],a:1,ex:"In metals: conduction band is partially filled (or valence and conduction bands overlap). Many electrons near EF can easily gain energy → high conductivity.",star:true},
+{c:5,q:"Insulators differ from semiconductors by having:",o:["No valence band","Very large band gap (>5 eV) that thermal energy cannot bridge at room temperature","Zero band gap","Higher electron mass"],a:1,ex:"Insulators: Eg > 5 eV (diamond: 5.5 eV, SiO₂: ~9 eV). Thermal energy kT ≈ 0.026 eV at 300K — far too small to excite electrons across. Semiconductors: Eg ~ 1-3 eV.",star:true},
+{c:5,q:"The Hall effect is used to determine:",o:["Band gap only","Carrier concentration, type (n or p), and mobility","Resistivity only","Temperature"],a:1,ex:"Hall effect: perpendicular magnetic field deflects current carriers. Hall voltage VH determines: carrier type (sign of VH), carrier concentration n=IB/qVHt, and mobility μ=σ/ne.",star:true},
+{c:5,q:"Carrier drift velocity is related to electric field E by:",o:["vd = μE","vd = E/μ","vd = E²μ","vd = μ/E"],a:0,ex:"Drift velocity vd = μE, where μ is mobility. Mobility μ = eτ/m (τ = relaxation time). Current density J = nevd = neμE = σE.",star:true},
+{c:5,q:"Diffusion current in a semiconductor is driven by:",o:["Electric field","Carrier concentration gradient","Temperature gradient only","Magnetic field"],a:1,ex:"Diffusion current flows due to concentration gradient. Jn,diff = eDn(dn/dx); Jp,diff = -eDp(dp/dx). Einstein relation: D/μ = kT/e.",star:true},
+{c:5,q:"The Fermi level in an n-type semiconductor moves:",o:["Toward middle of gap","Closer to the conduction band","Into the valence band","Out of the band gap"],a:1,ex:"In n-type semiconductor: EF moves toward the conduction band (since many electrons fill states near bottom of CB). In p-type: EF moves toward valence band.",star:true},
+{c:5,q:"Energy gap of Silicon at room temperature is approximately:",o:["0.67 eV","1.12 eV","2.26 eV","5.5 eV"],a:1,ex:"Silicon bandgap Eg ≈ 1.12 eV at 300K. Germanium: 0.67 eV. GaAs: 1.43 eV. Diamond: 5.5 eV (insulator). Si is most widely used semiconductor.",star:true},
+{c:5,q:"Intrinsic and extrinsic semiconductors: doping concentration in typical extrinsic semiconductor is:",o:["Less than ni","Same as ni","Much greater than ni (overwhelms intrinsic carriers)","Unrelated to ni"],a:2,ex:"Extrinsic: doping ND or NA >> ni. For Si, ni ≈ 1.5×10¹⁰ cm⁻³; typical doping ~ 10¹⁵-10¹⁷ cm⁻³. Doping overwhelms intrinsic carriers.",star:true},
+{c:5,q:"Transport of carriers: the current density J in a semiconductor is:",o:["J = J_drift only","J = J_drift + J_diffusion","J = J_diffusion only","J = nev only"],a:1,ex:"Total current density = drift + diffusion: J = (nμe + pμh)eE + e(Dn∂n/∂x - Dp∂p/∂x). Both mechanisms contribute in semiconductors.",star:true},
+{c:5,q:"The density of states g(E) in 3D free electron model varies as:",o:["g(E) = constant","g(E) ∝ E^(1/2)","g(E) ∝ E^(-1/2)","g(E) ∝ E²"],a:1,ex:"3D density of states: g(E) ∝ √E. Number of states between E and E+dE is proportional to √E. This combined with Fermi-Dirac distribution gives electron distribution.",star:true},
+{c:5,q:"Metals, semiconductors, and insulators are distinguished by:",o:["Atomic mass","Density","Position of Fermi level and size of band gap","Crystal structure only"],a:2,ex:"Key distinction: Metal — EF in band (partially filled). Semiconductor — EF in small gap (Eg ~ 1-3 eV). Insulator — EF in large gap (Eg > 5 eV). Temperature dependence of conductivity also distinguishes them.",star:true},
+{c:5,q:"The effective mass m* of an electron in a band is defined through:",o:["m* = m₀ always","m* = ℏ²/(d²E/dk²)","m* = p/v","m* = ℏk/v"],a:1,ex:"Effective mass m* = ℏ²/(d²E/dk²). Near band minimum, m* > 0. Near band maximum, m* < 0 (holes behave as positive effective mass). Allows treating band electrons as free electrons with m*.",star:true},
+{c:5,q:"Intrinsic semiconductors: at higher temperature, conductivity:",o:["Decreases (like metals)","Increases exponentially (more intrinsic carriers thermally generated)","Remains constant","First increases then decreases"],a:1,ex:"Semiconductor conductivity σ ∝ exp(-Eg/2kT) — increases with T as more electron-hole pairs are generated. Contrast with metals where σ decreases with T (phonon scattering).",star:true},
+{c:5,q:"The P-N junction diode equation (Shockley equation) is:",o:["I = I₀(e^(eV/kT))","I = I₀(e^(eV/kT) - 1)","I = V/R","I = I₀e^(-eV/kT)"],a:1,ex:"Shockley diode equation: I = I₀(e^(eV/kT) - 1). I₀ = reverse saturation current. Forward bias (V>0): exponential current. Reverse bias: I ≈ -I₀ (saturation).",star:true},
+{c:5,q:"Representation of Boolean function: the concept most related to semiconductor logic is:",o:["Analog operation","Binary switching using transistors (0 and 1 logic levels)","Analog amplification only","Linear operation only"],a:1,ex:"Semiconductor transistors operate as switches in digital logic — saturation (ON, ~0V, logic 1) and cutoff (OFF, logic 0). CMOS uses both n-channel and p-channel MOSFETs.",star:true},
+];
+
+/* STATE */
+let activeQuestions=[],currentIndex=0,score=0,skipped=0,userAnswers=[];
+let isAnswered=false,timerInterval=null,timeLeft=30,selectedChapter='all';
+let autoAdvanceTimer=null;
+let studentName='',studentBranch='',studentSem='',studentCollege='';
+const TIMER_SECS=30,AUTO_ADVANCE_DELAY=1500,LETTERS=['A','B','C','D'];
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function getRemark(pct){
+  if(pct>=90)return{emoji:'🏆',title:"Outstanding! You're a genius!",sub:"Exceptional performance! You've mastered Engineering Physics."};
+  if(pct>=75)return{emoji:'🌟',title:"Excellent Work! Almost Perfect!",sub:"Great score! A little more practice and you'll ace the exam."};
+  if(pct>=60)return{emoji:'👍',title:"Good Job! Keep Practicing!",sub:"Solid performance. Review the topics you missed."};
+  if(pct>=40)return{emoji:'📚',title:"Not Bad! Review & Retry",sub:"You're getting there. Focus on units you struggled with."};
+  if(pct>=20)return{emoji:'💪',title:"Keep Going! Practice Makes Perfect",sub:"Don't give up! Review basics and try again."};
+  return{emoji:'🎯',title:"Don't Give Up! Back to Basics",sub:"Start fresh! Review study material and give it another shot."};
+}
+
+document.getElementById('infoNextBtn').addEventListener('click',()=>{
+  const name=document.getElementById('inputName').value.trim();
+  if(!name){showToast('⚠️ Please enter your name to continue');document.getElementById('inputName').focus();return}
+  studentName=name;studentBranch=document.getElementById('inputBranch').value.trim()||'N/A';
+  studentSem=document.getElementById('inputSem').value||'N/A';
+  studentCollege=document.getElementById('inputCollege').value.trim()||'';
+  showScreen('screenIntro');
+});
+
+document.querySelectorAll('.chapter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedChapter=btn.dataset.chapter;});
+});
+
+document.getElementById('startBtn').addEventListener('click',()=>{
+  activeQuestions=selectedChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selectedChapter));
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');renderQuestion();
+});
+
+function renderQuestion(){
+  isAnswered=false;clearAutoAdvance();
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('explanationBox').classList.remove('show');
+  document.getElementById('skipBtn').style.display='';
+  document.getElementById('autoAdvanceBar').classList.remove('show');
+  document.getElementById('autoNextHint').classList.remove('show');
+  document.getElementById('autoAdvanceFill').classList.remove('running');
+  const q=activeQuestions[currentIndex],total=activeQuestions.length;
+  document.getElementById('progressText').textContent=`Question ${currentIndex+1} of ${total}`;
+  document.getElementById('scoreText').textContent=`Score: ${score}`;
+  document.getElementById('progressFill').style.width=((currentIndex/total)*100)+'%';
+  document.getElementById('chapterBadge').textContent=`${CHAPTERS[q.c].icon} ${CHAPTERS[q.c].name}`;
+  document.getElementById('qNum').textContent=`Q${currentIndex+1}`;
+  document.getElementById('qText').textContent=q.q;
+  let starEl=document.querySelector('.q-star');if(starEl)starEl.remove();
+  if(q.star){const sb=document.createElement('div');sb.className='q-star';sb.textContent='★ Important';document.getElementById('qNum').after(sb);}
+  const exEl=document.getElementById('qExample');
+  if(q.hint){exEl.textContent=q.hint;exEl.style.display='';}else{exEl.style.display='none';}
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  q.o.forEach((opt,i)=>{const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${LETTERS[i]}</div><div class="option-text">${opt}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));list.appendChild(li);});
+  startTimer();
+}
+
+function startTimer(){clearInterval(timerInterval);timeLeft=TIMER_SECS;updateTimerDisplay();timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);timeUp();}},1000);}
+function updateTimerDisplay(){const pill=document.getElementById('timerPill');pill.textContent=`⏱ ${timeLeft}s`;pill.className='timer-pill';if(timeLeft<=5)pill.classList.add('critical');else if(timeLeft<=10)pill.classList.add('urgent');}
+function timeUp(){if(isAnswered)return;isAnswered=true;showToast('⏰ Time Up! Correct answer revealed.');lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');}
+
+function selectAnswer(idx){
+  if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);
+  userAnswers[currentIndex]=idx;const q=activeQuestions[currentIndex];
+  lockOptions();const options=document.querySelectorAll('.option');
+  if(idx===q.a){options[idx].classList.add('correct');options[idx].querySelector('.option-radio').textContent='✓';score++;document.getElementById('scoreText').textContent=`Score: ${score}`;showExplanation();document.getElementById('skipBtn').style.display='none';startAutoAdvance();}
+  else{options[idx].classList.add('wrong');options[idx].querySelector('.option-radio').textContent='✕';highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');}
+}
+
+function startAutoAdvance(){
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  fill.classList.remove('running');void fill.offsetWidth;fill.style.animationDuration=AUTO_ADVANCE_DELAY+'ms';
+  bar.classList.add('show');hint.classList.add('show');fill.classList.add('running');
+  autoAdvanceTimer=setTimeout(()=>{bar.classList.remove('show');hint.classList.remove('show');fill.classList.remove('running');goNext();},AUTO_ADVANCE_DELAY);
+}
+function clearAutoAdvance(){if(autoAdvanceTimer){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=null;}
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  if(bar)bar.classList.remove('show');if(hint)hint.classList.remove('show');if(fill)fill.classList.remove('running');}
+function lockOptions(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function highlightCorrect(){const q=activeQuestions[currentIndex];const opts=document.querySelectorAll('.option');opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';}
+function showExplanation(){document.getElementById('explanationText').textContent=activeQuestions[currentIndex].ex;document.getElementById('explanationBox').classList.add('show');}
+
+document.getElementById('skipBtn').addEventListener('click',()=>{if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);userAnswers[currentIndex]=-1;skipped++;lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');showToast('⟫ Skipped — correct answer shown.');});
+document.getElementById('nextBtn').addEventListener('click',()=>{clearAutoAdvance();goNext();});
+function goNext(){currentIndex++;if(currentIndex>=activeQuestions.length)showResult();else renderQuestion();}
+document.getElementById('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Your progress will be lost.')){clearInterval(timerInterval);clearAutoAdvance();showScreen('screenIntro');}});
+
+function showResult(){
+  clearInterval(timerInterval);
+  const total=activeQuestions.length,wrong=total-score-skipped,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  document.getElementById('resultEmoji').textContent=remark.emoji;document.getElementById('scoreBig').textContent=score;document.getElementById('scoreTotal').textContent='/ '+total;
+  document.getElementById('resultPercent').textContent=pct+'%';document.getElementById('remarkText').textContent=remark.title;document.getElementById('remarkSub').textContent=remark.sub;
+  document.getElementById('pillCorrect').textContent=score;document.getElementById('pillWrong').textContent=wrong;document.getElementById('pillSkip').textContent=skipped;
+  document.getElementById('bannerName').textContent=studentName||'Student';
+  const parts=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');document.getElementById('bannerMeta').textContent=parts.join(' · ')||'Engineering Physics Quiz';
+  document.getElementById('certBannerName').textContent=studentName||'Your';document.getElementById('certBannerMeta').textContent='Engineering Physics Quiz · '+pct+'% · StudyHub';
+  let cnt=0;const el=document.getElementById('scoreBig');el.textContent='0';const inc=setInterval(()=>{cnt++;el.textContent=cnt;if(cnt>=score)clearInterval(inc);},Math.max(20,800/(score||1)));
+  showScreen('screenResult');if(pct>=75)launchConfetti();buildReview();
+}
+
+function launchConfetti(){
+  const canvas=document.getElementById('confettiCanvas'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+  const pieces=[],colors=['#0F4C81','#EA580C','#16A34A','#F59E0B','#1E88E5','#EC4899'];
+  for(let i=0;i<80;i++)pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,w:Math.random()*10+5,h:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,rot:Math.random()*360,rSpeed:Math.random()*5-2.5});
+  let frames=0;function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frames/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.rSpeed;});frames++;if(frames<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}draw();
+}
+
+function buildReview(){
+  const list=document.getElementById('reviewList');list.innerHTML='';
+  activeQuestions.forEach((q,i)=>{const ua=userAnswers[i],isCorrect=ua===q.a,isSkip=ua===-1;
+    const div=document.createElement('div');div.className=`review-item ${isCorrect?'ri-correct':isSkip?'ri-skip':'ri-wrong'}`;
+    div.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${isCorrect?'ri-correct-ans':isSkip?'':'ri-wrong-ans'}">${isSkip?'Skipped':q.o[ua]}</span>${!isCorrect?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(div);});
+}
+document.getElementById('reviewToggleBtn').addEventListener('click',()=>{const list=document.getElementById('reviewList'),btn=document.getElementById('reviewToggleBtn');list.classList.toggle('open');btn.textContent=list.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+
+document.getElementById('retryBtn').addEventListener('click',()=>{
+  document.getElementById('reviewList').classList.remove('open');document.getElementById('reviewToggleBtn').textContent='📖 Review Answers';document.getElementById('sharePanel').classList.remove('open');
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);showScreen('screenQuiz');renderQuestion();
+});
+
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCertificate(){
+  const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  const wrongCount=total-score-skipped,dateStr=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const canvas=document.getElementById('certCanvas'),W=960,H=680;canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
+  const bgG=ctx.createLinearGradient(0,0,W,H);bgG.addColorStop(0,'#050E1A');bgG.addColorStop(0.5,'#0A1F3C');bgG.addColorStop(1,'#050E1A');ctx.fillStyle=bgG;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,0.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,0.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(0.05,0.22-r*0.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,0.85)';ctx.lineWidth=3.5;roundRect(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,0.45)';ctx.lineWidth=1.2;roundRect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  function hLine(y){const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(0.3,'rgba(234,88,12,0.9)');g.addColorStop(0.7,'rgba(234,88,12,0.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;}
+  ctx.fillStyle=hLine(58);ctx.fillRect(80,58,W-160,2.5);
+  const sX=W/2,sY=96,sg=ctx.createRadialGradient(sX,sY,0,sX,sY,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sX,sY,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('⚛',sX,sY+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sY+52);ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sY+74);
+  const divG=ctx.createLinearGradient(120,150,W-120,150);divG.addColorStop(0,'transparent');divG.addColorStop(0.3,'rgba(234,88,12,0.7)');divG.addColorStop(0.7,'rgba(234,88,12,0.7)');divG.addColorStop(1,'transparent');ctx.strokeStyle=divG;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('This certifies that',W/2,183);
+  const dName=studentName||'Student';ctx.font=`bold ${dName.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,0.85)';ctx.shadowBlur=22;ctx.fillText(dName,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dName).width,ulx=W/2-nw/2;const ulG=ctx.createLinearGradient(ulx,245,ulx+nw,245);ulG.addColorStop(0,'rgba(30,136,229,0)');ulG.addColorStop(0.5,'rgba(30,136,229,0.8)');ulG.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ulG;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ulx,245);ctx.lineTo(ulx+nw,245);ctx.stroke();
+  const details=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');if(details.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,0.85)';ctx.fillText(details.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  roundRect(ctx,W/2-270,304,540,44,22);const qnG=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qnG.addColorStop(0,'rgba(234,88,12,0.18)');qnG.addColorStop(1,'rgba(15,76,129,0.18)');ctx.fillStyle=qnG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 20px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Engineering Physics Quiz — StudyHub',W/2,332);
+  const dG2=ctx.createLinearGradient(120,370,W-120,370);dG2.addColorStop(0,'transparent');dG2.addColorStop(0.5,'rgba(234,88,12,0.7)');dG2.addColorStop(1,'transparent');ctx.strokeStyle=dG2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sY2=420,rX=190,rR=60,scoreColor=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';ctx.beginPath();ctx.arc(rX,sY2,rR,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fill();ctx.beginPath();ctx.arc(rX,sY2,rR-8,-Math.PI/2,-Math.PI/2+(2*Math.PI*pct/100));ctx.strokeStyle=scoreColor;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=scoreColor;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.fillText(`${score}/${total}`,rX,sY2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('SCORE',rX,sY2+26);ctx.font='bold 14px Arial';ctx.fillStyle=scoreColor;ctx.fillText(pct+'%',rX,sY2+46);
+  const grade=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';roundRect(ctx,rX+80,sY2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=scoreColor;ctx.fillText(grade,rX+125,sY2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('GRADE',rX+125,sY2+30);
+  [{icon:'✅',label:'CORRECT',val:score,color:'#22C55E'},{icon:'❌',label:'WRONG',val:wrongCount,color:'#F87171'},{icon:'⟫',label:'SKIPPED',val:skipped,color:'#FBBF24'},{icon:'📊',label:'ACCURACY',val:pct+'%',color:'#90CAF9'}].forEach((s,i)=>{const col=i%2,row=Math.floor(i/2),sx=440+col*230,sy=sY2-46+row*68;roundRect(ctx,sx,sy,210,56,10);ctx.fillStyle='rgba(255,255,255,0.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.icon,sx+12,sy+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.color;ctx.fillText(String(s.val),sx+42,sy+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(s.label,sx+12,sy+46);});
+  const bY=516;roundRect(ctx,W/2-230,bY-24,460,40,20);const rmG=ctx.createLinearGradient(W/2-230,bY,W/2+230,bY);rmG.addColorStop(0,'rgba(234,88,12,0.15)');rmG.addColorStop(1,'rgba(15,76,129,0.15)');ctx.fillStyle=rmG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${remark.emoji}  ${remark.title}`,W/2,bY+4);
+  const botG=ctx.createLinearGradient(120,548,W-120,548);botG.addColorStop(0,'transparent');botG.addColorStop(0.5,'rgba(234,88,12,0.7)');botG.addColorStop(1,'transparent');ctx.strokeStyle=botG;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${dateStr}`,80,572);if(studentCollege)ctx.fillText(`🏛  ${studentCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  PhysicsSourceCode',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.32)';ctx.fillText('erabhi.in/studyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hLine(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return canvas;
+}
+
+function getQuizURL(){return window.location.href!=='about:blank'?window.location.href:'https://erabhi.in/studyHub/quiz/physicsquiz.html';}
+function buildShareText(){const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct),wrongCount=total-score-skipped;const nameStr=studentName?`👤 ${studentName}\n`:'',metaStr=(studentBranch&&studentBranch!=='N/A')?`📘 ${studentBranch}${studentSem&&studentSem!=='N/A'?' · '+studentSem:''}\n`:'';return `${remark.emoji} Engineering Physics Quiz — StudyHub\n\n${nameStr}${metaStr}🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${wrongCount}  ⟫ Skipped: ${skipped}\n\n📚 Try: ${getQuizURL()}\n\nStudyHub — erabhi.in/studyHub/`;}
+
+document.getElementById('shareBtn').addEventListener('click',()=>{const panel=document.getElementById('sharePanel');panel.classList.toggle('open');if(panel.classList.contains('open'))panel.scrollIntoView({behavior:'smooth',block:'nearest'});});
+document.getElementById('downloadCertBtn').addEventListener('click',()=>{showToast('🎨 Generating certificate…');setTimeout(()=>{try{const canvas=drawCertificate();const link=document.createElement('a');const total=activeQuestions.length,pct=Math.round((score/total)*100);const safeName=(studentName||'Student').replace(/[^a-zA-Z0-9]/g,'_');link.download=`StudyHub_Physics_Certificate_${safeName}_${score}_${total}_${pct}pct.png`;link.href=canvas.toDataURL('image/png');link.click();showToast('✅ Certificate downloaded!');document.getElementById('downloadCertBtn').classList.add('done');}catch(e){showToast('⚠️ Download failed — try another browser');}},200);});
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(getQuizURL()).then(()=>showToast('🔗 Quiz link copied!')).catch(()=>prompt('Copy:',getQuizURL()));});
+document.getElementById('whatsappBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const msg=`${remark.emoji} *Engineering Physics Quiz — StudyHub*\n\n${studentName?'👤 *'+studentName+'*\n':''}🏆 Score: *${score}/${total}* (${pct}%)\n${remark.title}\n\n📚 Try: ${getQuizURL()}`;window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');});
+document.getElementById('twitterBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const tweet=`${remark.emoji} Just scored ${score}/${total} (${pct}%) on the Engineering Physics Quiz on StudyHub!\n\n${remark.title}\n\nTry it 👇\n${getQuizURL()}\n\n#EngineeringPhysics #Physics #StudyHub #BTech`;window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`,'_blank');});
+document.getElementById('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(buildShareText()).then(()=>showToast('📋 Score text copied!')).catch(()=>prompt('Copy:',buildShareText()));});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

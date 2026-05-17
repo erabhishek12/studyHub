@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Management System Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">🗄️</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / MCA / BCA" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">🗄️</span>
+    <div class="intro-title">DBMS Quiz</div>
+    <div class="intro-sub">Database Management System — 200 VVI MCQs covering ER Model, Relational Algebra, SQL, Normalization, Transactions & File Organisation. B.Tech / BCA / MCA Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">200</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Introduction & ER Model</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Relational Model & Algebra</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: SQL</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Normalization</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Transactions & Concurrency</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: File Organisation & Indexing</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 200</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">🗄️ Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">DBMS Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 200</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">DBMS Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+<script>
+const CHAPTERS=[
+  {name:"Introduction & ER Model",           icon:"🗄️"},
+  {name:"Relational Model & Algebra",         icon:"🔗"},
+  {name:"SQL",                                icon:"📋"},
+  {name:"Normalization",                      icon:"📐"},
+  {name:"Transactions & Concurrency",         icon:"🔄"},
+  {name:"File Organisation & Indexing",       icon:"📁"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════════
+   UNIT 1 — Introduction & ER Model (34 Qs)
+══════════════════════════════════════════ */
+{c:0,q:"A Database Management System (DBMS) is:",o:["A programming language","Software that manages a collection of interrelated data and programs to access and manipulate that data","A hardware device","An operating system"],a:1,ex:"DBMS: a software system that enables users to define, create, maintain and control access to a database. Examples: MySQL, Oracle, PostgreSQL, MongoDB, SQL Server.",star:true,hint:"DBMS = Software to manage databases. Examples: MySQL, Oracle, PostgreSQL"},
+{c:0,q:"The main purpose of a DBMS is to provide:",o:["Faster hardware","A way to store and retrieve database information that is both convenient and efficient, with data independence and integrity","Only data storage","Only data retrieval"],a:1,ex:"DBMS purposes: data independence, efficient storage and retrieval, concurrent access, data integrity enforcement, security, backup/recovery, query language support.",star:true},
+{c:0,q:"Data independence in DBMS means:",o:["Data is stored independently on disk","The ability to change the schema at one level without affecting the schema at higher levels — physical & logical independence","Data is independent of users","Each table is independent"],a:1,ex:"Physical data independence: change storage structure without changing logical schema. Logical data independence: change logical schema without changing application programs. Key advantage of DBMS over file systems.",star:true},
+{c:0,q:"The three-schema architecture of a DBMS consists of:",o:["File, Table, Index","External (view level), Conceptual (logical level), and Internal (physical level) schemas","User, Admin, DBA","Input, Process, Output"],a:1,ex:"Three-schema architecture (ANSI/SPARC): External schema (user views), Conceptual schema (logical design, entire DB), Internal schema (physical storage details). Provides data abstraction and independence.",star:true,hint:"External = View level | Conceptual = Logical level | Internal = Physical level"},
+{c:0,q:"A Database Administrator (DBA) is responsible for:",o:["Writing application programs","Managing the database system: schema definition, storage structure, access authorization, backup, tuning","Marketing the database","Programming in Java"],a:1,ex:"DBA responsibilities: define schemas, define storage and access methods, grant user access privileges, monitor performance, backup and recovery, handle security and integrity constraints.",star:true},
+{c:0,q:"An Entity in ER (Entity-Relationship) model is:",o:["A relationship between tables","A real-world object or concept that can be distinctly identified — represented as a rectangle in ER diagram","A column in a table","A SQL keyword"],a:1,ex:"Entity: a thing or object in the real world that is distinguishable from others. Examples: Student, Employee, Product, Order. Represented by rectangles in ER diagrams.",star:true},
+{c:0,q:"An attribute in the ER model is:",o:["A row in a table","A property or characteristic of an entity or relationship — represented by ellipse in ER diagram","A type of relationship","A foreign key"],a:1,ex:"Attribute: describes a property of an entity. Types: simple (atomic), composite (subdivided), single-valued, multi-valued, derived, NULL. E.g., Student has attributes: roll_no, name, age, email.",star:true},
+{c:0,q:"A key attribute in an ER diagram is:",o:["Any attribute","An attribute (or minimal set) that uniquely identifies each entity instance — shown with underline in ER diagram","A foreign key","A derived attribute"],a:1,ex:"Key attribute uniquely identifies each entity in the entity set. Represented with underlined name in ER diagram. Example: Roll_No for Student, Employee_ID for Employee.",star:true},
+{c:0,q:"A composite attribute is an attribute that:",o:["Has a single atomic value","Can be subdivided into smaller subparts with independent meaning — e.g., Name into First, Middle, Last","Is derived from other attributes","Has multiple values for single entity"],a:1,ex:"Composite attribute: has sub-components. Example: Address → Street, City, State, ZIP. Name → FirstName, LastName. Can be stored as individual sub-attributes or as composite in the DB.",star:true},
+{c:0,q:"A multivalued attribute in ER model:",o:["Has one value per entity","Can have multiple values for a single entity — shown with double ellipse. E.g., Phone_Numbers for a person","Is derived","Cannot exist in relational model"],a:1,ex:"Multivalued attribute: an entity can have more than one value. Example: A person may have multiple phone numbers, degrees. Represented by double-oval ellipse. In relational model: needs separate table.",star:true,hint:"Multivalued = double ellipse | Derived = dashed ellipse | Key = underlined"},
+{c:0,q:"A derived attribute in ER model is:",o:["A primary key","An attribute whose value can be derived/computed from other attributes — shown with dashed ellipse","A foreign key","An attribute with multiple values"],a:1,ex:"Derived attribute: computed from other data. Example: Age derived from DateOfBirth; TotalSalary from BaseSalary+Allowances; GPA from individual grades. Not stored permanently — computed when needed.",star:true},
+{c:0,q:"A relationship in ER model represents:",o:["A table column","An association among several entities — represented by diamond shape in ER diagram","A database schema","A SQL query"],a:1,ex:"Relationship: an association between two or more entities. Example: Student ENROLLED_IN Course; Employee WORKS_IN Department. Represented by diamond (rhombus) in ER diagram.",star:true},
+{c:0,q:"The cardinality ratio of a relationship specifies:",o:["Number of entities in the database","The number of entity instances one entity can be associated with via a relationship — 1:1, 1:N, M:N","Number of attributes","Number of tables"],a:1,ex:"Cardinality: 1:1 (one employee manages one dept), 1:N (one dept has many employees), M:N (many students enroll in many courses). Determines whether a foreign key is in one table or a junction table needed.",star:true},
+{c:0,q:"A weak entity type in ER model:",o:["Is the strongest entity","Does not have a key attribute of its own — depends on an owner (identifying) entity for identification; represented by double rectangle","Has multiple primary keys","Has no attributes"],a:1,ex:"Weak entity: cannot be uniquely identified by its own attributes. Depends on identifying (owner) entity. Example: Order_Item depends on Order; Dependent depends on Employee. Has partial key, double rectangle, double diamond relationship.",star:true},
+{c:0,q:"Participation constraint in ER model: total participation means:",o:["Some entities participate in the relationship","Every entity in the entity set must participate in at least one relationship — shown by double line","No entity participates","Only one entity participates"],a:1,ex:"Total participation (existence dependency): every entity instance MUST participate. Shown by double line. Example: every Employee must WORK_FOR a Department (total). Every Department may or may not MANAGE an employee (partial).",star:true},
+{c:0,q:"The ER diagram uses which symbol for a relationship?",o:["Rectangle","Diamond (rhombus)","Ellipse","Double rectangle"],a:1,ex:"ER diagram symbols: Rectangle = Entity, Diamond = Relationship, Ellipse = Attribute, Double rectangle = Weak entity, Double diamond = Identifying relationship, Double ellipse = Multivalued attribute.",star:true},
+{c:0,q:"What is a superkey in a database?",o:["A foreign key","Any set of attributes that uniquely identifies a tuple (row) in a relation","A primary key only","An attribute that is not unique"],a:1,ex:"Superkey: any attribute set that uniquely identifies each tuple. May contain extra attributes. Example: {Roll_No}, {Roll_No, Name}, {Roll_No, Name, Age} are all superkeys if Roll_No alone is unique.",star:true},
+{c:0,q:"A candidate key is:",o:["Any superkey","A minimal superkey — no proper subset is a superkey. A relation can have multiple candidate keys","A foreign key","A composite key always"],a:1,ex:"Candidate key: minimal superkey (remove any attribute and it's no longer a superkey). All candidate keys are superkeys, not vice versa. One candidate key chosen as primary key; others are alternate keys.",star:true},
+{c:0,q:"A primary key is:",o:["Any attribute","A candidate key selected by the DBA to uniquely identify each tuple — cannot be NULL","A foreign key","Any composite attribute"],a:1,ex:"Primary key: chosen candidate key to uniquely identify each row. Constraints: must be unique, cannot be NULL (entity integrity), should be stable. Underlined in relational schema notation.",star:true},
+{c:0,q:"A foreign key in a relational table:",o:["Is always a primary key","Is an attribute (or set) in one relation that refers to the primary key of another relation — enforces referential integrity","Is always NULL","Is a derived attribute"],a:1,ex:"Foreign key: attribute(s) in table R that reference PK of table S. Referential integrity: FK value must match a PK value in S OR be NULL. Example: Student.dept_id references Department.dept_id.",star:true},
+{c:0,q:"What is an E-R diagram (Entity-Relationship diagram)?",o:["A flowchart","A graphical representation of the entities, attributes and relationships in a database — used for conceptual database design","A class diagram","A data flow diagram"],a:1,ex:"ER diagram is a high-level conceptual data model. Used in the design phase before creating actual tables. Shows entities, their attributes, and relationships graphically. Basis for creating relational schema.",star:true},
+{c:0,q:"Extended ER (EER) features include:",o:["Only basic ER features","Specialization, Generalization, Aggregation, and Inheritance — for more expressive modeling","SQL extensions only","B-tree indexes"],a:1,ex:"EER model extends ER with: Specialization (top-down, superclass to subclasses, e.g., Employee→Manager/Engineer), Generalization (bottom-up), Aggregation (relationship as entity), Inheritance (subclass inherits superclass attributes).",star:true},
+{c:0,q:"Specialization in EER model is:",o:["Combining subclasses into superclass","Top-down process: defining subclasses (subtypes) from a superclass based on distinguishing characteristics","Removing entities","Adding new attributes"],a:1,ex:"Specialization: an entity type (superclass) is split into more specific subclasses. Example: Employee specializes into Manager, Engineer, Secretary. Subclasses inherit superclass attributes and may have unique attributes.",star:true},
+{c:0,q:"Generalization in EER model is:",o:["Top-down refinement","Bottom-up process: combining common attributes of multiple entity types into a higher-level (generalized) superclass","Adding foreign keys","Creating indexes"],a:1,ex:"Generalization: multiple entity types (e.g., Car, Truck) share common attributes → generalized to Vehicle superclass. Opposite of specialization. Both result in same EER structure.",star:true},
+{c:0,q:"Aggregation in EER model means:",o:["Summing up values","Treating a relationship (and its entities) as a higher-level entity — allows a relationship to participate in another relationship","Combining tables","Removing weak entities"],a:1,ex:"Aggregation: abstracts a relationship set into a higher-level entity. Example: Employee WORKS_ON Project (relationship) is treated as entity so that Manager can MANAGE this 'work arrangement'.",star:true},
+{c:0,q:"A ternary relationship in ER model involves:",o:["Two entities","Three entity types participating simultaneously in one relationship","One entity with three attributes","Three tables with foreign keys"],a:1,ex:"Ternary relationship: three entity types participate together. Example: Supplier SUPPLIES Part to Project (all three together define a supply event). Cannot always be decomposed into binary relationships without losing information.",star:true},
+{c:0,q:"The difference between a DBMS and a File System is:",o:["No difference","DBMS provides data independence, concurrent access, integrity constraints, security, query language, and recovery; file systems do not","File systems are better for large data","DBMS is only for small data"],a:1,ex:"File system disadvantages: data redundancy, inconsistency, difficult access, integrity problems, atomicity failures, concurrent access issues, security problems. DBMS solves all these through centralized management.",star:true},
+{c:0,q:"Data redundancy in databases refers to:",o:["Having too many users","The same data being stored in multiple places, leading to inconsistency and wasted storage","Too many tables","A type of database error"],a:1,ex:"Data redundancy: data duplicated across multiple locations. Disadvantages: storage waste, update anomalies (update one copy, forget others → inconsistency), insertion anomalies, deletion anomalies. DBMS minimizes through normalization.",star:true},
+{c:0,q:"Which of the following is NOT an advantage of DBMS over file systems?",o:["Data independence","Reduced data redundancy","Higher cost and complexity","Better data integrity"],a:2,ex:"DBMS disadvantages: high initial cost (software, hardware, training), complexity, performance overhead (vs direct file access), needs a DBA. These are trade-offs for the many advantages DBMS provides.",star:true},
+{c:0,q:"The conceptual schema in three-level architecture describes:",o:["Physical storage details","The entire logical structure of the database — all entities, attributes, and relationships for all users","One user's view","Hardware details"],a:1,ex:"Conceptual schema (logical level): describes what data is stored (entities, attributes, relationships, constraints) without details of physical storage. The DBA's view. Basis for external schemas (user views).",star:true},
+{c:0,q:"What is a DDL (Data Definition Language) in DBMS?",o:["Language for querying data","Language for defining/modifying database schema: CREATE, ALTER, DROP, TRUNCATE statements","Language for controlling access","Language for inserting data"],a:1,ex:"DDL commands define the database structure/schema: CREATE TABLE, ALTER TABLE, DROP TABLE, CREATE INDEX, CREATE VIEW. DDL statements processed by DDL compiler that updates data dictionary.",star:true},
+{c:0,q:"What is a DML (Data Manipulation Language) in DBMS?",o:["Language to create tables","Language for manipulating data: SELECT, INSERT, UPDATE, DELETE — used by application programmers and users","Language to define schemas","Language to create indexes"],a:1,ex:"DML: SELECT (retrieve), INSERT (add rows), UPDATE (modify rows), DELETE (remove rows). Procedural DML: user specifies WHAT and HOW. Declarative/non-procedural (SQL): user specifies only WHAT (DBMS decides HOW).",star:true},
+{c:0,q:"An instance of a database is:",o:["A copy of the DBMS software","The actual data stored in the database at a particular moment in time (snapshot)","The schema definition","A database backup"],a:1,ex:"Instance: the actual data content at a specific point in time. Schema: overall design/structure (changes rarely). Instance changes frequently (every INSERT/UPDATE/DELETE). Analogous to class (schema) vs object (instance).",star:true},
+{c:0,q:"What is a data dictionary (system catalog) in DBMS?",o:["A word processing document","A repository storing metadata — descriptions of all data in the database: table names, column names, data types, constraints, indexes, views","A user manual","A backup file"],a:1,ex:"Data dictionary/system catalog: stores metadata (data about data): schema information, user privileges, integrity constraints, statistics for query optimization. Queried by DBMS internally for every operation.",star:true},
+
+/* ═══════════════════════════════════════════════════
+   UNIT 2 — Relational Model & Algebra (34 Qs)
+═══════════════════════════════════════════════════ */
+{c:1,q:"The relational model was proposed by:",o:["Bill Gates","E.F. Codd in 1970 in his paper 'A Relational Model of Data for Large Shared Data Banks'","Charles Babbage","Alan Turing"],a:1,ex:"E.F. Codd (IBM) introduced the relational model in 1970. It is based on mathematical set theory and first-order predicate logic. It provides data independence through a clean tabular representation.",star:true,hint:"E.F. Codd → Relational Model (1970). Codd's 12 rules define a 'fully relational DBMS'"},
+{c:1,q:"In the relational model, a relation is:",o:["A join between two tables","A two-dimensional table with rows (tuples) and columns (attributes); no duplicate rows; each cell contains an atomic value","A foreign key reference","A SQL query result"],a:1,ex:"Relation (table): set of tuples (rows). Schema: relation name + list of attributes with domains. Properties: no duplicate tuples (set), no ordering of tuples, no ordering of attributes, atomic attribute values (1NF).",star:true},
+{c:1,q:"A tuple in the relational model is:",o:["A column in a table","A single row/record in a relation — an ordered set of attribute values","A data type","A constraint"],a:1,ex:"Tuple: one row in a table. n-tuple has n attribute values. A relation of degree n has n attributes; cardinality = number of tuples. Example: (101, 'Alice', 'CS', 3.8) is a tuple in Student relation.",star:true},
+{c:1,q:"The degree of a relation is:",o:["Number of rows","Number of attributes (columns) in the relation","Number of primary keys","Number of foreign keys"],a:1,ex:"Degree (arity) = number of attributes in the relation. Unary (degree 1), Binary (degree 2), Ternary (degree 3), n-ary. Cardinality = number of tuples (rows). These are different concepts.",star:true},
+{c:1,q:"Domain of an attribute is:",o:["A foreign key","The set of atomic values allowed for that attribute — defines the data type and valid value range","A primary key","A derived attribute"],a:1,ex:"Domain: the pool of atomic values an attribute may take. Example: age domain = positive integers 0-150; gender domain = {M, F, Other}; emp_id domain = 6-digit integers. SQL: implemented via data types + CHECK constraints.",star:true},
+{c:1,q:"Entity integrity constraint states:",o:["Foreign keys cannot be NULL","The primary key attribute(s) of a relation cannot be NULL — every tuple must be uniquely identifiable","All attributes must be NOT NULL","Tuples cannot be deleted"],a:1,ex:"Entity integrity: PK ≠ NULL for any tuple. Without PK, we can't uniquely identify a row. SQL: PRIMARY KEY constraint enforces NOT NULL + UNIQUE automatically.",star:true},
+{c:1,q:"Referential integrity constraint states:",o:["Every table must have a primary key","A foreign key value must either match an existing primary key value in the referenced relation or be NULL","All foreign keys must be NOT NULL","No table can reference another"],a:1,ex:"Referential integrity: FK value in referencing table must exist as PK value in referenced table (or be NULL). Prevents 'dangling references'. SQL: FOREIGN KEY constraint with ON DELETE/UPDATE CASCADE/SET NULL options.",star:true},
+{c:1,q:"SELECT operation in Relational Algebra (σ) is used to:",o:["Choose specific columns","Select a subset of tuples (rows) from a relation that satisfy a specified predicate (condition)","Join two relations","Compute the union"],a:1,ex:"SELECT (σ): σ_condition(R). Horizontal operation — filters rows. Example: σ_age>20(Student) returns all students older than 20. Equivalent to SQL WHERE clause. Unary operation.",star:true,hint:"σ = Select rows (horizontal). π = Project columns (vertical). ⋈ = Join"},
+{c:1,q:"PROJECT operation in Relational Algebra (π) is used to:",o:["Filter rows","Select a subset of attributes (columns) from a relation, removing duplicates","Join two relations","Compute the difference"],a:1,ex:"PROJECT (π): π_attr1,attr2(R). Vertical operation — keeps only specified columns, removes duplicate tuples. Example: π_name,dept(Employee). Equivalent to SQL SELECT DISTINCT column_list.",star:true},
+{c:1,q:"The UNION operation in Relational Algebra requires:",o:["No conditions","Both relations to be union-compatible — same degree and compatible attribute domains","Both to have same primary key","Both to have foreign keys"],a:1,ex:"Union (R ∪ S): combines all tuples from R and S, eliminating duplicates. Union compatibility: same number of attributes, compatible domains. Result schema = R's schema. Equivalent to SQL UNION.",star:true},
+{c:1,q:"The SET DIFFERENCE operation (R − S) in Relational Algebra returns:",o:["Tuples in S but not R","Tuples in R that do not appear in S","All tuples from both","Common tuples of R and S"],a:1,ex:"Set difference (R − S): tuples in R but not in S. Union-compatible required. Equivalent to SQL EXCEPT (or MINUS in Oracle). Example: Students who are NOT in the Honors list.",star:true},
+{c:1,q:"The CARTESIAN PRODUCT (R × S) operation:",o:["Joins on matching keys","Combines every tuple of R with every tuple of S — result has degree(R)+degree(S) attributes and |R|×|S| tuples","Removes duplicates","Filters rows based on condition"],a:1,ex:"Cartesian product (×): all possible combinations of tuples from R and S. If R has 3 tuples and S has 4 tuples: result has 12 tuples. Usually followed by SELECT to implement JOIN. Very expensive without filtering.",star:true},
+{c:1,q:"A NATURAL JOIN (⋈) in Relational Algebra:",o:["Joins on all attributes","Joins two relations on all attributes with the same name, keeping only one copy of the common attributes","Never produces a result","Is same as Cartesian product"],a:1,ex:"Natural join: equijoin on all attributes with the same name, with duplicate columns removed. Example: Student ⋈ Enrollment on Student.roll = Enrollment.roll. If no common attributes: = Cartesian product.",star:true},
+{c:1,q:"An EQUIJOIN in Relational Algebra:",o:["Joins on inequality condition","Joins using equality condition on specified attributes — result includes both copies of join attributes","Joins all attributes","Is the same as natural join"],a:1,ex:"Equijoin: join condition uses only = comparisons. Result includes both join attribute columns. Natural join = equijoin on same-named attributes + removes one copy of join columns. Theta join: any comparison operator.",star:true},
+{c:1,q:"A THETA JOIN (⋈_θ) allows:",o:["Only equality joins","Joining on any comparison condition (=, <, >, ≤, ≥, ≠) — most general form of join","Only inequality joins","No conditions"],a:1,ex:"Theta join (⋈_θ): R ⋈_θ S = σ_θ(R × S). θ can use any comparison operator. Equijoin is special case of theta join. Natural join is special case of equijoin.",star:true},
+{c:1,q:"OUTER JOIN in Relational Algebra:",o:["Discards unmatched tuples","Preserves tuples with no matching counterpart by padding with NULLs — LEFT, RIGHT, FULL OUTER JOIN variants","Is same as inner join","Is same as natural join"],a:1,ex:"Outer join: preserves unmatched tuples. Left outer join: keeps all of left relation. Right outer: keeps all of right. Full outer: keeps all from both. NULLs fill missing attribute values.",star:true},
+{c:1,q:"The DIVISION operation (R ÷ S) in Relational Algebra is used for:",o:["All arithmetic divisions","Queries with 'for ALL' semantics — finds tuples in R that are associated with ALL tuples in S","Only mathematical calculations","Grouping tuples"],a:1,ex:"Division (÷): R ÷ S returns tuples t from R such that for every tuple s in S, tuple (t,s) exists in R. Example: Students who have enrolled in ALL courses (division of Enrollment by Courses).",star:true},
+{c:1,q:"Relational Algebra is a:",o:["Declarative query language","Procedural query language — specifies both WHAT data to retrieve and HOW (sequence of operations)","Natural language interface","Graphical query tool"],a:1,ex:"Relational Algebra is procedural: queries are expressed as a sequence of operations (select, project, join, etc.). Provides a formal foundation. SQL is declarative (non-procedural): specifies WHAT, not HOW.",star:true},
+{c:1,q:"Relational Calculus is a:",o:["Procedural language","Non-procedural (declarative) query language — specifies WHAT data to retrieve without specifying HOW","Type of join operation","Physical storage method"],a:1,ex:"Relational Calculus: declarative. Tuple relational calculus (TRC): {t | P(t)} — describes properties of result tuples. Domain relational calculus (DRC): uses domain variables. Basis for SQL. Codd showed RA and RC are equivalent in expressive power.",star:true},
+{c:1,q:"The RENAME operation (ρ) in Relational Algebra:",o:["Deletes a relation","Assigns a new name to a relation or its attributes — used to avoid name conflicts especially in self-joins","Creates a new table","Copies a relation"],a:1,ex:"Rename (ρ): ρ_S(A1,A2,...)(R) renames relation R to S with attributes A1,A2,... Useful in self-joins (join a table with itself), binary operations requiring union compatibility.",star:true},
+{c:1,q:"What is a view in a relational database?",o:["A physical table copy","A virtual table defined by a query — the view's content is derived dynamically from base tables whenever the view is accessed","A type of index","A stored procedure"],a:1,ex:"View: virtual table based on SELECT query. Not physically stored (except materialized views). Provides: data independence, security (hide sensitive columns/rows), simplify complex queries. UPDATE through views has restrictions.",star:true},
+{c:1,q:"Which of the following operations is NOT a basic operation in Relational Algebra?",o:["Selection (σ)","Projection (π)","Natural Join (⋈)","Union (∪)"],a:2,ex:"The five basic RA operations are: σ (select), π (project), ∪ (union), − (difference), × (Cartesian product). All others (join, intersection, division) can be derived from these five. Natural join is derived (not basic).",star:true},
+{c:1,q:"The intersection operation (R ∩ S) in Relational Algebra returns:",o:["All tuples from both R and S","Only tuples that appear in both R and S — requires union compatibility","Tuples in R but not S","All possible combinations"],a:1,ex:"Intersection: tuples in BOTH R and S. Can be derived: R ∩ S = R − (R − S). Union-compatible required. Equivalent to SQL INTERSECT.",star:true},
+{c:1,q:"An aggregate function in Relational Algebra (extended RA):",o:["Joins two relations","Computes summary values over a set of tuples: COUNT, SUM, AVG, MAX, MIN","Projects specific columns","Filters rows by condition"],a:1,ex:"Aggregate functions (extended RA): G_F(R) where F is an aggregate function. Example: ℊ_dept; SUM(salary)(Employee) = sum of salaries grouped by department. Equivalent to SQL GROUP BY with aggregate functions.",star:true},
+{c:1,q:"Which relational algebra expression is equivalent to SQL: SELECT name FROM Student WHERE age > 18?",o:["σ_age>18(Student)","π_name(σ_age>18(Student))","π_name(Student)","σ_name(Student)"],a:1,ex:"SQL: SELECT name FROM Student WHERE age > 18. RA: First filter rows (σ_age>18), then project column (π_name). Combined: π_name(σ_age>18(Student)). Apply innermost operation first.",star:true},
+{c:1,q:"In relational model, the term 'schema' refers to:",o:["Actual data in the table","The logical design of the database — the structure/definition of relations, attributes, and constraints","A specific SQL query","A stored procedure"],a:1,ex:"Schema: metadata — the description/structure of the database. Relation schema R(A1,A2,...,An) specifies relation name and attributes. Instance = actual current data. Schema changes rarely; instance changes frequently.",star:true},
+{c:1,q:"What is the difference between UNION and UNION ALL in SQL (and RA)?",o:["No difference","UNION removes duplicate rows from the combined result; UNION ALL retains all duplicates — UNION ALL is faster","UNION ALL removes duplicates","UNION includes more rows"],a:1,ex:"UNION: removes duplicates (sorts or hashes to find duplicates → slower). UNION ALL: keeps all rows including duplicates (faster, no deduplication). Use UNION ALL when duplicates are acceptable or don't exist.",star:true},
+{c:1,q:"A self-join in relational algebra is:",o:["Joining a table with itself using RENAME to create two separate references — used for hierarchical data","Joining a table with its foreign key table","A special type of outer join","Joining all tables in a database"],a:0,ex:"Self-join: relation joined with itself. Requires RENAME (ρ) to create two aliases. Example: find employees and their managers — Employee ⋈ ρ_Mgr(Employee) on Employee.mgrID = Mgr.empID.",star:true},
+{c:1,q:"Null values in relational databases represent:",o:["Zero value","Unknown, missing, or inapplicable values — special three-valued logic (TRUE/FALSE/UNKNOWN) needed","Empty string","Invalid data"],a:1,ex:"NULL: represents unknown or inapplicable. Three-valued logic: NULL = NULL is UNKNOWN (not TRUE). NULL in aggregates: usually ignored. NULL comparisons: always return UNKNOWN (use IS NULL / IS NOT NULL).",star:true},
+{c:1,q:"What is a schema diagram (relation schema diagram)?",o:["An ER diagram","A diagrammatic notation showing relations (tables), their attributes, primary keys (underlined), and foreign key references (arrows between tables)","A flowchart","A physical storage diagram"],a:1,ex:"Schema diagram: shows relation schemas with primary key attributes underlined, and FK relationships shown as arrows pointing to referenced PK. Used for database documentation and design verification.",star:true},
+{c:1,q:"Which of the following best describes the relational model's advantage over network and hierarchical models?",o:["It is slower","Data independence — changes to physical storage don't affect application programs; simple table structure; powerful non-procedural query language (SQL)","It stores less data","It requires more storage"],a:1,ex:"Relational model advantages over older models: physical/logical data independence, simple tabular structure, set-based operations, powerful query language (SQL), solid mathematical foundation, easier ad-hoc queries.",star:true},
+
+/* ══════════════════════════════
+   UNIT 3 — SQL (34 Qs)
+══════════════════════════════ */
+{c:2,q:"SQL stands for:",o:["Structured Query Language","Simple Query Language","System Query Language","Structured Question Language"],a:0,ex:"SQL = Structured Query Language. Standard language for relational DBMS. Includes DDL (CREATE, ALTER, DROP), DML (SELECT, INSERT, UPDATE, DELETE), DCL (GRANT, REVOKE), TCL (COMMIT, ROLLBACK).",star:true,hint:"SQL = Structured Query Language — standard for all RDBMS"},
+{c:2,q:"Which SQL statement is used to retrieve data from a database?",o:["INSERT","UPDATE","SELECT","CREATE"],a:2,ex:"SELECT is used to query data. Basic syntax: SELECT column_list FROM table_name WHERE condition ORDER BY column GROUP BY column HAVING condition. Most important and complex SQL command.",star:true},
+{c:2,q:"The SQL clause used to filter rows based on a condition is:",o:["GROUP BY","HAVING","WHERE","ORDER BY"],a:2,ex:"WHERE: filters rows BEFORE grouping. Example: SELECT * FROM Employee WHERE salary > 50000. HAVING: filters AFTER grouping (with GROUP BY). ORDER BY: sorts result. GROUP BY: groups rows for aggregation.",star:true,hint:"WHERE filters rows. HAVING filters groups (after GROUP BY)"},
+{c:2,q:"Which SQL aggregate function counts the number of rows?",o:["SUM()","AVG()","COUNT()","MAX()"],a:2,ex:"COUNT(*): counts all rows including NULLs. COUNT(column): counts non-NULL values in column. SUM(): total. AVG(): average. MAX(): maximum. MIN(): minimum. Used with GROUP BY for per-group statistics.",star:true},
+{c:2,q:"The SQL GROUP BY clause is used to:",o:["Sort results","Filter individual rows","Group rows with the same values in specified columns for aggregate calculations","Join multiple tables"],a:2,ex:"GROUP BY: groups rows sharing specified column values → aggregate functions applied per group. Example: SELECT dept, AVG(salary) FROM Employee GROUP BY dept — average salary per department.",star:true},
+{c:2,q:"The HAVING clause in SQL is used to:",o:["Filter individual rows (like WHERE)","Filter groups after GROUP BY — specify condition on aggregate results","Join tables","Order results"],a:1,ex:"HAVING: filter based on aggregate functions. Example: SELECT dept, COUNT(*) FROM Employee GROUP BY dept HAVING COUNT(*) > 5 — only departments with more than 5 employees. WHERE cannot use aggregate functions.",star:true},
+{c:2,q:"What does SELECT DISTINCT do in SQL?",o:["Selects all rows including duplicates","Removes duplicate rows from the result set — only unique rows returned","Selects only NULL values","Selects only primary keys"],a:1,ex:"SELECT DISTINCT eliminates duplicate rows. Example: SELECT DISTINCT dept FROM Employee — returns each department name only once. Equivalent to π (project) in relational algebra which eliminates duplicates.",star:true},
+{c:2,q:"SQL ORDER BY clause is used to:",o:["Filter rows","Group rows","Sort the result set in ascending (ASC, default) or descending (DESC) order","Count rows"],a:2,ex:"ORDER BY: sorts query result. Example: SELECT * FROM Student ORDER BY marks DESC — highest marks first. Can sort by multiple columns: ORDER BY dept ASC, salary DESC.",star:true},
+{c:2,q:"The SQL JOIN that returns all rows when there is a match in both tables is:",o:["LEFT JOIN","RIGHT JOIN","FULL OUTER JOIN","INNER JOIN (JOIN)"],a:3,ex:"INNER JOIN: returns only rows with matching values in both tables. LEFT JOIN: all rows from left + matching from right (NULLs for no match). RIGHT JOIN: opposite. FULL OUTER: all rows from both tables.",star:true},
+{c:2,q:"A LEFT OUTER JOIN in SQL returns:",o:["Only matching rows","All rows from left table and matching rows from right — NULL for non-matching right rows","All rows from right table","All rows from both tables only if they match"],a:1,ex:"LEFT JOIN (LEFT OUTER JOIN): SELECT * FROM A LEFT JOIN B ON A.id = B.id — returns ALL rows from A, with B's columns filled by NULLs when no matching row in B exists.",star:true},
+{c:2,q:"The SQL subquery (nested query) is:",o:["A stored procedure","A SELECT statement embedded within another SQL statement (SELECT/INSERT/UPDATE/DELETE) used as part of the query logic","A type of join","A view definition"],a:1,ex:"Subquery: query within a query. Can appear in SELECT, FROM (derived table), WHERE, HAVING. Correlated subquery: references outer query columns (re-evaluated for each outer row). Non-correlated: independent.",star:true},
+{c:2,q:"The SQL EXISTS operator checks:",o:["If a table exists","If a subquery returns any rows — returns TRUE if subquery result is non-empty","If a column has no NULLs","If a value matches any in a list"],a:1,ex:"EXISTS: SELECT * FROM Customer WHERE EXISTS (SELECT 1 FROM Orders WHERE Orders.cid = Customer.id) — finds customers who have placed at least one order. NOT EXISTS: for customers with no orders.",star:true},
+{c:2,q:"The SQL IN operator is used to:",o:["Check if value is between a range","Check if a value matches any value in a list or subquery result","Join tables","Create indexes"],a:1,ex:"IN: WHERE dept IN ('CS', 'ECE', 'ME') — matches any value in list. WHERE salary IN (SELECT salary FROM Manager) — matches any value in subquery. NOT IN: does not match any value.",star:true},
+{c:2,q:"What does SQL NULL represent and how is it tested?",o:["Zero value; tested with = NULL","Unknown/missing value; tested with IS NULL or IS NOT NULL (never = NULL)","Empty string; tested with = ''","False; tested with = FALSE"],a:1,ex:"NULL: unknown value. NULL = NULL evaluates to UNKNOWN (not TRUE). Must use IS NULL or IS NOT NULL. NULL in arithmetic: result is NULL. NULL in aggregates: usually ignored. Beware of NULL in joins and WHERE.",star:true},
+{c:2,q:"The SQL CREATE TABLE statement is an example of:",o:["DML (Data Manipulation Language)","DDL (Data Definition Language)","DCL (Data Control Language)","TCL (Transaction Control Language)"],a:1,ex:"CREATE TABLE is DDL. DDL commands: CREATE TABLE/VIEW/INDEX/DATABASE, ALTER TABLE, DROP TABLE/VIEW, TRUNCATE TABLE. DML: SELECT, INSERT, UPDATE, DELETE. DCL: GRANT, REVOKE. TCL: COMMIT, ROLLBACK, SAVEPOINT.",star:true},
+{c:2,q:"The SQL LIKE operator is used for:",o:["Exact string matching","Pattern matching using wildcards: % (any sequence of characters) and _ (any single character)","Numeric comparisons","Joining tables"],a:1,ex:"LIKE: WHERE name LIKE 'A%' — names starting with A. WHERE name LIKE '_oh_' — 4-char names with oh in middle. LIKE is case-insensitive in some DBMS. NOT LIKE: excludes pattern.",star:true},
+{c:2,q:"What is the difference between DROP TABLE and TRUNCATE TABLE in SQL?",o:["No difference","DROP TABLE removes the table structure AND all data permanently; TRUNCATE TABLE removes all rows but keeps the table structure","TRUNCATE removes the table structure","DROP removes only selected rows"],a:1,ex:"DROP TABLE: removes table completely (structure + data + indexes). TRUNCATE TABLE: removes all rows (faster than DELETE, no logging per row), keeps structure. DELETE: removes rows with WHERE condition, logged per row.",star:true},
+{c:2,q:"The SQL FOREIGN KEY constraint is used to:",o:["Uniquely identify each row","Enforce referential integrity — ensure a value in one table corresponds to an existing value in another table's primary key","Create an index","Speed up queries"],a:1,ex:"FOREIGN KEY: FOREIGN KEY (dept_id) REFERENCES Department(dept_id). Options: ON DELETE CASCADE (delete child rows), ON DELETE SET NULL, ON DELETE RESTRICT. Maintains referential integrity.",star:true},
+{c:2,q:"What does the SQL CHECK constraint do?",o:["Checks if table exists","Enforces a domain constraint — ensures column values satisfy a specified condition","Creates an index","Checks query syntax"],a:1,ex:"CHECK: limits values in a column. Example: CHECK (age >= 18 AND age <= 65), CHECK (salary > 0), CHECK (gender IN ('M', 'F', 'O')). Can be table-level (involving multiple columns): CHECK (start_date < end_date).",star:true},
+{c:2,q:"The SQL UNIQUE constraint ensures:",o:["Column cannot be NULL","All values in the specified column(s) are unique across all rows — unlike PRIMARY KEY, can have one NULL","Column is a foreign key","Column values are sorted"],a:1,ex:"UNIQUE: no two rows have same value in that column. UNIQUE allows NULL (can have multiple NULLs in some DBMS). PRIMARY KEY = UNIQUE + NOT NULL. Example: UNIQUE (email) ensures no duplicate email addresses.",star:true},
+{c:2,q:"What is a SQL view and how is it different from a table?",o:["A view is exactly like a table","A view is a virtual table based on a stored SELECT query — no data stored separately; queried like a table but content derived dynamically","A view stores data permanently","A view is faster than a table always"],a:1,ex:"View: CREATE VIEW v AS SELECT ... View is virtual — queried against base tables. Advantages: security (show only certain columns/rows), simplify complex queries, logical data independence. Materialized view: stores result physically.",star:true},
+{c:2,q:"Which SQL statement adds new rows to a table?",o:["UPDATE","SELECT","INSERT INTO ... VALUES (...)","ALTER TABLE"],a:2,ex:"INSERT: INSERT INTO Student(roll, name, age) VALUES (101, 'Alice', 20). INSERT multiple rows: INSERT INTO t VALUES (1,'a'),(2,'b'). INSERT FROM SELECT: INSERT INTO t SELECT ... FROM s WHERE ...",star:true},
+{c:2,q:"The SQL UPDATE statement modifies:",o:["Table structure","Existing rows in a table based on a condition — without WHERE clause, ALL rows are updated","Only primary keys","Only NULL values"],a:1,ex:"UPDATE: UPDATE Employee SET salary = salary * 1.10 WHERE dept = 'CS' — 10% raise for CS employees. Without WHERE: UPDATE Employee SET bonus = 500 — ALL employees get bonus. Be careful!",star:true},
+{c:2,q:"What does SQL DELETE do?",o:["Drops the table","Removes rows from a table that satisfy a condition — without WHERE, removes ALL rows (logged, can rollback)","Removes a column","Removes the database"],a:1,ex:"DELETE: DELETE FROM Student WHERE roll = 101 — removes that student. DELETE FROM Student — removes ALL rows but keeps table structure (logged). vs TRUNCATE: TRUNCATE is faster, not individually logged.",star:true},
+{c:2,q:"The SQL BETWEEN operator checks:",o:["If value equals given value","If a value falls within a range (inclusive): WHERE age BETWEEN 20 AND 30 ≡ WHERE age >= 20 AND age <= 30","If value is in a list","If value matches a pattern"],a:1,ex:"BETWEEN: inclusive on both ends. WHERE salary BETWEEN 30000 AND 60000. Works for numeric, date, string. NOT BETWEEN: outside the range. Example: WHERE order_date BETWEEN '2024-01-01' AND '2024-12-31'.",star:true},
+{c:2,q:"What is a correlated subquery?",o:["A subquery that never executes","A subquery that references columns from the outer query — re-evaluated once for every row processed by the outer query","A subquery with no WHERE clause","A subquery that joins two tables"],a:1,ex:"Correlated subquery: SELECT e.name FROM Employee e WHERE e.salary > (SELECT AVG(salary) FROM Employee WHERE dept = e.dept) — for each employee, compare their salary to their dept average. Re-executed per outer row.",star:true},
+{c:2,q:"SQL GRANT and REVOKE are part of:",o:["DDL","DML","DCL (Data Control Language) — GRANT gives privileges; REVOKE removes them","TCL"],a:2,ex:"DCL: GRANT SELECT, INSERT ON Student TO 'user1'@'localhost'. REVOKE INSERT ON Student FROM 'user1'. Privileges: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALL PRIVILEGES. WITH GRANT OPTION allows privilege to be passed.",star:true},
+{c:2,q:"What is a stored procedure in SQL?",o:["A type of table","A precompiled named block of SQL statements stored in the database — can accept parameters, be called by applications, reduce network traffic","A type of view","A database backup"],a:1,ex:"Stored procedure: CREATE PROCEDURE proc_name(params) BEGIN SQL statements END. Benefits: precompiled (faster), reduced network traffic, reusable logic, security (EXECUTE privilege). Can have IN, OUT, INOUT parameters.",star:true},
+{c:2,q:"A trigger in SQL is:",o:["A scheduled backup","An automatic action (procedure) executed in response to specified DML events (INSERT, UPDATE, DELETE) on a table","A type of index","A foreign key action"],a:1,ex:"Trigger: CREATE TRIGGER t BEFORE/AFTER INSERT/UPDATE/DELETE ON table FOR EACH ROW BEGIN action END. Uses: enforce business rules, automatic logging/auditing, maintain derived values, cascading operations.",star:true},
+{c:2,q:"What does the SQL COMMIT statement do?",o:["Rolls back changes","Permanently saves all changes made in the current transaction to the database","Creates a savepoint","Closes the database connection"],a:1,ex:"COMMIT: permanently saves all changes of the current transaction. After COMMIT, changes are visible to other transactions. Part of TCL (Transaction Control Language). Implicit commit in auto-commit mode (DDL statements).",star:true},
+{c:2,q:"What does the SQL ROLLBACK statement do?",o:["Saves current changes","Undoes all changes made in the current transaction — restores database to state before transaction began (or to savepoint)","Deletes the database","Creates a backup"],a:1,ex:"ROLLBACK: undoes all uncommitted changes in current transaction. ROLLBACK TO SAVEPOINT sp_name: partial rollback to savepoint. Essential for error recovery and maintaining ACID properties.",star:true},
+{c:2,q:"What is SQL CASE expression used for?",o:["To create a table","To implement conditional logic within a SELECT statement — if-then-else within SQL","To join tables","To delete rows conditionally"],a:1,ex:"CASE: SELECT name, CASE WHEN salary > 50000 THEN 'Senior' WHEN salary > 30000 THEN 'Mid' ELSE 'Junior' END AS level FROM Employee. Simple and searched CASE. Used in SELECT, ORDER BY, WHERE, UPDATE SET.",star:true},
+{c:2,q:"What is the purpose of SQL indexes?",o:["Store extra data","Speed up data retrieval operations on database tables by providing quick lookup paths — trade-off: faster SELECT, slower INSERT/UPDATE/DELETE","Create new tables","Enforce constraints"],a:1,ex:"Index: data structure (B-tree, hash) built on column(s) to speed up SELECT queries. CREATE INDEX idx ON Employee(dept). Trade-off: faster lookups but extra storage and slower DML. Primary key and unique constraints create indexes automatically.",star:true},
+
+/* ══════════════════════════════
+   UNIT 4 — Normalization (34 Qs)
+══════════════════════════════ */
+{c:3,q:"Normalization in DBMS is the process of:",o:["Increasing data redundancy","Organizing a relational database to reduce data redundancy and improve data integrity by applying normal forms","Speeding up queries","Creating indexes"],a:1,ex:"Normalization: decompose relations to eliminate redundancy and update anomalies using functional dependencies. Goals: eliminate insertion, deletion, update anomalies while preserving data and dependencies.",star:true,hint:"1NF: atomic values | 2NF: no partial FD | 3NF: no transitive FD | BCNF: every determinant is a CK"},
+{c:3,q:"Functional Dependency (FD) X → Y means:",o:["Y causes X","For every tuple, if two tuples have the same X value, they must have the same Y value — X determines Y","X and Y are independent","X is a foreign key to Y"],a:1,ex:"FD X→Y: X functionally determines Y. Example: RollNo → Name (same roll number always has same name). FDs come from semantics/business rules, not just current data. Used to define normal forms.",star:true},
+{c:3,q:"A relation is in 1NF (First Normal Form) if:",o:["It has no functional dependencies","All attributes contain only atomic (indivisible) values — no multi-valued or composite attributes in cells, each row is unique","It has no partial dependencies","It has a primary key"],a:1,ex:"1NF: all attribute values are atomic (single-valued, not lists or sets). No repeating groups. Every table in a relational DBMS is (should be) in 1NF. Example violation: storing multiple phone numbers in one cell.",star:true},
+{c:3,q:"A relation is in 2NF (Second Normal Form) if:",o:["It is in 1NF only","It is in 1NF AND every non-key attribute is fully functionally dependent on the WHOLE primary key (no partial dependencies) — applies when PK is composite","It has no transitive dependencies","It is in BCNF"],a:1,ex:"2NF: in 1NF + no partial dependency (non-key attribute depends on part of composite PK). If PK is a single attribute, relation is automatically in 2NF. Example violation: OrderID+ProductID → CustomerName (partial: CustomerName depends only on OrderID).",star:true},
+{c:3,q:"A partial dependency occurs when:",o:["A non-key attribute depends on the full primary key","A non-key attribute depends on only PART of a composite primary key — violates 2NF","A non-key attribute depends on another non-key attribute","Two tables have a foreign key relationship"],a:1,ex:"Partial FD: in R(A,B,C,D) with PK=(A,B), if C depends only on A (not on B), C→A is partial. Causes: update anomalies, redundancy. Fix: decompose into R1(A,C) and R2(A,B,D).",star:true},
+{c:3,q:"A relation is in 3NF (Third Normal Form) if:",o:["It is in 2NF only","It is in 2NF AND there are no transitive dependencies — every non-key attribute is directly dependent on the primary key","It has no functional dependencies","BCNF is always equivalent to 3NF"],a:1,ex:"3NF: in 2NF + no transitive FD (A → B → C, where A is PK and B is non-key → 3NF violation). Example: EmpID → DeptID → DeptName (transitive). Fix: separate Department(DeptID, DeptName).",star:true},
+{c:3,q:"A transitive dependency occurs when:",o:["A non-key attribute partially depends on PK","A non-key attribute depends on another non-key attribute rather than directly on the primary key — chain: PK → X → Y","The primary key is composite","A foreign key is NULL"],a:1,ex:"Transitive FD: PK → A → B. Example: StudentID → ZipCode → City (ZipCode is non-key, City depends on ZipCode not StudentID directly). Remove by decomposing: ZipCode(ZipCode, City) and Student(StudentID, ..., ZipCode).",star:true},
+{c:3,q:"BCNF (Boyce-Codd Normal Form) is a stricter version of 3NF where:",o:["No primary key allowed","For every non-trivial functional dependency X → Y, X must be a superkey (candidate key) — eliminates ALL anomalies caused by FDs","All attributes must be non-null","Every column must be unique"],a:1,ex:"BCNF: every determinant is a superkey. 3NF allows X→Y if Y is part of a candidate key (prime attribute). BCNF removes this exception. Every BCNF relation is in 3NF, but not vice versa.",star:true,hint:"BCNF: for every FD X→Y, X must be a superkey. Stronger than 3NF."},
+{c:3,q:"The difference between 3NF and BCNF is:",o:["No difference","3NF allows FD X→Y where Y is a prime attribute (part of candidate key) even if X is not a superkey; BCNF does not allow this exception","BCNF is weaker than 3NF","3NF is always achievable; BCNF is not always achievable with lossless + dependency preservation"],a:3,ex:"3NF allows: X→Y where Y is prime, even if X is not superkey. BCNF: no such exception — X must always be superkey. BCNF decomposition always lossless but may not preserve all FDs. 3NF decomposition preserves both.",star:true},
+{c:3,q:"A lossless join decomposition means:",o:["Data is lost during decomposition","Joining the decomposed relations produces exactly the original relation — no spurious tuples added","Some attributes are removed","Joins produce fewer rows"],a:1,ex:"Lossless join: R decomposed into R1 and R2 such that R1 ⋈ R2 = R (no spurious tuples). Test: at least one of (R1∩R2→R1-R2 or R1∩R2→R2-R1) must be in F+. Essential requirement for all decompositions.",star:true},
+{c:3,q:"Dependency preservation in normalization means:",o:["All FDs are removed","All original functional dependencies can be checked in the decomposed relations without performing joins","All attributes are preserved","Foreign keys are maintained"],a:1,ex:"Dependency preservation: every FD in F can be checked using only one of the decomposed relations (no join needed). Important for efficient integrity enforcement. BCNF may sacrifice this; 3NF synthesis algorithm always achieves both.",star:true},
+{c:3,q:"Armstrong's Axioms are used to:",o:["Create indexes","Derive all functional dependencies (closure F+) from a given set F — Reflexivity, Augmentation, Transitivity are the three axioms","Normalize tables","Design ER diagrams"],a:1,ex:"Armstrong's Axioms: Reflexivity (Y⊆X → X→Y), Augmentation (X→Y → XZ→YZ), Transitivity (X→Y, Y→Z → X→Z). Sound and complete — generate exactly F+. Secondary rules: Union, Decomposition, Pseudotransitivity derived from these.",star:true},
+{c:3,q:"The closure of a set of attributes X (X⁺) under a set of FDs F means:",o:["The number of tables after decomposition","The set of all attributes that can be functionally determined by X using FDs in F","The primary key of a relation","The set of all FDs in F"],a:1,ex:"Attribute closure X⁺: start with X, repeatedly apply FDs (if X→Y in F and Y not in X⁺, add Y). X⁺ = all attributes determinable from X. Use: test if X is a superkey (X⁺ = all attributes), find candidate keys, compute F+.",star:true},
+{c:3,q:"The 4NF (Fourth Normal Form) addresses:",o:["Partial dependencies","Multi-valued dependencies (MVDs) — if A ↠ B and A ↠ C, then B and C are independent — 4NF eliminates non-trivial MVDs not implied by a superkey","Transitive dependencies","Join dependencies"],a:1,ex:"4NF: relation in BCNF + no non-trivial multivalued dependencies. MVD A↠B: for each value of A, the set of B-values is independent of other attributes. Example: Employee ↠ Skills and Employee ↠ Languages — should be separate tables.",star:true},
+{c:3,q:"The 5NF (Fifth Normal Form / Project-Join Normal Form) deals with:",o:["Multi-valued dependencies","Join dependencies — a relation is in 5NF if every join dependency is implied by the candidate keys","Transitive dependencies","Partial dependencies"],a:1,ex:"5NF (PJNF): relation cannot be decomposed without loss into projections. Deals with cases where a relation is not a join of any of its proper projections. Rarely encountered in practice.",star:true},
+{c:3,q:"An anomaly in database context refers to:",o:["A query error","A problem occurring during INSERT, UPDATE, or DELETE operations due to data redundancy","A syntax error in SQL","A network failure"],a:1,ex:"Update anomalies: Insertion anomaly (can't insert data without additional unrelated data), Deletion anomaly (deleting one fact accidentally deletes another), Update anomaly (must update multiple rows for one logical change). Normalization eliminates these.",star:true},
+{c:3,q:"Which normal form does a relation violate if it has partial functional dependencies?",o:["1NF","2NF","3NF","BCNF"],a:1,ex:"Partial dependency → violates 2NF. A relation is in 2NF if it's in 1NF and has no partial FDs. Partial FD: non-prime attribute depends on a proper subset of a composite candidate key.",star:true},
+{c:3,q:"Which normal form does a relation violate if it has transitive functional dependencies?",o:["1NF","2NF","3NF","BCNF"],a:2,ex:"Transitive dependency (PK→A→B) → violates 3NF. 3NF requires: in 2NF + for every FD X→Y, either X is a superkey or Y is a prime attribute.",star:true},
+{c:3,q:"Denormalization is the process of:",o:["Applying more normal forms","Intentionally introducing redundancy (merging tables) to improve read query performance — trade-off: more redundancy but faster reads","Removing all tables","Deleting unused indexes"],a:1,ex:"Denormalization: reverse of normalization. Used in data warehouses and OLAP where read performance is critical. Fewer joins needed. Trade-off: redundancy, potential anomalies, larger storage. Common in analytical databases.",star:true},
+{c:3,q:"A candidate key must be:",o:["The longest attribute set","Minimal: no proper subset is also a key (minimal superkey)","Composite always","Equal to the primary key only"],a:1,ex:"Candidate key: minimal superkey. Properties: uniqueness (no two tuples same CK value), minimality (removing any attribute loses uniqueness). A relation can have multiple CKs. One CK chosen as PK.",star:true},
+{c:3,q:"The concept of 'prime attribute' in normalization means:",o:["The most important attribute","An attribute that is part of at least one candidate key","The first attribute in a table","An attribute with no NULLs"],a:1,ex:"Prime attribute: member of some candidate key. Non-prime (non-key) attribute: not part of any CK. 3NF FD rule involves prime attributes: FD X→Y allowed in 3NF if X is superkey OR Y is prime.",star:true},
+{c:3,q:"Minimal cover (canonical cover) of a set of FDs F is:",o:["The largest possible FD set","An equivalent, simplified FD set with no redundant FDs, no extraneous attributes on left or right sides — Fc where F ≡ Fc","The closure of F","The FDs used for indexing"],a:1,ex:"Minimal cover Fc: equivalent to F but with single-attribute RHS, no extraneous LHS attributes, no redundant FDs. Algorithm: decompose RHS, eliminate extraneous LHS, eliminate redundant FDs. Used in 3NF synthesis algorithm.",star:true},
+{c:3,q:"The 3NF synthesis algorithm produces a decomposition that is:",o:["Only lossless","Only dependency preserving","Both lossless and dependency preserving — and in 3NF","Only in BCNF"],a:2,ex:"3NF synthesis: find minimal cover, create one relation per FD, add a relation with a candidate key if none covers all attributes. Result: always 3NF, lossless, and dependency preserving (unlike BCNF).",star:true},
+{c:3,q:"Relation R(A,B,C,D) with FDs: AB→C, C→D, D→A. Is it in BCNF?",o:["Yes, it is in BCNF","No — C→D violates BCNF if C is not a superkey; need to find candidate keys first","Yes, all FDs are fine","Cannot determine without data"],a:1,ex:"Candidate keys: AB (AB→C→D→A, and AB→C, so AB+ = {A,B,C,D}). C is not a superkey (C+ = {C,D,A} ≠ all). C→D violates BCNF (C is not superkey). D→A also violates BCNF.",star:true},
+{c:3,q:"Update anomaly occurs when:",o:["A new record cannot be inserted","Updating a fact requires changing multiple rows, and if some are missed the database becomes inconsistent","A record cannot be deleted","A query returns wrong results"],a:1,ex:"Update anomaly: if 'Manager_Name' is stored in every employee row for a dept, changing manager requires updating ALL those rows. Missing one update → inconsistency. Normalization: store manager only once in Department table.",star:true},
+{c:3,q:"In the context of FDs, a trivial functional dependency is:",o:["One that is always violated","One that is always satisfied: X→Y where Y ⊆ X (Y is a subset of X) — doesn't convey new information","One that involves NULL","One that connects two tables"],a:1,ex:"Trivial FD: X→Y where Y is a subset of X. Always holds, no useful constraint. Example: {A,B} → A is trivial. Non-trivial FD: Y ⊄ X — conveys a real constraint about the data.",star:true},
+{c:3,q:"Which is the highest/most restrictive normal form that is practically useful?",o:["1NF","3NF","BCNF — strong normal form addressing all FD-based anomalies, achievable for most real schemas","5NF"],a:2,ex:"BCNF is the most practically applied strict NF. Eliminates all FD-based anomalies. 3NF is widely used due to guaranteed lossless + dependency preserving decomposition. 4NF/5NF for special cases (MVDs, JDs).",star:true},
+{c:3,q:"FD augmentation rule (Armstrong's axiom) states:",o:["X→Y implies Z→Y","X→Y implies XZ→YZ (can add same attributes to both sides)","X→Y and Y→Z implies X→Z","X→X always holds"],a:1,ex:"Augmentation: if X→Y, then XZ→YZ for any Z. Adding the same attributes to both sides preserves the FD. Formally: if X→Y ∈ F+, then XZ→YZ ∈ F+ for any attribute set Z.",star:true},
+{c:3,q:"A relation with no repeating groups and atomic values is in:",o:["2NF","3NF","1NF (First Normal Form)","BCNF"],a:2,ex:"1NF: all attribute values are atomic (not lists, not nested tables), no repeating groups. This is the minimum requirement for a valid relational table. Every properly designed relational table should be in 1NF.",star:true},
+
+/* ═══════════════════════════════════════════════
+   UNIT 5 — Transactions & Concurrency (34 Qs)
+═══════════════════════════════════════════════ */
+{c:4,q:"A transaction in DBMS is:",o:["A SQL query","A unit of work that is either completely executed (committed) or completely undone (rolled back) — must satisfy ACID properties","A type of join","A stored procedure"],a:1,ex:"Transaction: logical unit of work consisting of one or more database operations. Must maintain database consistency. Example: bank transfer — debit one account + credit another — must be atomic (both or neither).",star:true,hint:"ACID: Atomicity, Consistency, Isolation, Durability"},
+{c:4,q:"ACID properties of transactions stand for:",o:["Accuracy, Consistency, Integrity, Durability","Atomicity, Consistency, Isolation, Durability","Atomicity, Completeness, Integrity, Data","Accuracy, Concurrency, Isolation, Data"],a:1,ex:"ACID: Atomicity (all-or-nothing), Consistency (DB moves from one consistent state to another), Isolation (concurrent transactions appear serial), Durability (committed changes persist despite failures).",star:true},
+{c:4,q:"Atomicity in ACID means:",o:["Transactions execute fast","A transaction is treated as an indivisible unit — either ALL operations succeed and commit, or ALL are undone (rolled back)","Each transaction is independent","Transactions are small"],a:1,ex:"Atomicity: no partial transactions. If a transaction fails midway, all changes are undone. Implemented by: undo logs (UNDO), shadow paging. If system crashes after debit but before credit → rollback debit.",star:true},
+{c:4,q:"Consistency in ACID means:",o:["All queries return same results","A transaction takes the database from one consistent state to another consistent state — integrity constraints satisfied before and after","Transactions are fast","Data is not lost"],a:1,ex:"Consistency: transaction must move DB from one valid state to another. All defined integrity constraints, rules, and cascades must be satisfied. If any constraint violated → transaction must be rolled back.",star:true},
+{c:4,q:"Isolation in ACID means:",o:["Transactions cannot access same data","Concurrent transactions execute as if they were serial — intermediate states of a transaction are not visible to other concurrent transactions","Data is isolated on disk","Transactions run on separate servers"],a:1,ex:"Isolation: concurrently executing transactions don't interfere. Each transaction sees a consistent snapshot. Implemented via concurrency control (locking, MVCC). Full isolation = serializable schedule.",star:true},
+{c:4,q:"Durability in ACID means:",o:["Data is backed up daily","Once a transaction commits, its changes are permanently saved even if system crashes immediately after commit","Transactions are fast","Data is stored on multiple servers"],a:1,ex:"Durability: committed data survives failures (crashes, power loss). Implemented via write-ahead logging (WAL) / redo logs — committed changes written to stable storage before acknowledging commit.",star:true},
+{c:4,q:"A schedule in transaction processing is:",o:["A timetable for transactions","An ordered sequence of operations (read/write) from multiple concurrent transactions — determines if executions are consistent","A type of index","A stored procedure"],a:1,ex:"Schedule: sequence of R(X)/W(X)/COMMIT/ABORT operations from multiple transactions. Serial schedule: all operations of one transaction complete before another starts. Serializable: equivalent to some serial schedule.",star:true},
+{c:4,q:"A serial schedule is one where:",o:["Transactions run in parallel","Transactions execute one at a time — all operations of T1 complete before T2 starts — always consistent but poor performance","Transactions are sorted by size","Only read operations are allowed"],a:1,ex:"Serial schedule: T1 then T2 (or T2 then T1). Always correct (no interference) but poor resource utilization and throughput. Goal of concurrency control: allow concurrent schedules that are equivalent to some serial schedule.",star:true},
+{c:4,q:"A serializable schedule is one that:",o:["Executes transactions serially","Produces the same result as some serial schedule of the same transactions — considered correct for concurrent execution","Has no conflicts","Never commits transactions"],a:1,ex:"Serializability: a concurrent schedule is correct if equivalent to a serial schedule. Two types: conflict serializable (based on conflicting operations order) and view serializable. Conflict serializable ⊂ view serializable.",star:true},
+{c:4,q:"Two operations conflict in a schedule if they:",o:["Are from different transactions only","Belong to different transactions, access the same data item, and at least one is a WRITE operation","Are both read operations","Are both write operations on different items"],a:1,ex:"Conflicting operations: from different transactions, access same data item X, at least one is write. Conflict pairs: Read-Write (RW), Write-Read (WR), Write-Write (WW). Same transaction operations never conflict.",star:true},
+{c:4,q:"Conflict serializability is tested using:",o:["Two-phase locking","A precedence graph (serialization graph) — if the graph has no cycle, the schedule is conflict serializable","Timestamps","Checkpoints"],a:1,ex:"Precedence graph: node per transaction, edge Ti→Tj if operation of Ti conflicts with operation of Tj and Ti's operation comes first. No cycle → conflict serializable. Cycle → not conflict serializable.",star:true},
+{c:4,q:"The two-phase locking (2PL) protocol ensures:",o:["Deadlock prevention only","Conflict serializability — transactions have a growing phase (acquire locks, no releases) and shrinking phase (release locks, no acquires)","Faster transactions only","No need for rollback"],a:1,ex:"2PL: growing phase (only acquire locks), shrinking phase (only release). Once a transaction releases any lock, it cannot acquire new ones. Ensures serializability. Variants: strict 2PL (hold all locks until commit — prevents cascading rollback).",star:true},
+{c:4,q:"A deadlock in DBMS occurs when:",o:["A transaction runs for too long","Two or more transactions are each waiting for the other to release a lock — circular wait, no transaction can proceed","Too many transactions run simultaneously","A transaction is rolled back"],a:1,ex:"Deadlock: T1 holds lock on A, waits for B; T2 holds lock on B, waits for A → circular wait. Detection: wait-for graph (cycle = deadlock). Prevention: wound-wait, wait-die schemes, timeouts. Resolution: abort one transaction (victim).",star:true},
+{c:4,q:"Deadlock prevention strategies include:",o:["Allowing all locks","Wait-die scheme (non-preemptive: old waits, young dies) and Wound-wait scheme (preemptive: old wounds young, young waits) — use timestamps to prevent circular wait","Ignoring deadlocks","Using more locks"],a:1,ex:"Wait-die: older transaction waits for younger; younger is aborted (dies). Wound-wait: older transaction preempts younger (wound = force rollback); younger waits for older. Both assign priority by timestamp to break cycles.",star:true},
+{c:4,q:"A dirty read problem occurs when:",o:["A transaction reads its own data","Transaction T2 reads data written by T1 that has not yet committed — if T1 rolls back, T2 has read invalid (dirty) data","Two transactions read same data","A transaction reads old data"],a:1,ex:"Dirty read: T1 writes X, T2 reads X (before T1 commits), T1 rolls back → T2 used garbage value. Prevented by READ COMMITTED isolation level (only read committed data). Allowed in READ UNCOMMITTED level.",star:true},
+{c:4,q:"A non-repeatable read problem occurs when:",o:["A transaction cannot read data","Transaction T1 reads X, T2 updates and commits X, T1 reads X again and gets different value — same read returns different results within same transaction","Transaction reads dirty data","Two transactions conflict"],a:1,ex:"Non-repeatable read: T1 reads X = 10, T2 updates X = 20 and commits, T1 reads X again = 20 (different!). Prevented by REPEATABLE READ isolation level. Allowed in READ COMMITTED.",star:true},
+{c:4,q:"A phantom read problem occurs when:",o:["A transaction reads NULL values","Transaction T1 reads rows satisfying condition, T2 inserts new rows matching the condition and commits, T1 repeats the query and sees new 'phantom' rows","A transaction reads stale data","A transaction reads dirty data"],a:1,ex:"Phantom read: T1 selects students with grade>90 (gets 5 rows), T2 inserts new student with grade=95 and commits, T1 repeats select and gets 6 rows (new phantom row). Prevented by SERIALIZABLE isolation level.",star:true},
+{c:4,q:"SQL isolation levels from lowest to highest are:",o:["SERIALIZABLE → REPEATABLE READ → READ COMMITTED → READ UNCOMMITTED","READ UNCOMMITTED → READ COMMITTED → REPEATABLE READ → SERIALIZABLE","READ COMMITTED → READ UNCOMMITTED → REPEATABLE READ → SERIALIZABLE","All levels are equivalent"],a:1,ex:"ISO SQL isolation levels: READ UNCOMMITTED (allows dirty reads), READ COMMITTED (prevents dirty reads), REPEATABLE READ (prevents non-repeatable reads), SERIALIZABLE (prevents all anomalies including phantoms). Higher level = more consistent, less concurrent.",star:true},
+{c:4,q:"MVCC (Multi-Version Concurrency Control) works by:",o:["Using locks for all operations","Keeping multiple versions of data — readers read a consistent snapshot without blocking writers, and writers don't block readers","Using only timestamps","Preventing all concurrent access"],a:1,ex:"MVCC: each transaction sees a snapshot of committed data from when it started. Writers create new versions; old versions kept for readers. Used in PostgreSQL, Oracle, MySQL InnoDB. Readers never block writers and vice versa.",star:true},
+{c:4,q:"A lock in DBMS concurrency control is:",o:["A physical lock on database files","A mechanism to control concurrent access to data — shared lock (S/read lock) allows multiple readers; exclusive lock (X/write lock) for single writer","A type of index","A SQL constraint"],a:1,ex:"Shared lock (S): multiple transactions can hold S lock on same item simultaneously (read-only). Exclusive lock (X): only one transaction can hold X lock, no other S or X locks allowed simultaneously. Compatibility matrix: SS=OK, SX=wait, XS=wait, XX=wait.",star:true},
+{c:4,q:"Timestamp-based concurrency control works by:",o:["Using locks","Assigning each transaction a unique timestamp at start; operations that would violate timestamp order are rejected (transaction rolled back)","Using version numbers","Using a central coordinator"],a:1,ex:"Timestamp ordering: TS(Ti) = start time. Read rule: W_TS(X) ≤ TS(Ti) to read X. Write rule: R_TS(X) ≤ TS(Ti) and W_TS(X) ≤ TS(Ti) to write X. Violation → abort Ti, restart with new timestamp.",star:true},
+{c:4,q:"A checkpoint in database recovery is used to:",o:["Create a full backup","Mark a point in the log where all active transactions have been written to disk — reduces work needed during recovery after a crash","Stop all transactions","Create a savepoint for one transaction"],a:1,ex:"Checkpoint: periodically, DBMS flushes all dirty buffers to disk and writes checkpoint record to log. On recovery: only need to redo/undo transactions active at or after last checkpoint, not entire log.",star:true},
+{c:4,q:"The ARIES recovery algorithm uses:",o:["Shadow paging","Write-Ahead Logging (WAL) with three phases: Analysis (find active transactions at crash), Redo (repeat history), Undo (rollback incomplete transactions)","Checksum-based recovery","File copying"],a:1,ex:"ARIES (Algorithm for Recovery and Isolation Exploiting Semantics): WAL protocol, steal/no-force policy. Recovery: Analysis pass (find winner/loser transactions), Redo pass (repeat all history from earliest log record needed), Undo pass (rollback losers using CLRs).",star:true},
+{c:4,q:"Write-Ahead Logging (WAL) protocol requires:",o:["Writing data to disk before logging","Writing the log record BEFORE the corresponding data page is written to disk — ensures undo/redo is possible after a crash","Logging after commit only","No logging required"],a:1,ex:"WAL: before any data page is written to disk, its log record must be on stable storage. Ensures: if crash occurs, log has enough info to redo committed changes and undo uncommitted changes.",star:true},
+{c:4,q:"Cascading rollback occurs when:",o:["Multiple databases are deleted","An uncommitted transaction's rolled-back data had been read by other transactions, which must also be rolled back — can cascade to many transactions","A join fails","An index is dropped"],a:1,ex:"Cascading rollback: T1 writes X, T2 reads X (dirty read), T1 aborts → T2 must also abort → T3 (read T2's data) must abort. Prevented by strict 2PL (no dirty reads) and READ COMMITTED isolation.",star:true},
+{c:4,q:"A recoverability property of a schedule means:",o:["Schedule can be backed up","If T2 reads data written by T1, T1 must commit before T2 commits — ensures correct recovery is possible after failures","Schedule runs faster","Transactions never fail"],a:1,ex:"Recoverable schedule: T2 reads X written by T1 → T1 must commit before T2 commits. Non-recoverable: T2 commits before T1 → if T1 aborts, T2 has committed with dirty data, impossible to undo T2.",star:true},
+{c:4,q:"Optimistic concurrency control (OCC) is based on the assumption that:",o:["All transactions will conflict","Conflicts are rare — transactions execute freely, then validate before commit; if conflict detected during validation, transaction is restarted","Locks are always needed","All transactions must be serial"],a:1,ex:"OCC: three phases — Read (execute, track reads/writes in local workspace), Validation (check for conflicts with committed transactions), Write (apply changes if validation passes). Better for low-contention workloads, avoids locking overhead.",star:true},
+{c:4,q:"The lost update problem in concurrency occurs when:",o:["A transaction is rolled back","Two transactions read the same value, both update it, and one update is lost because the second write overwrites the first without considering it","A transaction reads dirty data","A deadlock occurs"],a:1,ex:"Lost update: T1 reads X=10, T2 reads X=10, T1 writes X=15, T2 writes X=12 (based on old value 10) — T1's update is lost. Prevented by exclusive locking or proper isolation level.",star:true},
+
+/* ═══════════════════════════════════════════════════
+   UNIT 6 — File Organisation & Indexing (30 Qs)
+═══════════════════════════════════════════════════ */
+{c:5,q:"File organization in DBMS refers to:",o:["How files are named","How data records are physically arranged and stored in secondary storage — affects access time, insertion, deletion performance","How SQL queries are written","How indexes are created"],a:1,ex:"File organization determines physical layout of records on disk. Common types: heap (unordered), sequential (ordered by search key), hash, clustered. Choice affects I/O cost for queries and updates.",star:true},
+{c:5,q:"A heap file organization stores records:",o:["Sorted by primary key","In no particular order — records appended wherever space is available","Using a hash function","In a B-tree structure"],a:1,ex:"Heap file: records inserted in any available space (usually at end). Simple, fast insertion. Search requires full scan O(n). Deletion leaves gaps (need periodic reorganization). Good for bulk loading and full table scans.",star:true},
+{c:5,q:"Sequential file organization stores records:",o:["In random order","Sorted on a search key (ordering key) — allows binary search; fast for range queries on ordering key; updates are expensive","Using a hash function","Using linked lists only"],a:1,ex:"Sequential file: records sorted by search key. Binary search: O(log n). Efficient range queries. Insertions: must maintain order → costly (overflow blocks or file reorganization periodically). Used for master files.",star:true},
+{c:5,q:"A dense index in database indexing contains:",o:["One index entry per block","An index entry for every search key value in the data file — allows direct lookup of every record","Only primary key entries","Only unique key entries"],a:1,ex:"Dense index: one index entry per data record. Entry: (search-key value, pointer to record). Allows direct lookup. More storage than sparse index. Secondary indexes are always dense.",star:true,hint:"Dense index: entry for every record. Sparse index: entry for every block only."},
+{c:5,q:"A sparse index contains:",o:["An entry for every record","An index entry only for some of the search key values — typically one entry per block (for the first record in each block)","Only unique keys","Only primary keys"],a:1,ex:"Sparse index: one entry per disk block (pointing to first record in block). Less storage than dense. Requires sequential scan within block. Only works for ordered files (sequential organization). Primary indexes are often sparse.",star:true},
+{c:5,q:"A primary index (clustering index) is built on:",o:["Any non-key attribute","The ordering key field of a sequentially ordered file — index entry per block pointing to first record in each block","A secondary attribute","A composite key always"],a:1,ex:"Primary index: built on physical ordering key of data file. Usually sparse — one entry per block. Search: binary search on index + small sequential scan. Data file is ordered by this key.",star:true},
+{c:5,q:"A secondary index is built on:",o:["The primary key only","A non-ordering field — data file may not be physically sorted on this field; secondary index is always dense","An ordering field","Always a composite key"],a:1,ex:"Secondary index: built on non-ordering field. Always dense (one entry per record since data not ordered by this key). May have duplicate keys (use bucket of pointers). Example: index on Employee.dept_name when file ordered by emp_id.",star:true},
+{c:5,q:"A B-tree index has the property that:",o:["Only leaf nodes store data pointers","All paths from root to leaf have the same length (balanced tree) — provides O(log n) search, insert, delete for any order operations","Data is stored only in non-leaf nodes","It is always a binary tree"],a:1,ex:"B-tree: balanced tree with order m. Each node has at most m children. All leaves at same depth. Internal nodes guide search. Provides O(log n) operations. Generalizes binary search tree for disk storage.",star:true},
+{c:5,q:"A B+ tree index differs from a B-tree in that:",o:["B+ tree is slower","In B+ tree, all data records/pointers are only in leaf nodes; internal nodes contain only search keys for routing; leaf nodes linked in a linked list for efficient range queries","B+ tree has no leaf nodes","B-tree is always better"],a:1,ex:"B+ tree: internal nodes = only keys (routing). Leaf nodes = all key-pointer pairs, linked in sorted order. Advantages: range queries very efficient (traverse linked list), higher fanout (more keys per internal node, shallower tree). Most widely used index structure.",star:true,hint:"B+ tree: data pointers ONLY in leaf nodes. Leaves linked list → efficient range scan"},
+{c:5,q:"The order (m) of a B+ tree means:",o:["Number of records","Each internal node has at most m pointers (children) and at most m-1 keys; minimum ⌈m/2⌉ pointers (except root)","Number of levels","Number of indexes"],a:1,ex:"B+ tree order m: internal node has 2 to m children (except root: 2 to m). ⌈m/2⌉ to m children (at least half full). Leaf node: ⌈(m-1)/2⌉ to m-1 key-pointer pairs. Root: 1 to m-1 keys.",star:true},
+{c:5,q:"Hash-based file organization uses:",o:["Sorted order","A hash function to compute the bucket/block address for a record based on search key value — O(1) average lookup for equality queries","B-tree structure","Sequential order"],a:1,ex:"Hash file: h(key) → bucket number → disk block. O(1) average for equality search. Poor for range queries (can't hash range). Overflow chains for hash collisions. Static hashing: fixed number of buckets. Dynamic hashing (extendible): grows as needed.",star:true},
+{c:5,q:"In static hashing, overflow occurs when:",o:["Too many indexes exist","A bucket is full and a new record hashes to it — resolved by overflow chains (linked overflow blocks); can degrade performance","The B-tree becomes unbalanced","All records are deleted"],a:1,ex:"Static hash overflow: bucket full → allocate overflow block, chain to bucket. Many overflows → long chains → linear scan within chain → performance degrades. Solution: periodic reorganization or dynamic hashing.",star:true},
+{c:5,q:"Extendible hashing is a dynamic hashing technique that:",o:["Uses a fixed hash table","Doubles the number of buckets when overflow occurs — uses a directory that can grow; splits only the overflowed bucket, not all buckets","Reorganizes entire file","Uses B+ trees instead"],a:1,ex:"Extendible hashing: directory of pointers to buckets. Global depth (d): directory has 2^d entries. Local depth (d'): bits of hash value bucket uses. On overflow: split bucket, increase local depth (double directory if needed).",star:true},
+{c:5,q:"Linear hashing is:",o:["Same as extendible hashing","A dynamic hashing scheme that splits buckets in a linear (round-robin) order, not necessarily the overflowing bucket — gradual expansion without directory","Uses linear search","Requires sorted order"],a:1,ex:"Linear hashing: maintains split pointer that progresses through buckets linearly. Splits occur in order regardless of which bucket overflows. No directory needed. Simpler than extendible hashing but may have more overflow temporarily.",star:true},
+{c:5,q:"A clustered index (or clustering index) means:",o:["Index is very large","The data file is physically ordered on the index search key — records on disk are stored in the order of the index key","Index stores data in RAM","Secondary index type"],a:1,ex:"Clustered index: index order = physical disk order. Only one clustered index per table (since data can only be physically sorted one way). SQL Server: PRIMARY KEY creates clustered index by default. Excellent for range queries.",star:true},
+{c:5,q:"An unclustered (non-clustered) secondary index means:",o:["Index is unused","The physical order of records on disk is different from the index order — pointer in index must chase to actual record location","Index has no pointers","Data is stored in the index"],a:1,ex:"Unclustered index: index and data have different orders. Each index entry has pointer to actual record. Range query: may access many different disk blocks (worst case: one I/O per record). Better than no index for equality search.",star:true},
+{c:5,q:"RAID (Redundant Array of Independent Disks) is used in DBMS environments to:",o:["Speed up CPU","Provide improved performance and/or fault tolerance through multiple disk drives working together","Replace memory","Compress data"],a:1,ex:"RAID levels: RAID 0 (striping, performance, no redundancy), RAID 1 (mirroring, full redundancy), RAID 5 (striping + parity, balanced), RAID 6 (double parity). Used for high availability and I/O performance in database servers.",star:true},
+{c:5,q:"A composite index (multi-attribute index) is an index on:",o:["Multiple tables","Multiple columns together — efficient for queries that filter on all indexed columns or on leading columns of the index","Multiple databases","Derived attributes only"],a:1,ex:"Composite index (A,B): efficient for queries on (A,B), or just A (leading column). Not efficient for queries on B alone. Example: index on (last_name, first_name) helps: WHERE last_name='Smith' AND first_name='John' or just WHERE last_name='Smith'.",star:true},
+{c:5,q:"Query processing in DBMS involves:",o:["Only parsing SQL","Parsing, translation to RA, optimization (choosing lowest cost plan), execution — the query optimizer is crucial for performance","Only executing SQL","Only creating indexes"],a:1,ex:"Query processing steps: 1) Parse and validate SQL, 2) Translate to relational algebra, 3) Optimize (enumerate plans, estimate costs using statistics, choose cheapest), 4) Execute chosen plan. Query optimizer can make 1000x performance difference.",star:true},
+{c:5,q:"Query optimization in DBMS chooses:",o:["The first execution plan found","The execution plan with the lowest estimated cost (I/O + CPU) among all equivalent plans — uses statistics about table sizes, distributions","The plan using the most indexes","The plan with fewest joins"],a:1,ex:"Query optimizer: cost-based (estimates disk I/O, CPU costs using statistics stored in catalog) or rule-based (heuristics: push selections down, push projections down, join smaller tables first). Cost-based is standard in modern DBMS.",star:true},
+{c:5,q:"What is a data warehouse?",o:["A regular operational database","A large repository of integrated historical data from multiple sources, optimized for analytical queries (OLAP), not transactions (OLTP)","A type of index","A backup system"],a:1,ex:"Data warehouse: subject-oriented, integrated, time-variant, non-volatile data collection for decision support. Uses star/snowflake schema. ETL (Extract, Transform, Load) from OLTP databases. OLAP queries analyze trends over time.",star:true},
+{c:5,q:"OLTP (Online Transaction Processing) vs OLAP (Online Analytical Processing):",o:["Both are the same","OLTP: many short transactions, current data, normalized DB, high concurrency. OLAP: complex analytical queries over large historical data, aggregations, denormalized/star schema","OLAP is faster always","OLTP handles all analytical queries"],a:1,ex:"OLTP: day-to-day operations (orders, payments) — thousands of transactions/second, small data per transaction, normalized 3NF. OLAP: business intelligence/analytics — few complex queries, aggregates, large data scans, denormalized star schema.",star:true},
+{c:5,q:"A star schema in data warehousing consists of:",o:["All normalized tables","A central fact table containing measurable facts (sales, revenue) surrounded by dimension tables (product, customer, time, location)","Only one table","A circular arrangement of tables"],a:1,ex:"Star schema: Fact table (large, metrics, FK references) + Dimension tables (small, descriptive attributes). Example: Sales fact table with dimensions: Product, Customer, Date, Store. Simple joins, good OLAP performance.",star:true},
+{c:5,q:"NoSQL databases differ from relational DBMS in that:",o:["They are older technology","They sacrifice strict ACID and relational structure for horizontal scalability and flexibility — types: document, key-value, column-family, graph stores","They only store numbers","They have no query language"],a:1,ex:"NoSQL: BASE model (Basically Available, Soft state, Eventually consistent) vs ACID. Types: document (MongoDB), key-value (Redis), column-family (Cassandra), graph (Neo4j). Good for big data, unstructured data, horizontal scaling.",star:true},
+{c:5,q:"CAP theorem in distributed databases states:",o:["Consistency, Availability, Performance cannot all be maximized","A distributed system can guarantee at most 2 of 3: Consistency, Availability, Partition tolerance — must choose trade-off","All three can always be achieved","CAP applies only to SQL databases"],a:1,ex:"CAP theorem (Brewer 2000): Consistency (all nodes see same data), Availability (every request gets a response), Partition tolerance (system works despite network failures). CA (traditional RDBMS), CP (MongoDB, HBase), AP (Cassandra, CouchDB).",star:true},
+{c:5,q:"An index scan vs a full table scan in DBMS:",o:["Full scan is always faster","Index scan uses the index to find relevant rows quickly (faster for selective queries); full table scan reads every row (faster when most rows are needed or table is small)","Index scan is always faster","Both are always identical in performance"],a:1,ex:"Query optimizer chooses: index scan if selectivity is high (few rows returned, index is selective). Full table scan if selectivity is low (most rows returned), table is small (fits in few blocks), or no useful index. Index has overhead cost.",star:true},
+];
+
+/* ──── ENGINE ──── */
+let sN='',sB='',sS='',sC='';
+let aQ=[],qi=0,sc=0,sk=0,uA=[];
+let tInt=null,tL=30,ans=false,adT=null;
+const TS=30,AD=1500;
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sN=$('inputName').value.trim();
+  if(!sN){toast('⚠️ Please enter your name.');$('inputName').focus();return;}
+  sB=$('inputBranch').value.trim()||'N/A';sS=$('inputSem').value||'N/A';sC=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+let selC='all';
+$('chapterGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.chapter-btn');if(!b)return;
+  document.querySelectorAll('.chapter-btn').forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');selC=b.dataset.chapter;
+});
+
+$('startBtn').addEventListener('click',()=>{
+  aQ=selC==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===+selC);
+  for(let i=aQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[aQ[i],aQ[j]]=[aQ[j],aQ[i]];}
+  qi=0;sc=0;sk=0;uA=new Array(aQ.length).fill(-1);
+  showScreen('screenQuiz');render();
+});
+
+function startTimer(){
+  clearInterval(tInt);tL=TS;
+  const p=$('timerPill');p.className='timer-pill';p.textContent='⏳ '+tL+'s';
+  tInt=setInterval(()=>{
+    tL--;p.textContent='⏳ '+tL+'s';
+    if(tL<=10&&tL>5)p.className='timer-pill urgent';
+    if(tL<=5)p.className='timer-pill critical';
+    if(tL<=0){clearInterval(tInt);if(!ans){ans=true;uA[qi]=-1;sk++;lockO();showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⏰ Time up!');}}
+  },1000);
+}
+
+function render(){
+  ans=false;clearAd();clearInterval(tInt);
+  const q=aQ[qi],tot=aQ.length;
+  $('progressText').textContent=`Question ${qi+1} of ${tot}`;
+  $('scoreText').textContent=`Score: ${sc}`;
+  $('progressFill').style.width=`${(qi/tot)*100}%`;
+  $('qNum').textContent=`Q${qi+1}`;
+  const os=$('qStar');if(os)os.remove();
+  if(q.star){const s=document.createElement('div');s.id='qStar';s.className='q-star';s.textContent='⭐ VVI';$('qNum').insertAdjacentElement('afterend',s);}
+  $('qText').textContent=q.q;
+  const ex=$('qExample');
+  if(q.hint){ex.textContent='💡 '+q.hint;ex.style.display='block';}else{ex.style.display='none';}
+  $('chapterBadge').textContent=CHAPTERS[q.c].icon+' '+CHAPTERS[q.c].name;
+  const list=$('optionsList');list.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${l}</div><div class="option-text">${q.o[i]}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>pick(i));list.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');$('nextBtn').classList.remove('visible');$('skipBtn').style.display='';
+  startTimer();
+}
+
+function pick(i){
+  if(ans)return;ans=true;clearInterval(tInt);uA[qi]=i;
+  const q=aQ[qi];lockO();
+  const opts=document.querySelectorAll('.option');
+  if(i===q.a){sc++;opts[i].classList.add('correct');opts[i].querySelector('.option-radio').textContent='✓';showExp();$('skipBtn').style.display='none';startAd();}
+  else{opts[i].classList.add('wrong');opts[i].querySelector('.option-radio').textContent='✗';showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');}
+}
+
+function startAd(){
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  f.classList.remove('running');void f.offsetWidth;f.classList.add('running');b.classList.add('show');h.classList.add('show');
+  adT=setTimeout(()=>{b.classList.remove('show');h.classList.remove('show');f.classList.remove('running');nxt();},AD);
+}
+function clearAd(){if(adT){clearTimeout(adT);adT=null;}
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  if(b)b.classList.remove('show');if(h)h.classList.remove('show');if(f)f.classList.remove('running');}
+function lockO(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function showCor(){const q=aQ[qi];const o=document.querySelectorAll('.option');o[q.a].classList.add('correct');o[q.a].querySelector('.option-radio').textContent='✓';}
+function showExp(){$('explanationText').textContent=aQ[qi].ex;$('explanationBox').classList.add('show');}
+
+$('skipBtn').addEventListener('click',()=>{if(ans)return;ans=true;clearInterval(tInt);uA[qi]=-1;sk++;lockO();showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⟫ Skipped!');});
+$('nextBtn').addEventListener('click',()=>{clearAd();nxt();});
+function nxt(){qi++;if(qi>=aQ.length)showResult();else render();}
+$('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Progress will be lost.')){clearInterval(tInt);clearAd();showScreen('screenIntro');}});
+
+const RMK=[
+  {min:95,e:'🏆',t:'Outstanding! Perfect Score!',s:'You have mastered DBMS! Exceptional performance.'},
+  {min:80,e:'🥇',t:'Excellent Performance!',s:'Strong command of DBMS concepts. Well prepared for exams!'},
+  {min:65,e:'🥈',t:'Good Job!',s:'Solid performance! Revise a few topics and you will be perfect.'},
+  {min:50,e:'🥉',t:'Above Average!',s:'You are on the right track. Keep practicing all units!'},
+  {min:35,e:'📚',t:'Keep Practicing!',s:'Revisit the DBMS units and attempt more questions. You can do it!'},
+  {min:0,e:'💪',t:"Don't Give Up!",s:'Every expert was a beginner. Study hard and try again!'},
+];
+const gRmk=p=>RMK.find(r=>p>=r.min)||RMK[RMK.length-1];
+
+function showResult(){
+  clearInterval(tInt);
+  const tot=aQ.length,wr=tot-sc-sk,pct=~~((sc/tot)*100),r=gRmk(pct);
+  $('resultEmoji').textContent=r.e;$('scoreBig').textContent=sc;$('scoreTotal').textContent='/ '+tot;
+  $('resultPercent').textContent=pct+'%';$('remarkText').textContent=r.t;$('remarkSub').textContent=r.s;
+  $('pillCorrect').textContent=sc;$('pillWrong').textContent=wr;$('pillSkip').textContent=sk;
+  $('bannerName').textContent=sN||'Student';
+  const pts=[sB,sS,sC].filter(v=>v&&v!=='N/A');$('bannerMeta').textContent=pts.join(' · ')||'DBMS Quiz';
+  $('certBannerName').textContent=sN||'Your';$('certBannerMeta').textContent='DBMS Quiz · '+pct+'% · StudyHub';
+  let c=0;const el=$('scoreBig');el.textContent='0';
+  const inc=setInterval(()=>{c++;el.textContent=c;if(c>=sc)clearInterval(inc);},Math.max(15,800/(sc||1)));
+  showScreen('screenResult');if(pct>=75)doConfetti();buildReview();
+}
+
+function doConfetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const ps=[],cols=['#0F4C81','#EA580C','#16A34A','#F59E0B','#1E88E5','#EC4899'];
+  for(let i=0;i<80;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*-cv.height,w:Math.random()*10+5,h:Math.random()*6+3,c:cols[~~(Math.random()*cols.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,r:Math.random()*360,rs:Math.random()*5-2.5});
+  let f=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.r*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,1-f/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.r+=p.rs;});f++;if(f<130)requestAnimationFrame(draw);}());
+}
+
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  aQ.forEach((q,i)=>{const ua=uA[i],ok=ua===q.a,sv=ua===-1;
+    const d=document.createElement('div');d.className=`review-item ${ok?'ri-correct':sv?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sv?'':'ri-wrong-ans'}">${sv?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);});
+}
+$('reviewToggleBtn').addEventListener('click',()=>{const l=$('reviewList'),b=$('reviewToggleBtn');l.classList.toggle('open');b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=aQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[aQ[i],aQ[j]]=[aQ[j],aQ[i]];}
+  qi=0;sc=0;sk=0;uA=new Array(aQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCert(){
+  const tot=aQ.length,pct=~~((sc/tot)*100),rm=gRmk(pct),wc=tot-sc-sk;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rrect(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rrect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('🗄️',sx,sy+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sN||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sB,sS,sC].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rrect(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 19px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Database Management System — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,col=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=col;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=col;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${sc}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=col;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rrect(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=col;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:sc,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:sk,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const co=ii%2,ro=~~(ii/2),sx2=440+co*230,sy3=sy2-46+ro*68;rrect(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rrect(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sC&&sC!=='N/A')ctx.fillText(`🏛  ${sC}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  DBMS',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+
+const qURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/dmsquiz.html';
+const sTxt=()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct),wc=tot-sc-sk;return `${r.e} DBMS Quiz — StudyHub\n\n${sN?'👤 '+sN+'\n':''}${sB&&sB!=='N/A'?'📘 '+sB+(sS&&sS!=='N/A'?' · '+sS:'')+'\n':''}🏆 Score: ${sc}/${tot} (${pct}%)\n${r.t}\n\n✅ ${sc}  ❌ ${wc}  ⟫ ${sk}\n\n📚 Try: ${qURL()}\n\nStudyHub`;};
+
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=aQ.length,pct=~~((sc/tot)*100),sn=(sN||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_DBMS_Certificate_${sn}_${sc}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed.');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(qURL()).then(()=>toast('🔗 Link copied!')).catch(()=>prompt('Copy:',qURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *DBMS Quiz — StudyHub*\n\n${sN?'👤 *'+sN+'*\n':''}🏆 Score: *${sc}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${qURL()}`)}`);});
+$('twitterBtn').addEventListener('click',()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${sc}/${tot} (${pct}%) on DBMS Quiz!\n${r.t}\nTry: ${qURL()} #DBMS #BTech #MCA #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(sTxt()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',sTxt()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

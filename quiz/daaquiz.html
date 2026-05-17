@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design & Analysis of Algorithms Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">⚡</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<!-- INFO SCREEN -->
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / ECE / IT" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">⚡</span>
+    <div class="intro-title">DAA Quiz</div>
+    <div class="intro-sub">Design & Analysis of Algorithms — 200 VVI MCQs covering Complexity, Divide & Conquer, Greedy, Dynamic Programming, Graph Algorithms & NP-Completeness. B.Tech Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">200</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Introduction & Algorithm Analysis</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Divide & Conquer</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Greedy & Dynamic Programming</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Dynamic Programming (Advanced)</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Graph Algorithms</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: NP-Completeness & Approximation</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 200</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">⚡ Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">DAA Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 200</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">DAA Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Introduction & Algorithm Analysis",   icon:"📊"},
+  {name:"Divide & Conquer",                    icon:"✂️"},
+  {name:"Greedy Algorithms",                   icon:"💰"},
+  {name:"Dynamic Programming",                 icon:"🔢"},
+  {name:"Graph Algorithms",                    icon:"🕸️"},
+  {name:"NP-Completeness & Approximation",     icon:"🚫"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════
+   UNIT 1 — Introduction & Algorithm Analysis (34 Qs)
+══════════════════════════════════════ */
+{c:0,q:"An algorithm is best defined as:",o:["A computer program","A finite sequence of well-defined instructions to solve a problem in finite time","An infinite loop","A mathematical equation"],a:1,ex:"Algorithm: finite, unambiguous, step-by-step procedure that takes input, produces output, and terminates. Key properties: finiteness, definiteness, input, output, effectiveness.",star:true},
+{c:0,q:"The time complexity of an algorithm measures:",o:["The amount of RAM used","How long it takes to run as a function of input size n","The number of lines of code","The number of variables"],a:1,ex:"Time complexity T(n): number of primitive operations (or steps) as a function of input size n, in the worst case. Expressed using asymptotic notation like O, Ω, Θ.",star:true},
+{c:0,q:"Big-O notation O(f(n)) represents:",o:["Exact running time","Lower bound on running time","Upper bound on running time (worst case)","Average case running time"],a:2,ex:"T(n) = O(f(n)) if ∃c>0, n0 such that T(n) ≤ c·f(n) for all n ≥ n0. It is an asymptotic upper bound — the algorithm runs in at most f(n) time (up to a constant factor).",star:true},
+{c:0,q:"Big-Omega notation Ω(f(n)) represents:",o:["Upper bound","Lower bound on running time (best case)","Exact running time","Worst case only"],a:1,ex:"T(n) = Ω(f(n)) if ∃c>0, n0 such that T(n) ≥ c·f(n) for all n ≥ n0. It is an asymptotic lower bound — the algorithm takes at least f(n) time.",star:true},
+{c:0,q:"Big-Theta notation Θ(f(n)) means:",o:["Only upper bound","Only lower bound","Both upper and lower bound — tight bound","Neither bound"],a:2,ex:"T(n) = Θ(f(n)) iff T(n) = O(f(n)) AND T(n) = Ω(f(n)). It means f(n) is a tight asymptotic bound — the algorithm's exact growth rate.",star:true},
+{c:0,q:"The recurrence T(n) = 2T(n/2) + n solved by Master Theorem gives:",o:["O(n)","O(n log n)","O(n²)","O(log n)"],a:1,ex:"Master Theorem Case 2: a=2, b=2, f(n)=n=n^(log_2 2)=n^1. Since f(n)=Θ(n^log_b a), T(n)=Θ(n log n). Classic merge sort recurrence.",star:true},
+{c:0,q:"The Master Theorem applies to recurrences of the form:",o:["T(n) = T(n-1) + f(n)","T(n) = aT(n/b) + f(n) where a≥1, b>1","T(n) = T(n/2) + T(n/3)","T(n) = n·T(n-1)"],a:1,ex:"Master Theorem: T(n)=aT(n/b)+f(n). Compare f(n) with n^(log_b a). Case 1: f(n)=O(n^(log_b a - ε)) → T=Θ(n^log_b a). Case 2: f(n)=Θ(n^log_b a) → T=Θ(n^log_b a·log n). Case 3: converse.",star:true},
+{c:0,q:"The recurrence T(n) = T(n-1) + 1 with T(1) = 1 solves to:",o:["O(log n)","O(n)","O(n²)","O(1)"],a:1,ex:"T(n) = T(n-1)+1 = T(n-2)+2 = … = T(1)+(n-1) = n. This is O(n). Example: linear search — each step reduces problem by 1.",star:false},
+{c:0,q:"Which sorting algorithm has worst-case time complexity O(n log n)?",o:["Bubble Sort","Insertion Sort","Merge Sort","Selection Sort"],a:2,ex:"Merge Sort: T(n)=2T(n/2)+n → Θ(n log n) always (best, average, worst). Bubble, Insertion, Selection are all O(n²) worst case.",star:true},
+{c:0,q:"Space complexity measures:",o:["Time taken by algorithm","Amount of memory used as a function of input size","Number of function calls","I/O operations"],a:1,ex:"Space complexity S(n): total memory used by algorithm as function of input size, including input data, auxiliary variables, recursion stack, etc.",star:false},
+{c:0,q:"In-place algorithm means:",o:["Algorithm uses O(1) or O(log n) extra space beyond input","Algorithm runs in place without I/O","Algorithm modifies original array","Algorithm has no loops"],a:0,ex:"In-place: uses only O(1) extra space (or O(log n) for recursive stack). Examples: Bubble Sort, Insertion Sort, Heap Sort. Merge Sort is NOT in-place (needs O(n) extra).",star:true},
+{c:0,q:"The best, average, and worst case complexities of Binary Search are:",o:["O(1), O(log n), O(n)","O(1), O(log n), O(log n)","O(log n), O(log n), O(log n)","O(n), O(n), O(n)"],a:1,ex:"Binary Search: best O(1) (found at mid), average O(log n), worst O(log n) (not found, searched all levels). Works only on sorted arrays.",star:true},
+{c:0,q:"Amortized analysis is used to:",o:["Find worst case of a single operation","Analyze average cost per operation over a sequence of operations","Find best case only","Analyze space complexity"],a:1,ex:"Amortized analysis: average cost per operation over n operations (worst total / n). Used for dynamic arrays (doubling), binary counter. Even if some operations are expensive, the amortized cost is cheap.",star:true},
+{c:0,q:"Which notation gives a strict upper bound (excludes equal growth)?",o:["O(f(n))","Θ(f(n))","o(f(n)) (little-oh)","Ω(f(n))"],a:2,ex:"Little-oh o(f(n)): T(n)=o(f(n)) if lim(n→∞) T(n)/f(n) = 0. Strictly smaller growth rate. Similarly ω(f(n)) is strict lower bound. Big-O allows equal growth.",star:false},
+{c:0,q:"T(n) = 8T(n/2) + n² solved by Master Theorem gives:",o:["O(n²)","O(n² log n)","O(n³)","O(n^2.5)"],a:2,ex:"a=8, b=2, log_2(8)=3. f(n)=n²=O(n^(3-1))=O(n^(log_b a - ε)) with ε=1. Case 1: T(n)=Θ(n³). This is the complexity of naive matrix multiplication.",star:true},
+{c:0,q:"The recurrence for binary search is:",o:["T(n) = 2T(n/2) + O(1)","T(n) = T(n/2) + O(1)","T(n) = T(n-1) + O(1)","T(n) = 2T(n-1) + O(1)"],a:1,ex:"Binary search splits array in half and does constant work: T(n)=T(n/2)+O(1). By Master Theorem Case 2 (log work): T(n)=Θ(log n).",star:true},
+{c:0,q:"Which of the following represents the fastest asymptotic growth?",o:["O(n log n)","O(n²)","O(2ⁿ)","O(n³)"],a:2,ex:"Growth order: O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(n³) < O(2ⁿ) < O(n!). Exponential O(2ⁿ) grows fastest among these.",star:true},
+{c:0,q:"An algorithm is called polynomial-time if its complexity is:",o:["O(2ⁿ)","O(n!) ","O(nᵏ) for some constant k","O(n log n) only"],a:2,ex:"Polynomial-time: runs in O(nᵏ) for some fixed k. These are considered 'efficient/tractable'. Exponential (2ⁿ) and factorial (n!) are super-polynomial and considered intractable.",star:true},
+{c:0,q:"The lower bound for comparison-based sorting algorithms is:",o:["O(n)","O(n log n)","O(n²)","O(log n)"],a:1,ex:"Any comparison-based sort needs Ω(n log n) comparisons in the worst case (decision tree argument: n! leaves, height ≥ log(n!) = Ω(n log n)). Merge Sort and Heap Sort achieve this bound.",star:true},
+{c:0,q:"Counting Sort runs in time O(n+k) where k is:",o:["Number of comparisons","The range of input values","Number of passes","Input size"],a:1,ex:"Counting Sort: k = range of input values. Total time O(n+k). If k=O(n), it's O(n). Not comparison-based, so it beats Ω(n log n) lower bound. Works only for integer keys in [0,k].",star:true},
+{c:0,q:"Radix Sort sorts n numbers of d digits in time:",o:["O(d·n)","O(d·n log n)","O(n²)","O(d²)"],a:0,ex:"Radix Sort: d passes of Counting Sort, each O(n+k). Total O(d(n+k)). If d=O(1) and k=O(n), it's O(n). Stable, non-comparison sort.",star:false},
+{c:0,q:"The substitution method for solving recurrences involves:",o:["Expanding the recurrence tree","Guessing a solution and proving by induction","Using Master Theorem directly","Drawing a recursion diagram"],a:1,ex:"Substitution method: (1) guess form of solution (e.g., T(n)=O(n log n)), (2) prove by mathematical induction that the recurrence satisfies this bound with appropriate constants.",star:false},
+{c:0,q:"Which of the following recurrences describes Strassen's matrix multiplication?",o:["T(n) = 8T(n/2) + O(n²)","T(n) = 7T(n/2) + O(n²)","T(n) = 4T(n/2) + O(n²)","T(n) = 2T(n/2) + O(n²)"],a:1,ex:"Strassen uses 7 recursive calls (not 8) on n/2 submatrices plus O(n²) additions. T(n)=7T(n/2)+O(n²) → O(n^log_2 7) ≈ O(n^2.807), better than naive O(n³).",star:true},
+{c:0,q:"What is the worst-case time complexity of Quick Sort?",o:["O(n log n)","O(n)","O(n²)","O(log n)"],a:2,ex:"Quick Sort worst case: O(n²) when pivot is always min or max (already sorted array). Average case O(n log n). With randomized pivot, expected O(n log n).",star:true},
+{c:0,q:"The recurrence tree method involves:",o:["Using algebra to simplify","Drawing a tree of all recursive calls and summing costs at each level","Guessing and proving","Using Master Theorem only"],a:1,ex:"Recurrence tree: draw all recursive calls as a tree, compute cost at each level, sum over all levels. Useful for recurrences not directly solvable by Master Theorem (like T(n)=T(n/3)+T(2n/3)+n).",star:false},
+{c:0,q:"Which sorting algorithm is NOT stable?",o:["Merge Sort","Bubble Sort","Heap Sort","Insertion Sort"],a:2,ex:"Heap Sort is NOT stable — heap operations may move equal elements out of relative order. Merge Sort, Bubble Sort (adjacent swaps), and Insertion Sort are stable.",star:true},
+{c:0,q:"The running time T(n) = T(n/3) + T(2n/3) + n solves to:",o:["O(n)","O(n log n)","O(n²)","O(log n)"],a:1,ex:"Recurrence tree for T(n)=T(n/3)+T(2n/3)+n: each level costs n, depth is log_{3/2}(n)=O(log n). Total: O(n log n). Classic example solved by recursion tree.",star:false},
+{c:0,q:"An algorithm with time complexity O(n!) is considered:",o:["Efficient","Polynomial","Intractable for large n","Linear"],a:2,ex:"O(n!) grows faster than exponential. For n=20, n!=2.4×10^18. Completely intractable for large inputs. Example: brute-force Travelling Salesman Problem.",star:false},
+{c:0,q:"Heap Sort has which time complexity in all cases?",o:["O(n²) worst, O(n log n) best","O(n log n) in all cases","O(n) best, O(n log n) worst","O(n log n) average, O(n²) worst"],a:1,ex:"Heap Sort: O(n log n) in best, average, AND worst case. Build heap O(n), then n extract-max operations each O(log n). In-place but not stable.",star:true},
+{c:0,q:"The average-case complexity of Quick Sort is:",o:["O(n²)","O(n log n)","O(n)","O(log n)"],a:1,ex:"Quick Sort average case: O(n log n). Expected number of comparisons is 2n ln n ≈ 1.386 n log n. Randomized Quick Sort achieves expected O(n log n) regardless of input.",star:true},
+{c:0,q:"Which data structure gives O(1) average time for insert, delete, and search?",o:["Array","Binary Search Tree","Hash Table","Linked List"],a:2,ex:"Hash Table with good hash function: O(1) average for insert, delete, search. Worst case O(n) with all collisions. BST: O(log n) average. Array: O(1) access but O(n) search.",star:false},
+{c:0,q:"The order of growth from slowest to fastest is:",o:["O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ)","O(n) < O(log n) < O(1)","O(2ⁿ) < O(n²) < O(n log n)","O(n²) < O(n) < O(log n)"],a:0,ex:"Correct hierarchy: O(1) < O(log n) < O(√n) < O(n) < O(n log n) < O(n²) < O(n³) < O(2ⁿ) < O(n!). Essential to memorize for complexity analysis.",star:true},
+{c:0,q:"Average and worst case of Linear Search are:",o:["O(1) and O(n)","O(n/2) and O(n), both Θ(n)","O(log n) and O(n)","O(n) and O(n²)"],a:1,ex:"Linear Search: best O(1) (first element), average O(n/2)=Θ(n), worst O(n) (last or not found). All are Θ(n) asymptotically.",star:false},
+{c:0,q:"Which technique is used to prove lower bounds for sorting?",o:["Master Theorem","Decision Tree Model","Recurrence Tree","Amortized Analysis"],a:1,ex:"Decision Tree: each internal node = comparison, leaves = permutations (n!). Tree height ≥ log(n!) = Ω(n log n). Proves any comparison sort needs Ω(n log n) comparisons.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 2 — Divide & Conquer (32 Qs)
+══════════════════════════════════════ */
+{c:1,q:"Divide and Conquer paradigm consists of which three steps?",o:["Input, Process, Output","Divide, Conquer (solve subproblems), Combine","Sort, Search, Merge","Split, Recurse, Return"],a:1,ex:"D&C: (1) Divide: split problem into smaller subproblems of same type. (2) Conquer: recursively solve each subproblem. (3) Combine: merge solutions to get overall solution.",star:true},
+{c:1,q:"Merge Sort divides the array into how many parts?",o:["3","4","2","n"],a:2,ex:"Merge Sort splits array into 2 equal halves, recursively sorts each, then merges. T(n)=2T(n/2)+Θ(n) → Θ(n log n). Stable, not in-place (needs O(n) extra).",star:true},
+{c:1,q:"The merge step in Merge Sort takes time:",o:["O(1)","O(log n)","O(n)","O(n²)"],a:2,ex:"Merging two sorted arrays of total size n: scan both arrays linearly, picking smaller element each time. Takes O(n) time. This is the 'combine' step cost.",star:true},
+{c:1,q:"Quick Sort selects a _____ and partitions the array around it.",o:["median","pivot element","maximum element","minimum element"],a:1,ex:"Quick Sort chooses a pivot, partitions array so elements < pivot are left, > pivot are right. Pivot is in final position. Recursively sort left and right parts.",star:true},
+{c:1,q:"In Quick Sort, the partition step runs in:",o:["O(1)","O(log n)","O(n)","O(n log n)"],a:2,ex:"Partition: scan all n elements, placing each on correct side of pivot. O(n) time. After partition, pivot is in final sorted position. Lomuto and Hoare schemes both O(n).",star:true},
+{c:1,q:"Binary Search requires that the input array must be:",o:["Unsorted","Sorted","Reversed sorted","Partially sorted"],a:1,ex:"Binary Search works only on sorted arrays. Compares target with midpoint, eliminates half each time. T(n)=T(n/2)+O(1) → O(log n). Crucial precondition: array must be sorted.",star:true},
+{c:1,q:"Strassen's algorithm multiplies two n×n matrices in time:",o:["O(n³)","O(n^2.807) ≈ O(n^log₂7)","O(n²)","O(n² log n)"],a:1,ex:"Strassen: T(n)=7T(n/2)+O(n²) → O(n^log₂7)≈O(n^2.807). Better than naive O(n³). Uses 7 multiplications instead of 8, trades multiplications for additions.",star:true},
+{c:1,q:"The naive matrix multiplication algorithm runs in:",o:["O(n²)","O(n² log n)","O(n³)","O(n^2.5)"],a:2,ex:"Naive: three nested loops, each n iterations → O(n³). Strassen improves to O(n^2.807). Current best known is O(n^2.37...) by Coppersmith-Winograd variants.",star:true},
+{c:1,q:"The Master Theorem Case 1 applies when:",o:["f(n) = Θ(n^log_b a)","f(n) = O(n^(log_b a - ε)) for some ε>0","f(n) = Ω(n^(log_b a + ε)) for some ε>0","f(n) = O(log n)"],a:1,ex:"Case 1: if f(n) grows polynomially slower than n^log_b(a), then T(n)=Θ(n^log_b a). The recursion dominates. Example: T(n)=8T(n/2)+n² → O(n³).",star:true},
+{c:1,q:"Which D&C algorithm finds the closest pair of points in O(n log n)?",o:["Quick Sort","Closest Pair of Points algorithm","Merge Sort","Binary Search"],a:1,ex:"Closest Pair: divide points by x-coord, recursively find closest pair in each half, combine by checking strip of width 2δ. T(n)=2T(n/2)+O(n log n) → O(n log²n) or O(n log n) with pre-sort.",star:true},
+{c:1,q:"The maximum subarray problem (Kadane's D&C version) runs in:",o:["O(n)","O(n log n)","O(n²)","O(log n)"],a:1,ex:"D&C max subarray: divide array in half, max subarray is in left, right, or crosses midpoint. Crossing case: O(n). T(n)=2T(n/2)+O(n) → O(n log n). Kadane's DP does O(n).",star:false},
+{c:1,q:"Randomized Quick Sort achieves expected time of:",o:["O(n²)","O(n)","O(n log n)","O(log n)"],a:2,ex:"Randomized Quick Sort: random pivot gives expected O(n log n) regardless of input order. Probability of bad splits (making it O(n²)) is extremely low with random pivots.",star:true},
+{c:1,q:"The median-of-3 pivot selection strategy in Quick Sort:",o:["Always gives O(n) time","Reduces probability of worst-case O(n²)","Gives O(n log n) in all cases","Eliminates the need for recursion"],a:1,ex:"Median-of-3: choose median of first, middle, last elements as pivot. Avoids worst case on sorted/reverse-sorted inputs. Not guaranteed O(n log n) but works well in practice.",star:false},
+{c:1,q:"Integer multiplication of two n-digit numbers: Karatsuba algorithm runs in:",o:["O(n²)","O(n^1.585) ≈ O(n^log₂3)","O(n log n)","O(n)"],a:1,ex:"Karatsuba: T(n)=3T(n/2)+O(n) → O(n^log₂3)≈O(n^1.585). Better than schoolbook O(n²). Splits n-digit numbers and uses 3 multiplications instead of 4.",star:true},
+{c:1,q:"In Merge Sort, how many merge operations are there at each level of recursion?",o:["1","log n","n/2^k at level k","n"],a:2,ex:"At level k (depth k from root), there are 2^k subproblems of size n/2^k each. Each level's total work is 2^k × (n/2^k) = n. Total across log n levels: O(n log n).",star:false},
+{c:1,q:"Which recurrence represents the Tower of Hanoi problem with n disks?",o:["T(n) = T(n-1) + 1","T(n) = 2T(n-1) + 1","T(n) = T(n/2) + n","T(n) = 3T(n-1) + 1"],a:1,ex:"Tower of Hanoi: move n-1 disks to spare, move bottom disk, move n-1 disks from spare. T(n)=2T(n-1)+1 → T(n)=2ⁿ-1. Exponential — impractical for large n.",star:true},
+{c:1,q:"The 3-way partition in Quick Sort (Dutch National Flag) handles:",o:["Only equal elements","Arrays with many duplicate keys efficiently","Sorted arrays only","Non-integer arrays"],a:1,ex:"3-way (Dutch National Flag) partition: partition into <pivot, =pivot, >pivot. Handles duplicates efficiently — elements equal to pivot are not recursively processed. O(n log n) with many duplicates.",star:false},
+{c:1,q:"What is the space complexity (auxiliary) of Merge Sort?",o:["O(1)","O(log n)","O(n)","O(n log n)"],a:2,ex:"Merge Sort needs O(n) auxiliary space for the merge step (temp array). Plus O(log n) recursion stack. Total auxiliary: O(n). Not in-place (unlike Heap Sort or Quick Sort).",star:true},
+{c:1,q:"Quick Sort is preferred over Merge Sort in practice because:",o:["Quick Sort is always faster","Quick Sort has better cache performance and smaller constant factors","Merge Sort uses more comparisons","Quick Sort is stable"],a:1,ex:"Quick Sort: in-place (O(log n) stack), better cache locality (sequential access), smaller constant factors. Average O(n log n). Merge Sort: O(n) extra space, more memory accesses.",star:true},
+{c:1,q:"The D&C approach to finding maximum and minimum of n elements uses how many comparisons?",o:["2n-2","3n/2-2","n-1","n log n"],a:1,ex:"D&C max-min: pair up elements (n/2 comparisons), recurse. Total comparisons: ⌈3n/2⌉-2. Better than 2n-2 from two separate scans. Minimum comparisons for max-min problem.",star:true},
+{c:1,q:"Which of the following is NOT a Divide and Conquer algorithm?",o:["Merge Sort","Binary Search","Dijkstra's Algorithm","Quick Sort"],a:2,ex:"Dijkstra's Algorithm is a Greedy algorithm (not D&C). Merge Sort, Binary Search, and Quick Sort are classic D&C algorithms that split problem into subproblems.",star:true},
+{c:1,q:"The Quick Select algorithm finds the k-th smallest element in expected time:",o:["O(n log n)","O(n)","O(n²)","O(log n)"],a:1,ex:"Quick Select (randomized): use partition step, recurse only on one side. Expected O(n) time. Worst case O(n²) with bad pivots. Deterministic O(n) possible with median-of-medians.",star:true},
+{c:1,q:"Median of Medians (BFPRT algorithm) finds the k-th smallest in:",o:["O(n log n)","O(n) worst case","O(n²)","O(n log²n)"],a:1,ex:"BFPRT: divide into groups of 5, find median of each group, recurse to find median of medians as pivot. Guarantees at least 30% elements on each side → T(n)=T(7n/10)+T(n/5)+O(n) → O(n).",star:true},
+{c:1,q:"In Binary Search, how many elements are eliminated with each comparison?",o:["1","n/2","log n","n/3"],a:1,ex:"Binary Search: compare with middle element, eliminate HALF the remaining elements. This halving leads to O(log n) comparisons total. Key insight of the algorithm.",star:false},
+{c:1,q:"The Fast Fourier Transform (FFT) runs in time:",o:["O(n²)","O(n log n)","O(n)","O(n³)"],a:1,ex:"FFT (Cooley-Tukey): D&C on polynomials. T(n)=2T(n/2)+O(n) → O(n log n). Evaluates polynomial of degree n at n points. Used in signal processing, fast polynomial multiplication.",star:true},
+{c:1,q:"Which case of Master Theorem applies when f(n) and n^(log_b a) grow at the same rate?",o:["Case 1","Case 2","Case 3","None"],a:1,ex:"Case 2: f(n)=Θ(n^log_b a · log^k n). For k=0: T(n)=Θ(n^log_b a · log n). Both recursion and combination contribute equally. Example: Merge Sort.",star:false},
+{c:1,q:"Ternary Search reduces problem size by factor of:",o:["2","3","4","log n"],a:1,ex:"Ternary Search: divide range into 3 parts using 2 comparisons, eliminate 1/3. Recurrence T(n)=T(2n/3)+O(1) → O(log n). Same asymptotic as binary search, but more comparisons per step.",star:false},
+{c:1,q:"What is the best case of Quick Sort?",o:["O(n)","O(n log n)","O(log n)","O(n²)"],a:1,ex:"Quick Sort best case: O(n log n) when pivot always splits array in half. Recurrence: T(n)=2T(n/2)+O(n) → O(n log n). Even the best case for comparisons is Ω(n log n).",star:false},
+{c:1,q:"The D&C solution to the matrix chain multiplication ordering is:",o:["O(n)","O(n²)","O(n³)","O(2ⁿ)"],a:1,ex:"Matrix chain ordering via DP: O(n³). Brute force tries all parenthesizations: exponential. D&C without memoization: exponential (overlapping subproblems). With DP: O(n³).",star:false},
+{c:1,q:"Which D&C algorithm is used for polynomial multiplication in O(n log n)?",o:["Strassen's","FFT-based multiplication","Karatsuba","Merge Sort"],a:1,ex:"FFT-based polynomial multiplication: evaluate both polynomials at n points using FFT (O(n log n)), multiply point-wise O(n), interpolate using inverse FFT O(n log n). Total O(n log n).",star:false},
+{c:1,q:"The external sorting algorithm that is a D&C approach is:",o:["Bubble Sort","Merge Sort (external variant)","Radix Sort","Counting Sort"],a:1,ex:"External Merge Sort: for data too large for RAM. Divide data into chunks fitting in memory, sort each, then k-way merge sorted runs. Classic D&C approach for disk-based sorting.",star:false},
+{c:1,q:"The worst case of Binary Search occurs when:",o:["Element is at the middle","Element is found immediately","Element is not present (or at last comparison position)","Array has duplicate elements"],a:2,ex:"Binary Search worst case O(log n): element is not in array (searches all levels) or is at the very first/last comparison. Best case O(1): element at middle of initial array.",star:false},
+
+/* ══════════════════════════════════════
+   UNIT 3 — Greedy Algorithms (33 Qs)
+══════════════════════════════════════ */
+{c:2,q:"The Greedy approach makes decisions by:",o:["Exploring all possibilities","Making locally optimal choice at each step, hoping for global optimum","Using dynamic programming","Backtracking"],a:1,ex:"Greedy: at each step, choose the locally best option without reconsidering. Does NOT guarantee global optimum for all problems, but does for specific ones with greedy-choice property and optimal substructure.",star:true},
+{c:2,q:"Which of the following problems is solved optimally by a greedy algorithm?",o:["0-1 Knapsack","Matrix Chain Multiplication","Fractional Knapsack","Travelling Salesman Problem"],a:2,ex:"Fractional Knapsack: greedy works — sort by value/weight ratio, take as much as possible of highest ratio item. 0-1 Knapsack needs DP (cannot take fractions). TSP/MCM are not greedy.",star:true},
+{c:2,q:"Kruskal's algorithm for Minimum Spanning Tree works by:",o:["Adding edges in BFS order","Greedily adding smallest weight edge that doesn't form a cycle","Starting from a vertex and adding nearest","Removing maximum edges"],a:1,ex:"Kruskal's: sort all edges by weight, iterate: add edge if it doesn't create a cycle (check with Union-Find). Time: O(E log E) for sorting + O(E α(V)) for union-find. Greedy edge-based MST.",star:true},
+{c:2,q:"Prim's algorithm for MST works by:",o:["Adding smallest weight edge globally","Starting from a vertex and greedily adding the minimum weight edge connecting tree to non-tree vertex","Sorting all edges first","Using BFS traversal"],a:1,ex:"Prim's: start with any vertex, repeatedly add minimum weight edge crossing the cut (tree vs. non-tree). With min-heap: O(E log V). Greedy vertex-based MST.",star:true},
+{c:2,q:"Dijkstra's algorithm finds:",o:["Minimum Spanning Tree","Shortest paths from single source in graphs with non-negative weights","Shortest paths with negative weights","All-pairs shortest paths"],a:1,ex:"Dijkstra's: single-source shortest path for non-negative edge weights. Greedy: always process vertex with minimum tentative distance. With binary heap: O((V+E) log V). Fails with negative edges.",star:true},
+{c:2,q:"Huffman Coding is a greedy algorithm that produces:",o:["Fixed-length codes","Optimal variable-length prefix-free codes for data compression","Shortest paths","Minimum spanning tree"],a:1,ex:"Huffman: builds optimal prefix-free binary code. Greedy: repeatedly merge two lowest-frequency symbols. Produces minimum expected code length. Used in ZIP, JPEG, MP3 compression.",star:true},
+{c:2,q:"Activity Selection Problem: greedy strategy is to always select the activity with:",o:["Earliest start time","Maximum duration","Earliest finish time","Highest priority"],a:2,ex:"Activity Selection: among compatible activities, always pick one with earliest finish time. This leaves maximum room for future activities. Greedy choice property proven by exchange argument. O(n log n).",star:true},
+{c:2,q:"The greedy choice property means:",o:["Greedy choice may need to be reversed","A globally optimal solution always includes the locally greedy choice (can be proven by exchange argument)","All choices are equal","Greedy doesn't work for this problem"],a:1,ex:"Greedy choice property: local greedy choice is always part of some globally optimal solution. Proven by exchange argument — if optimal solution doesn't include greedy choice, swap it in without worsening.",star:true},
+{c:2,q:"Optimal substructure means:",o:["Problem has no subproblems","Optimal solution contains optimal solutions to subproblems","Greedy always works","Problem needs exponential time"],a:1,ex:"Optimal substructure: optimal solution to problem contains optimal solutions to its subproblems. Required for both Greedy and DP. Example: shortest path — subpath of shortest path is shortest path.",star:true},
+{c:2,q:"The time complexity of Huffman Coding algorithm is:",o:["O(n)","O(n log n)","O(n²)","O(2ⁿ)"],a:1,ex:"Huffman: build min-heap of n symbols O(n), extract two minima and insert merged node n-1 times, each O(log n). Total: O(n log n). Result: optimal prefix-free binary code.",star:true},
+{c:2,q:"Kruskal's algorithm uses which data structure to detect cycles?",o:["Stack","Queue","Union-Find (Disjoint Set Union)","Binary Heap"],a:2,ex:"Union-Find: each edge (u,v) — if Find(u)=Find(v), adding it creates a cycle (skip). Else Union(u,v) — merge sets. With path compression and union by rank: nearly O(1) per operation.",star:true},
+{c:2,q:"Which of the following does NOT have the greedy choice property?",o:["Activity Selection","Fractional Knapsack","0-1 Knapsack","Huffman Coding"],a:2,ex:"0-1 Knapsack: cannot take fractions, so greedy (by value/weight ratio) doesn't work. Counter-example: items (weight,value): (10,60),(20,100),(30,120) with capacity 50. Greedy gives 160, optimal gives 220.",star:true},
+{c:2,q:"The Job Sequencing with Deadlines problem's greedy strategy is to:",o:["Schedule jobs by earliest deadline","Schedule jobs in decreasing order of profit, fitting each into latest available slot before deadline","Schedule smallest jobs first","Skip jobs with tight deadlines"],a:1,ex:"Job Sequencing: sort by profit desc, for each job find latest available time slot ≤ deadline. Uses DSU or simple array to find latest free slot. Maximizes total profit. O(n² ) or O(n log n) with DSU.",star:true},
+{c:2,q:"Prim's algorithm time complexity with a Binary Heap is:",o:["O(V²)","O(E log V)","O(V log V)","O(E + V)"],a:1,ex:"Prim's with binary min-heap: O(E log V). Each vertex extracted once from heap (V×log V), each edge relaxes once (E×log V). With Fibonacci heap: O(E + V log V). Simple array: O(V²).",star:true},
+{c:2,q:"Dijkstra's algorithm fails when edge weights are:",o:["Large","Non-integer","Negative","Greater than 1000"],a:2,ex:"Dijkstra's fails with negative weights because it assumes once a vertex is processed its distance is final. Negative edge from a processed vertex to an unprocessed one could give shorter path. Use Bellman-Ford instead.",star:true},
+{c:2,q:"The coin change problem with greedy (always pick largest coin) works for:",o:["All coin systems","Only canonical coin systems (like US coins 1,5,10,25)","Never","Only when coins are powers of 2"],a:1,ex:"Greedy coin change works for canonical coin systems (where greedy always gives optimal). Fails for arbitrary coin systems: e.g., coins {1,3,4} for amount 6 — greedy gives 4+1+1=3 coins, optimal 3+3=2 coins.",star:true},
+{c:2,q:"The Minimum Spanning Tree of a connected graph with n vertices has:",o:["n edges","n-1 edges","n+1 edges","Depends on the graph"],a:1,ex:"MST: spanning tree connecting all n vertices with minimum total edge weight. A tree on n vertices always has exactly n-1 edges. MST may not be unique if there are equal weight edges.",star:true},
+{c:2,q:"Which theorem guarantees that MST cuts have minimum weight crossing edges?",o:["Kruskal's theorem","Cut property of MST","Prim's theorem","Union-Find theorem"],a:1,ex:"Cut property: for any cut (S, V-S) of graph, the minimum weight edge crossing the cut belongs to some MST. This is the fundamental theorem underlying both Kruskal's and Prim's algorithms.",star:true},
+{c:2,q:"In Huffman encoding, the most frequent characters get:",o:["Longest codes","Same length codes as others","Shortest codes","Random length codes"],a:2,ex:"Huffman assigns shorter codes to more frequent characters (lower depth in tree) and longer codes to less frequent ones. This minimizes total encoded message length (expected code length).",star:true},
+{c:2,q:"The Bellman-Ford algorithm is used instead of Dijkstra's when:",o:["Graph is very large","Graph has negative weight edges","Graph is a DAG","All weights are equal"],a:1,ex:"Bellman-Ford handles negative weight edges and detects negative cycles. Runs in O(VE) time — slower than Dijkstra. For DAGs: shortest path possible in O(V+E) via topological ordering.",star:true},
+{c:2,q:"Greedy algorithms are characterized by:",o:["Global backtracking","Optimal substructure only","No-backtracking, locally optimal decisions, polynomial time","Exponential exploration"],a:2,ex:"Greedy: (1) make locally optimal choice at each step, (2) never backtrack/reconsider, (3) usually polynomial time. Works when greedy choice property and optimal substructure both hold.",star:true},
+{c:2,q:"The fractional knapsack problem with n items and greedy runs in:",o:["O(n)","O(n log n)","O(n²)","O(2ⁿ)"],a:1,ex:"Fractional Knapsack: sort items by value/weight ratio — O(n log n). Then greedily pick items. Total: O(n log n) dominated by sorting. Greedy gives optimal solution.",star:false},
+{c:2,q:"The 'exchange argument' in greedy proofs works by:",o:["Showing no solution exists","Showing any optimal solution can be transformed to match the greedy solution without losing optimality","Proving by contradiction","Dynamic programming"],a:1,ex:"Exchange argument: take any optimal solution, if it differs from greedy choice, swap the greedy choice in — show the result is at least as good. Proves greedy choice is safe.",star:true},
+{c:2,q:"Which algorithm finds MST in O(E log log V) time?",o:["Kruskal's","Prim's","Borůvka's algorithm","Dijkstra's"],a:2,ex:"Borůvka's (Sollin's) algorithm: each component selects its minimum outgoing edge, merge, repeat O(log V) rounds. Each round O(E). Total: O(E log V). With additional techniques: O(E log log V).",star:false},
+{c:2,q:"Task Scheduling to minimize lateness: greedy approach is:",o:["Earliest start time","Earliest deadline first","Shortest processing time first","Largest job first"],a:1,ex:"Minimize maximum lateness: Earliest Deadline First (EDF). Schedule jobs in increasing order of deadlines. Proven optimal by exchange argument. All jobs completed, minimize latest finish-deadline gap.",star:true},
+{c:2,q:"Prim's algorithm is preferred over Kruskal's when:",o:["Graph is sparse (few edges)","Graph is dense (many edges, E≈V²)","Graph has negative edges","Graph is disconnected"],a:1,ex:"Dense graphs (E≈V²): Prim's with simple array is O(V²) vs Kruskal's O(E log E)≈O(V² log V). Prim's is better. Sparse graphs: Kruskal's O(E log E) with E≪V² is faster.",star:true},
+{c:2,q:"The number of steps in Huffman Coding to build the tree for n symbols is:",o:["n","n-1","2n","n log n"],a:1,ex:"Huffman tree is built in n-1 merge steps: start with n leaf nodes, each merge reduces count by 1, until one root remains. n symbols → n-1 merges → O(n log n) with heap.",star:false},
+{c:2,q:"Dijkstra's algorithm with a Fibonacci heap runs in:",o:["O(V log V + E)","O(E log V)","O(V²)","O(VE)"],a:0,ex:"Dijkstra's with Fibonacci heap: O(V log V + E) — V decrease-key operations O(1) amortized + V extract-min O(log V) + E edge relaxations. Theoretically best for sparse graphs.",star:false},
+{c:2,q:"The greedy algorithm for interval graph coloring (scheduling on minimum machines) uses:",o:["Sort by finish time","Sort by start time, assign machine with closest available time","Sort by duration","Random assignment"],a:1,ex:"Interval graph coloring: sort by start time, assign each interval to machine with latest finish time ≤ current start time (greedy). Number of machines = maximum overlap (depth of intervals). O(n log n).",star:false},
+{c:2,q:"Which greedy problem involves constructing an optimal prefix-free binary code?",o:["Activity Selection","Dijkstra's","Huffman Coding","Fractional Knapsack"],a:2,ex:"Huffman Coding: constructs optimal prefix-free binary code minimizing expected code length. Greedy: merge two lowest-frequency nodes repeatedly. Used in compression algorithms.",star:false},
+{c:2,q:"For the Traveling Salesman Problem (TSP), greedy (nearest neighbor) gives:",o:["Optimal solution","An approximation, not guaranteed optimal","Polynomial optimal solution","Exponential optimal solution"],a:1,ex:"Greedy nearest-neighbor TSP: always visit closest unvisited city. Simple but NOT optimal — can give solutions up to O(log n) times optimal. TSP is NP-hard; no polynomial optimal algorithm known.",star:true},
+{c:2,q:"The Set Cover greedy algorithm achieves an approximation ratio of:",o:["O(1)","O(log n)","O(n)","O(√n)"],a:1,ex:"Greedy Set Cover: repeatedly pick set covering most uncovered elements. Achieves O(log n) approximation ratio (≤ ln n + 1 factor from optimal). This is optimal unless P=NP.",star:true},
+{c:2,q:"Which property distinguishes Greedy from Dynamic Programming?",o:["Greedy uses recursion, DP does not","Greedy makes one irrevocable choice per step without considering future; DP considers all subproblem choices","DP is always faster than Greedy","Greedy always gives optimal results"],a:1,ex:"Greedy: one locally optimal choice per step, never reconsider, fast. DP: considers all possible subproblem solutions, memoizes/tabulates, guarantees optimal when substructure holds. DP more powerful but slower.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 4 — Dynamic Programming (35 Qs)
+══════════════════════════════════════ */
+{c:3,q:"Dynamic Programming (DP) is based on:",o:["Greedy choice at each step","Divide and conquer without overlapping subproblems","Optimal substructure and overlapping subproblems","Random sampling"],a:2,ex:"DP two key properties: (1) Optimal substructure: optimal solution contains optimal sub-solutions. (2) Overlapping subproblems: same subproblems solved multiple times. DP stores solutions to avoid recomputation.",star:true},
+{c:3,q:"The two approaches to implementing DP are:",o:["Recursion and Iteration","Top-down (memoization) and Bottom-up (tabulation)","Greedy and Backtracking","BFS and DFS"],a:1,ex:"Top-down: recursive + memoization (cache results). Bottom-up: fill DP table from smallest subproblems to largest (tabulation). Both have same time complexity; bottom-up avoids recursion overhead.",star:true},
+{c:3,q:"The Fibonacci sequence computed by DP runs in:",o:["O(2ⁿ) like naive recursion","O(n) time and O(n) space (or O(1) space with optimization)","O(n²)","O(log n)"],a:1,ex:"DP Fibonacci: compute F(1),F(2),...,F(n) iteratively storing previous two values. O(n) time, O(1) space. Naive recursion: O(2ⁿ) due to redundant computation.",star:true},
+{c:3,q:"The 0-1 Knapsack Problem with n items and capacity W runs in:",o:["O(n)","O(nW)","O(n²)","O(2ⁿ)"],a:1,ex:"0-1 Knapsack DP: table dp[i][w] = max value using first i items with capacity w. Fill n×W table. Time O(nW), Space O(nW) or O(W) with rolling array. Pseudo-polynomial (depends on W).",star:true},
+{c:3,q:"The Longest Common Subsequence (LCS) of two strings of length m and n runs in:",o:["O(m+n)","O(mn)","O(m²)","O(2^(m+n))"],a:1,ex:"LCS DP: dp[i][j] = LCS length of first i chars of s1 and first j chars of s2. If s1[i]=s2[j]: dp[i][j]=dp[i-1][j-1]+1; else max(dp[i-1][j],dp[i][j-1]). Time O(mn), Space O(mn).",star:true},
+{c:3,q:"Matrix Chain Multiplication (MCM) DP runs in:",o:["O(n)","O(n log n)","O(n³)","O(n²)"],a:2,ex:"MCM: dp[i][j] = min cost to multiply matrices i through j. Try all split points k: dp[i][j]=min(dp[i][k]+dp[k+1][j]+dims). O(n³) time, O(n²) space. Optimal parenthesization.",star:true},
+{c:3,q:"The recurrence for 0-1 Knapsack is:",o:["dp[i][w]=dp[i-1][w-wi]+vi if wi≤w, else dp[i-1][w]","dp[i][w]=vi+dp[i][w-wi]","dp[i][w]=max(vi,dp[i-1][w])","dp[i][w]=dp[i][w-1]+1"],a:0,ex:"dp[i][w] = max value with first i items and capacity w. If item i fits (wi≤w): max(not take: dp[i-1][w], take: dp[i-1][w-wi]+vi). Else: dp[i-1][w].",star:true},
+{c:3,q:"Longest Increasing Subsequence (LIS) runs in:",o:["O(n)","O(n log n)","O(n²)","O(n³)"],a:1,ex:"LIS: O(n²) DP or O(n log n) with patience sorting (binary search). dp[i]=length of LIS ending at index i. O(n²): for each i, check all j<i. O(n log n): maintain sorted tails array with binary search.",star:true},
+{c:3,q:"The Bellman-Ford algorithm for shortest paths uses DP and runs in:",o:["O(V log V)","O(VE)","O(V²)","O(E log E)"],a:1,ex:"Bellman-Ford: dp[k][v] = shortest path from source to v using at most k edges. Relax all E edges V-1 times. O(VE). Also detects negative cycles (run one more iteration — if improvement, negative cycle exists).",star:true},
+{c:3,q:"Floyd-Warshall algorithm finds:",o:["Single source shortest path","All-pairs shortest paths","Minimum spanning tree","Maximum flow"],a:1,ex:"Floyd-Warshall: dp[i][j][k] = shortest path from i to j using only vertices {1,...,k}. O(V³) time, O(V²) space. Handles negative weights (but not negative cycles). All-pairs shortest path.",star:true},
+{c:3,q:"The recurrence for Floyd-Warshall is:",o:["dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])","dp[i][j] = dp[i][k] × dp[k][j]","dp[i][j] = max(dp[i][k], dp[k][j])","dp[i][j] = dp[i][j-1] + 1"],a:0,ex:"Floyd-Warshall: for each intermediate vertex k, update dp[i][j] = min(dp[i][j], dp[i][k]+dp[k][j]). This checks if going through k gives a shorter path from i to j.",star:true},
+{c:3,q:"Edit Distance (Levenshtein) problem: minimum operations to transform one string to another. Time complexity is:",o:["O(m+n)","O(mn)","O(m²+n²)","O(2^n)"],a:1,ex:"Edit Distance DP: dp[i][j] = min ops to transform s1[1..i] to s2[1..j]. If chars equal: dp[i-1][j-1]. Else: 1+min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) (delete,insert,replace). O(mn).",star:true},
+{c:3,q:"The Coin Change problem (minimum coins) uses DP and runs in:",o:["O(n)","O(n×amount)","O(2ⁿ)","O(n log n)"],a:1,ex:"Coin Change DP: dp[i] = min coins for amount i. For each coin c, dp[i]=min(dp[i], dp[i-c]+1). Bottom-up from 0 to amount. Time O(n×amount), Space O(amount) where n=number of coin types.",star:true},
+{c:3,q:"Memoization in top-down DP means:",o:["Memorizing the algorithm","Storing results of subproblems in a cache/table to avoid recomputation","Recursion without storage","Bottom-up table filling"],a:1,ex:"Memoization: cache/store result of each subproblem when first computed. On subsequent calls, return cached result. Converts exponential recursion to polynomial by eliminating redundant calls.",star:true},
+{c:3,q:"The Optimal Binary Search Tree problem runs in time:",o:["O(n log n)","O(n²)","O(n³)","O(n⁴)"],a:2,ex:"OBST: dp[i][j] = minimum expected search cost for keys i to j. Try all roots r: dp[i][j]=min(dp[i][r-1]+dp[r+1][j]+sum of probabilities). O(n³) time, O(n²) space. Knuth's O(n²) optimization exists.",star:true},
+{c:3,q:"The Travelling Salesman Problem (TSP) using DP (Held-Karp) runs in:",o:["O(n²)","O(n³)","O(2ⁿ × n²)","O(n!)"],a:2,ex:"Held-Karp DP for TSP: dp[S][v] = min cost to visit all cities in set S ending at v. O(2ⁿ × n²) time — exponential but much better than O(n!). Still not polynomial.",star:true},
+{c:3,q:"Which DP problem involves finding the maximum sum of non-adjacent elements?",o:["LCS","LIS","House Robber / Maximum Sum Non-Adjacent Subarray","Coin Change"],a:2,ex:"House Robber: dp[i]=max(dp[i-1], dp[i-2]+arr[i]). Maximum sum without taking adjacent elements. O(n) time, O(1) space. Classic DP with simple recurrence.",star:false},
+{c:3,q:"The Rod Cutting problem with prices p[1..n] for a rod of length n uses DP and runs in:",o:["O(n)","O(n log n)","O(n²)","O(2ⁿ)"],a:2,ex:"Rod Cutting: dp[i] = max revenue for rod of length i. dp[i]=max over j of (p[j]+dp[i-j]). O(n²) time and O(n) space. Unbounded: can use same cut multiple times.",star:true},
+{c:3,q:"The Egg Drop Problem with n eggs and k floors has DP complexity:",o:["O(nk)","O(n × k²)","O(nk log k)","O(2ⁿ)"],a:0,ex:"Egg Drop DP: dp[n][k] = min trials to find critical floor with n eggs and k floors. dp[n][k]=1+min over x of (max(dp[n-1][x-1], dp[n][k-x])). O(nk²) naive, O(nk log k) with binary search.",star:false},
+{c:3,q:"Subset Sum Problem runs in:",o:["O(n)","O(n × sum)","O(2ⁿ)","O(n²)"],a:1,ex:"Subset Sum DP: dp[i][s] = true if subset of first i elements sums to s. Similar to 0-1 Knapsack. O(n×sum) time, O(n×sum) space. NP-complete (exponential worst case when sum is large).",star:true},
+{c:3,q:"The Longest Palindromic Subsequence of a string of length n runs in:",o:["O(n)","O(n log n)","O(n²)","O(n³)"],a:2,ex:"LPS: reverse string, find LCS of original and reversed string. LCS is O(n²). Or directly: dp[i][j]=longest palindromic subsequence in s[i..j]. If s[i]=s[j]: 2+dp[i+1][j-1], else max(dp[i+1][j],dp[i][j-1]).",star:false},
+{c:3,q:"Chain Matrix Multiplication: if we have n matrices, how many different parenthesizations exist?",o:["n!","2ⁿ","C(n-1) — Catalan number","n²"],a:2,ex:"Number of ways to parenthesize n matrices = (n-1)-th Catalan number = C(2(n-1), n-1)/n ≈ 4ⁿ/n^1.5. Exponential — this is why DP (not enumeration) is needed.",star:false},
+{c:3,q:"The DP table for LCS of strings of length m and n has size:",o:["m+n","m×n","(m+n)²","max(m,n)"],a:1,ex:"LCS DP table: (m+1)×(n+1) entries (including base cases for empty string). dp[i][j] for i in [0,m], j in [0,n]. Total entries: O(mn). Space can be reduced to O(min(m,n)).",star:false},
+{c:3,q:"Which DP approach fills the table from base cases to final answer?",o:["Top-down","Memoization","Bottom-up (tabulation)","Recursive"],a:2,ex:"Bottom-up tabulation: start from smallest subproblems (base cases), fill table systematically until reaching the main problem. No recursion overhead. Iterative. All subproblems computed even if not needed.",star:true},
+{c:3,q:"The String Matching DP (Wildcard/Regex matching) runs in:",o:["O(n)","O(mn)","O(n log n)","O(m+n)"],a:1,ex:"DP string matching: dp[i][j] = whether pattern[0..i] matches text[0..j]. Cases for ?, *, or exact char. O(mn) time and space where m=pattern length, n=text length.",star:false},
+{c:3,q:"The Longest Common Substring (not subsequence) problem runs in:",o:["O(m+n)","O(mn)","O(m² × n²)","O(2^(m+n))"],a:1,ex:"LCS Substring DP: dp[i][j] = length of common substring ending at s1[i] and s2[j]. If s1[i]=s2[j]: dp[i][j]=dp[i-1][j-1]+1, else 0. Track maximum. O(mn) time.",star:false},
+{c:3,q:"The Counting DP technique (like counting paths in a grid) typically runs in:",o:["O(2ⁿ)","O(mn) for m×n grid","O(n!)","O(n log n)"],a:1,ex:"Grid paths DP: dp[i][j] = number of paths from (0,0) to (i,j) moving right or down. dp[i][j]=dp[i-1][j]+dp[i][j-1]. O(mn) time and space. Answer = dp[m-1][n-1].",star:false},
+{c:3,q:"The Weighted Job Scheduling problem runs in:",o:["O(n)","O(n log n)","O(n²)","O(2ⁿ)"],a:1,ex:"Weighted Job Scheduling: sort by finish time, dp[i]=max profit considering first i jobs. For each job, binary search for latest non-overlapping job. dp[i]=max(dp[i-1], profit[i]+dp[p(i)]). O(n log n).",star:true},
+{c:3,q:"Which DP problem has the recurrence dp[i] = max(dp[i], dp[i-coins[j]] + 1)?",o:["0-1 Knapsack","Coin Change (minimum coins)","LCS","Matrix Chain"],a:1,ex:"Coin Change minimum coins: dp[amount] = min coins for 'amount'. dp[i] = min(dp[i], dp[i-coin]+1) for each coin. Fill from 0 to target amount. O(n×amount).",star:false},
+{c:3,q:"What is the main difference between 0-1 Knapsack and Fractional Knapsack?",o:["0-1 uses greedy, Fractional uses DP","0-1: each item taken entirely or not; Fractional: can take fractions. 0-1 needs DP, Fractional is greedy-solvable","They are identical","Fractional takes more time"],a:1,ex:"0-1 Knapsack: binary choice (take or leave entire item). DP needed: O(nW). Fractional Knapsack: can take fractions. Greedy (sort by value/weight) gives optimal in O(n log n).",star:true},
+{c:3,q:"Bitmask DP is used when:",o:["Array is sorted","State space involves subsets of a small set (usually n≤20)","Strings are long","Graph is dense"],a:1,ex:"Bitmask DP: represent set as integer bitmask. dp[mask] = optimal value considering elements in mask. Works when n≤20 (2²⁰≈10⁶). Used in TSP (Held-Karp), covering problems.",star:true},
+{c:3,q:"The Longest Increasing Subsequence (LIS) O(n log n) algorithm uses:",o:["Two pointers","Binary search on a patience sorting array","Hash table","Greedy without DP"],a:1,ex:"LIS O(n log n): maintain array 'tails' where tails[i]=smallest tail of IS of length i+1. For each element, binary search to find position. Replace or extend. Length of tails = LIS length.",star:true},
+{c:3,q:"DP vs. Divide & Conquer: key difference is:",o:["D&C is always faster","D&C subproblems are independent (no overlap); DP subproblems overlap — solved once and cached","DP doesn't use recursion","D&C uses tables"],a:1,ex:"D&C: divide into independent subproblems (Merge Sort — no overlap). DP: subproblems overlap (Fibonacci — f(5) needs f(4) and f(3), f(4) also needs f(3)). DP avoids recomputing overlapping parts.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 5 — Graph Algorithms (33 Qs)
+══════════════════════════════════════ */
+{c:4,q:"BFS (Breadth-First Search) runs in time:",o:["O(V)","O(V + E)","O(V log V)","O(E log E)"],a:1,ex:"BFS: visit all vertices reachable from source using queue. Each vertex processed once (O(V)), each edge examined once (O(E)). Total: O(V+E). Finds shortest paths in unweighted graphs.",star:true},
+{c:4,q:"DFS (Depth-First Search) runs in time:",o:["O(V)","O(V + E)","O(V²)","O(E log V)"],a:1,ex:"DFS: explore as deep as possible before backtracking. Each vertex visited once, each edge traversed once (in directed graphs) or twice (undirected). Time: O(V+E). Space: O(V) for recursion stack.",star:true},
+{c:4,q:"Topological Sort is applicable to:",o:["All graphs","Only undirected graphs","Directed Acyclic Graphs (DAGs)","Only trees"],a:2,ex:"Topological Sort: linear ordering of vertices such that for every edge (u,v), u comes before v. Only possible for DAGs (no cycles). Uses DFS finishing times or Kahn's BFS-based algorithm. O(V+E).",star:true},
+{c:4,q:"Kahn's algorithm for Topological Sort uses:",o:["DFS","BFS with in-degree array","Stack only","Priority queue"],a:1,ex:"Kahn's: compute in-degree of all vertices. Add all 0-in-degree vertices to queue. Process: remove vertex, output it, decrease in-degree of neighbors — add to queue if in-degree becomes 0. O(V+E).",star:true},
+{c:4,q:"Strongly Connected Components (SCCs) of a directed graph are found by:",o:["BFS only","Kosaraju's or Tarjan's algorithm","Prim's algorithm","Kruskal's algorithm"],a:1,ex:"Kosaraju's: (1) DFS on original graph, record finish times. (2) Transpose graph. (3) DFS on transpose in reverse finish order. Each DFS tree in step 3 is an SCC. O(V+E).",star:true},
+{c:4,q:"The number of SCCs in an acyclic directed graph (DAG) equals:",o:["1","V (each vertex is its own SCC)","V/2","E"],a:1,ex:"In a DAG (no cycles), no two vertices are mutually reachable. Thus every SCC has exactly one vertex. Number of SCCs = number of vertices V.",star:false},
+{c:4,q:"Dijkstra's algorithm uses which data structure for efficiency?",o:["Stack","Queue","Min-Heap (Priority Queue)","Hash Table"],a:2,ex:"Dijkstra's: uses min-heap to always process vertex with minimum tentative distance. Extract-min O(log V), decrease-key O(log V). Total with binary heap: O((V+E) log V). With Fibonacci heap: O(V log V + E).",star:true},
+{c:4,q:"Bellman-Ford correctly handles graphs with:",o:["Only positive weights","Negative weight edges (and detects negative cycles)","Only unweighted graphs","Only trees"],a:1,ex:"Bellman-Ford: relax all edges V-1 times. Works with negative weights. Detects negative cycles: if any edge can still be relaxed after V-1 iterations, negative cycle exists. O(VE).",star:true},
+{c:4,q:"Floyd-Warshall algorithm computes shortest paths for a graph in time:",o:["O(V + E)","O(V² log V)","O(V³)","O(VE)"],a:2,ex:"Floyd-Warshall: triple nested loop over all vertex triples (k,i,j). O(V³) time and O(V²) space. Handles negative weights but not negative cycles. All-pairs shortest paths.",star:true},
+{c:4,q:"A Bridge in a graph is:",o:["A vertex whose removal disconnects graph","An edge whose removal increases number of connected components","A cycle edge","A self-loop"],a:1,ex:"Bridge: edge (u,v) is a bridge if removing it disconnects the graph. Found using DFS and low values. Low[u] = min of disc[u] and low/disc of back-edge neighbors. Bridge if low[v] > disc[u].",star:true},
+{c:4,q:"An Articulation Point is:",o:["A vertex of degree 1","A vertex whose removal increases the number of connected components","An edge with maximum weight","A leaf node"],a:1,ex:"Articulation point (cut vertex): removing it disconnects graph. Found by DFS: vertex u is articulation point if (1) it's root with 2+ children in DFS tree, or (2) non-root with child v where low[v] ≥ disc[u].",star:true},
+{c:4,q:"The maximum flow in a network is found by:",o:["Dijkstra's algorithm","Ford-Fulkerson or Edmonds-Karp algorithm","Prim's algorithm","DFS alone"],a:1,ex:"Max Flow: Ford-Fulkerson (augmenting paths via DFS/BFS). Edmonds-Karp (BFS augmenting paths): O(VE²). Max-flow min-cut theorem: max flow = min cut capacity.",star:true},
+{c:4,q:"The Max-Flow Min-Cut theorem states:",o:["Maximum flow equals minimum spanning tree weight","Maximum flow in a network equals the capacity of the minimum cut","Max flow equals number of edges","Min cut equals number of vertices"],a:1,ex:"Max-Flow Min-Cut: for any flow network, maximum flow value = minimum cut capacity. A cut separates source from sink. The minimum capacity cut is the bottleneck of the network.",star:true},
+{c:4,q:"A graph is bipartite if and only if it:",o:["Has even number of vertices","Contains no odd-length cycles","Is a tree","Has no parallel edges"],a:1,ex:"Bipartite: vertices divisible into two sets with all edges between sets (no edges within sets). Equivalent: no odd-length cycles. Check: 2-color with BFS/DFS. Fails on odd cycle → not bipartite.",star:true},
+{c:4,q:"Edmonds-Karp algorithm for max flow runs in:",o:["O(VE)","O(VE²)","O(V³)","O(E log V)"],a:1,ex:"Edmonds-Karp: Ford-Fulkerson using BFS (shortest augmenting paths). O(VE²) — at most O(VE) augmentations each O(E). Better than general Ford-Fulkerson (which may not terminate with irrational capacities).",star:true},
+{c:4,q:"Which algorithm detects negative cycles in a graph?",o:["Dijkstra's","Prim's","Bellman-Ford","Floyd-Warshall (diagonal check)"],a:2,ex:"Bellman-Ford: run V-1 relaxations. Then check all edges again — if any edge can still improve, a negative cycle is reachable. Floyd-Warshall: negative cycle if dp[i][i] < 0 for any i.",star:true},
+{c:4,q:"Tarjan's SCC algorithm uses which concept?",o:["In-degree count","DFS with discovery time and low-link values and a stack","BFS levels","Transposing the graph"],a:1,ex:"Tarjan's: single DFS pass. For each vertex, track disc[] and low[] values. Use a stack. A root of SCC: low[v]=disc[v]. Pop stack to get SCC. O(V+E). More efficient than Kosaraju's (one pass).",star:true},
+{c:4,q:"The Johnson's algorithm for all-pairs shortest paths runs in:",o:["O(V³)","O(V² log V + VE)","O(VE)","O(V²E)"],a:1,ex:"Johnson's: (1) Add source, run Bellman-Ford to get h[] values for reweighting. (2) Reweight edges to non-negative. (3) Run Dijkstra from each vertex. Total: O(V² log V + VE). Better than Floyd for sparse graphs.",star:true},
+{c:4,q:"BFS gives shortest paths in:",o:["Weighted graphs","Unweighted graphs (or all-equal weight)","Negative weight graphs","DAGs only"],a:1,ex:"BFS shortest path: works for unweighted graphs (all edges weight 1). Level = distance from source. For weighted graphs, use Dijkstra (non-negative) or Bellman-Ford (negative allowed).",star:true},
+{c:4,q:"A Hamiltonian path visits:",o:["Every edge exactly once","Every vertex exactly once","Only leaf vertices","Only cycle vertices"],a:1,ex:"Hamiltonian path: visits every vertex exactly once. Hamiltonian cycle: visits every vertex exactly once and returns to start. Hamiltonian path problem is NP-complete (unlike Eulerian path which is polynomial).",star:true},
+{c:4,q:"An Eulerian circuit visits:",o:["Every vertex exactly once","Every edge exactly once","Only even-degree vertices","Only a subset of edges"],a:1,ex:"Eulerian circuit: traverses every edge exactly once and returns to start. Condition: graph is connected AND every vertex has even degree. Eulerian path (not circuit): exactly 0 or 2 odd-degree vertices.",star:true},
+{c:4,q:"Which algorithm finds minimum spanning tree using vertex-based greedy?",o:["Kruskal's","Prim's","Borůvka's","Dijkstra's"],a:1,ex:"Prim's: vertex-based. Start with any vertex in MST set. Repeatedly add minimum weight edge from MST set to non-MST vertex. Greedy on vertex cuts, not edge sorting.",star:false},
+{c:4,q:"Topological sort detects cycles because:",o:["All cycles are bipartite","If graph has a cycle, topological sort cannot complete (all vertices processed)","Cycles increase in-degree","Back edges mean topological order exists"],a:1,ex:"Kahn's: if there's a cycle, vertices in the cycle always have in-degree ≥ 1, never added to queue. Result: processed vertices < V → cycle detected. DFS-based: back edge detected → cycle.",star:true},
+{c:4,q:"The condensation of a directed graph is obtained by:",o:["Removing all back edges","Contracting each SCC to a single node — result is a DAG","Adding edges","DFS traversal"],a:1,ex:"Condensation: represent each SCC as a single super-node, with edges between super-nodes if edges exist between SCCs. Condensation is always a DAG. Useful for meta-graph analysis.",star:false},
+{c:4,q:"Which algorithm is used for matching in bipartite graphs?",o:["Dijkstra's","Floyd-Warshall","Hungarian algorithm or Hopcroft-Karp","Bellman-Ford"],a:2,ex:"Bipartite matching: Hopcroft-Karp uses augmenting paths — O(E√V). Hungarian algorithm for weighted maximum matching: O(V³). Max bipartite matching can also be reduced to max flow.",star:true},
+{c:4,q:"DFS tree back edges indicate:",o:["Tree edges","Cross edges","Cycles in the graph","Forward edges"],a:2,ex:"DFS back edge (u,v) where v is ancestor of u in DFS tree: indicates a cycle. In undirected graphs, back edges are the only non-tree edges. In directed graphs, back edges → cycle, forward/cross edges don't.",star:true},
+{c:4,q:"The time complexity of Prim's algorithm with adjacency matrix is:",o:["O(V log V)","O(V²)","O(E log V)","O(VE)"],a:1,ex:"Prim's with adjacency matrix: O(V²) — each of V iterations scans all V vertices to find minimum. With binary heap and adjacency list: O(E log V). Matrix representation suits dense graphs.",star:true},
+{c:4,q:"A DAG can be used to:",o:["Represent undirected relationships","Model tasks with dependencies and compute longest path (critical path)","Detect bridges","Find SCCs"],a:1,ex:"DAG (Directed Acyclic Graph): models dependencies, scheduling, compilation. Longest path in DAG (critical path) solvable in O(V+E) via topological sort + DP. No polynomial algorithm for general graphs.",star:true},
+{c:4,q:"The minimum number of colors needed to color a graph (chromatic number) for a bipartite graph is:",o:["1","2","3","Depends on structure"],a:1,ex:"Bipartite graph chromatic number = 2 (2-colorable). Two color classes form the bipartition. Non-bipartite graphs need ≥ 3. Graph coloring problem is NP-hard in general.",star:false},
+{c:4,q:"Network Flow: Ford-Fulkerson with DFS augmenting paths runs in:",o:["O(VE)","O(VE²)","O(max_flow × E)","O(V log V)"],a:2,ex:"Ford-Fulkerson (DFS): each augmenting path increases flow by ≥ 1. Up to max_flow augmentations, each O(E). Total: O(max_flow × E). Can be non-polynomial for irrational capacities.",star:true},
+{c:4,q:"The shortest path in a DAG can be found in:",o:["O(V log V)","O(VE)","O(V + E) using topological sort","O(V²)"],a:2,ex:"Shortest path in DAG: topological sort O(V+E), then relax edges in topological order. Total O(V+E). Works with negative edges (no cycles → Bellman-Ford not needed). Longest path same complexity.",star:true},
+{c:4,q:"Which algorithm uses the concept of augmenting paths to find maximum matching?",o:["Dijkstra's","Kruskal's","Hopcroft-Karp / Edmonds Blossom","Bellman-Ford"],a:2,ex:"Augmenting path matching: a path that alternates between matched and unmatched edges, starting and ending with unmatched vertices. Flipping matched/unmatched increases matching size by 1. Hopcroft-Karp: O(E√V).",star:false},
+{c:4,q:"Strongly Connected Components decompose a directed graph into:",o:["Spanning trees","Maximal subgraphs where every pair of vertices is mutually reachable","Minimum cuts","Bipartite parts"],a:1,ex:"SCC: maximal strongly connected subgraph. In SCC, ∀u,v: there's a path u→v and v→u. Every directed graph has a unique SCC decomposition. Condensation is a DAG.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 6 — NP-Completeness & Approximation (33 Qs)
+══════════════════════════════════════ */
+{c:5,q:"The class P contains problems that:",o:["Can only be solved in exponential time","Are solvable by deterministic TM in polynomial time","Are not decidable","Can only be verified in polynomial time"],a:1,ex:"P = class of decision problems solvable by deterministic algorithm in O(nᵏ) time. Examples: sorting, shortest path, MST, 2-SAT, bipartite matching. These are considered tractable.",star:true},
+{c:5,q:"The class NP contains problems that:",o:["Are not solvable","Are solvable in non-polynomial time","Have solutions verifiable in polynomial time by a deterministic TM","Are NP-hard only"],a:2,ex:"NP (Non-deterministic Polynomial): decision problems whose YES-instance has a certificate verifiable in polynomial time. Alternatively: solvable by non-deterministic TM in polynomial time.",star:true},
+{c:5,q:"The P vs NP question asks:",o:["Whether all problems are solvable","Whether every problem verifiable in poly-time is also solvable in poly-time","Whether NP is infinite","Whether sorting is NP-complete"],a:1,ex:"P vs NP: does P = NP? I.e., if a problem's solution can be VERIFIED quickly (poly-time), can it also be SOLVED quickly? Most believe P ≠ NP but unproven. Clay Millennium Prize problem.",star:true},
+{c:5,q:"NP-Hard problems are:",o:["Problems in NP only","Problems at least as hard as every problem in NP (not necessarily in NP)","Problems solvable in polynomial time","Problems with unknown complexity"],a:1,ex:"NP-Hard: problem H is NP-hard if every NP problem reduces to H in poly time. H may or may not be in NP itself. Example: Halting problem is NP-hard but not in NP.",star:true},
+{c:5,q:"NP-Complete problems are:",o:["Problems in NP with no known poly-time algorithm and every NP problem reduces to them","Easy problems in P","Problems outside NP","Only approximation problems"],a:0,ex:"NP-Complete = NP ∩ NP-Hard. A problem is NP-complete if: (1) it's in NP (solution verifiable in poly-time), (2) every NP problem poly-time reduces to it. Hardest problems in NP.",star:true},
+{c:5,q:"To prove a problem B is NP-Complete, we need:",o:["Show B ∈ P","Show B ∈ NP AND reduce a known NP-Complete problem A to B in poly-time (A ≤p B)","Show B is undecidable","Show B takes exponential time"],a:1,ex:"NP-Completeness proof: (1) Show B ∈ NP (construct poly-time verifier). (2) Show B is NP-hard by reducing known NPC problem A to B in poly-time: if B ∈ P, then A ∈ P, contradiction.",star:true},
+{c:5,q:"The first problem proven NP-Complete is:",o:["Graph Coloring","3-SAT","SAT (Cook-Levin Theorem, 1971)","Knapsack"],a:2,ex:"Cook-Levin theorem (1971): SAT (Boolean satisfiability) is NP-complete. Every NP problem reduces to SAT in poly-time (via TM simulation). Subsequently 3-SAT, Vertex Cover, Clique, etc. were proven NPC.",star:true},
+{c:5,q:"Which of the following is in P (polynomial time)?",o:["3-SAT","Hamiltonian Cycle","Bipartite Matching","Graph Coloring (3-color)"],a:2,ex:"Bipartite Matching is in P: O(E√V) using Hopcroft-Karp. 3-SAT, Hamiltonian Cycle, and 3-Graph Coloring are all NP-complete.",star:true},
+{c:5,q:"Polynomial-time reduction A ≤p B means:",o:["A is harder than B","A can be transformed to B in poly-time: if B ∈ P then A ∈ P","B reduces to A","A and B are equivalent"],a:1,ex:"A ≤p B: there's a poly-time computable function f such that x∈A ↔ f(x)∈B. If B solvable in poly-time, so is A. Used to show A is 'no harder than' B, and B is 'at least as hard as' A.",star:true},
+{c:5,q:"The 3-SAT problem is NP-Complete. It is a special case of:",o:["Graph Coloring","SAT (Boolean Satisfiability)","Knapsack","Vertex Cover"],a:1,ex:"3-SAT: each clause has exactly 3 literals. Special case of general SAT. 3-SAT is NP-complete (proved by reducing SAT to 3-SAT). Most other NPC reductions use 3-SAT as the source.",star:true},
+{c:5,q:"Vertex Cover problem: find minimum set of vertices that covers all edges. It is:",o:["Solvable in polynomial time","NP-Complete","In class P","Solvable by greedy optimally"],a:1,ex:"Vertex Cover is NP-complete. Decision version (is there a vertex cover of size k?) is NP-complete. Optimization version is NP-hard. Has a 2-approximation algorithm.",star:true},
+{c:5,q:"The Independent Set problem is NP-Complete. It is related to Vertex Cover by:",o:["Independence and spanning","S is independent set ↔ V-S is vertex cover","They are unrelated","Both have same algorithm"],a:1,ex:"Independent Set and Vertex Cover are complementary: S is an independent set iff V\\S is a vertex cover. So IS ≤p VC and VC ≤p IS. If k-Vertex Cover exists, then (n-k)-Independent Set exists.",star:true},
+{c:5,q:"The Clique problem (find clique of size k) is NP-Complete. A clique is:",o:["Any connected subgraph","Complete subgraph where every pair of vertices is connected","A spanning tree","A minimum cut"],a:1,ex:"Clique: subset S of vertices where every pair in S is connected by an edge. k-Clique: does graph have clique of size k? NP-complete. Complementary to Independent Set in complement graph.",star:true},
+{c:5,q:"The Travelling Salesman Problem (TSP) decision version asks:",o:["Find shortest tour","Is there a tour with total weight ≤ k?","Find minimum spanning tree","Count all tours"],a:1,ex:"TSP decision: given complete graph with weights and budget k, does a Hamiltonian cycle of total weight ≤ k exist? NP-complete. Optimization version (find shortest tour) is NP-hard.",star:true},
+{c:5,q:"An approximation algorithm for an optimization problem gives a solution that is:",o:["Always optimal","Within a provable factor of optimal","Always worse than optimal","Only correct sometimes"],a:1,ex:"Approximation algorithm: poly-time algorithm guaranteeing solution within factor ρ of optimal. Approximation ratio ρ: MAX(ALG/OPT, OPT/ALG). Better ρ = better approximation (ρ=1 means optimal).",star:true},
+{c:5,q:"The 2-approximation algorithm for Vertex Cover works by:",o:["Greedy degree-based","Finding a maximal matching M — both endpoints of each matched edge are in cover (2|M| ≤ 2·OPT)","Exhaustive search","Random sampling"],a:1,ex:"2-approx Vertex Cover: find maximal matching (no more edges can be added). Add both endpoints of each matched edge. This cover has ≤ 2·OPT vertices (each OPT vertex covers ≤ 1 matched edge).",star:true},
+{c:5,q:"The greedy approximation for Set Cover achieves ratio:",o:["O(1)","O(log n)","O(n)","O(√n)"],a:1,ex:"Greedy Set Cover: repeatedly pick set covering most uncovered elements. Approximation ratio: H(max_size) ≤ ln n + 1. This is optimal (unless P=NP, no polynomial algorithm does better by constant factor).",star:true},
+{c:5,q:"The TSP with triangle inequality has an approximation algorithm of ratio:",o:["4","3/2 (Christofides-Serdyuk)","2","O(log n)"],a:1,ex:"Christofides-Serdyuk (1976): for metric TSP. Find MST, find min-weight perfect matching on odd-degree vertices, combine for Eulerian circuit, shortcut for Hamiltonian cycle. Ratio 3/2.",star:true},
+{c:5,q:"A PTAS (Polynomial Time Approximation Scheme) is:",o:["An exact algorithm","Algorithm family with approximation ratio (1+ε) for any ε>0, running in poly-time in n (may be exponential in 1/ε)","Always O(log n) approximation","Only for graph problems"],a:1,ex:"PTAS: for any fixed ε>0, gives (1+ε)-approximation in poly-time in n. Running time may be exponential in 1/ε (e.g., O(n^(1/ε))). Better than constant-ratio but not as strong as FPTAS.",star:true},
+{c:5,q:"FPTAS (Fully Polynomial Time Approximation Scheme) has running time:",o:["Poly in n only","Poly in both n and 1/ε","Exponential in 1/ε","Same as exact algorithm"],a:1,ex:"FPTAS: (1+ε)-approximation in time poly in both n and 1/ε. Example: 0-1 Knapsack has FPTAS via scaling/rounding (O(n³/ε)). Strongest type of approximation — practical for small ε.",star:true},
+{c:5,q:"Graph 3-Coloring is NP-Complete. 2-Coloring (bipartite check) is:",o:["Also NP-Complete","In P — O(V+E) using BFS/DFS","Undecidable","NP-Hard but not NP-Complete"],a:1,ex:"2-Coloring is in P: check if graph is bipartite using BFS/DFS 2-coloring in O(V+E). 3-Coloring is NP-complete. k-Coloring for k≥3 is NP-complete.",star:true},
+{c:5,q:"Hamiltonian Cycle is NP-Complete but Eulerian Circuit is in P because:",o:["They are equivalent","Eulerian Circuit has simple polynomial condition (all even degrees), Hamiltonian Cycle has no known poly-time characterization","Hamiltonian Cycle is easier","Eulerian Circuit needs exponential verification"],a:1,ex:"Eulerian Circuit: exists iff graph is connected and all vertices have even degree — checkable in O(V+E). Hamiltonian Cycle: no polynomial sufficient condition known. NP-complete.",star:true},
+{c:5,q:"The Subset Sum problem is NP-Complete. It is a special case of:",o:["Graph Coloring","SAT","0-1 Knapsack","TSP"],a:2,ex:"Subset Sum: special case of 0-1 Knapsack where value=weight for each item and target=capacity. Both NP-complete. Subset Sum reduces to 0-1 Knapsack trivially.",star:true},
+{c:5,q:"Which of the following shows P ⊆ NP?",o:["Every NP problem is in P","Any poly-time algorithm is also a poly-time verifier (just run algorithm as verifier, ignore certificate)","P and NP are disjoint","Only NPC problems are in NP"],a:1,ex:"P ⊆ NP: for any problem in P with poly-time solver M, make a verifier that ignores certificate and runs M directly. Since M halts in poly-time, verifier does too. Hence P ⊆ NP.",star:true},
+{c:5,q:"The decision version of Knapsack (is there a selection of weight ≤W and value ≥V?) is:",o:["In P","NP-Complete","Undecidable","In co-NP only"],a:1,ex:"Knapsack decision: NP-complete. Certificate: list of chosen items — verify in poly-time by summing weights and values. NP-hard: subset sum (NPC) reduces to it. Hence NP-complete.",star:true},
+{c:5,q:"Randomized algorithms for NP-hard problems (like simulated annealing) are:",o:["Exact algorithms","Heuristics — may not guarantee optimality or approximation ratio","Always polynomial","Always exponential"],a:1,ex:"Heuristics (simulated annealing, genetic algorithms, local search): no guarantee on solution quality but often work well in practice. Different from approximation algorithms which have provable bounds.",star:false},
+{c:5,q:"2-SAT (each clause has exactly 2 literals) is:",o:["NP-Complete","In P — O(V+E) using implication graph and SCC","NP-Hard","Undecidable"],a:1,ex:"2-SAT is in P! Build implication graph (x→y for clause ¬x∨y). Formula satisfiable iff no variable x has x and ¬x in same SCC. Solve with Kosaraju's/Tarjan's SCC: O(V+E).",star:true},
+{c:5,q:"The relation between NP and co-NP is:",o:["NP = co-NP proven","NP ∩ co-NP = empty","NP and co-NP are believed not equal (unproven), P ⊆ NP ∩ co-NP","co-NP ⊂ P"],a:2,ex:"co-NP: complements of NP problems. P ⊆ NP ∩ co-NP. NP = co-NP is unknown (open problem like P=NP). NP ≠ co-NP would imply P ≠ NP. Problems in NP ∩ co-NP include primality, factoring.",star:false},
+{c:5,q:"Approximation ratio of 2 for metric TSP (using MST doubling) means:",o:["Solution is 2× worse than optimal in worst case","Solution is optimal","Solution is 2× better than optimal","Random selection"],a:0,ex:"MST 2-approx for metric TSP: find MST (≤ OPT), double edges for Eulerian circuit, shortcut to Hamiltonian. Tour weight ≤ 2×MST ≤ 2×OPT. Christofides improves to 3/2.",star:true},
+{c:5,q:"SAT to 3-SAT reduction: a clause with k>3 literals is handled by:",o:["Splitting into multiple 2-literal clauses","Introducing auxiliary variables and splitting into multiple 3-literal clauses","Ignoring the extra literals","Negating the extra literals"],a:1,ex:"SAT→3-SAT: clause (l1∨l2∨l3∨l4) becomes (l1∨l2∨y1) ∧ (¬y1∨l3∨y2) ∧ (¬y2∨l4∨l4) with new variables. Each original clause becomes O(k) 3-literal clauses. Poly-time reduction.",star:false},
+{c:5,q:"The Graph Coloring problem asks for the minimum number of colors (chromatic number). It is:",o:["Always solvable in poly time","NP-Hard (optimization), NP-Complete (decision for k≥3)","In class P","Undecidable"],a:1,ex:"k-Graph Coloring decision (k≥3): NP-complete. Chromatic number optimization: NP-hard. Special cases: k=1 (trivial — no edges), k=2 (bipartite check, P). Greedy gives ≤ Δ+1 colors.",star:true},
+{c:5,q:"Which of the following would imply P = NP?",o:["Finding an exponential algorithm for 3-SAT","Finding a polynomial-time algorithm for any single NP-Complete problem","Proving NP is infinite","Solving TSP approximately"],a:1,ex:"If any NP-complete problem has a poly-time algorithm, then ALL NP problems do (by poly-time reductions). Since NPC problems are the hardest in NP, poly-time for one → P = NP.",star:true},
+{c:5,q:"The complexity class EXP (EXPTIME) contains:",o:["Only undecidable problems","Problems solvable in exponential time 2^(n^k)","Problems in NP only","All problems"],a:1,ex:"EXPTIME: decidable in O(2^(nᵏ)) time. P ⊆ NP ⊆ PSPACE ⊆ EXPTIME. Known: P ≠ EXPTIME (time hierarchy theorem). Many game-solving problems are EXPTIME-complete.",star:false},
+{c:5,q:"Local search algorithms for NP-hard optimization problems work by:",o:["Global enumeration","Starting with a solution and iteratively improving by exploring neighboring solutions","Divide and conquer","Pure random guessing"],a:1,ex:"Local search: start with initial solution, try local modifications (swaps, insertions). Accept improvements. May get stuck at local optima. Examples: 2-opt for TSP, local search for Max-Cut. No global optimality guarantee.",star:false},
+];
+
+let sName='',sBranch='',sSem='',sCollege='';
+let activeQ=[],idx=0,score=0,skipped=0,uAns=[];
+let timerInterval=null,timeLeft=30;
+let selChapter='all';
+
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+function getRmk(pct){
+  if(pct>=90)return{e:'🏆',t:'Outstanding! DAA Champion!'};
+  if(pct>=75)return{e:'🥇',t:'Excellent! Ready for exam!'};
+  if(pct>=60)return{e:'🥈',t:'Good work! Keep practising!'};
+  if(pct>=40)return{e:'🥉',t:'Fair attempt. Revise more!'};
+  return{e:'📖',t:'Keep studying! You can do it!'};
+}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sName=$('inputName').value.trim()||'Student';
+  sBranch=$('inputBranch').value.trim()||'N/A';
+  sSem=$('inputSem').value||'N/A';
+  sCollege=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+document.querySelectorAll('.chapter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selChapter=btn.dataset.chapter;
+  });
+});
+
+$('startBtn').addEventListener('click',()=>{
+  activeQ=selChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selChapter));
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);
+  showScreen('screenQuiz');render();
+});
+
+$('backBtn').addEventListener('click',()=>{
+  if(confirm('Go back to intro? Current progress will be lost.')){clearInterval(timerInterval);showScreen('screenIntro');}
+});
+
+function startTimer(){
+  clearInterval(timerInterval);timeLeft=30;updateTimerUI();
+  timerInterval=setInterval(()=>{
+    timeLeft--;updateTimerUI();
+    if(timeLeft<=0){clearInterval(timerInterval);autoSkip();}
+  },1000);
+}
+function updateTimerUI(){
+  const tp=$('timerPill');
+  tp.textContent=`⏳ ${timeLeft}s`;
+  tp.className='timer-pill'+(timeLeft<=10?' urgent':'')+(timeLeft<=5?' critical':'');
+}
+function autoSkip(){
+  if(uAns[idx]===-1){uAns[idx]=-2;skipped++;}
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+}
+
+function render(){
+  const q=activeQ[idx];
+  $('progressText').textContent=`Question ${idx+1} of ${activeQ.length}`;
+  $('scoreText').textContent=`Score: ${score}`;
+  $('progressFill').style.width=`${((idx)/activeQ.length)*100}%`;
+  $('qNum').textContent=`Q${idx+1}`;
+  const oldStar=document.querySelector('.q-star');if(oldStar)oldStar.remove();
+  if(q.star){const s=document.createElement('div');s.className='q-star';s.textContent='⭐ Important';$('qNum').after(s);}
+  $('qText').textContent=q.q;
+  const ex=$('qExample');
+  if(q.hint){ex.textContent='💡 Hint: '+q.hint;ex.style.display='block';}
+  else{ex.style.display='none';}
+  const chInfo=CHAPTERS[q.c];
+  $('chapterBadge').textContent=`${chInfo.icon} Unit ${q.c+1}: ${chInfo.name}`;
+  const ol=$('optionsList');ol.innerHTML='';
+  ['A','B','C','D'].forEach((ltr,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${ltr}</div><div class="option-text">${q.o[i]}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));
+    ol.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');
+  $('explanationText').textContent='';
+  $('nextBtn').classList.remove('visible');
+  $('skipBtn').style.display='inline-block';
+  $('autoAdvanceBar').classList.remove('show');
+  $('autoNextHint').classList.remove('show');
+  startTimer();
+}
+
+function selectAnswer(chosen){
+  clearInterval(timerInterval);
+  if(uAns[idx]!==-1)return;
+  uAns[idx]=chosen;
+  const q=activeQ[idx];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('locked'));
+  opts[q.a].classList.add('correct');
+  opts[q.a].querySelector('.option-radio').textContent='✓';
+  if(chosen===q.a){score++;opts[chosen].querySelector('.option-radio').textContent='✓';}
+  else{opts[chosen].classList.add('wrong');opts[chosen].querySelector('.option-radio').textContent='✗';}
+  if(q.ex){$('explanationText').textContent=q.ex;$('explanationBox').classList.add('show');}
+  $('skipBtn').style.display='none';
+  if(chosen===q.a){
+    $('autoAdvanceBar').classList.add('show');
+    $('autoAdvanceFill').classList.remove('running');
+    void $('autoAdvanceFill').offsetWidth;
+    $('autoAdvanceFill').classList.add('running');
+    $('autoNextHint').classList.add('show');
+    setTimeout(()=>{if(idx<activeQ.length-1){idx++;render();}else{showResult();}},1600);
+  }else{$('nextBtn').classList.add('visible');}
+}
+
+$('skipBtn').addEventListener('click',()=>{
+  clearInterval(timerInterval);uAns[idx]=-2;skipped++;
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+});
+$('nextBtn').addEventListener('click',()=>{
+  if(idx<activeQ.length-1){idx++;render();}else{showResult();}
+});
+
+function showResult(){
+  clearInterval(timerInterval);
+  const tot=activeQ.length,wc=tot-score-skipped,pct=Math.round((score/tot)*100),rm=getRmk(pct);
+  $('resultEmoji').textContent=rm.e;
+  $('scoreBig').textContent=score;$('scoreTotal').textContent=`/ ${tot}`;
+  $('resultPercent').textContent=pct+'%';$('remarkText').textContent=rm.t;
+  const meta=[sBranch!=='N/A'?sBranch:'',sSem!=='N/A'?sSem:''].filter(Boolean).join(' · ')||'DAA Quiz';
+  $('bannerName').textContent=sName;$('bannerMeta').textContent=meta;
+  $('remarkSub').textContent=`${score} correct · ${wc} wrong · ${skipped} skipped`;
+  $('pillCorrect').textContent=score;$('pillWrong').textContent=wc;$('pillSkip').textContent=skipped;
+  $('certBannerName').textContent=sName;$('certBannerMeta').textContent='DAA Quiz · StudyHub';
+  showScreen('screenResult');
+  if(pct>=60)launchConfetti();
+  buildReview();
+}
+
+function launchConfetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');
+  cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const P=Array.from({length:120},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,r:Math.random()*6+3,c:`hsl(${Math.random()*360},80%,60%)`,s:Math.random()*3+1,a:Math.random()*6.28}));
+  let fr=0;
+  const anim=()=>{ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.y+=p.s;p.a+=.04;if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width;}ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);ctx.restore();});fr++;if(fr<220)requestAnimationFrame(anim);else ctx.clearRect(0,0,cv.width,cv.height);};
+  anim();
+}
+
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  activeQ.forEach((q,i)=>{
+    const ua=uAns[i],sk=ua===-2,ok=ua===q.a;
+    const d=document.createElement('div');
+    d.className=`review-item ${ok?'ri-correct':sk?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sk?'':'ri-wrong-ans'}">${sk?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);
+  });
+}
+
+$('reviewToggleBtn').addEventListener('click',()=>{
+  const l=$('reviewList'),b=$('reviewToggleBtn');
+  l.classList.toggle('open');
+  b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';
+});
+
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=activeQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[activeQ[i],activeQ[j]]=[activeQ[j],activeQ[i]];}
+  idx=0;score=0;skipped=0;uAns=new Array(activeQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCert(){
+  const tot=activeQ.length,pct=Math.round((score/tot)*100),rm=getRmk(pct),wc=tot-score-skipped;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r2=40;r2<=160;r2+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r2*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r2,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rr(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rr(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('⚡',sx,sy+9);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);
+  ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sName||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sBranch,sSem,sCollege].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rr(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 18px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Design & Analysis of Algorithms — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,sc=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=sc;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=sc;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${score}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=sc;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rr(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=sc;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:score,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:skipped,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const col=ii%2,row=~~(ii/2),sx2=440+col*230,sy3=sy2-46+row*68;rr(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rr(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sCollege&&sCollege!=='N/A')ctx.fillText(`🏛  ${sCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  DAA',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+
+const quizURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/daaquiz.html';
+const shareText=()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct),wc=tot-score-skipped;return `${r.e} DAA Quiz — StudyHub\n\n${sName?'👤 '+sName+'\n':''}${sBranch&&sBranch!=='N/A'?'📘 '+sBranch+(sSem&&sSem!=='N/A'?' · '+sSem:'')+'\n':''}🏆 Score: ${score}/${tot} (${pct}%)\n${r.t}\n\n✅ ${score}  ❌ ${wc}  ⟫ ${skipped}\n\n📚 Try: ${quizURL()}\n\nStudyHub`;};
+
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=activeQ.length,pct=Math.round((score/tot)*100),sn=(sName||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_DAA_Certificate_${sn}_${score}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed — try another browser');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(quizURL()).then(()=>toast('🔗 Link copied!')).catch(()=>prompt('Copy:',quizURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *DAA Quiz — StudyHub*\n\n${sName?'👤 *'+sName+'*\n':''}🏆 Score: *${score}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${quizURL()}`)}`)});
+$('twitterBtn').addEventListener('click',()=>{const tot=activeQ.length,pct=Math.round((score/tot)*100),r=getRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${score}/${tot} (${pct}%) on DAA Quiz!\n${r.t}\nTry it: ${quizURL()} #DAA #BTech #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(shareText()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',shareText()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

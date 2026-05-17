@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Workshop Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);
+  flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+/* INFO */
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+/* INTRO */
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+/* QUIZ */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong)}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);
+  box-shadow:0 0 0 3px rgba(22,163,74,.15),6px 6px 16px rgba(22,163,74,.1)}
+.option.correct .option-letter{background:var(--correct);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.4)}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);
+  box-shadow:0 0 0 3px rgba(220,38,38,.15),6px 6px 16px rgba(220,38,38,.1)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.4)}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+/* RESULT */
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;
+  margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);
+  box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;
+  box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);
+  border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;
+  cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);
+  padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;
+  border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #B8C8D8,-8px -8px 18px #FFFFFF}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);
+  cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}.share-actions{gap:8px}.share-action-btn{min-width:68px;padding:12px 8px}
+}
+</style>
+</head>
+<body data-quiz="itworkshop">
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">💻</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a>
+  <a href="#" class="active">🧠 Quizzes</a>
+  <a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. Computer Science" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option>
+            <option>3rd Semester</option><option>4th Semester</option>
+            <option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">💻</span>
+    <div class="intro-title">IT Workshop Quiz</div>
+    <div class="intro-sub">B.Tech Exam-Oriented MCQs — PC Hardware, Internet, MS Word, LaTeX, MS Excel, MS PowerPoint. 180 questions across 6 units.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">180</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (180 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: PC Hardware</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Internet</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Microsoft Word</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: LaTeX</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Microsoft Excel</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Microsoft PowerPoint</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 30</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">💻 Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">IT Workshop Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 30</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">IT Workshop Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">Share on<br>WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Share on<br>Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Score<br>Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"PC Hardware",                  icon:"🖥️"},
+  {name:"Internet",                     icon:"🌐"},
+  {name:"Microsoft Word",               icon:"📝"},
+  {name:"LaTeX",                        icon:"📄"},
+  {name:"Microsoft Excel",              icon:"📊"},
+  {name:"Microsoft PowerPoint",         icon:"📽️"},
+];
+
+const ALL_QUESTIONS=[
+/* ═══ UNIT 1: PC HARDWARE (30) ═══ */
+{c:0,q:"Which component is considered the 'brain' of a computer?",o:["RAM","Hard Disk","CPU","Motherboard"],a:2,ex:"The CPU (Central Processing Unit) is the brain of the computer. It performs all arithmetic, logic, control and input/output operations specified by the instructions.",star:true,hint:"CPU = Central Processing Unit — it processes all instructions"},
+{c:0,q:"What does RAM stand for?",o:["Read Access Memory","Random Access Memory","Rapid Access Module","Read and Modify"],a:1,ex:"RAM stands for Random Access Memory. It is volatile memory used to store data that the CPU is currently using. Data is lost when the computer is switched off.",star:true},
+{c:0,q:"Which of the following is a peripheral of a computer?",o:["CPU","RAM","Keyboard","Motherboard"],a:2,ex:"A peripheral is an external device connected to a computer. Keyboard, mouse, printer, and monitor are peripherals. CPU, RAM, and motherboard are internal components.",star:true},
+{c:0,q:"What is the function of the Motherboard?",o:["Store data permanently","Connect and allow communication between all components","Display output","Process graphics only"],a:1,ex:"The motherboard is the main circuit board of a computer. It connects and allows communication between the CPU, RAM, storage, and all other components.",star:true},
+{c:0,q:"Which type of memory is non-volatile?",o:["RAM","Cache","ROM","Register"],a:2,ex:"ROM (Read Only Memory) is non-volatile — it retains data even when power is off. RAM is volatile and loses data on power off.",star:true},
+{c:0,q:"What does CPU stand for?",o:["Central Processing Unit","Computer Processing Utility","Central Program Unit","Core Processing Unit"],a:0,ex:"CPU stands for Central Processing Unit. It is the primary component of a computer that processes instructions and manages all hardware components.",star:true},
+{c:0,q:"Which component in the CPU performs arithmetic and logical operations?",o:["Control Unit","ALU","Register","Cache"],a:1,ex:"The ALU (Arithmetic Logic Unit) performs all arithmetic operations (addition, subtraction) and logical operations (AND, OR, NOT) inside the CPU.",star:true},
+{c:0,q:"The function of the Control Unit (CU) in CPU is to:",o:["Store data","Perform calculations","Coordinate and control all operations","Connect to the internet"],a:2,ex:"The Control Unit directs and coordinates the operations of all the other units of the computer. It fetches instructions from memory, decodes them, and controls execution.",star:true},
+{c:0,q:"Which of the following is an example of secondary storage?",o:["RAM","Cache","Hard Disk Drive","CPU Register"],a:2,ex:"Secondary storage (also called auxiliary storage) includes Hard Disk Drives, SSDs, CD/DVDs, and USB drives. They are non-volatile and have large storage capacity.",star:true},
+{c:0,q:"What is the process of starting a computer called?",o:["Logging in","Booting","Formatting","Partitioning"],a:1,ex:"Booting (or bootstrapping) is the process of starting a computer. The BIOS/UEFI performs POST, loads the bootloader, and the OS is loaded into memory.",star:true},
+{c:0,q:"Which port is commonly used to connect a mouse and keyboard to a modern PC?",o:["VGA","HDMI","USB","RJ-45"],a:2,ex:"USB (Universal Serial Bus) is the standard interface for connecting peripherals like mouse, keyboard, printer, and external drives to modern computers.",star:true},
+{c:0,q:"The speed of a CPU is measured in:",o:["Bytes","Hertz (Hz) or GHz","Watts","Pixels"],a:1,ex:"CPU speed (clock speed) is measured in Hertz (Hz). Modern CPUs operate at billions of cycles per second, measured in GHz (GigaHertz).",star:true},
+{c:0,q:"What does BIOS stand for?",o:["Basic Input Output System","Binary Input Output Storage","Basic Integrated Operating System","Binary Integrated Output System"],a:0,ex:"BIOS stands for Basic Input Output System. It is firmware stored on a chip on the motherboard that initialises hardware during the booting process.",star:true},
+{c:0,q:"Which of the following is used to connect a computer to a Local Area Network?",o:["Sound Card","Graphics Card","NIC (Network Interface Card)","USB Hub"],a:2,ex:"NIC (Network Interface Card) is a hardware component that connects a computer to a network. It can be wired (Ethernet) or wireless (Wi-Fi).",star:true},
+{c:0,q:"What is the purpose of a heat sink in a computer?",o:["Store data","Improve graphics","Dissipate heat from the CPU","Supply power"],a:2,ex:"A heat sink is a passive cooling device attached to the CPU and other chips. It absorbs and dissipates heat to prevent components from overheating.",star:true},
+{c:0,q:"Which of the following is an input device?",o:["Monitor","Printer","Scanner","Speaker"],a:2,ex:"A scanner is an input device that converts physical documents or images into digital format. Monitor, printer, and speaker are output devices.",star:true},
+{c:0,q:"The process of organizing a disk to prepare it for use is called:",o:["Partitioning","Defragmentation","Formatting","Compression"],a:2,ex:"Formatting prepares a disk for use by creating a file system. It sets up the structure needed to store files. High-level formatting creates the file system; low-level formatting defines sectors.",star:true},
+{c:0,q:"Which of the following is NOT a function of the OS?",o:["Memory management","Process management","Performing arithmetic operations","Device management"],a:2,ex:"The OS manages memory, processes, files, and devices. Arithmetic operations are performed by the ALU inside the CPU, not the OS.",star:true},
+{c:0,q:"What does POST stand for in computer startup?",o:["Power On Self Test","Program Operating System Test","Process Output System Test","Processor Operating Speed Test"],a:0,ex:"POST (Power On Self Test) is a diagnostic testing sequence performed by the BIOS at startup to ensure all hardware components are functioning correctly before booting.",star:true},
+{c:0,q:"Which storage medium uses magnetic platters to store data?",o:["SSD","USB Flash Drive","HDD","CD-ROM"],a:2,ex:"HDD (Hard Disk Drive) uses spinning magnetic platters and read/write heads to store data. SSDs use flash memory with no moving parts and are faster.",star:true},
+{c:0,q:"What is the typical function of the SMPS in a computer?",o:["Cool the CPU","Store BIOS settings","Convert AC to regulated DC power","Connect to the internet"],a:2,ex:"SMPS (Switch Mode Power Supply) converts the AC power from the wall outlet into the regulated DC voltages (3.3V, 5V, 12V) needed by computer components.",star:true},
+{c:0,q:"Which Linux command is used to list files in a directory?",o:["dir","list","ls","show"],a:2,ex:"The 'ls' command in Linux lists the contents of a directory. 'ls -l' gives a detailed listing, 'ls -a' shows hidden files. On Windows, the equivalent is 'dir'.",star:true},
+{c:0,q:"Which Linux command is used to change directories?",o:["move","cd","chdir","go"],a:1,ex:"The 'cd' (change directory) command is used to navigate between directories in both Linux and Windows. 'cd ..' goes to the parent directory.",star:true},
+{c:0,q:"What does 'sudo' mean in Linux?",o:["Super User Do","System Update Direct Operations","Start Unix Direct Order","Simple Unix Directory Operations"],a:0,ex:"'sudo' stands for 'Super User Do'. It allows a permitted user to execute a command as the superuser (root), providing elevated privileges for system administration tasks.",star:true},
+{c:0,q:"Which command is used to copy files in Linux?",o:["move","cp","copy","mv"],a:1,ex:"The 'cp' command copies files and directories in Linux. 'cp source dest' copies a file. 'cp -r' copies directories recursively. 'mv' moves/renames files.",star:true},
+{c:0,q:"What is the purpose of the 'pwd' command in Linux?",o:["Print Working Directory","Password","Power Word","Program Working Directory"],a:0,ex:"'pwd' stands for Print Working Directory. It displays the absolute path of the current directory you are in.",star:true},
+{c:0,q:"Which command is used to display the contents of a file in Linux?",o:["show","view","cat","read"],a:2,ex:"The 'cat' command concatenates and displays file contents. 'cat filename' shows the file. Other commands: 'more' and 'less' for paginated display.",star:true},
+{c:0,q:"What does the 'rm' command do in Linux?",o:["Rename a file","Move a file","Remove/delete a file","Read memory"],a:2,ex:"'rm' removes (deletes) files or directories in Linux. 'rm -r' removes directories recursively. Use with caution — deleted files cannot easily be recovered.",star:true},
+{c:0,q:"Which command creates a new directory in Linux?",o:["newdir","mkdir","createdir","makedir"],a:1,ex:"'mkdir' (make directory) creates a new directory. 'mkdir dirname' creates a single directory. 'mkdir -p a/b/c' creates nested directories.",star:true},
+{c:0,q:"Assembling a PC involves connecting which of the following first?",o:["Hard drive","CPU to Motherboard","SMPS to Monitor","RAM to Hard Drive"],a:1,ex:"When assembling a PC, the CPU is the first component installed onto the motherboard. After the CPU, the CPU cooler, RAM, storage drives, graphics card, and power supply connections are added.",star:true},
+
+/* ═══ UNIT 2: INTERNET (30) ═══ */
+{c:1,q:"What does WWW stand for?",o:["World Wide Web","Wide World Web","World Web Wide","Web World Wide"],a:0,ex:"WWW stands for World Wide Web. It is a system of interlinked hypertext documents accessed via the Internet using a web browser.",star:true},
+{c:1,q:"What does URL stand for?",o:["Universal Resource Locator","Uniform Resource Locator","Universal Reference Link","Uniform Reference Locator"],a:1,ex:"URL stands for Uniform Resource Locator. It is the address used to access resources on the internet, e.g., https://www.example.com/page.",star:true},
+{c:1,q:"Which protocol is used for secure web browsing?",o:["HTTP","FTP","HTTPS","SMTP"],a:2,ex:"HTTPS (HyperText Transfer Protocol Secure) uses SSL/TLS encryption to provide secure communication over the internet. The padlock icon in browsers indicates HTTPS.",star:true},
+{c:1,q:"What is a web browser?",o:["A program that searches for viruses","Software used to access and navigate the World Wide Web","A type of internet connection","An email client"],a:1,ex:"A web browser is software that allows users to access, retrieve and display websites and web pages on the internet. Examples: Chrome, Firefox, Edge, Safari.",star:true},
+{c:1,q:"What does ISP stand for?",o:["Internet Service Protocol","Internet Service Provider","Internal System Protocol","Internet Speed Provider"],a:1,ex:"ISP stands for Internet Service Provider. It is a company that provides internet access to consumers and businesses, e.g., BSNL, Jio, Airtel.",star:true},
+{c:1,q:"Which of the following is a web browser?",o:["MS Word","Google Chrome","MS Excel","Adobe Photoshop"],a:1,ex:"Google Chrome is a web browser developed by Google. Other popular browsers include Mozilla Firefox, Microsoft Edge, and Apple Safari.",star:true},
+{c:1,q:"What is a Search Engine?",o:["A physical device for searching files","A software system that searches the web for information based on keywords","An email service","A programming language"],a:1,ex:"A search engine is a software system designed to search and retrieve information on the World Wide Web based on keywords entered by users. Examples: Google, Bing, DuckDuckGo.",star:true},
+{c:1,q:"What is the purpose of a Proxy Server?",o:["Provide storage","Act as an intermediary between client and internet for security/caching","Boost CPU speed","Manage printer queues"],a:1,ex:"A proxy server acts as an intermediary between a client and the internet. It provides anonymity, caching (improves speed), content filtering, and security.",star:true},
+{c:1,q:"What is the difference between a web page and a website?",o:["There is no difference","A web page is a single document; a website is a collection of web pages","A website is a single page","A web page contains multiple websites"],a:1,ex:"A web page is a single document on the internet identified by a unique URL. A website is a collection of related web pages under a common domain name.",star:true},
+{c:1,q:"Which of the following is NOT a web browser?",o:["Mozilla Firefox","Internet Explorer","Google Chrome","Microsoft Word"],a:3,ex:"Microsoft Word is a word processor, not a web browser. Browsers are used to access the internet, while Word is used for creating and editing documents.",star:true},
+{c:1,q:"What does HTML stand for?",o:["Hyper Text Markup Language","High Text Machine Language","Hyper Transfer Markup Language","High Transfer Markup Language"],a:0,ex:"HTML stands for HyperText Markup Language. It is the standard markup language used to create and structure web pages.",star:true},
+{c:1,q:"What is the function of a Search Toolbar in a browser?",o:["Download files","Allow quick web searches without opening a search engine page","Block pop-ups","Manage bookmarks"],a:1,ex:"A search toolbar (or address/omnibox) in a browser allows users to quickly perform web searches directly from the toolbar without navigating to a search engine first.",star:true},
+{c:1,q:"What is a Bookmark in a web browser?",o:["A saved link/URL for quick access","A deleted webpage","An error page","A downloaded file"],a:0,ex:"A bookmark is a saved URL/link in a web browser for quick future access to a webpage. Also called 'Favorites' in Internet Explorer/Edge.",star:true},
+{c:1,q:"What is a Pop-up Blocker?",o:["Software that opens multiple windows","A tool that prevents unwanted pop-up advertisements from appearing","A virus","A type of browser"],a:1,ex:"A pop-up blocker is a browser feature or software that prevents websites from opening new windows or tabs without user action, blocking unwanted advertisements.",star:true},
+{c:1,q:"Which of the following is an antivirus software?",o:["MS Word","Notepad","Norton Antivirus","Adobe Reader"],a:2,ex:"Norton Antivirus is security software that detects and removes malware, viruses, and other threats. Other examples: Kaspersky, Avast, McAfee, Windows Defender.",star:true},
+{c:1,q:"What is Phishing?",o:["A type of fishing activity","A cyberattack that tricks users into revealing sensitive information","A file compression technique","A programming method"],a:1,ex:"Phishing is a social engineering attack where attackers impersonate legitimate entities via fake emails or websites to steal sensitive information like passwords or credit card numbers.",star:true},
+{c:1,q:"What is a Firewall?",o:["Hardware only","A system to monitor and control network traffic based on security rules","An antivirus program","A web browser"],a:1,ex:"A firewall is a network security system that monitors and controls incoming and outgoing network traffic based on predetermined security rules. It can be hardware or software.",star:true},
+{c:1,q:"What is Customization of web browsers?",o:["Changing the computer's wallpaper","Modifying browser settings, extensions, and appearance to suit user preferences","Updating the OS","Installing a new hard drive"],a:1,ex:"Customizing a web browser involves modifying settings like homepage, default search engine, themes, extensions/add-ons, and privacy settings to improve user experience.",star:true},
+{c:1,q:"Which protocol is used for sending email?",o:["HTTP","FTP","SMTP","TCP"],a:2,ex:"SMTP (Simple Mail Transfer Protocol) is used for sending emails. POP3 and IMAP are used for receiving/reading emails.",star:true},
+{c:1,q:"What does FTP stand for?",o:["File Transfer Protocol","Fast Transfer Process","File Type Protocol","Folder Transfer Program"],a:0,ex:"FTP stands for File Transfer Protocol. It is a standard network protocol used to transfer files between a client and a server over a TCP/IP network.",star:true},
+{c:1,q:"What is an IP address?",o:["A type of virus","A unique numerical label assigned to each device on a network","A web browser setting","An email format"],a:1,ex:"An IP (Internet Protocol) address is a unique numerical label assigned to each device connected to a computer network. IPv4 uses 32-bit addresses (e.g., 192.168.1.1). IPv6 uses 128-bit addresses.",star:true},
+{c:1,q:"What is the purpose of the Domain Name System (DNS)?",o:["Store files online","Translate domain names to IP addresses","Encrypt web traffic","Manage email"],a:1,ex:"DNS (Domain Name System) translates human-readable domain names (like www.google.com) into numerical IP addresses that computers use to identify each other on the network.",star:true},
+{c:1,q:"What is Cloud Computing?",o:["Computing inside clouds","Delivery of computing services over the internet on demand","A type of satellite","A programming language"],a:1,ex:"Cloud computing is the delivery of computing services — servers, storage, databases, networking, software — over the internet ('the cloud') on a pay-as-you-go model. Examples: AWS, Azure, Google Cloud.",star:true},
+{c:1,q:"What is Cybersecurity?",o:["Manufacturing computers","Protecting computer systems and networks from digital attacks","Designing websites","Installing hardware"],a:1,ex:"Cybersecurity is the practice of protecting computers, servers, networks, and data from malicious attacks, theft, or damage. It includes network security, application security, and information security.",star:true},
+{c:1,q:"What is the function of cookies in web browsing?",o:["Delete browsing history","Store small pieces of data on the user's browser for session management and tracking","Speed up internet","Block ads"],a:1,ex:"Cookies are small text files stored by websites on your browser to remember login sessions, preferences, shopping cart items, and track user behavior for analytics.",star:true},
+{c:1,q:"What is a Trojan Horse in computer security?",o:["A gaming software","Malware disguised as legitimate software","An antivirus","A network cable"],a:1,ex:"A Trojan horse is malicious software that disguises itself as legitimate software to trick users into installing it. Once installed, it can steal data, install backdoors, or cause damage.",star:true},
+{c:1,q:"What does VPN stand for?",o:["Virtual Private Network","Very Personal Network","Variable Protocol Network","Virtual Public Network"],a:0,ex:"VPN (Virtual Private Network) creates an encrypted connection over the internet, providing privacy and security. It hides your IP address and encrypts data transmission.",star:true},
+{c:1,q:"What is an email attachment?",o:["An email without a subject","A file (image, document, etc.) sent along with an email message","The email address","The email body"],a:1,ex:"An email attachment is a file (document, image, audio, video, etc.) that is sent alongside an email message. The attachment is encoded and transmitted with the email.",star:true},
+{c:1,q:"What is the primary purpose of a web server?",o:["Browse the internet","Store and serve web pages to clients upon request","Run desktop applications","Store personal files"],a:1,ex:"A web server is software (and hardware) that stores, processes, and delivers web pages to clients (browsers) in response to HTTP/HTTPS requests.",star:true},
+{c:1,q:"What type of threat is Ransomware?",o:["A helpful security tool","Malware that encrypts files and demands payment for decryption","An antivirus upgrade","A type of firewall"],a:1,ex:"Ransomware is malicious software that encrypts the victim's files and demands a ransom payment to restore access. Notable examples: WannaCry, Petya.",star:true},
+
+/* ═══ UNIT 3: MICROSOFT WORD (30) ═══ */
+{c:2,q:"Which menu in MS Word contains the option to insert a Table of Contents?",o:["Insert","References","View","Home"],a:1,ex:"The Table of Contents option is found in the References tab in MS Word. It automatically generates a TOC based on heading styles used in the document.",star:true},
+{c:2,q:"What is the keyboard shortcut to Bold text in MS Word?",o:["Ctrl+I","Ctrl+U","Ctrl+B","Ctrl+E"],a:2,ex:"Ctrl+B is the keyboard shortcut to apply Bold formatting in MS Word. Ctrl+I applies Italic and Ctrl+U applies Underline.",star:true},
+{c:2,q:"How do you insert a Hyperlink in MS Word?",o:["Format > Link","Insert > Hyperlink or Ctrl+K","Home > Hyperlink","View > Link"],a:1,ex:"To insert a hyperlink in MS Word: go to Insert tab > Hyperlink, or press Ctrl+K. You can link to a URL, another file, an email address, or a location in the document.",star:true},
+{c:2,q:"Which feature in MS Word checks the spelling and grammar of the document?",o:["Find and Replace","Spell Check (F7 or Review tab)","Thesaurus","AutoCorrect"],a:1,ex:"Spell Check in MS Word (accessible via F7 or the Review tab > Spelling & Grammar) automatically checks for spelling errors, grammar issues, and suggests corrections.",star:true},
+{c:2,q:"What is the function of 'Track Changes' in MS Word?",o:["Save the document automatically","Record all edits made to a document so they can be reviewed, accepted, or rejected","Create a backup copy","Add comments to text"],a:1,ex:"Track Changes (Review tab) records all edits — insertions, deletions, formatting changes — made to a document. Reviewers can accept or reject each change, useful for collaborative editing.",star:true},
+{c:2,q:"How do you create a Newspaper Column layout in MS Word?",o:["Insert > Columns","Home > Text > Columns","Layout/Page Layout > Columns","View > Columns"],a:2,ex:"To create multiple columns (newspaper style) in MS Word: go to Layout (or Page Layout) tab > Columns, and choose the number of columns required.",star:true},
+{c:2,q:"What is Mail Merge used for in MS Word?",o:["Merging two documents into one","Creating personalized letters/emails by combining a template with a data source","Merging cells in a table","Sending files via email directly"],a:1,ex:"Mail Merge creates personalized documents (letters, envelopes, labels, emails) by combining a main template document with a data source (Excel sheet, database) containing individual recipients' data.",star:true},
+{c:2,q:"What type of document can be created using MS Word for a Project Certificate?",o:["Spreadsheet","Database","Formal certificate with text, images, and formatting","Presentation slides"],a:2,ex:"MS Word can create project certificates with professional formatting including text, borders, images, different fonts, and styles — the References and Mailings features also aid in formal documents.",star:true},
+{c:2,q:"Which option adds page numbers to a document in MS Word?",o:["Home > Page Number","Insert > Header & Footer > Page Number","View > Page Number","Format > Page Number"],a:1,ex:"Page numbers are added via Insert tab > Header & Footer > Page Number in MS Word. You can choose position (top/bottom of page) and formatting.",star:true},
+{c:2,q:"What is the purpose of the 'Find and Replace' feature in MS Word?",o:["Find errors","Search for specific text and replace it with different text throughout the document","Save the document","Change font color"],a:1,ex:"Find and Replace (Ctrl+H) searches for specific text in the document and replaces it with new text, either one instance at a time or all at once.",star:true},
+{c:2,q:"What is a Paragraph in MS Word?",o:["A single word","A block of text ending with a paragraph mark (pressing Enter)","A sentence","A chapter"],a:1,ex:"A paragraph in MS Word is a block of text followed by a paragraph mark (created by pressing Enter). Paragraph formatting (alignment, spacing, indentation) applies to the entire paragraph.",star:true},
+{c:2,q:"What does the 'Indentation' option in MS Word control?",o:["Font size","The horizontal distance of text from the page margins","Page color","Line height"],a:1,ex:"Indentation controls the distance between the text and the left or right page margins. You can set first-line indent, hanging indent, and left/right indentation.",star:true},
+{c:2,q:"Which is a Textbox used for in MS Word?",o:["Drawing shapes","Placing text in a specific position independent of the main text flow","Creating tables","Adding page numbers"],a:1,ex:"A text box in MS Word is a movable container that holds text and can be positioned anywhere on the page, independent of the main text flow. Useful for callouts and sidebars.",star:true},
+{c:2,q:"What is the default file extension for MS Word 2007 and later documents?",o:[".doc",".txt",".docx",".rtf"],a:2,ex:".docx is the default file format for MS Word 2007 and later versions. It is based on the Open XML format. Older versions used .doc format.",star:true},
+{c:2,q:"Which feature in MS Word allows inserting images from files?",o:["Insert > Shapes","Insert > Pictures","View > Images","Home > Insert Image"],a:1,ex:"Images are inserted via Insert tab > Pictures in MS Word. You can insert images from your local file system, or use Online Pictures to search the web.",star:true},
+{c:2,q:"What does 'AutoCorrect' do in MS Word?",o:["Checks grammar only","Automatically corrects common spelling mistakes and typos as you type","Formats the document","Translates text"],a:1,ex:"AutoCorrect automatically corrects common typing errors, misspellings, and automatically formats certain text as you type. You can customize the AutoCorrect list in Word Options.",star:true},
+{c:2,q:"What is a 'Style' in MS Word?",o:["A type of border","A named set of formatting attributes that can be applied to text","A page size setting","A document template"],a:1,ex:"A Style in MS Word is a predefined collection of formatting attributes (font, size, color, spacing) that can be applied to text with one click. Examples: Heading 1, Normal, Title.",star:true},
+{c:2,q:"How can you insert a Clipart or image in MS Word?",o:["Home > Art","Insert > Clip Art or Insert > Online Pictures","File > Image","View > Media"],a:1,ex:"In older versions of MS Word, you could Insert > Clip Art. In newer versions (2013+), it's Insert > Online Pictures to search and insert online images and icons.",star:true},
+{c:2,q:"What is the Drawing Toolbar used for in MS Word?",o:["Drawing database diagrams","Creating and editing shapes, lines, arrows, and other graphic objects in the document","Editing photos","Creating charts"],a:1,ex:"The Drawing tools in MS Word (accessed via Insert > Shapes) allow you to draw geometric shapes, lines, arrows, and other objects directly in the document.",star:true},
+{c:2,q:"What is the purpose of 'Headers and Footers' in MS Word?",o:["Adding chapter headings","Adding information (title, page number, date) that appears at the top or bottom of every page","Creating numbered lists","Adding borders"],a:1,ex:"Headers appear at the top of each page and footers at the bottom. They typically contain document title, page number, date, author name, or company logo.",star:true},
+{c:2,q:"What is a 'Word Count' feature used for?",o:["Count the number of pages","Display the number of words, characters, paragraphs, and lines in a document","Count sentences only","Count fonts"],a:1,ex:"Word Count (Review tab or the status bar at the bottom) shows statistics including number of words, characters, paragraphs, and lines in the document or selected text.",star:true},
+{c:2,q:"How do you apply a border to a paragraph in MS Word?",o:["Insert > Border","Home > Paragraph > Borders and Shading","View > Border","Format > Text Border"],a:1,ex:"Paragraph borders are applied via Home tab > Paragraph group > Borders dropdown, or Format > Borders and Shading. You can add box borders, shading, and custom line styles.",star:true},
+{c:2,q:"What is the function of 'Line Spacing' in MS Word?",o:["Set the width of columns","Control the vertical space between lines of text","Set page margins","Change font size"],a:1,ex:"Line spacing controls the amount of vertical space between lines of text. Options include Single (1.0), 1.5 lines, Double (2.0), and exact/multiple values.",star:true},
+{c:2,q:"What does Ctrl+Z do in MS Word?",o:["Redo last action","Undo last action","Save the document","Print the document"],a:1,ex:"Ctrl+Z is the Undo shortcut in MS Word (and most applications). It reverses the last action. Ctrl+Y redoes an undone action.",star:true},
+{c:2,q:"What is the purpose of 'Sections' in MS Word?",o:["Divide a book into chapters visually","Allow different formatting (page orientation, columns, margins) within the same document","Create bookmarks","Sort paragraphs"],a:1,ex:"Sections in MS Word allow you to apply different formatting to different parts of the document — such as landscape orientation for one page, two columns for another, or different headers/footers.",star:true},
+{c:2,q:"Which shortcut key saves a document in MS Word?",o:["Ctrl+P","Ctrl+S","Ctrl+N","Ctrl+W"],a:1,ex:"Ctrl+S saves the current document in MS Word. Ctrl+P opens Print dialog, Ctrl+N creates a new document, Ctrl+W closes the document.",star:true},
+{c:2,q:"What is 'Newspaper columns' in MS Word?",o:["A feature to add a newspaper border","Text divided into multiple vertical columns on a page, flowing from one column to the next","A template for newspapers","A style for headings"],a:1,ex:"Newspaper columns (Layout > Columns) divide the page into multiple vertical columns, with text flowing from the bottom of one column to the top of the next, like a newspaper layout.",star:true},
+{c:2,q:"What is the shortcut to print a document in MS Word?",o:["Ctrl+P","Ctrl+S","Ctrl+F","Alt+P"],a:0,ex:"Ctrl+P opens the Print dialog box in MS Word, allowing you to select printer settings and print the document.",star:true},
+{c:2,q:"What does 'Alignment' in MS Word refer to?",o:["Font size adjustment","How text is positioned horizontally within the margins (Left, Center, Right, Justified)","Vertical text direction","Indentation level"],a:1,ex:"Text alignment controls horizontal text positioning: Left (Ctrl+L), Center (Ctrl+E), Right (Ctrl+R), and Justified (Ctrl+J) which aligns both margins.",star:true},
+{c:2,q:"What is a 'News Letter' in the context of MS Word?",o:["An email newsletter plugin","A document with multiple columns and varied text/image layout resembling a newsletter publication","A mail merge list","A type of style"],a:1,ex:"A newsletter in MS Word is a multi-column document that combines text, images, headings, and graphics in a layout resembling a printed newsletter. It uses columns, text boxes, and graphics.",star:true},
+
+/* ═══ UNIT 4: LaTeX (30) ═══ */
+{c:3,q:"What is LaTeX primarily used for?",o:["Creating spreadsheets","High-quality typesetting especially for scientific and mathematical documents","Building websites","Creating databases"],a:1,ex:"LaTeX is a high-quality typesetting system widely used for scientific, technical, and academic documents, especially those containing complex mathematical formulas, citations, and cross-references.",star:true},
+{c:3,q:"Which command starts a LaTeX document?",o:["\\begin{document}","\\start{document}","\\open{document}","\\init{document}"],a:0,ex:"\\begin{document} is the command that marks the start of the document body in LaTeX. The \\documentclass command must come before it, followed by any preamble settings.",star:true},
+{c:3,q:"What is the full form of FOSS?",o:["Free Open Source Software","Fast Operating System Software","Full Open Standard Software","Freely Operating System Software"],a:0,ex:"FOSS stands for Free Open Source Software — software where the source code is freely available for anyone to use, study, modify, and distribute. LaTeX is an example of FOSS.",star:true},
+{c:3,q:"Which LaTeX command is used to create a bold text?",o:["\\bold{text}","\\textbf{text}","\\bf{text}","\\strong{text}"],a:1,ex:"\\textbf{text} makes text bold in LaTeX. \\textit{text} makes it italic, \\underline{text} underlines, and \\emph{text} emphasizes (usually italic).",star:true},
+{c:3,q:"In LaTeX, how do you start a new paragraph?",o:["\\newpara","Press Enter once","Leave a blank line between text","\\paragraph{}"],a:2,ex:"In LaTeX, a new paragraph begins by leaving a blank line between two blocks of text. A single line break does not start a new paragraph.",star:true},
+{c:3,q:"What does \\documentclass{article} specify?",o:["The article title","The type/class of document being created","The author name","The bibliography style"],a:1,ex:"\\documentclass{} specifies the type of document. Common classes: article (short documents), report (longer with chapters), book (full books), beamer (presentations).",star:true},
+{c:3,q:"Which LaTeX command adds an image/figure to a document?",o:["\\insertimage","\\includegraphics","\\addimage","\\figure"],a:1,ex:"\\includegraphics{filename} inserts an image in LaTeX. It requires the graphicx package (\\usepackage{graphicx}). You can specify width, height, and other options.",star:true},
+{c:3,q:"What is the purpose of \\usepackage{} in LaTeX?",o:["Define a new command","Load additional packages/extensions to extend LaTeX functionality","Add a table","Insert a hyperlink"],a:1,ex:"\\usepackage{packagename} in the preamble loads LaTeX packages that extend its functionality. Examples: graphicx (images), amsmath (math), hyperref (hyperlinks), geometry (margins).",star:true},
+{c:3,q:"How do you write a mathematical equation in display mode in LaTeX?",o:["$equation$","$$equation$$ or \\[equation\\]","\\math{equation}","\\formula{equation}"],a:1,ex:"Display math mode in LaTeX uses $$...$$ or \\[...\\] to show equations on their own line, centered. Inline math uses $...$ within text.",star:true},
+{c:3,q:"Which LaTeX command creates a numbered list?",o:["\\begin{itemize}","\\begin{enumerate}","\\begin{list}","\\begin{numberedlist}"],a:1,ex:"\\begin{enumerate}...\\end{enumerate} creates a numbered (ordered) list. \\begin{itemize} creates a bulleted (unordered) list. Each item is prefixed with \\item.",star:true},
+{c:3,q:"What does the \\maketitle command do in LaTeX?",o:["Makes text bold","Generates the title, author, and date based on \\title, \\author, and \\date commands","Ends the document","Starts a new section"],a:1,ex:"\\maketitle generates the formatted title block using the information provided by \\title{}, \\author{}, and \\date{} commands in the preamble.",star:true},
+{c:3,q:"How do you add a table in LaTeX?",o:["\\begin{table}","\\begin{tabular}","\\addtable{}","\\table{}"],a:1,ex:"\\begin{tabular}{column specs} creates a table in LaTeX. The tabular environment defines the layout. \\begin{table} is a floating wrapper for tabular with captions.",star:true},
+{c:3,q:"What command inserts a horizontal line in a LaTeX table?",o:["\\line","\\hline","\\tableline","\\rule"],a:1,ex:"\\hline inserts a horizontal rule/line in a LaTeX table. It must appear at the beginning or end of a row. \\cline{i-j} draws a partial horizontal line.",star:true},
+{c:3,q:"Which symbol is used to separate columns in a LaTeX table row?",o:["//","::","&","@@"],a:2,ex:"The ampersand (&) separates columns in a LaTeX table. Double backslash (\\\\) ends a row. Example: Cell1 & Cell2 & Cell3 \\\\",star:true},
+{c:3,q:"How do you create a section heading in LaTeX?",o:["\\heading{name}","\\section{Section Name}","\\title{name}","\\chapter[name]"],a:1,ex:"\\section{Section Name} creates a section heading in LaTeX. Other levels: \\subsection{}, \\subsubsection{}, \\paragraph{}, \\subparagraph{}.",star:true},
+{c:3,q:"What is BibTeX used for in LaTeX?",o:["Creating tables","Managing bibliographies/references","Inserting images","Formatting code"],a:1,ex:"BibTeX is a tool used with LaTeX to manage and format bibliographies and references. You create a .bib file with references and cite them using \\cite{key}.",star:true},
+{c:3,q:"Which LaTeX command inserts a footnote?",o:["\\note{text}","\\footnote{text}","\\bottomnote{text}","\\foot{text}"],a:1,ex:"\\footnote{text} inserts a footnote in LaTeX. The note appears at the bottom of the page with an automatically numbered superscript marker.",star:true},
+{c:3,q:"What is the \\LaTeX command used for in LaTeX?",o:["Compile the document","Display the LaTeX logo with proper formatting","Insert a hyperlink","Define a macro"],a:1,ex:"\\LaTeX produces the properly formatted LaTeX logo (with the distinctive letter spacing) in your document. Similarly, \\TeX produces the TeX logo.",star:true},
+{c:3,q:"How do you change font size in LaTeX?",o:["\\font{12pt}","Use font size commands like \\large, \\small, \\normalsize, \\huge","\\size{large}","\\fontsize{14}"],a:1,ex:"LaTeX has built-in font size commands: \\tiny, \\scriptsize, \\footnotesize, \\small, \\normalsize, \\large, \\Large, \\LARGE, \\huge, \\Huge.",star:true},
+{c:3,q:"What does 'Drop Cap' mean in the context of document formatting?",o:["A lowercase letter","A large decorative initial capital letter at the start of a paragraph, dropping below the baseline","Removing capital letters","A special font"],a:1,ex:"Drop Cap is a typographic feature where the first letter of a paragraph is enlarged and 'drops' below the baseline of the text, spanning multiple lines. In LaTeX, use the 'lettrine' package.",star:true},
+{c:3,q:"Which LaTeX command changes text color?",o:["\\color{red}text","\\textcolor{red}{text}","\\fontcolor{red}{text}","\\setcolor{text}{red}"],a:1,ex:"\\textcolor{color}{text} changes text color in LaTeX using the xcolor or color package. Example: \\textcolor{blue}{This text is blue}.",star:true},
+{c:3,q:"What does \\newpage do in LaTeX?",o:["Creates a new section","Inserts a page break, starting content on a new page","Adds a blank line","Creates a new paragraph"],a:1,ex:"\\newpage inserts a page break in LaTeX, starting subsequent content on the next page. \\clearpage also flushes all pending floats (figures, tables).",star:true},
+{c:3,q:"How do you add a bullet list in LaTeX?",o:["\\begin{enumerate}","\\begin{itemize}","\\begin{bulletlist}","\\begin{list}"],a:1,ex:"\\begin{itemize}...\\end{itemize} creates a bulleted (unordered) list. Each item uses \\item. The default bullet can be changed with the enumitem package.",star:true},
+{c:3,q:"In LaTeX, what does \\ref{label} do?",o:["Creates a reference list","Inserts a cross-reference to a labeled element (section, figure, equation)","Adds a bibliography","Creates a hyperlink"],a:1,ex:"\\ref{label} inserts the number of a labeled element. Use \\label{key} to label sections, figures, equations, and then \\ref{key} to reference them automatically.",star:true},
+{c:3,q:"Which LaTeX package is used for including graphics?",o:["graphics","graphicx","image","picturebox"],a:1,ex:"The graphicx package (\\usepackage{graphicx}) is used to include images in LaTeX documents with the \\includegraphics command and options for size and rotation.",star:true},
+{c:3,q:"What does the \\textit{} command do in LaTeX?",o:["Makes text bold","Inserts text in a table","Makes text italic","Underlines text"],a:2,ex:"\\textit{text} applies italic formatting in LaTeX. It is the preferred command over the older {\\it text} declaration for inline italic text.",star:true},
+{c:3,q:"What is the purpose of the 'abstract' environment in LaTeX?",o:["Define document margins","Create a summary/abstract section typically appearing before the main content","Add page numbers","Insert a bibliography"],a:1,ex:"\\begin{abstract}...\\end{abstract} creates an abstract section in LaTeX. It produces a formatted summary of the document, typically used in research papers and articles.",star:true},
+{c:3,q:"How is a comment written in LaTeX?",o:["// comment","/* comment */","% comment","-- comment"],a:2,ex:"In LaTeX, the percent sign (%) starts a comment. Everything after % on that line is ignored by the compiler. Example: % This is a comment.",star:true},
+{c:3,q:"What MS Word feature is equivalent to LaTeX's \\tableofcontents?",o:["Bookmarks","References > Table of Contents","Insert > Index","Home > Styles"],a:1,ex:"LaTeX's \\tableofcontents automatically generates a TOC from \\section, \\subsection commands — equivalent to MS Word's References tab > Table of Contents feature.",star:true},
+{c:3,q:"Which command in LaTeX ends a document?",o:["\\stop","\\end{document}","\\close{document}","\\finish"],a:1,ex:"\\end{document} marks the end of a LaTeX document. Any content after this command is ignored by the LaTeX compiler.",star:true},
+
+/* ═══ UNIT 5: MICROSOFT EXCEL (30) ═══ */
+{c:4,q:"What is the basic unit of a spreadsheet in MS Excel?",o:["Row","Column","Cell","Sheet"],a:2,ex:"A cell is the basic unit of a spreadsheet, formed at the intersection of a row and a column. Each cell has a unique address (e.g., A1, B2, C3).",star:true},
+{c:4,q:"Which function calculates the sum of a range of cells in Excel?",o:["=AVERAGE(A1:A10)","=COUNT(A1:A10)","=SUM(A1:A10)","=TOTAL(A1:A10)"],a:2,ex:"=SUM(A1:A10) adds all values in cells A1 through A10. SUM is one of the most commonly used Excel functions for totaling numerical data.",star:true},
+{c:4,q:"What does the AVERAGE function do in Excel?",o:["Adds all numbers","Finds the highest number","Calculates the mean (average) of a range of numbers","Counts cells with numbers"],a:2,ex:"=AVERAGE(range) calculates the arithmetic mean of the numbers in the specified range, dividing the sum by the count of numbers.",star:true},
+{c:4,q:"What is a formula in MS Excel?",o:["A cell reference","An expression starting with '=' that performs calculations using values, cell references, and functions","A chart type","A formatting style"],a:1,ex:"A formula in Excel starts with '=' and can include arithmetic operators (+,-,*,/), cell references, functions, and constants. Example: =A1+B1 or =SUM(A1:A5).",star:true},
+{c:4,q:"What is Conditional Formatting in Excel?",o:["Formatting based on cell content — applying color or style when specified conditions are met","Formatting only numbers","Formatting text only","Changing page margins"],a:0,ex:"Conditional Formatting automatically applies formatting (colors, bold, icons) to cells based on their values or conditions. For example, highlight cells greater than 100 in red.",star:true},
+{c:4,q:"What type of chart is best for showing trends over time in Excel?",o:["Pie Chart","Line Chart","Bar Chart","Scatter Plot"],a:1,ex:"A Line Chart is best for showing trends over time (time-series data). Each data point is connected by a line, making it easy to see patterns and changes over periods.",star:true},
+{c:4,q:"What does the VLOOKUP function do in Excel?",o:["Count values vertically","Search for a value in the first column of a range and return a value from another column","Sum values vertically","Filter rows"],a:1,ex:"VLOOKUP(value, range, col_index, [exact_match]) searches for a value in the first column of a table and returns a corresponding value from a specified column in the same row.",star:true},
+{c:4,q:"What is the purpose of Pivot Tables in Excel?",o:["Create presentations","Summarize, analyze, and explore large datasets interactively","Format cells","Insert images"],a:1,ex:"Pivot Tables allow you to summarize large datasets, group data, calculate totals and averages, and reorganize data dynamically without writing formulas.",star:true},
+{c:4,q:"What does the IF function do in Excel?",o:["Check if a file exists","Perform a logical test and return one value if TRUE and another if FALSE","Count items","Sum values"],a:1,ex:"=IF(condition, value_if_true, value_if_false) tests a condition. Example: =IF(A1>50,\"Pass\",\"Fail\") returns 'Pass' if A1 is greater than 50, otherwise 'Fail'.",star:true},
+{c:4,q:"Which shortcut inserts a new sheet in Excel?",o:["Ctrl+N","Shift+F11","Ctrl+S","Alt+N"],a:1,ex:"Shift+F11 inserts a new worksheet in Excel. You can also right-click a sheet tab and select 'Insert'. Ctrl+N opens a new workbook.",star:true},
+{c:4,q:"What is the difference between a workbook and a worksheet in Excel?",o:["They are the same thing","A workbook is the entire Excel file; a worksheet is an individual sheet tab within the workbook","A worksheet contains multiple workbooks","A workbook is a single cell"],a:1,ex:"A workbook is the entire Excel file (.xlsx). Each workbook can contain multiple worksheets (tabs). By default, Excel creates one sheet named 'Sheet1'.",star:true},
+{c:4,q:"What does Ctrl+Home do in Excel?",o:["Save the file","Go to cell A1 (the first cell in the worksheet)","Open a new workbook","Select all cells"],a:1,ex:"Ctrl+Home navigates to cell A1 (the beginning of the worksheet). Ctrl+End navigates to the last used cell in the worksheet.",star:true},
+{c:4,q:"How do you create an absolute cell reference in Excel?",o:["By adding @ before the cell address","By adding $ before the row and/or column (e.g., $A$1)","By pressing Ctrl+A","By using square brackets"],a:1,ex:"An absolute reference uses $ signs: $A$1 keeps both column A and row 1 fixed when copied. $A1 fixes column only; A$1 fixes row only.",star:true},
+{c:4,q:"What is AutoFill in Excel?",o:["Automatically fills in form data","Extends a series or pattern (numbers, dates, formulas) automatically to adjacent cells","Filters data automatically","Auto-saves the file"],a:1,ex:"AutoFill recognizes patterns (1,2,3... or Mon,Tue... or formulas) and extends them to adjacent cells by dragging the fill handle (small square at cell corner).",star:true},
+{c:4,q:"What does the COUNT function count in Excel?",o:["All cells including blanks","Only cells containing numbers","Only cells with text","Cells with formatting"],a:1,ex:"COUNT(range) counts only cells containing numbers. COUNTA counts all non-empty cells. COUNTBLANK counts empty cells. COUNTIF counts cells meeting a condition.",star:true},
+{c:4,q:"What is the keyboard shortcut to select all cells in Excel?",o:["Ctrl+S","Ctrl+A","Ctrl+F","Ctrl+C"],a:1,ex:"Ctrl+A selects all cells in the worksheet in Excel. Pressing Ctrl+A again when a range is selected may extend selection to all cells.",star:true},
+{c:4,q:"What does the MAX function return in Excel?",o:["Average value","Minimum value","Maximum (largest) value in a range","Count of values"],a:2,ex:"=MAX(range) returns the largest numerical value in the specified range. =MIN(range) returns the smallest value.",star:true},
+{c:4,q:"What is a Pie Chart used for in Excel?",o:["Showing trends over time","Showing the proportion of parts to a whole","Comparing multiple data series","Showing correlation between two variables"],a:1,ex:"A Pie Chart shows the proportional distribution of values — each 'slice' represents a category as a percentage of the total. Best for showing composition of a single data series.",star:true},
+{c:4,q:"Which function calculates the GPA using cell referencing in Excel?",o:["=MAX()","=SUM()/COUNT() or =AVERAGE()","=VLOOKUP()","=IF()"],a:1,ex:"GPA can be calculated using =AVERAGE() or =SUM(grades)/COUNT(grades) with cell references pointing to grade values. This updates automatically when grades change.",star:true},
+{c:4,q:"What is Data Validation in Excel?",o:["Checking for viruses","Restricting the type or range of data that can be entered in a cell","Formatting cell colors","Sorting data"],a:1,ex:"Data Validation (Data tab > Data Validation) restricts input to specific values, ranges, lists, or data types. It prevents invalid data entry and can show error messages.",star:true},
+{c:4,q:"What is the purpose of the Freeze Panes feature in Excel?",o:["Freeze the entire worksheet","Lock rows and/or columns so they remain visible while scrolling through data","Protect cells from editing","Save the current view"],a:1,ex:"Freeze Panes (View > Freeze Panes) keeps specified rows or columns visible when you scroll. Useful for keeping headers visible in large spreadsheets.",star:true},
+{c:4,q:"What does the SUMIF function do in Excel?",o:["Sum all values","Sum values in a range that meet a specified condition","Count values with a condition","Find the maximum with a condition"],a:1,ex:"=SUMIF(range, criteria, sum_range) sums values in sum_range where the corresponding cells in range meet the criteria. Example: =SUMIF(A1:A10,\">50\",B1:B10).",star:true},
+{c:4,q:"How do you sort data in Excel?",o:["Format > Sort","Data > Sort or using the Sort buttons on the Data tab","Insert > Sort","Home > Sort"],a:1,ex:"Data is sorted in Excel using Data tab > Sort & Filter. You can sort by one or multiple columns in ascending or descending order.",star:true},
+{c:4,q:"What is the Formula Bar in Excel?",o:["The row of column letters","The bar above the spreadsheet that shows the content or formula of the selected cell","The bottom status bar","The toolbar at the top"],a:1,ex:"The Formula Bar (below the ribbon) displays the content or formula of the currently selected cell. You can also type and edit formulas directly in the Formula Bar.",star:true},
+{c:4,q:"What does Ctrl+Enter do in Excel?",o:["Create a new line within a cell","Fill the selection with the same data/formula entered","Save and close","Select the column"],a:1,ex:"Ctrl+Enter fills all selected cells with the content typed. It also confirms entry while keeping the current cell selected (unlike pressing Enter which moves down).",star:true},
+{c:4,q:"Which function returns the current date and time in Excel?",o:["=DATE()","=TODAY()","=NOW()","=TIME()"],a:2,ex:"=NOW() returns the current date and time. =TODAY() returns only the current date. Both update automatically when the workbook recalculates.",star:true},
+{c:4,q:"What is cell merging in Excel?",o:["Copying a cell","Combining multiple adjacent cells into a single larger cell","Adding cells","Splitting a cell"],a:1,ex:"Merging cells (Home > Merge & Center) combines multiple adjacent cells into one larger cell. Useful for creating headers spanning multiple columns.",star:true},
+{c:4,q:"What does the CONCATENATE function (or & operator) do in Excel?",o:["Adds numbers","Joins (concatenates) text strings from multiple cells into one","Counts text cells","Finds text"],a:1,ex:"CONCATENATE or the & operator joins text strings. Example: =A1&\" \"&B1 combines first and last names. In newer Excel: =CONCAT() or =TEXTJOIN().",star:true},
+{c:4,q:"What is a 'Named Range' in Excel?",o:["A worksheet named by the user","A cell or range of cells assigned a descriptive name for easier reference in formulas","A range with borders","A colored range"],a:1,ex:"A Named Range gives a cell or range a meaningful name (like 'Prices' instead of B2:B10). Used in formulas for readability: =SUM(Prices) instead of =SUM(B2:B10).",star:true},
+{c:4,q:"What is the purpose of 'AutoSum' button in Excel?",o:["Automatically save the file","Automatically insert a SUM formula for adjacent cells","Sort data automatically","Auto-format cells"],a:1,ex:"AutoSum (Alt+=) automatically inserts a =SUM() formula for the adjacent range of numbers. It appears in the Home tab and Formulas tab.",star:true},
+
+/* ═══ UNIT 6: MICROSOFT POWERPOINT (30) ═══ */
+{c:5,q:"What is MS PowerPoint primarily used for?",o:["Creating spreadsheets","Creating slide-based presentations for business, education, and other purposes","Writing documents","Database management"],a:1,ex:"MS PowerPoint is a presentation software used to create slide shows combining text, images, charts, animations, and multimedia. Used for lectures, business presentations, and training.",star:true},
+{c:5,q:"What is a Slide in MS PowerPoint?",o:["A single page/screen in a presentation","A type of animation","A chart type","A text style"],a:0,ex:"A slide is an individual page in a PowerPoint presentation. Each slide can contain text, images, charts, videos, and animations. Presentations are built from multiple slides.",star:true},
+{c:5,q:"What is the default file extension for PowerPoint 2007 and later?",o:[".ppt",".pps",".pptx",".ppsx"],a:2,ex:".pptx is the default format for PowerPoint 2007 and later (XML-based). .ppt is the older format. .pptx is more efficient and open-standard.",star:true},
+{c:5,q:"What is a 'Slide Transition' in PowerPoint?",o:["An animation on slide content","The visual effect that occurs when moving from one slide to the next during a presentation","A theme change","A text effect"],a:1,ex:"Slide transitions are animations that occur when you advance from one slide to the next. Examples include Fade, Push, Wipe, and Zoom. Set via the Transitions tab.",star:true},
+{c:5,q:"What is the 'Slide Layout' in PowerPoint?",o:["The font used on a slide","A predefined arrangement of placeholders for text, images, and other content on a slide","The slide color","The presentation theme"],a:1,ex:"A slide layout defines the arrangement and type of content placeholders on a slide. Examples: Title Slide, Title and Content, Blank, Two Content, Picture with Caption.",star:true},
+{c:5,q:"How do you insert an image in MS PowerPoint?",o:["Home > Image","Insert > Pictures","View > Insert Image","Format > Add Image"],a:1,ex:"Images are inserted via Insert tab > Pictures in PowerPoint. You can insert pictures from your device or use Online Pictures to search and insert images from the web.",star:true},
+{c:5,q:"What is 'Custom Animation' in PowerPoint?",o:["Creating a new template","Applying specific animation effects to individual elements on a slide","Changing slide background","Adding transitions only"],a:1,ex:"Custom Animation (Animations tab > Animation Pane) applies specific entrance, emphasis, exit, and motion path animations to individual objects on a slide. You control timing, order, and triggers.",star:true},
+{c:5,q:"What is the purpose of 'Slide Master' in PowerPoint?",o:["Create the first slide","Control the global design — fonts, colors, backgrounds — applied to all slides in the presentation","Delete all slides","Add transitions to all slides"],a:1,ex:"Slide Master (View > Slide Master) is the top-level slide that controls the layout and appearance of all slides. Changes to the master automatically apply to all slides.",star:true},
+{c:5,q:"What is a Hyperlink in PowerPoint?",o:["A type of animation","A clickable link that navigates to a web page, another slide, or another file","A special text effect","A media player"],a:1,ex:"Hyperlinks in PowerPoint (Insert > Hyperlink) create clickable areas that link to websites, other slides, email addresses, or other files. Useful for interactive presentations.",star:true},
+{c:5,q:"How do you add a new slide in PowerPoint?",o:["File > New Slide","Home > New Slide or Ctrl+M","Insert > Page","View > Add Slide"],a:1,ex:"A new slide is added using Home tab > New Slide, or by pressing Ctrl+M, or right-clicking in the slide panel and selecting 'New Slide'.",star:true},
+{c:5,q:"What is the Slide Show view in PowerPoint used for?",o:["Editing slides","Running the full-screen presentation as it will be shown to the audience","Printing slides","Viewing slide thumbnails"],a:1,ex:"Slide Show view (F5 to start from beginning, Shift+F5 from current slide) displays the presentation full-screen for the audience. All animations and transitions play as designed.",star:true},
+{c:5,q:"What does the 'Animation Pane' in PowerPoint allow you to do?",o:["Change slide backgrounds","View and manage all animations applied to objects on a slide, including their order and timing","Add new slides","Create new themes"],a:1,ex:"The Animation Pane (Animations > Animation Pane) lists all animations on the current slide. You can reorder, adjust timing (start, duration, delay), and preview animations.",star:true},
+{c:5,q:"What is a 'Theme' in PowerPoint?",o:["A type of slide transition","A set of coordinated colors, fonts, and effects that give the presentation a consistent visual design","A text formatting option","A chart style"],a:1,ex:"A theme is a predefined collection of design elements (colors, fonts, backgrounds, effects) applied to all slides for a consistent look. Found in the Design tab.",star:true},
+{c:5,q:"Which keyboard shortcut starts a PowerPoint presentation from the beginning?",o:["Ctrl+P","F5","Ctrl+F5","Alt+F5"],a:1,ex:"F5 starts the PowerPoint slide show from the very first slide. Shift+F5 starts from the current slide. Press Escape to exit the presentation.",star:true},
+{c:5,q:"What is the 'Normal View' in PowerPoint?",o:["Full-screen presentation view","The default editing view with slide panel, main slide area, and notes section","A black-and-white view","The printing view"],a:1,ex:"Normal View is the default editing view in PowerPoint. It shows the slide thumbnails panel on the left, the main editing area in the center, and notes section at the bottom.",star:true},
+{c:5,q:"What is the purpose of 'Speaker Notes' in PowerPoint?",o:["Add captions on slides","Notes visible only to the presenter (not audience) containing talking points and reminders","Create a bibliography","Add slide numbers"],a:1,ex:"Speaker Notes (the notes panel below the slide in Normal View) are visible to the presenter on their screen but not shown to the audience during Slide Show mode.",star:true},
+{c:5,q:"What does 'Handout' mean in the context of PowerPoint printing?",o:["A promotional brochure","A printed version of slides with multiple slides per page, given to the audience","An online share","A video export"],a:1,ex:"Handouts are printed copies of PowerPoint slides, typically with 2, 4, 6, or 9 slides per page. They are given to the audience for reference. Printed via File > Print > Print Layout.",star:true},
+{c:5,q:"What is the 'Slide Sorter' view used for in PowerPoint?",o:["Editing individual slides","Viewing thumbnail versions of all slides simultaneously to rearrange and manage slide order","Running the slideshow","Checking spelling"],a:1,ex:"Slide Sorter view (View > Slide Sorter) displays small thumbnails of all slides in the presentation, making it easy to drag and reorder slides or apply transitions to multiple slides.",star:true},
+{c:5,q:"What is SmartArt in PowerPoint?",o:["A drawing tool","Pre-designed visual diagrams for representing information like processes, hierarchies, and relationships","An image editing tool","A chart type"],a:1,ex:"SmartArt (Insert > SmartArt) provides professional-looking graphical diagrams to visualize information: organizational charts, process flows, cycle diagrams, pyramids, and more.",star:true},
+{c:5,q:"What type of chart in PowerPoint shows comparison of values across categories?",o:["Pie Chart","Bar/Column Chart","Line Chart","Area Chart"],a:1,ex:"Bar charts and Column charts compare values across different categories (e.g., sales by region, scores by student). Column charts are vertical; bar charts are horizontal.",star:true},
+{c:5,q:"Which PowerPoint feature ensures all slides have a consistent background?",o:["Slide Transition","Slide Master or Theme Background","Custom Animation","Slide Layout"],a:1,ex:"Setting the background on the Slide Master (View > Slide Master) or applying a Theme ensures all slides have a consistent background image, color, or gradient.",star:true},
+{c:5,q:"What is the shortcut to duplicate a slide in PowerPoint?",o:["Ctrl+D or right-click > Duplicate Slide","Ctrl+C then Ctrl+V only","Alt+D","Ctrl+Shift+D"],a:0,ex:"Ctrl+D duplicates the selected slide in PowerPoint. You can also right-click the slide thumbnail and choose 'Duplicate Slide'.",star:true},
+{c:5,q:"What is 'Morph' transition in PowerPoint?",o:["A simple fade effect","A transition that smoothly animates movement, sizing, and rotation of objects between slides","A 3D rotation","An entrance animation"],a:1,ex:"The Morph transition (available in PowerPoint 2016+) creates seamless, cinematic animations by smoothly moving, resizing, or changing identical objects between consecutive slides.",star:true},
+{c:5,q:"What does the 'Format Painter' do in PowerPoint?",o:["Changes slide format","Copies formatting from one object and applies it to another","Paints the background","Adds a photo frame"],a:1,ex:"Format Painter (Home tab > Format Painter) copies all formatting (font, size, color, effects) from one object or text and applies it to another with a single click.",star:true},
+{c:5,q:"What is the purpose of 'Section' in PowerPoint?",o:["Add borders","Organize slides into named groups for easier navigation and management","Insert a table","Create a chapter"],a:1,ex:"Sections (Home > Section > Add Section) organize slides into named groups. Useful for long presentations — you can collapse/expand sections and move groups of slides.",star:true},
+{c:5,q:"What file format is used to save a PowerPoint file that opens directly in Slide Show mode?",o:[".pptx",".ppt",".ppsx",".potx"],a:2,ex:".ppsx (PowerPoint Show) is a file format that opens directly in Slide Show mode when double-clicked, without showing the editing interface. Useful for distributing presentations.",star:true},
+{c:5,q:"What does 'Align' option do in PowerPoint?",o:["Adds text alignment","Positions selected objects (images, shapes, text boxes) precisely on the slide relative to each other or the slide","Changes font alignment","Aligns slide numbers"],a:1,ex:"Align (Format/Shape Format > Arrange > Align) positions selected objects relative to the slide or each other: align left, right, top, bottom, center, or distribute evenly.",star:true},
+{c:5,q:"What is 'Group' option in PowerPoint?",o:["Creating slide groups","Combining multiple objects into a single unit that can be moved, resized, or formatted together","Merging slides","Grouping slides by date"],a:1,ex:"Group (Format > Arrange > Group or Ctrl+G) combines multiple selected objects into one unit. This makes it easier to move, resize, and format them together. Ungroup with Ctrl+Shift+G.",star:true},
+{c:5,q:"What is the purpose of 'Rehearse Timings' in PowerPoint?",o:["Record slide audio","Practice the presentation and record time spent on each slide to set automatic timings","Add transition effects","Test animations"],a:1,ex:"Rehearse Timings (Slide Show > Rehearse Timings) lets you practice your presentation and records how long you spend on each slide. These timings can then advance slides automatically during the actual presentation.",star:true},
+{c:5,q:"What does 'Embed Fonts' option do when saving a PowerPoint?",o:["Reduce file size","Include all fonts used in the file so the presentation displays correctly on computers without those fonts","Remove images","Compress the file"],a:1,ex:"Embed Fonts (File > Options > Save > Embed fonts) includes all font files within the PowerPoint file. This ensures the correct fonts display on any computer, even without those fonts installed.",star:true},
+];
+
+let studentName='',studentBranch='',studentSem='',studentCollege='';
+let activeQuestions=[],currentIndex=0,score=0,skipped=0,userAnswers=[];
+let timerInterval=null,timeLeft=30,isAnswered=false,autoAdvanceTimer=null;
+const TIMER_DURATION=30,AUTO_ADVANCE_DELAY=1500;
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// Info screen
+document.getElementById('infoNextBtn').addEventListener('click',()=>{
+  studentName=document.getElementById('inputName').value.trim();
+  if(!studentName){showToast('⚠️ Please enter your name.');document.getElementById('inputName').focus();return;}
+  studentBranch=document.getElementById('inputBranch').value.trim()||'N/A';
+  studentSem=document.getElementById('inputSem').value||'N/A';
+  studentCollege=document.getElementById('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+
+// Chapter selection
+let selectedChapter='all';
+document.getElementById('chapterGrid').addEventListener('click',e=>{
+  const btn=e.target.closest('.chapter-btn');if(!btn)return;
+  document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedChapter=btn.dataset.chapter;
+});
+
+document.getElementById('startBtn').addEventListener('click',()=>{
+  activeQuestions=selectedChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selectedChapter));
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');renderQuestion();
+});
+
+function startTimer(){
+  clearInterval(timerInterval);timeLeft=TIMER_DURATION;
+  const pill=document.getElementById('timerPill');
+  pill.className='timer-pill';pill.textContent='⏳ '+timeLeft+'s';
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    pill.textContent='⏳ '+timeLeft+'s';
+    if(timeLeft<=10&&timeLeft>5){pill.className='timer-pill urgent';}
+    if(timeLeft<=5){pill.className='timer-pill critical';}
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      if(!isAnswered){
+        isAnswered=true;userAnswers[currentIndex]=-1;skipped++;
+        lockOptions();highlightCorrect();showExplanation();
+        document.getElementById('skipBtn').style.display='none';
+        document.getElementById('nextBtn').classList.add('visible');
+        showToast('⏰ Time up! Correct answer shown.');
+      }
+    }
+  },1000);
+}
+
+function renderQuestion(){
+  isAnswered=false;
+  clearAutoAdvance();
+  clearInterval(timerInterval);
+  const q=activeQuestions[currentIndex];
+  const total=activeQuestions.length;
+  document.getElementById('progressText').textContent=`Question ${currentIndex+1} of ${total}`;
+  document.getElementById('scoreText').textContent=`Score: ${score}`;
+  document.getElementById('progressFill').style.width=`${(currentIndex/total)*100}%`;
+  document.getElementById('qNum').textContent=`Q${currentIndex+1}`;
+  if(q.star){
+    if(!document.getElementById('qStar')){
+      const s=document.createElement('div');s.id='qStar';s.className='q-star';s.textContent='⭐ VVI';
+      document.getElementById('qNum').insertAdjacentElement('afterend',s);
+    }else{document.getElementById('qStar').style.display='inline-block';}
+  }else{
+    const s=document.getElementById('qStar');if(s)s.style.display='none';
+  }
+  document.getElementById('qText').textContent=q.q;
+  const ex=document.getElementById('qExample');
+  if(q.hint){ex.textContent='💡 Hint: '+q.hint;ex.style.display='block';}else{ex.style.display='none';}
+  const chap=CHAPTERS[q.c];
+  document.getElementById('chapterBadge').textContent=chap.icon+' '+chap.name;
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${letters[i]}</div><div class="option-text">${opt}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>handleAnswer(i));
+    list.appendChild(li);
+  });
+  document.getElementById('explanationBox').classList.remove('show');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('skipBtn').style.display='';
+  startTimer();
+}
+
+function handleAnswer(idx){
+  if(isAnswered)return;isAnswered=true;
+  clearInterval(timerInterval);
+  userAnswers[currentIndex]=idx;
+  const q=activeQuestions[currentIndex];
+  const opts=document.querySelectorAll('.option');
+  lockOptions();
+  if(idx===q.a){
+    score++;
+    opts[idx].classList.add('correct');opts[idx].querySelector('.option-radio').textContent='✓';
+    showExplanation();triggerAutoAdvance();
+  }else{
+    opts[idx].classList.add('wrong');opts[idx].querySelector('.option-radio').textContent='✗';
+    highlightCorrect();showExplanation();
+    document.getElementById('skipBtn').style.display='none';
+    document.getElementById('nextBtn').classList.add('visible');
+  }
+  document.getElementById('skipBtn').style.display='none';
+}
+
+function triggerAutoAdvance(){
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  fill.classList.remove('running');void fill.offsetWidth;fill.classList.add('running');
+  bar.classList.add('show');hint.classList.add('show');
+  autoAdvanceTimer=setTimeout(()=>{bar.classList.remove('show');hint.classList.remove('show');fill.classList.remove('running');goNext();},AUTO_ADVANCE_DELAY);
+}
+function clearAutoAdvance(){if(autoAdvanceTimer){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=null;}
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  if(bar)bar.classList.remove('show');if(hint)hint.classList.remove('show');if(fill)fill.classList.remove('running');}
+function lockOptions(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function highlightCorrect(){const q=activeQuestions[currentIndex];const opts=document.querySelectorAll('.option');opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';}
+function showExplanation(){document.getElementById('explanationText').textContent=activeQuestions[currentIndex].ex;document.getElementById('explanationBox').classList.add('show');}
+
+document.getElementById('skipBtn').addEventListener('click',()=>{if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);userAnswers[currentIndex]=-1;skipped++;lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');showToast('⟫ Skipped — correct answer shown.');});
+document.getElementById('nextBtn').addEventListener('click',()=>{clearAutoAdvance();goNext();});
+function goNext(){currentIndex++;if(currentIndex>=activeQuestions.length)showResult();else renderQuestion();}
+document.getElementById('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Your progress will be lost.')){clearInterval(timerInterval);clearAutoAdvance();showScreen('screenIntro');}});
+
+const REMARKS=[
+  {min:95,emoji:'🏆',title:'Outstanding! Perfect Score!',sub:'You have mastered the IT Workshop! Exceptional performance.'},
+  {min:80,emoji:'🥇',title:'Excellent Performance!',sub:'You have a strong command of IT Workshop concepts. Keep it up!'},
+  {min:65,emoji:'🥈',title:'Good Job!',sub:'Solid performance! Review a few topics to reach the top.'},
+  {min:50,emoji:'🥉',title:'Above Average!',sub:'You are on the right track. More practice will boost your score.'},
+  {min:35,emoji:'📚',title:'Keep Practicing!',sub:'Revisit the syllabus and attempt more questions. You can do it!'},
+  {min:0,emoji:'💪',title:'Don\'t Give Up!',sub:'Everyone starts somewhere. Study the units and try again!'},
+];
+function getRemark(pct){return REMARKS.find(r=>pct>=r.min)||REMARKS[REMARKS.length-1];}
+
+function showResult(){
+  clearInterval(timerInterval);
+  const total=activeQuestions.length,wrong=total-score-skipped,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  document.getElementById('resultEmoji').textContent=remark.emoji;document.getElementById('scoreBig').textContent=score;document.getElementById('scoreTotal').textContent='/ '+total;
+  document.getElementById('resultPercent').textContent=pct+'%';document.getElementById('remarkText').textContent=remark.title;document.getElementById('remarkSub').textContent=remark.sub;
+  document.getElementById('pillCorrect').textContent=score;document.getElementById('pillWrong').textContent=wrong;document.getElementById('pillSkip').textContent=skipped;
+  document.getElementById('bannerName').textContent=studentName||'Student';
+  const parts=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');document.getElementById('bannerMeta').textContent=parts.join(' · ')||'IT Workshop Quiz';
+  document.getElementById('certBannerName').textContent=studentName||'Your';document.getElementById('certBannerMeta').textContent='IT Workshop Quiz · '+pct+'% · StudyHub';
+  let cnt=0;const el=document.getElementById('scoreBig');el.textContent='0';const inc=setInterval(()=>{cnt++;el.textContent=cnt;if(cnt>=score)clearInterval(inc);},Math.max(20,800/(score||1)));
+  showScreen('screenResult');if(pct>=75)launchConfetti();buildReview();
+}
+
+function launchConfetti(){
+  const canvas=document.getElementById('confettiCanvas'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+  const pieces=[],colors=['#0F4C81','#EA580C','#16A34A','#F59E0B','#1E88E5','#EC4899'];
+  for(let i=0;i<80;i++)pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,w:Math.random()*10+5,h:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,rot:Math.random()*360,rSpeed:Math.random()*5-2.5});
+  let frames=0;function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frames/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.rSpeed;});frames++;if(frames<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}draw();
+}
+
+function buildReview(){
+  const list=document.getElementById('reviewList');list.innerHTML='';
+  activeQuestions.forEach((q,i)=>{const ua=userAnswers[i],isCorrect=ua===q.a,isSkip=ua===-1;
+    const div=document.createElement('div');div.className=`review-item ${isCorrect?'ri-correct':isSkip?'ri-skip':'ri-wrong'}`;
+    div.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${isCorrect?'ri-correct-ans':isSkip?'':'ri-wrong-ans'}">${isSkip?'Skipped':q.o[ua]}</span>${!isCorrect?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(div);});
+}
+document.getElementById('reviewToggleBtn').addEventListener('click',()=>{const list=document.getElementById('reviewList'),btn=document.getElementById('reviewToggleBtn');list.classList.toggle('open');btn.textContent=list.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+
+document.getElementById('retryBtn').addEventListener('click',()=>{
+  document.getElementById('reviewList').classList.remove('open');document.getElementById('reviewToggleBtn').textContent='📖 Review Answers';document.getElementById('sharePanel').classList.remove('open');
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);showScreen('screenQuiz');renderQuestion();
+});
+
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function drawCertificate(){
+  const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  const wrongCount=total-score-skipped,dateStr=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const canvas=document.getElementById('certCanvas'),W=960,H=680;canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
+  const bgG=ctx.createLinearGradient(0,0,W,H);bgG.addColorStop(0,'#050E1A');bgG.addColorStop(0.5,'#0A1F3C');bgG.addColorStop(1,'#050E1A');ctx.fillStyle=bgG;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,0.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,0.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(0.05,0.22-r*0.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,0.85)';ctx.lineWidth=3.5;roundRect(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,0.45)';ctx.lineWidth=1.2;roundRect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  function hLine(y){const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(0.3,'rgba(234,88,12,0.9)');g.addColorStop(0.7,'rgba(234,88,12,0.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;}
+  ctx.fillStyle=hLine(58);ctx.fillRect(80,58,W-160,2.5);
+  const sX=W/2,sY=96,sg=ctx.createRadialGradient(sX,sY,0,sX,sY,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sX,sY,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('💻',sX,sY+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sY+52);ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sY+74);
+  const divG=ctx.createLinearGradient(120,150,W-120,150);divG.addColorStop(0,'transparent');divG.addColorStop(0.3,'rgba(234,88,12,0.7)');divG.addColorStop(0.7,'rgba(234,88,12,0.7)');divG.addColorStop(1,'transparent');ctx.strokeStyle=divG;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('This certifies that',W/2,183);
+  const dName=studentName||'Student';ctx.font=`bold ${dName.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,0.85)';ctx.shadowBlur=22;ctx.fillText(dName,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dName).width,ulx=W/2-nw/2;const ulG=ctx.createLinearGradient(ulx,245,ulx+nw,245);ulG.addColorStop(0,'rgba(30,136,229,0)');ulG.addColorStop(0.5,'rgba(30,136,229,0.8)');ulG.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ulG;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ulx,245);ctx.lineTo(ulx+nw,245);ctx.stroke();
+  const details=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');if(details.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,0.85)';ctx.fillText(details.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  roundRect(ctx,W/2-270,304,540,44,22);const qnG=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qnG.addColorStop(0,'rgba(234,88,12,0.18)');qnG.addColorStop(1,'rgba(15,76,129,0.18)');ctx.fillStyle=qnG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 20px Arial';ctx.fillStyle='#FB923C';ctx.fillText('IT Workshop Quiz — StudyHub',W/2,332);
+  const dG2=ctx.createLinearGradient(120,370,W-120,370);dG2.addColorStop(0,'transparent');dG2.addColorStop(0.5,'rgba(234,88,12,0.7)');dG2.addColorStop(1,'transparent');ctx.strokeStyle=dG2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sY2=420,rX=190,rR=60,scoreColor=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';ctx.beginPath();ctx.arc(rX,sY2,rR,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fill();ctx.beginPath();ctx.arc(rX,sY2,rR-8,-Math.PI/2,-Math.PI/2+(2*Math.PI*pct/100));ctx.strokeStyle=scoreColor;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=scoreColor;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.fillText(`${score}/${total}`,rX,sY2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('SCORE',rX,sY2+26);ctx.font='bold 14px Arial';ctx.fillStyle=scoreColor;ctx.fillText(pct+'%',rX,sY2+46);
+  const grade=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';roundRect(ctx,rX+80,sY2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=scoreColor;ctx.fillText(grade,rX+125,sY2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('GRADE',rX+125,sY2+30);
+  [{icon:'✅',label:'CORRECT',val:score,color:'#22C55E'},{icon:'❌',label:'WRONG',val:wrongCount,color:'#F87171'},{icon:'⟫',label:'SKIPPED',val:skipped,color:'#FBBF24'},{icon:'📊',label:'ACCURACY',val:pct+'%',color:'#90CAF9'}].forEach((s,i)=>{const col=i%2,row=Math.floor(i/2),sx=440+col*230,sy=sY2-46+row*68;roundRect(ctx,sx,sy,210,56,10);ctx.fillStyle='rgba(255,255,255,0.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.icon,sx+12,sy+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.color;ctx.fillText(String(s.val),sx+42,sy+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(s.label,sx+12,sy+46);});
+  const bY=516;roundRect(ctx,W/2-230,bY-24,460,40,20);const rmG=ctx.createLinearGradient(W/2-230,bY,W/2+230,bY);rmG.addColorStop(0,'rgba(234,88,12,0.15)');rmG.addColorStop(1,'rgba(15,76,129,0.15)');ctx.fillStyle=rmG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${remark.emoji}  ${remark.title}`,W/2,bY+4);
+  const botG=ctx.createLinearGradient(120,548,W-120,548);botG.addColorStop(0,'transparent');botG.addColorStop(0.5,'rgba(234,88,12,0.7)');botG.addColorStop(1,'transparent');ctx.strokeStyle=botG;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${dateStr}`,80,572);if(studentCollege&&studentCollege!=='N/A')ctx.fillText(`🏛  ${studentCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  IT Workshop',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hLine(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return canvas;
+}
+
+function getQuizURL(){return window.location.href!=='about:blank'?window.location.href:'https://studyhub.example.com/itworkshop.html';}
+function buildShareText(){const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct),wrongCount=total-score-skipped;const nameStr=studentName?`👤 ${studentName}\n`:'',metaStr=(studentBranch&&studentBranch!=='N/A')?`📘 ${studentBranch}${studentSem&&studentSem!=='N/A'?' · '+studentSem:''}\n`:'';return `${remark.emoji} IT Workshop Quiz — StudyHub\n\n${nameStr}${metaStr}🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${wrongCount}  ⟫ Skipped: ${skipped}\n\n📚 Try: ${getQuizURL()}\n\nStudyHub`;}
+
+document.getElementById('shareBtn').addEventListener('click',()=>{const panel=document.getElementById('sharePanel');panel.classList.toggle('open');if(panel.classList.contains('open'))panel.scrollIntoView({behavior:'smooth',block:'nearest'});});
+document.getElementById('downloadCertBtn').addEventListener('click',()=>{showToast('🎨 Generating certificate…');setTimeout(()=>{try{const canvas=drawCertificate();const link=document.createElement('a');const total=activeQuestions.length,pct=Math.round((score/total)*100);const safeName=(studentName||'Student').replace(/[^a-zA-Z0-9]/g,'_');link.download=`StudyHub_ITWorkshop_Certificate_${safeName}_${score}_${total}_${pct}pct.png`;link.href=canvas.toDataURL('image/png');link.click();showToast('✅ Certificate downloaded!');document.getElementById('downloadCertBtn').classList.add('done');}catch(e){showToast('⚠️ Download failed — try another browser');}},200);});
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(getQuizURL()).then(()=>showToast('🔗 Quiz link copied!')).catch(()=>prompt('Copy:',getQuizURL()));});
+document.getElementById('whatsappBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const msg=`${remark.emoji} *IT Workshop Quiz — StudyHub*\n\n${studentName?'👤 *'+studentName+'*\n':''}🏆 Score: *${score}/${total}* (${pct}%)\n${remark.title}\n\n📚 Try: ${getQuizURL()}`;window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');});
+document.getElementById('twitterBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);const tweet=`${remark.emoji} Just scored ${score}/${total} (${pct}%) on the IT Workshop Quiz on StudyHub!\n\n${remark.title}\n\nTry it 👇\n${getQuizURL()}\n\n#ITWorkshop #BCA #BTech #StudyHub`;window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`,'_blank');});
+document.getElementById('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(buildShareText()).then(()=>showToast('📋 Score text copied!')).catch(()=>prompt('Copy:',buildShareText()));});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

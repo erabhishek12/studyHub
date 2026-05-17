@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Networks Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#0F4C81;--primary-light:#1E88E5;--primary-dark:#0A3055;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2F7;--card:#FFFFFF;--text:#0D1B2A;--text-sub:#5A7A9A;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C8D4E0,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C8D4E0,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,247,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(15,76,129,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-raise-sm);color:#fff;font-weight:800}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(15,76,129,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(15,76,129,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,247,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(15,76,129,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(15,76,129,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(15,76,129,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(15,76,129,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong);animation:pulse .5s ease-in-out infinite}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,76,129,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none;animation:fadeInUp .3s ease}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#0A3055,#0F4C81);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(15,76,129,.35),8px 8px 16px #C8D4E0,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8D8,-6px -6px 14px #FFFFFF;border-color:rgba(15,76,129,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C8D4E0;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.option.correct .option-letter{background:var(--correct);color:#fff}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(15,76,129,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(15,76,129,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0A1628,#0F3460);border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(30,136,229,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(15,76,129,.3);background:var(--bg);color:var(--primary);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">🌐</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Quizzes</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">🏠 Home</a><a href="#" class="active">🧠 Quizzes</a><a href="#">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. CSE / ECE / IT" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option>
+            <option>4th Semester</option><option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">🌐</span>
+    <div class="intro-title">Computer Networks Quiz</div>
+    <div class="intro-sub">200 VVI MCQs covering OSI & TCP/IP Models, Data Link, Network, Transport & Application Layers. B.Tech / BCA / MCA Exam-Oriented.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">200</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Data Communication & OSI Model</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Physical Layer</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Data Link Layer</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Network Layer</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Transport Layer</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Application Layer</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 200</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏳ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">🌐 Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">Computer Networks Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 200</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="#" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">CN Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Data Communication & OSI Model", icon:"🌐"},
+  {name:"Physical Layer",                 icon:"📡"},
+  {name:"Data Link Layer",                icon:"🔗"},
+  {name:"Network Layer",                  icon:"🗺️"},
+  {name:"Transport Layer",                icon:"🚀"},
+  {name:"Application Layer",              icon:"💻"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════════
+   UNIT 1 — Data Communication & OSI (34 Qs)
+══════════════════════════════════════════ */
+{c:0,q:"Data communication refers to:",o:["Storing data on hard drives","The exchange of data between two devices via some form of transmission medium","Managing databases","Writing computer programs"],a:1,ex:"Data communication: transfer of data between source and destination using a transmission medium. Key components: message, sender, receiver, medium, and protocol.",star:true,hint:"5 components: Message, Sender, Receiver, Medium, Protocol"},
+{c:0,q:"The OSI (Open Systems Interconnection) model has how many layers?",o:["5","6","7","4"],a:2,ex:"OSI model has 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application. Developed by ISO in 1984. Provides a standard framework for network communication.",star:true,hint:"Please Do Not Throw Sausage Pizza Away = Physical, Data Link, Network, Transport, Session, Presentation, Application"},
+{c:0,q:"The correct order of OSI layers from bottom to top is:",o:["Application→Transport→Network→Data Link→Physical","Physical→Data Link→Network→Transport→Session→Presentation→Application","Network→Transport→Session→Application→Physical","Data Link→Network→Physical→Transport→Session"],a:1,ex:"OSI bottom to top: Physical (1), Data Link (2), Network (3), Transport (4), Session (5), Presentation (6), Application (7). Data flows down on sender side, up on receiver side.",star:true},
+{c:0,q:"Which OSI layer is responsible for end-to-end delivery of the entire message?",o:["Network Layer","Data Link Layer","Transport Layer","Session Layer"],a:2,ex:"Transport Layer (Layer 4): end-to-end (process-to-process) delivery, error correction, flow control, segmentation. Protocols: TCP (reliable), UDP (unreliable). Uses port numbers.",star:true},
+{c:0,q:"The Network Layer (Layer 3) of OSI is responsible for:",o:["Framing data","End-to-end delivery across multiple networks using logical addressing (IP addresses) and routing","Physical transmission","Process-to-process delivery"],a:1,ex:"Network Layer: logical addressing (IP), routing (finding path from source to destination across networks), packet forwarding, fragmentation. Devices: routers. Protocol: IP, ICMP, OSPF, BGP.",star:true},
+{c:0,q:"Which OSI layer converts data into bits for transmission and handles physical medium?",o:["Data Link Layer","Network Layer","Transport Layer","Physical Layer"],a:3,ex:"Physical Layer (Layer 1): deals with actual transmission of raw bits over physical medium. Defines: bit representation (encoding), data rate, physical topology, transmission mode. Devices: hubs, repeaters.",star:true},
+{c:0,q:"The Data Link Layer (Layer 2) is responsible for:",o:["Routing between networks","Node-to-node delivery within same network, framing, MAC addressing, error detection, and flow control","End-to-end delivery","Encryption"],a:1,ex:"Data Link Layer: frames data for transmission, adds source/destination MAC addresses, error detection (CRC), flow control. Sublayers: LLC (Logical Link Control) and MAC (Media Access Control). Devices: switches, bridges.",star:true},
+{c:0,q:"What is the PDU (Protocol Data Unit) at the Transport Layer?",o:["Bit","Frame","Packet","Segment"],a:3,ex:"PDU names: Physical=Bits, Data Link=Frame, Network=Packet, Transport=Segment, Session/Presentation/Application=Data (or Message). Segments contain port numbers and sequence numbers.",star:true,hint:"Bits→Frame→Packet→Segment→Data — bottom to top of OSI"},
+{c:0,q:"The TCP/IP model has how many layers?",o:["7","5","4","3"],a:2,ex:"TCP/IP (Internet) model has 4 layers: Network Access (Link), Internet, Transport, Application. Developed by DARPA. It is the actual protocol suite used on the internet, unlike OSI which is a reference model.",star:true,hint:"TCP/IP: Network Access, Internet, Transport, Application (4 layers)"},
+{c:0,q:"Which TCP/IP layer corresponds to OSI Network Layer?",o:["Network Access Layer","Internet Layer","Transport Layer","Application Layer"],a:1,ex:"TCP/IP Internet Layer ≡ OSI Network Layer. Both handle logical addressing (IP addresses) and routing. Main protocol: IP (IPv4, IPv6). Also: ICMP, ARP, RARP.",star:true},
+{c:0,q:"The Application layer of TCP/IP combines which OSI layers?",o:["Physical + Data Link","Transport + Network","Session + Presentation + Application","Network + Transport"],a:2,ex:"TCP/IP Application layer = OSI Session (5) + Presentation (6) + Application (7) combined. Protocols: HTTP, FTP, SMTP, DNS, Telnet, SSH, SNMP.",star:true},
+{c:0,q:"What does the Session Layer of OSI do?",o:["Translates data formats","Establishes, manages, and terminates communication sessions between applications — synchronization, dialog control","Routes packets","Detects errors in frames"],a:1,ex:"Session Layer (5): dialog control (half/full duplex), synchronization (checkpoints for long transfers), session establishment/termination. Example: NetBIOS. In practice, TCP/IP combines this with Application layer.",star:true},
+{c:0,q:"The Presentation Layer of OSI is responsible for:",o:["Routing data","Translation, encryption/decryption, compression — ensures data sent by one system can be read by another (format conversion)","Frame delimiting","Port number assignment"],a:1,ex:"Presentation Layer (6): data translation (ASCII↔EBCDIC), encryption/decryption (SSL/TLS), compression. 'The translator of the network'. In TCP/IP, handled by Application layer protocols.",star:true},
+{c:0,q:"What is protocol encapsulation in networking?",o:["Removing all headers","Each layer adding its own header (and sometimes trailer) to data from the upper layer as data moves down the protocol stack","Encrypting all data","Compressing data packets"],a:1,ex:"Encapsulation: as data moves down OSI layers, each layer adds its header (Data Link also adds trailer). Decapsulation: reverse process at receiver (each layer removes its header). Creates PDUs at each layer.",star:true},
+{c:0,q:"The OSI model Application Layer (Layer 7) provides:",o:["Physical transmission","Network services directly to user applications — interface between network and application programs. Protocols: HTTP, FTP, DNS, SMTP","Routing","Flow control between nodes"],a:1,ex:"Application Layer: user interface to network services. Provides protocols for file transfer (FTP), email (SMTP), web (HTTP), name resolution (DNS), remote access (SSH/Telnet). Closest to the end user.",star:true},
+{c:0,q:"What is a protocol in networking?",o:["A programming language","A set of rules and standards that define how data is transmitted between devices in a network","A type of cable","A network device"],a:1,ex:"Protocol: agreed-upon rules defining format, timing, sequencing, and error control for data exchange between communicating entities. Examples: TCP, IP, HTTP, FTP, SMTP. Without protocols, devices cannot communicate.",star:true},
+{c:0,q:"Unicast, Multicast, and Broadcast refer to:",o:["Types of cables","Types of transmission: Unicast (1 sender, 1 receiver), Multicast (1 sender, group of receivers), Broadcast (1 sender, all receivers on network)","Types of protocols","Types of errors"],a:1,ex:"Unicast: one-to-one (regular web browsing). Multicast: one-to-many specific group (video conferencing, IPTV). Broadcast: one-to-all (ARP request, DHCP discover). Anycast: one-to-nearest (IPv6, CDN).",star:true},
+{c:0,q:"What is bandwidth in networking?",o:["Length of cable","The maximum rate of data transfer across a network path — measured in bits per second (bps, Kbps, Mbps, Gbps)","Number of connected devices","Physical size of cable"],a:1,ex:"Bandwidth: maximum data transfer rate of a network or connection. Theoretical maximum set by channel capacity (Shannon's theorem). Actual throughput is usually less. Higher bandwidth → more data per second.",star:true},
+{c:0,q:"Latency (delay) in a network is:",o:["The bandwidth of the link","The time it takes for a packet to travel from source to destination — includes propagation, transmission, queuing, processing delays","The size of a packet","The number of hops"],a:1,ex:"Latency = total delay. Components: Propagation delay (distance/speed of light), Transmission delay (packet_size/bandwidth), Queuing delay (waiting in buffer), Processing delay (router processing). RTT = 2 × one-way latency.",star:true},
+{c:0,q:"What is the purpose of the OSI model?",o:["To replace TCP/IP","To provide a conceptual framework for understanding network communication — allows different vendors' equipment to interoperate","To design hardware only","To program network applications"],a:1,ex:"OSI model: reference framework dividing communication into 7 layers. Each layer has specific functions, communicates with adjacent layers via interfaces. Vendor independence: different manufacturers implement same layer protocols interoperably.",star:true},
+{c:0,q:"Point-to-Point topology connects:",o:["Multiple devices in a ring","Exactly two devices with a dedicated link between them","All devices to a central hub","Devices in a mesh"],a:1,ex:"Point-to-point: dedicated direct link between two devices. Simplest topology. Examples: dial-up modem connection, leased lines, direct device-to-device serial cable. Full bandwidth dedicated to one pair.",star:true},
+{c:0,q:"Bus topology in networks:",o:["All devices connect to a central switch","All devices connect to a single shared backbone cable — one failure in main cable brings down entire network","Devices connected in a circle","Every device connected to every other"],a:1,ex:"Bus topology: single backbone cable with all devices tapped in. Simple, cheap for small networks. Disadvantage: one cable break kills network, collision domain, difficult troubleshooting. Used in early Ethernet (10BASE5, 10BASE2).",star:true},
+{c:0,q:"Star topology connects all devices to:",o:["Each other directly","A central hub or switch — most common LAN topology","A ring","A bus cable"],a:1,ex:"Star topology: all devices connect to central hub/switch. Advantages: easy to add/remove devices, one device failure doesn't affect others, easy troubleshooting. Disadvantage: central device failure = whole network down.",star:true},
+{c:0,q:"Mesh topology provides:",o:["Single path between devices","Multiple redundant paths — every device connected to every other device (full mesh) or some devices (partial mesh)","Single shared cable","Central hub connection"],a:1,ex:"Full mesh: n nodes → n(n-1)/2 links. Maximum redundancy and reliability. Expensive (too many cables). Used in WAN backbone, critical infrastructure. Partial mesh: compromise between cost and redundancy.",star:true},
+{c:0,q:"LAN, MAN, and WAN differ in:",o:["Protocol used only","Geographic coverage: LAN (Local Area Network — building), MAN (Metropolitan — city), WAN (Wide Area — country/worldwide)","Speed only","Number of devices"],a:1,ex:"LAN: 1km, high speed (Gbps), Ethernet/WiFi. MAN: 5-50km, city-wide, cable TV networks, Metro Ethernet. WAN: worldwide, leased lines, fiber, satellite, Internet. PAN: personal (Bluetooth, USB). GAN: global.",star:true},
+{c:0,q:"What is a protocol stack?",o:["A hardware component","A set of protocols arranged in layers where each layer provides services to the layer above — e.g., TCP/IP stack","A network cable type","A type of switch"],a:1,ex:"Protocol stack: the complete set of network protocols arranged in layers. TCP/IP stack: Application (HTTP), Transport (TCP/UDP), Internet (IP), Network Access (Ethernet). Each layer uses services of layer below.",star:true},
+{c:0,q:"Simplex, Half-Duplex, and Full-Duplex describe:",o:["Cable types","Transmission modes: Simplex (one direction only), Half-Duplex (both directions but not simultaneously), Full-Duplex (both directions simultaneously)","Encoding schemes","Network topologies"],a:1,ex:"Simplex: TV broadcast (sender only). Half-duplex: walkie-talkie (one speaks at a time). Full-duplex: telephone (both speak simultaneously). Modern Ethernet switches provide full-duplex. Old hubs = half-duplex.",star:true},
+{c:0,q:"The Internet is best described as:",o:["A single network","A network of networks — a global interconnected system of millions of networks using TCP/IP protocols","A type of LAN","A private corporate network"],a:1,ex:"Internet: global interconnection of heterogeneous networks using TCP/IP protocol suite. No central authority owns it. Key services: WWW, email, FTP, VoIP, streaming. Tim Berners-Lee invented WWW (not Internet).",star:true},
+{c:0,q:"What is a node in a network?",o:["Only a computer","Any device connected to a network (computer, switch, router, printer, server, smartphone)","Only a router","Only a server"],a:1,ex:"Node: any active device connected to a network. Includes: computers, smartphones, printers, servers, switches, routers, access points. Each node typically has a unique network address (IP or MAC).",star:true},
+{c:0,q:"What does OSI stand for?",o:["Open System Interface","Open Systems Interconnection","Operating System Integration","Open Standard Internet"],a:1,ex:"OSI = Open Systems Interconnection. Developed by ISO (International Organization for Standardization) in 1984. 'Open' means non-proprietary — any vendor can implement it. 7-layer reference model.",star:true},
+{c:0,q:"Peer-to-peer communication in OSI model refers to:",o:["Physical layer only","Logical communication between same-layer entities of sender and receiver (e.g., Transport layer of sender 'talks to' Transport layer of receiver)","Application layer only","Direct cable connection"],a:1,ex:"Peer communication: logical. Layer N on machine A communicates with Layer N on machine B using Layer N protocols. Actual physical path: data goes down all layers on sender, up all layers on receiver.",star:true},
+{c:0,q:"What is the purpose of network architecture?",o:["To design computer hardware only","The complete framework of a network's hardware, software, protocols, and topology that defines how components interact and data flows","To write applications","To manufacture cables"],a:1,ex:"Network architecture: the design framework that specifies network components, communication rules (protocols), and organizational structure (topology). Examples: Client-server, P2P, Cloud. OSI and TCP/IP are architectural models.",star:true},
+{c:0,q:"Which is the correct mapping: OSI Data Link Layer ↔ TCP/IP?",o:["Internet Layer","Transport Layer","Network Access (Link) Layer","Application Layer"],a:2,ex:"TCP/IP Network Access (Link) Layer = OSI Physical + Data Link combined. Handles hardware addressing (MAC), framing, physical transmission. Protocols: Ethernet, WiFi (802.11), PPP.",star:true},
+
+/* ═══════════════════════════════
+   UNIT 2 — Physical Layer (33 Qs)
+═══════════════════════════════ */
+{c:1,q:"Analog signals are characterized by:",o:["Discrete values only","Continuously varying values over time — represented as sine waves, characterized by amplitude, frequency, and phase","Binary digits 0 and 1","Fixed voltage levels"],a:1,ex:"Analog signal: continuous signal varying smoothly over time. Described by amplitude (height), frequency (cycles/sec), and phase (shift). Human voice, radio waves are analog. Traditional telephone used analog.",star:true,hint:"Analog = continuous. Digital = discrete (0s and 1s)"},
+{c:1,q:"Digital signals are characterized by:",o:["Continuous variation","Discrete values (0 and 1) represented as voltage levels — high voltage = 1, low voltage = 0","Infinite amplitude","Frequency only"],a:1,ex:"Digital signal: discrete values, typically binary. Advantages: noise immunity, easy to compress/encrypt, can be perfectly regenerated. Modern computers and networks use digital signals exclusively.",star:true},
+{c:1,q:"Transmission impairments in networking include:",o:["Only attenuation","Attenuation (signal weakening), distortion (signal shape change), and noise (random interference)","Only noise","Only bandwidth limitations"],a:1,ex:"Transmission impairments: Attenuation (signal loses strength over distance — use amplifiers/repeaters), Distortion (different frequency components travel at different speeds — equalization), Noise (thermal, induced, crosstalk, impulse).",star:true},
+{c:1,q:"Attenuation in signal transmission means:",o:["Signal getting stronger","The weakening/loss of signal energy as it travels through a medium — signal strength decreases with distance","Signal frequency increasing","Signal speed decreasing"],a:1,ex:"Attenuation: signal power decreases with distance. Cause: resistance in wire, absorption in fiber. Measured in decibels (dB). Solution: amplifiers (analog), repeaters (digital). Fiber optic has much lower attenuation than copper.",star:true},
+{c:1,q:"The Nyquist theorem for noiseless channels states that maximum data rate =",o:["2 × Bandwidth × log2(M) where M = number of signal levels","Bandwidth × log2(S/N)","Bandwidth only","2 × Bandwidth"],a:0,ex:"Nyquist theorem: Max data rate = 2B log₂M, where B = bandwidth, M = number of discrete signal levels. Example: 3kHz bandwidth, 4 levels → max 6 kbps. Only for noiseless channels.",star:true,hint:"Nyquist (noiseless): 2B log₂M | Shannon (noisy): B log₂(1+S/N)"},
+{c:1,q:"Shannon's Capacity theorem states maximum data rate =",o:["2 × Bandwidth × log2(M)","Bandwidth × log2(1 + S/N) — accounts for noise in the channel","Bandwidth only","2 × Bandwidth × SNR"],a:1,ex:"Shannon's theorem: C = B log₂(1 + S/N), where B = bandwidth (Hz), S/N = signal-to-noise ratio. Absolute theoretical maximum for any encoding. Example: 1MHz BW, SNR=63 → C = 6 Mbps.",star:true},
+{c:1,q:"NRZ (Non-Return to Zero) encoding:",o:["Signal returns to zero between bits","Signal remains at high for 1, low for 0 — does NOT return to zero — two variations: NRZ-L (Level) and NRZ-I (Invert on 1)","Uses three signal levels","Requires extra bandwidth"],a:1,ex:"NRZ-L: voltage level directly represents bit (high=1, low=0). NRZ-I: signal inverted for each 1, no change for 0. Problem: long string of 0s or 1s causes DC component and sync loss. Used in RS-232.",star:true},
+{c:1,q:"Manchester encoding in digital-to-digital conversion:",o:["No transition in middle of bit","Has a transition in the MIDDLE of each bit: low-to-high = 1, high-to-low = 0 — provides self-synchronization","Uses 3 voltage levels","Same as NRZ"],a:1,ex:"Manchester: transition in middle of each bit. Self-clocking (receiver extracts clock from transitions). Doubles bandwidth requirement compared to NRZ. Used in 10BASE-T Ethernet (10 Mbps). Differential Manchester used in Token Ring.",star:true},
+{c:1,q:"4B/5B encoding is used to:",o:["Compress data","Ensure sufficient transitions for synchronization by encoding every 4 data bits into a 5-bit code — ensures no more than one leading 0 and no more than two trailing 0s","Encrypt data","Reduce bandwidth"],a:1,ex:"4B/5B: encodes 4 bits → 5 bits using a lookup table that avoids long runs of 0s. Used with NRZI. 20% overhead (5/4 = 1.25 redundancy). Used in 100BASE-TX Fast Ethernet and FDDI.",star:true},
+{c:1,q:"Twisted pair cable reduces:",o:["Cable length","Electromagnetic interference (EMI) and crosstalk — twisting causes interfering signals to cancel each other","Cable weight","Signal frequency"],a:1,ex:"Twisted pair: wires twisted together. Twisting causes induced EMI/crosstalk to cancel (equal and opposite voltages). UTP (unshielded): categories 3,5,5e,6. STP: extra shielding. Most common LAN cable.",star:true},
+{c:1,q:"Fiber optic cable transmits data using:",o:["Electrical signals","Light pulses traveling through a glass or plastic core — immune to electromagnetic interference, very high bandwidth, long distances","Radio waves","Sound waves"],a:1,ex:"Fiber optic: light pulses in glass/plastic fiber. Total internal reflection keeps light inside fiber. Single-mode (SMF): one light path, very long distance, expensive. Multimode (MMF): multiple paths, shorter distance, cheaper.",star:true},
+{c:1,q:"What is the data rate limit of a 1MHz bandwidth channel with SNR of 1000?",o:["1 Mbps","10 Mbps","~10 Mbps (Shannon: 1M × log₂(1001) ≈ 1M × 10 = 10 Mbps)","1 Gbps"],a:2,ex:"Shannon: C = B × log₂(1+SNR) = 1×10⁶ × log₂(1001) ≈ 1×10⁶ × 10 ≈ 10 Mbps. SNR(dB) = 30dB → ratio = 10³ = 1000. This is the absolute maximum, regardless of encoding scheme.",star:true},
+{c:1,q:"Multiplexing is a technique that:",o:["Splits a signal into two","Allows multiple signals to share a single transmission medium simultaneously — increases efficiency","Amplifies signals","Reduces noise"],a:1,ex:"Multiplexing: combine multiple signals to share one channel. Types: FDM (frequency bands), TDM (time slots), WDM (wavelengths in fiber), CDM (codes). Demultiplexer separates signals at receiver.",star:true},
+{c:1,q:"FDM (Frequency Division Multiplexing) works by:",o:["Assigning time slots","Assigning different frequency bands to different signals — signals transmitted simultaneously in different frequency sub-bands","Assigning different codes","Using multiple fibers"],a:1,ex:"FDM: divide total bandwidth into sub-bands. Each user gets dedicated frequency band. Guard bands prevent interference between channels. Used in radio/TV broadcasting, traditional telephone (PSTN). Analog technique.",star:true},
+{c:1,q:"TDM (Time Division Multiplexing) works by:",o:["Assigning different frequencies","Dividing time into fixed slots — each source gets a dedicated repeating time slot (synchronous TDM) or slots on demand (statistical TDM)","Assigning different codes","Using multiple cables"],a:1,ex:"Synchronous TDM: fixed slot assignment even if no data (wastes slots). Statistical (async) TDM: slots assigned only when data available — more efficient. Used in T1/E1 lines, digital telephone networks.",star:true},
+{c:1,q:"WDM (Wavelength Division Multiplexing) is used in:",o:["Copper cables","Fiber optic cables — multiple light wavelengths (colors) carry different data streams simultaneously on one fiber — DWDM: dense WDM with 80+ wavelengths","Wireless networks","Coaxial cables"],a:1,ex:"WDM: fiber optic multiplexing using different wavelengths (colors of light). DWDM (Dense WDM): 80-100+ wavelengths, each at 10-100 Gbps → terabits per second on single fiber. Backbone internet infrastructure.",star:true},
+{c:1,q:"Guided transmission media includes:",o:["Radio waves, microwaves","Twisted pair, coaxial cable, and fiber optic cable — physical media that guides signal along its path","Satellite","Infrared"],a:1,ex:"Guided (wired) media: physical wire/cable guides signal. Twisted pair (UTP/STP), Coaxial cable, Fiber optic. Unguided (wireless): electromagnetic waves through air/space. Radio, Microwave, Infrared, Satellite.",star:true},
+{c:1,q:"Coaxial cable consists of:",o:["Only one conductor","A central conductor surrounded by insulation, metallic shield, and outer jacket — better shielding than twisted pair, used for cable TV and older Ethernet","Two parallel wires","Optical fiber"],a:1,ex:"Coaxial cable: inner copper conductor + insulating layer + braided metal shield + outer plastic jacket. Shield provides better EMI protection than twisted pair. Used in cable TV (75Ω) and older 10BASE2/10BASE5 Ethernet (50Ω).",star:true},
+{c:1,q:"Radio waves are used in:",o:["Only satellite communication","Wireless LAN (WiFi), cellular networks, AM/FM radio, Bluetooth — omnidirectional, can penetrate walls, frequency 3Hz-1GHz range","Only optical fiber","Only cable TV"],a:1,ex:"Radio waves: 3Hz-1GHz. Omnidirectional (spread in all directions). Penetrate walls. Used: AM radio (535kHz-1.6MHz), FM radio (88-108MHz), WiFi (2.4/5GHz), cellular (700MHz-2.6GHz), Bluetooth (2.4GHz).",star:true},
+{c:1,q:"Microwave transmission is:",o:["Used for satellite only","Unguided line-of-sight transmission at 1GHz-300GHz — used for cellular, WiFi (higher bands), satellite, terrestrial microwave links","Guided transmission","Used only underground"],a:1,ex:"Microwaves: 1GHz-300GHz. Line-of-sight (cannot bend around Earth — repeaters every 50-80km for terrestrial). Used: cellular (1.9-2.5GHz), satellite (C-band 4-8GHz, Ku-band 12-18GHz), WiFi (2.4/5GHz).",star:true},
+{c:1,q:"The decibel (dB) is used in networking to measure:",o:["Cable length","Signal strength changes (gain or loss): dB = 10 log₁₀(P2/P1) — negative dB = attenuation, positive dB = amplification","Data rate","Bandwidth in Hz"],a:1,ex:"dB: logarithmic unit. Signal halving = -3 dB. Signal doubling = +3 dB. 10× increase = +10 dB. 10× decrease = -10 dB. Fiber has very low attenuation (~0.2 dB/km for SMF at 1550nm).",star:true},
+{c:1,q:"Spread spectrum technology:",o:["Concentrates signal in narrow band","Spreads signal over a wide frequency band — more resistant to interference and eavesdropping. Types: FHSS (frequency hopping) and DSSS (direct sequence)","Uses only one frequency","Reduces bandwidth"],a:1,ex:"FHSS (frequency hopping): signal hops between frequencies pseudo-randomly. DSSS (direct sequence): signal multiplied by faster pseudo-random spreading code (chips). Used in WiFi (802.11b), Bluetooth, CDMA cellular. Resistant to jamming and interception.",star:true},
+{c:1,q:"CDMA (Code Division Multiple Access) allows:",o:["Users to share time slots","Multiple users to share same frequency band simultaneously using unique spreading codes — each user's signal spread with unique code, receiver uses same code to extract signal","Users to share frequency bands","Only one user at a time"],a:1,ex:"CDMA: all users transmit simultaneously on same frequency. Each user has unique orthogonal code (chip sequence). Receiver correlates received signal with user's code to extract their data. Used in 3G cellular (CDMA2000, WCDMA).",star:true},
+{c:1,q:"Circuit switching (used in PSTN) involves:",o:["Packet-based routing","Establishing a dedicated physical path between source and destination for the entire duration of communication before data is sent","Statistical multiplexing","Store-and-forward"],a:1,ex:"Circuit switching: dedicated path established (call setup), resources reserved for entire call, constant quality, connection teardown after call. Used in traditional telephone. Wastes capacity if no data being sent.",star:true},
+{c:1,q:"Packet switching (used in Internet) involves:",o:["Dedicated circuits","Breaking data into packets, each routed independently through the network — no dedicated path, resources shared among users","No addressing","Fixed bit rate only"],a:1,ex:"Packet switching: data divided into packets. Each packet has header (source, destination address). Packets may take different paths, arrive out of order. Store-and-forward at each router. Efficient use of bandwidth. Used in Internet.",star:true},
+{c:1,q:"Virtual circuit switching combines features of:",o:["Only circuit switching","Both circuit switching (fixed path established beforehand) and packet switching (data still in packets) — path is reserved but resources may be shared","Only packet switching","Neither type"],a:1,ex:"Virtual circuit: connection established first (like circuit switching) → all packets follow same path → connection released. Resources may be shared (unlike circuit switching). Used in ATM, Frame Relay, MPLS.",star:true},
+{c:1,q:"Baud rate vs bit rate: baud rate measures:",o:["Bits per second","Number of signal changes (symbols) per second — bit rate = baud rate × log₂(M) where M = signal levels","Packets per second","Frames per second"],a:1,ex:"Baud rate: symbol rate (signal changes per second). Bit rate: bits per second = baud × log₂M. Example: 1200 baud with 4 signal levels = 1200 × log₂4 = 1200 × 2 = 2400 bps. Higher M → more bits per symbol.",star:true},
+{c:1,q:"Synchronization in digital transmission is needed to:",o:["Reduce noise","Allow receiver to know exactly when each bit starts and ends — derived from signal transitions or separate clock signal","Increase bandwidth","Reduce cable length"],a:1,ex:"Synchronization: receiver needs timing reference. Asynchronous: start/stop bits per byte (RS-232). Synchronous: shared clock or self-clocking encoding (Manchester). Isochronous: continuous synchronization for real-time streams.",star:true},
+{c:1,q:"What is crosstalk in cable transmission?",o:["Signal amplification","Interference caused by electromagnetic coupling from one wire pair to adjacent wire pair in the same cable — NEXT (near-end), FEXT (far-end)","Signal reflection","Packet loss"],a:1,ex:"Crosstalk: signal from one wire electromagnetically induces noise into adjacent wires. NEXT: crosstalk measured at same end as transmitter. FEXT: measured at far end. Twisted pairs reduce crosstalk. Higher cable category = less crosstalk.",star:true},
+{c:1,q:"Infrared communication is used for:",o:["Long distance WAN","Short-range, line-of-sight communication (TV remote controls, IrDA for device-to-device) — blocked by walls, used in controlled environments","Satellite links","Deep ocean cables"],a:1,ex:"Infrared: 300GHz-400THz. Short range, line-of-sight, cannot penetrate walls. Used in: TV/AC remote controls, IrDA (data transfer between phones/laptops), indoor wireless LANs (limited use). Not affected by radio interference.",star:true},
+
+/* ═══════════════════════════════
+   UNIT 3 — Data Link Layer (34 Qs)
+═══════════════════════════════ */
+{c:2,q:"Framing in Data Link Layer means:",o:["Creating video frames","Encapsulating Network layer packets into frames by adding header and trailer — defines where a frame begins and ends","Compressing data","Encrypting data"],a:1,ex:"Framing: DLL adds header (destination/source MAC, control) and trailer (FCS/CRC) to Network layer packets. Methods: Character count, Flag bytes with byte stuffing, Bit stuffing (01111110 flag). Frame delimiting.",star:true,hint:"DLL responsibilities: Framing, Flow Control, Error Control, Access Control"},
+{c:2,q:"Error detection using CRC (Cyclic Redundancy Check) works by:",o:["Counting bits","Dividing data (as polynomial) by a generator polynomial — remainder is appended as CRC; receiver performs same division and checks for zero remainder","Adding checksum only","Using parity only"],a:1,ex:"CRC: treat data bits as polynomial, divide by generator polynomial (e.g., CRC-32), append remainder as FCS. Receiver divides frame+FCS by generator — if remainder=0, no error. Very powerful, detects burst errors. Used in Ethernet.",star:true},
+{c:2,q:"Even parity error detection works by:",o:["Making total 1s in data even by adding a parity bit — simple, only detects odd number of bit errors","Making total 0s even","Adding two parity bits","Using a hash function"],a:0,ex:"Even parity: count 1-bits in data; add parity bit to make total 1s even. Example: data=1010001 (three 1s) → parity=1 → 10100011. Receiver counts 1s; if odd → error. Only detects odd number of bit errors, cannot correct.",star:true},
+{c:2,q:"Stop-and-Wait ARQ protocol works by:",o:["Sending all packets at once","Sender sends one frame, then waits for ACK before sending next — simple but very inefficient for high-bandwidth-delay-product links","Sending frames continuously","Using flow control only"],a:1,ex:"Stop-and-wait ARQ: sender sends 1 frame → waits for ACK. If ACK received → send next. If NAK or timeout → retransmit. Efficiency = Tt/(Tt+2Tp) where Tt=transmission time, Tp=propagation delay. Very low for satellite links.",star:true},
+{c:2,q:"Go-Back-N ARQ allows:",o:["Sending one frame at a time","Sender to send up to N frames (window size N) without waiting for ACK — on error, ALL frames from error point onwards are retransmitted","Selective retransmission only","No retransmission"],a:1,ex:"Go-Back-N: sender window = N (up to N unacknowledged frames). On error/timeout, resend all frames from lost one. Receiver window = 1 (discards out-of-order). Simpler receiver, wastes bandwidth on retransmission.",star:true,hint:"Go-Back-N: resend from error. Selective Repeat: resend ONLY error frame"},
+{c:2,q:"Selective Repeat ARQ differs from Go-Back-N in that:",o:["It uses a smaller window","Only the specific lost/corrupted frame is retransmitted, not all subsequent frames — requires larger receiver buffer","It is slower","It uses no buffer"],a:1,ex:"Selective Repeat: sender AND receiver window size = N. On error, only that specific frame is resent. Receiver buffers out-of-order frames. More efficient than GBN but needs larger receiver buffer. Sender window ≤ sequence_space/2.",star:true},
+{c:2,q:"Flow control in Data Link Layer prevents:",o:["Signal noise","A fast sender from overwhelming a slow receiver with more frames than it can process","Routing errors","Physical errors"],a:1,ex:"Flow control: matches sender rate to receiver's processing capacity. Methods: Stop-and-Wait (simplest), Sliding Window (send window of frames, receiver sends ACK to advance window). Prevents buffer overflow at receiver.",star:true},
+{c:2,q:"The sliding window protocol:",o:["Uses only one frame at a time","Allows sender to have multiple unacknowledged frames in transit simultaneously — window slides forward as ACKs received — improves link utilization","Slides the receiver window backward","Requires full-duplex only"],a:1,ex:"Sliding window: sender maintains window of frames that can be in transit. Window slides right as ACKs received. Both GBN and SR are sliding window protocols. Window size determines max frames in flight.",star:true},
+{c:2,q:"CSMA/CD (Carrier Sense Multiple Access / Collision Detection) is used in:",o:["WiFi networks","Wired Ethernet (802.3) — listen before transmit, detect collision during transmission, stop and retry after random backoff","Satellite networks","Fiber optic only"],a:1,ex:"CSMA/CD: (1) Sense carrier — if busy, wait. (2) If idle, transmit. (3) If collision detected during transmission — stop, send jam signal. (4) Binary exponential backoff, retry. Used in traditional Ethernet. Eliminated by switches.",star:true},
+{c:2,q:"CSMA/CA (Carrier Sense Multiple Access / Collision Avoidance) is used in:",o:["Wired Ethernet","Wireless networks (WiFi/802.11) — collision detection impossible wirelessly so collision is AVOIDED using RTS/CTS and random backoff before transmitting","Cable TV","Bluetooth only"],a:1,ex:"CSMA/CA: (1) Sense channel. (2) If idle, wait DIFS then transmit. (3) If busy, random backoff. (4) Optional: RTS/CTS handshake to reserve channel. ACK required for every unicast frame. Used in all 802.11 WiFi.",star:true},
+{c:2,q:"The MAC (Media Access Control) address is:",o:["IP address","A 48-bit (6-byte) hardware address burned into NIC by manufacturer — written as 6 pairs of hex digits (e.g., 00:1A:2B:3C:4D:5E)","A logical address","A 32-bit address"],a:1,ex:"MAC address: 48 bits, globally unique, burned into NIC. First 3 bytes = OUI (Organizationally Unique Identifier, manufacturer code). Last 3 bytes = device serial number. Used for frame delivery within same network.",star:true,hint:"MAC = 48-bit hardware address. IP = 32-bit (IPv4) logical address"},
+{c:2,q:"Binary Exponential Backoff algorithm after a collision:",o:["Fixed delay before retry","Doubles the range of random wait times after each successive collision — after k collisions, wait random slots from 0 to 2^k-1","Fixed 1 second wait","No waiting required"],a:1,ex:"Exponential backoff: after 1st collision: wait 0 or 1 slots. After 2nd: 0-3. After 3rd: 0-7. After kth: 0 to 2^k-1. After 16 collisions: abort. Used in Ethernet CSMA/CD. Reduces subsequent collision probability.",star:true},
+{c:2,q:"A switch in networking operates at:",o:["Physical Layer only","Data Link Layer (Layer 2) — learns MAC addresses, forwards frames based on MAC address table to correct port only — creates separate collision domains","Network Layer","Transport Layer"],a:1,ex:"Switch: stores MAC address table (MAC→port mapping). Receives frame → looks up destination MAC → forwards to specific port only (unicast) or all ports (if unknown). Eliminates collisions vs hub. Creates separate collision domains.",star:true},
+{c:2,q:"A hub in networking operates at:",o:["Data Link Layer","Network Layer","Physical Layer — simply broadcasts all incoming signals to all ports — creates one large collision domain, all devices share bandwidth","Transport Layer"],a:2,ex:"Hub: Layer 1 device. Receives signal on one port → broadcasts to all other ports. All connected devices share bandwidth and collision domain. Largely obsolete, replaced by switches. No intelligence/addressing.",star:true},
+{c:2,q:"ALOHA protocol:",o:["Never has collisions","Pure ALOHA: transmit whenever you have data, if collision occurs wait random time and retransmit — max efficiency ~18.4%. Slotted ALOHA: transmit at slot boundaries only — max efficiency ~36.8%","Always detects collisions","Has 100% efficiency"],a:1,ex:"Pure ALOHA: simple, any time transmission. Efficiency = 18.4% (at best). Slotted ALOHA: synchronized time slots, transmit at slot start only — doubles efficiency to 36.8%. Historical: Hawaiian radio network. Basis for modern CSMA.",star:true},
+{c:2,q:"Token passing in Token Ring networks:",o:["Causes many collisions","A special frame (token) circulates; a station can only transmit when it holds the token — deterministic, no collisions, guaranteed access time","Requires CSMA/CD","Uses random access"],a:1,ex:"Token ring (IEEE 802.5): station seizes free token → attaches data → transmits → removes frame → releases token. No collisions (token = permission to transmit). Deterministic latency. Less popular than Ethernet today.",star:true},
+{c:2,q:"TDMA (Time Division Multiple Access) in controlled access protocols:",o:["Assigns frequency bands","Assigns dedicated time slots to each station — each station can only transmit in its slot — deterministic, no collisions","Uses token passing","Random access"],a:1,ex:"TDMA: time divided into frames of N slots. Station i transmits in slot i of each frame. Used in GSM cellular (2G), satellite access, digital audio broadcasting. Wastes slots if no data in assigned slot.",star:true},
+{c:2,q:"The Ethernet frame format contains:",o:["Only data","Preamble, Destination MAC, Source MAC, EtherType/Length, Data (46-1500 bytes), FCS (CRC-32)","Only MAC addresses","Only data and checksum"],a:1,ex:"Ethernet II frame: Preamble (7B) + SFD (1B) + Dest MAC (6B) + Src MAC (6B) + EtherType (2B) + Data (46-1500B) + FCS (4B). Min frame: 64B (collision detection requirement). Max: 1518B.",star:true},
+{c:2,q:"The PPP (Point-to-Point Protocol) is used for:",o:["Ethernet connections","Direct WAN connections between two nodes (dial-up, DSL, dedicated serial links) — supports authentication (PAP, CHAP), IP assignment, compression","WiFi connections","Token Ring"],a:1,ex:"PPP: widely used for WAN links. Features: authentication (PAP - Password Auth Protocol, CHAP - Challenge Handshake Auth Protocol), multiprotocol (IP, IPX, etc.), error detection, compression. Used in DSL (PPPoE), dial-up modems.",star:true},
+{c:2,q:"Error correction using Hamming code can:",o:["Only detect errors","Detect and CORRECT single-bit errors — uses redundant parity bits at positions 2^0, 2^1, 2^2, etc.","Detect only burst errors","Require retransmission always"],a:1,ex:"Hamming code: (n+k, n) code where k parity bits added. Can detect 2-bit errors, correct 1-bit errors. Positions of parity bits: 1,2,4,8,16... Each parity bit covers specific data bit positions. Used in ECC RAM.",star:true},
+{c:2,q:"VLAN (Virtual LAN) allows:",o:["Physical network segmentation only","Logical segmentation of a physical LAN into multiple separate broadcast domains — devices in different physical locations can be in same VLAN; switches support VLANs using 802.1Q tagging","Wireless segmentation only","WAN connections only"],a:1,ex:"VLAN: logical grouping of switch ports regardless of physical location. Benefits: security (isolated broadcast domains), flexibility (group by function not location), reduces broadcast traffic. 802.1Q tag: 4-byte VLAN tag added to Ethernet frame.",star:true},
+{c:2,q:"Polling in controlled access MAC protocols:",o:["Uses random access","A primary station invites secondary stations to transmit in turn — deterministic, no collisions, primary must manage all access — overhead of polling messages","Uses token passing","Is collision-based"],a:1,ex:"Polling: central controller (primary) polls each station (secondary) asking if it has data. Eliminates collisions, deterministic. Overhead: polling messages. Used in older systems: IBM mainframe multipoint lines, satellite access.",star:true},
+{c:2,q:"What is the purpose of the Preamble in an Ethernet frame?",o:["Contains destination address","A 7-byte sequence of alternating 1s and 0s (10101010...) that allows receiving hardware to synchronize its clock before actual data arrives","Contains error check","Contains source address"],a:1,ex:"Preamble: 7 bytes of 10101010 pattern. Synchronizes receiver's clock. Followed by Start Frame Delimiter (SFD) = 10101011 which signals start of frame. Stripped by hardware before passing up to DLL.",star:true},
+{c:2,q:"A bridge in networking:",o:["Repeats signal on physical layer","Connects two or more LAN segments at Data Link Layer — filters traffic based on MAC addresses, reduces collision domains, segment-by-segment forwarding","Routes IP packets","Assigns IP addresses"],a:1,ex:"Bridge: Layer 2 device. Connects network segments, filters frames by MAC address. Unlike hub: doesn't forward frame if destination on same segment. Predecessor to modern switches. Switches = multi-port bridges.",star:true},
+{c:2,q:"The minimum frame size in Ethernet (64 bytes) is necessary for:",o:["Efficiency","Collision detection — frame must still be transmitting when collision signal arrives; minimum ensures collision detected before transmission ends. Based on round-trip propagation time at 10 Mbps.","Security","Error correction"],a:1,ex:"Minimum Ethernet frame 64 bytes ensures: at 10 Mbps, 64 bytes = 51.2μs transmission time > 2 × max propagation delay (25.6μs for 2.5km). If frame shorter, sender finishes before collision signal arrives = late collision detection failure.",star:true},
+{c:2,q:"The FCS (Frame Check Sequence) field in a frame contains:",o:["Source address","A CRC (Cyclic Redundancy Check) value computed over the entire frame — receiver recalculates and compares to detect transmission errors","Destination address","Data length"],a:1,ex:"FCS/CRC: computed by sender over header+data using CRC-32 polynomial. Appended as trailer. Receiver performs same CRC calculation — if result ≠ 0, frame corrupted → discard. Does NOT correct errors, only detects.",star:true},
+{c:2,q:"Channel efficiency (utilization) of Stop-and-Wait ARQ is approximately:",o:["100%","1/(1+2a) where a = Tp/Tt (propagation delay to transmission delay ratio) — very low for high-bandwidth-delay-product links","50% always","2a/(1+2a)"],a:1,ex:"Stop-and-wait efficiency: η = Tt/(Tt + 2Tp) = 1/(1+2a). For satellite link: Tp=270ms, Tt=1ms → a=270, η = 1/541 ≈ 0.18%! Sliding window efficiency: w/(1+2a) for w ≤ 1+2a, or 1 for w > 1+2a.",star:true},
+{c:2,q:"Channelization protocols include:",o:["ALOHA, CSMA","TDMA, FDMA, CDMA — divide channel into non-interfering sub-channels assigned to users","Token Ring, Token Bus","Stop-and-Wait, Go-Back-N"],a:1,ex:"Channelization: divide channel among users. FDMA (frequency bands), TDMA (time slots), CDMA (unique codes), WDMA (wavelengths). Used in cellular networks: 1G=FDMA, 2G=TDMA/CDMA, 3G=CDMA, 4G=OFDMA.",star:true},
+{c:2,q:"IEEE 802.11 (WiFi) uses which MAC protocol?",o:["CSMA/CD","CSMA/CA (Carrier Sense Multiple Access / Collision Avoidance) — cannot detect collisions wirelessly so collision is avoided","Token passing","TDMA"],a:1,ex:"WiFi CSMA/CA: (1) Carrier sense: channel busy? → back off. (2) Channel idle: wait DIFS period. (3) Transmit. (4) Wait ACK. (5) No ACK → collision assumed → exponential backoff → retry. RTS/CTS optional for hidden node problem.",star:true},
+{c:2,q:"The hidden station problem in WiFi occurs when:",o:["WiFi signal is too weak","Two stations both in range of AP but out of range of each other — both sense channel as idle and transmit simultaneously causing collision at AP","Too many users connected","AP signal is hidden"],a:1,ex:"Hidden station: A can hear AP, C can hear AP, but A and C cannot hear each other. Both sense idle and transmit → collision at AP. Solution: RTS/CTS (Request to Send/Clear to Send) reservation. CTS heard by all, reserves channel.",star:true},
+
+/* ═══════════════════════════════
+   UNIT 4 — Network Layer (33 Qs)
+═══════════════════════════════ */
+{c:3,q:"IPv4 addresses are:",o:["48-bit numbers","32-bit numbers usually written in dotted decimal notation (e.g., 192.168.1.1) — divided into network portion and host portion","128-bit numbers","16-bit numbers"],a:1,ex:"IPv4: 32-bit = 4 bytes. Dotted decimal: each byte as decimal separated by dots. Range: 0.0.0.0 to 255.255.255.255 (about 4.3 billion addresses). Exhausted in 2011, driving IPv6 adoption.",star:true,hint:"IPv4 = 32-bit | IPv6 = 128-bit"},
+{c:3,q:"IPv6 addresses are:",o:["32-bit","64-bit","128-bit written as eight groups of four hex digits separated by colons (e.g., 2001:0db8:85a3::0000:8a2e:0370:7334)","256-bit"],a:2,ex:"IPv6: 128-bit = 16 bytes = 8 groups of 4 hex digits. About 3.4×10³⁸ addresses. Features: no NAT needed, built-in IPSec, simplified header, auto-configuration (SLAAC), no broadcast (multicast instead).",star:true},
+{c:3,q:"Subnetting divides a network by:",o:["Using different protocols","Borrowing bits from host portion of IP address to create subnet IDs — allows division of one large network into multiple smaller subnetworks","Adding more routers","Using VLANs only"],a:1,ex:"Subnetting: borrow host bits for subnet ID. Example: 192.168.1.0/24 → four /26 subnets. Subnet mask: 255.255.255.192 (/26). Benefits: reduce broadcast domains, better security, efficient IP usage.",star:true},
+{c:3,q:"A subnet mask of /24 (255.255.255.0) means:",o:["24 hosts per network","The first 24 bits are the network portion, last 8 bits are host portion — allows 2^8 - 2 = 254 usable host addresses per subnet","Only 24 subnets","24 routers needed"],a:1,ex:"/24 = 255.255.255.0. Network bits: 24, Host bits: 8. Usable hosts: 2^8 - 2 = 254 (subtract network address and broadcast). Example: 192.168.1.0/24 → hosts 192.168.1.1 to .254.",star:true},
+{c:3,q:"The purpose of ARP (Address Resolution Protocol) is:",o:["Assign IP addresses","Map a known IP address to the corresponding MAC address — sends broadcast ARP request, device with matching IP replies with its MAC address","Route packets","Translate domain names"],a:1,ex:"ARP: When sending frame, need destination MAC. ARP request broadcast: 'Who has 192.168.1.5? Tell 192.168.1.1'. Device with IP .1.5 replies unicast with its MAC. Sender caches in ARP table. Used within same subnet.",star:true},
+{c:3,q:"RARP (Reverse ARP) is used to:",o:["Find IP from MAC","Find MAC from IP","Allow diskless workstations to find their own IP address from server given their MAC address — largely replaced by BOOTP and DHCP","Refresh ARP cache"],a:2,ex:"RARP: machine knows its MAC, asks server for its IP. Broadcast: 'I have MAC 00:11:22:33:44:55, what is my IP?' Server looks up table and replies. Used by diskless workstations. Replaced by BOOTP/DHCP (more flexible).",star:true},
+{c:3,q:"DHCP (Dynamic Host Configuration Protocol) automatically assigns:",o:["MAC addresses","IP addresses, subnet mask, default gateway, DNS server — eliminates manual IP configuration","Routing tables","Physical addresses"],a:1,ex:"DHCP: client broadcasts DISCOVER → server sends OFFER → client sends REQUEST → server sends ACK. Client gets: IP address (with lease time), subnet mask, default gateway, DNS servers. Simplifies network management.",star:true},
+{c:3,q:"ICMP (Internet Control Message Protocol) is used for:",o:["Routing only","Error reporting and diagnostic functions — carries error messages (destination unreachable, TTL exceeded) and queries (ping/echo request-reply)","Data transfer","MAC address resolution"],a:1,ex:"ICMP: Network layer protocol for error reporting and diagnostics. Ping: ICMP Echo Request → Echo Reply (tests connectivity). Traceroute: uses ICMP TTL exceeded messages. Destination unreachable, port unreachable, redirect messages.",star:true},
+{c:3,q:"IGMP (Internet Group Management Protocol) is used for:",o:["Individual host communication","Managing multicast group membership — hosts inform local routers which multicast groups they want to receive","Routing between routers","Error reporting"],a:1,ex:"IGMP: hosts use IGMP to join/leave multicast groups. Routers use IGMP to track group membership for multicast routing. IGMP versions: v1, v2, v3 (source-specific multicast). Used for IPTV, video conferencing.",star:true},
+{c:3,q:"Routing algorithms determine:",o:["MAC addresses","The best path (route) from source to destination across the network — populate routing tables in routers","Error correction","Encryption keys"],a:1,ex:"Routing algorithms: determine optimal path based on metrics (hop count, bandwidth, delay, cost). Types: Distance Vector (RIP), Link State (OSPF), Path Vector (BGP). Populate forwarding tables used for packet forwarding.",star:true},
+{c:3,q:"Distance Vector routing (e.g., RIP) works by:",o:["Knowing full network topology","Each router sharing its routing table with immediate neighbors — routers know distances to all destinations through neighbors, periodically exchange tables","Using Dijkstra's algorithm","Broadcasting to all routers"],a:1,ex:"Distance Vector: each router maintains distance vector (table of costs to all destinations). Periodically sends copy to neighbors. Neighbors update tables using Bellman-Ford algorithm. Problem: slow convergence, count-to-infinity. Used in RIP.",star:true,hint:"Distance Vector: Bellman-Ford, periodic updates, slow convergence. Link State: Dijkstra, LSA flooding, fast convergence"},
+{c:3,q:"Link State routing (e.g., OSPF) works by:",o:["Sharing full routing table with neighbors","Each router flooding link-state advertisements (LSAs) to ALL routers — every router builds complete network topology map and runs Dijkstra's shortest path algorithm","Only using hop count","Sharing tables with distant routers only"],a:1,ex:"Link State: each router discovers neighbors, measures link costs, floods LSAs to all routers. Every router has identical topology map → runs Dijkstra's → builds shortest path tree. Faster convergence than DV. Used in OSPF, IS-IS.",star:true},
+{c:3,q:"The Dijkstra's shortest path algorithm finds:",o:["All paths in network","The shortest path from a source node to ALL other nodes in the network — used in OSPF link state routing","Only one path","Longest path only"],a:1,ex:"Dijkstra's: greedy algorithm. Maintains set of known shortest paths. At each step, adds closest unvisited node to known set. O(n²) basic, O((V+E)log V) with priority queue. Used in OSPF for intra-AS routing.",star:true},
+{c:3,q:"NAT (Network Address Translation) is used to:",o:["Convert IPv6 to IPv4","Allow multiple private IP addresses to share one or few public IP addresses — translates private IPs to public IP (PAT/NAPT) for internet access","Convert domain names to IPs","Assign IP addresses dynamically"],a:1,ex:"NAT: private IPs (10.x.x.x, 172.16.x.x, 192.168.x.x) → translated to public IP. PAT (Port Address Translation): maps multiple private IP:port to one public IP with different ports. Conserves IPv4 addresses. Home routers use NAT.",star:true},
+{c:3,q:"The TTL (Time to Live) field in IPv4 header:",o:["Specifies data validity time in seconds","A hop counter decremented by each router — when TTL reaches 0, packet discarded and ICMP 'TTL exceeded' sent to source — prevents infinite routing loops","Specifies packet priority","Indicates packet size"],a:1,ex:"TTL: maximum number of hops packet can traverse. Decremented by 1 at each router. Default: 64 (Linux), 128 (Windows), 255 (Cisco). When TTL=0, router discards packet and sends ICMP Time Exceeded. Used by traceroute.",star:true},
+{c:3,q:"Classful IP addressing divides addresses into classes where Class C is:",o:["First byte 0-127","First byte 192-223, default subnet mask /24 (255.255.255.0), used for small networks (254 hosts per network)","First byte 128-191","First byte 224-239"],a:1,ex:"IP address classes: A (0-127, /8, large networks), B (128-191, /16, medium), C (192-223, /24, small, 254 hosts), D (224-239, multicast), E (240-255, reserved). Classful addressing wastes many addresses; CIDR replaced it.",star:true},
+{c:3,q:"CIDR (Classless Inter-Domain Routing) allows:",o:["Only class-based addressing","Variable-length prefix notation (/n) — any prefix length, efficient IP space allocation, route aggregation (supernetting) to reduce routing table size","Only /24 networks","Only /8, /16, /24 prefixes"],a:1,ex:"CIDR: prefix notation 192.168.0.0/22 means 22 network bits, 10 host bits. Route aggregation: 200.0.0.0/22, 200.0.4.0/22, 200.0.8.0/22, 200.0.12.0/22 → summarized as 200.0.0.0/20. Reduces internet routing table size.",star:true},
+{c:3,q:"BGP (Border Gateway Protocol) is used for:",o:["Routing within a single network","Inter-AS (autonomous system) routing on the Internet — the internet's core routing protocol, path-vector protocol, used between ISPs","Switching in LANs","Local area routing"],a:1,ex:"BGP (EGP): routes between autonomous systems (ISPs, large organizations). Path vector protocol: advertises complete AS path to destinations. Highly configurable policies. Mandatory: one ISP must not advertise routes learned from one neighbor to another competing neighbor.",star:true},
+{c:3,q:"OSPF (Open Shortest Path First) is a:",o:["Distance vector protocol","Link state interior gateway protocol (IGP) using Dijkstra's algorithm — used within an autonomous system, supports VLSM/CIDR, fast convergence, hierarchical areas","Path vector protocol","Exterior gateway protocol"],a:1,ex:"OSPF: link state, open standard, used within AS. Uses LSAs (Link State Advertisements) flooded to all routers. Hierarchical: backbone area (area 0) + other areas. Supports authentication, VLSM, load balancing. Metric: cost=100Mbps/interface_BW.",star:true},
+{c:3,q:"RIP (Routing Information Protocol) uses which metric?",o:["Bandwidth","Delay","Hop count (maximum 15 hops — 16 = infinity/unreachable) — simple but doesn't consider link speed","Cost"],a:2,ex:"RIP: distance vector, uses hop count (1-15). RIPv1: classful, broadcast updates every 30 seconds. RIPv2: classless (CIDR), multicast updates. Max 15 hops limits to small networks. Problem: count-to-infinity, slow convergence.",star:true},
+{c:3,q:"IP fragmentation occurs when:",o:["Packet is corrupted","Packet exceeds MTU (Maximum Transmission Unit) of a link — router divides packet into smaller fragments, each with fragment offset in header, reassembled at destination","TTL expires","Routing loop occurs"],a:1,ex:"IP fragmentation: MTU Ethernet=1500B. If packet > MTU of next link → router fragments. Fragment header fields: Identification (same for all fragments), Flags (DF=Don't Fragment, MF=More Fragments), Fragment Offset. Reassembly only at destination.",star:true},
+{c:3,q:"The default gateway is:",o:["DNS server address","The router's IP address on the local subnet — packets to destinations outside local subnet sent to default gateway which then routes them further","DHCP server","Broadcast address"],a:1,ex:"Default gateway: the router interface on local subnet. When host sends packet to IP not on same subnet → sends to default gateway. Router forwards packet based on routing table. Without default gateway, can only communicate on local subnet.",star:true},
+{c:3,q:"IPv4 address 127.0.0.1 is the:",o:["Broadcast address","Default gateway","Loopback address (localhost) — used for testing the TCP/IP stack on a device without sending packets on network","DHCP server address"],a:2,ex:"Loopback: 127.0.0.0/8 (any 127.x.x.x). Most commonly 127.0.0.1 = localhost. Packet sent to loopback never leaves the device's network stack. Used for local testing, IPC. IPv6 loopback: ::1",star:true},
+{c:3,q:"Private IP address ranges (RFC 1918) are:",o:["All addresses from 1.0.0.0 onwards","10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 — not routed on public internet, used in private networks with NAT","Only 192.168.x.x","Only 10.x.x.x"],a:1,ex:"RFC 1918 private ranges: 10.0.0.0-10.255.255.255 (/8), 172.16.0.0-172.31.255.255 (/12), 192.168.0.0-192.168.255.255 (/16). Not globally routable. Used in homes, offices with NAT for internet access.",star:true},
+{c:3,q:"What is an Autonomous System (AS) in networking?",o:["A single router","A collection of IP networks and routers under a single administrative domain, connected by a common routing policy — identified by ASN (AS Number)","A type of switch","A network protocol"],a:1,ex:"Autonomous System: a group of networks under single administration (ISP, large enterprise, university). Has unique ASN (16-bit: 1-65535, 32-bit extended). BGP routes between ASes. OSPF/RIP/EIGRP route within AS.",star:true},
+{c:3,q:"BOOTP (Bootstrap Protocol) is used to:",o:["Boot OS from network — diskless clients get IP address, server IP, and boot file name from BOOTP server — predecessor to DHCP","Route packets","Detect errors","Assign MAC addresses"],a:0,ex:"BOOTP: allows diskless workstations to get IP and boot information at startup. Uses UDP, port 67 (server) and 68 (client). DHCP extended BOOTP with: address leasing, dynamic assignment, and more configuration options.",star:true},
+{c:3,q:"The IPv4 header has a minimum size of:",o:["8 bytes","16 bytes","20 bytes (without options) — contains: version, IHL, ToS/DSCP, total length, identification, flags, fragment offset, TTL, protocol, header checksum, source IP, destination IP","32 bytes"],a:2,ex:"IPv4 header: 20 bytes minimum (no options). Key fields: Version(4b), IHL(4b), DSCP(8b), Total Length(16b), ID(16b), Flags(3b), Fragment Offset(13b), TTL(8b), Protocol(8b), Header Checksum(16b), Src IP(32b), Dst IP(32b). Options: up to 40 bytes.",star:true},
+
+/* ═══════════════════════════════
+   UNIT 5 — Transport Layer (33 Qs)
+═══════════════════════════════ */
+{c:4,q:"The Transport Layer provides:",o:["Physical transmission","Process-to-process (end-to-end) communication using port numbers — responsible for segmentation, reassembly, flow control, error control, connection management","Node-to-node delivery","Routing between networks"],a:1,ex:"Transport Layer: end-to-end delivery between specific processes identified by port numbers. Provides: multiplexing/demultiplexing, segmentation/reassembly, connection establishment/termination (TCP), flow control, error control.",star:true,hint:"TCP = reliable, connection-oriented. UDP = unreliable, connectionless. Both use port numbers"},
+{c:4,q:"TCP (Transmission Control Protocol) provides:",o:["Fast but unreliable delivery","Reliable, connection-oriented, byte-stream service — guarantees delivery, ordering, and error correction via ACKs, sequence numbers, flow control (sliding window), and congestion control","No error checking","Only multicast"],a:1,ex:"TCP: connection-oriented (3-way handshake), reliable (ACK + retransmission), ordered (sequence numbers), error checked (checksum), flow controlled (sliding window), congestion controlled. Used for HTTP, FTP, SMTP, SSH.",star:true},
+{c:4,q:"UDP (User Datagram Protocol) provides:",o:["Reliable connection-oriented delivery","Connectionless, unreliable, fast delivery — no handshake, no ACKs, no sequencing, low overhead — suitable for real-time applications where speed > reliability","Error correction","Flow control"],a:1,ex:"UDP: connectionless (no setup), unreliable (no ACK/retransmit), unordered, low overhead (8-byte header vs TCP 20 bytes). Used for: DNS queries, video streaming, VoIP, online gaming, DHCP, SNMP, NTP.",star:true},
+{c:4,q:"TCP's 3-way handshake for connection establishment is:",o:["SYN → ACK → FIN","SYN → SYN-ACK → ACK — client sends SYN, server responds SYN+ACK, client responds ACK — connection established","ACK → SYN → ACK","FIN → ACK → FIN"],a:1,ex:"TCP 3-way handshake: (1) Client: SYN (seq=x). (2) Server: SYN+ACK (seq=y, ack=x+1). (3) Client: ACK (ack=y+1). Connection established. Exchange Initial Sequence Numbers (ISN) for reliable ordered delivery.",star:true,hint:"TCP connect: SYN → SYN-ACK → ACK (3 steps). TCP close: FIN → ACK → FIN → ACK (4 steps)"},
+{c:4,q:"TCP connection termination uses:",o:["2-way handshake","4-way handshake (FIN-ACK-FIN-ACK) — each side independently closes its direction: FIN+ACK, other FIN+ACK — half-close allows data to continue flowing in one direction","3-way handshake","1-way message"],a:1,ex:"TCP 4-way close: (1) Client: FIN. (2) Server: ACK. (3) Server: FIN. (4) Client: ACK (waits 2MSL in TIME_WAIT). Each direction closed independently. Server may send more data after step 2 before step 3.",star:true},
+{c:4,q:"Port numbers in TCP/UDP identify:",o:["Router interfaces","Specific application processes/services on a host — combined with IP address forms socket (IP:port). Well-known ports: 0-1023, registered: 1024-49151, dynamic: 49152-65535","Network addresses","MAC addresses"],a:1,ex:"Port numbers: 16-bit (0-65535). Well-known ports 0-1023: HTTP=80, HTTPS=443, FTP=21, SSH=22, Telnet=23, DNS=53, DHCP=67/68, SMTP=25, POP3=110, IMAP=143. Socket = IP:port uniquely identifies connection endpoint.",star:true},
+{c:4,q:"TCP flow control is implemented using:",o:["Stop-and-wait only","Sliding window mechanism — receiver advertises receive window size (rwnd) in ACK, sender cannot send more bytes than rwnd — prevents overwhelming slow receiver","ICMP messages","IP headers"],a:1,ex:"TCP flow control: receiver advertises rwnd (receive window) in TCP header. Sender can have at most rwnd unacknowledged bytes in flight. If receiver buffer fills → rwnd=0 → sender pauses. Prevents receiver buffer overflow.",star:true},
+{c:4,q:"TCP congestion control algorithms include:",o:["Only slow start","Slow Start, Congestion Avoidance, Fast Retransmit, Fast Recovery — prevents sender from overloading the network based on perceived congestion","Only avoidance","Timeout only"],a:1,ex:"TCP congestion control: Slow Start (exponential growth until ssthresh), Congestion Avoidance (linear growth), Fast Retransmit (retransmit after 3 duplicate ACKs without waiting timeout), Fast Recovery (ssthresh=cwnd/2, cwnd=ssthresh). Reno, Cubic, BBR variants.",star:true},
+{c:4,q:"In TCP slow start, the congestion window (cwnd):",o:["Grows linearly by 1 MSS per RTT","Doubles each RTT (grows exponentially) until it reaches ssthresh — then switches to congestion avoidance (additive increase)","Remains constant","Decreases each RTT"],a:1,ex:"Slow start: cwnd starts at 1 MSS. Each ACK: cwnd += 1 MSS → cwnd doubles per RTT (exponential). Misleading name (grows fast). Stops when cwnd = ssthresh (slow start threshold). Then: +1 MSS per RTT (congestion avoidance).",star:true},
+{c:4,q:"TCP sequence numbers are used for:",o:["Routing packets","Ordering bytes in the data stream — each byte gets a unique sequence number allowing receiver to reorder out-of-sequence segments and detect duplicates","Identifying ports","Checksum calculation"],a:1,ex:"Sequence number: 32-bit, counts bytes (not packets). Initial Sequence Number (ISN) is random to prevent security attacks. ACK number = next expected byte (cumulative ACK). Allows ordered reassembly and duplicate detection.",star:true},
+{c:4,q:"TCP acknowledgment (ACK) is:",o:["Negative acknowledgment","Cumulative: ACK N means all bytes up to N-1 received correctly, next expected byte is N — receiver can piggyback ACK with data","Selective only","Per-segment only"],a:1,ex:"TCP cumulative ACK: if ACK=1001, means bytes 0-1000 received, expecting byte 1001 next. ACK typically delayed (delayed ACK: wait up to 500ms for data to piggyback). Duplicate ACK triggers fast retransmit (3 dup-ACKs).",star:true},
+{c:4,q:"A socket in networking is defined as:",o:["A network cable connector","The combination of IP address and port number (IP:port) — uniquely identifies a communication endpoint. A TCP connection is identified by the 4-tuple: (src-IP, src-port, dst-IP, dst-port)","Only a port number","Only an IP address"],a:1,ex:"Socket: endpoint of two-way communication link. TCP socket: (srcIP:srcPort, dstIP:dstPort) = 4-tuple, uniquely identifies a connection. Server socket binds to known port, accepts connections. Client gets ephemeral port.",star:true},
+{c:4,q:"UDP header contains only:",o:["20 fields","4 fields: Source Port (2B), Destination Port (2B), Length (2B), Checksum (2B) — total 8 bytes","10 fields","Only destination port"],a:1,ex:"UDP header: 8 bytes. Source Port (optional for server reply), Destination Port (mandatory), Length (UDP header + data in bytes), Checksum (optional in IPv4, mandatory in IPv6). Simple, low overhead.",star:true},
+{c:4,q:"The purpose of port 80 is:",o:["FTP","HTTP (Hypertext Transfer Protocol) — standard port for web traffic","SSH","DNS"],a:1,ex:"Well-known ports: 21=FTP, 22=SSH, 23=Telnet, 25=SMTP, 53=DNS, 67/68=DHCP, 80=HTTP, 110=POP3, 143=IMAP, 443=HTTPS, 3306=MySQL, 3389=RDP, 8080=HTTP-alt.",star:true},
+{c:4,q:"Quality of Service (QoS) in networks refers to:",o:["Physical cable quality","The ability to provide different priorities to different traffic types — guaranteeing minimum bandwidth, low latency, low jitter for real-time applications like VoIP and video","Error correction","Security protocols"],a:1,ex:"QoS: traffic management to meet requirements. Parameters: bandwidth (throughput), delay, jitter (delay variation), packet loss. Techniques: traffic shaping, priority queuing, DiffServ (DSCP marking), RSVP. Critical for VoIP, video streaming.",star:true},
+{c:4,q:"Multiplexing at Transport Layer means:",o:["Hardware multiplexing","Multiple applications on a host can use network services simultaneously — each identified by port number, multiple TCP/UDP sessions over same IP address","Physical signal multiplexing","Frequency division only"],a:1,ex:"Transport layer multiplexing: many applications (HTTP port 80, SSH port 22, DNS port 53) share the same IP address. Source port + destination port identify each conversation. Demultiplexing: deliver segments to correct process based on port.",star:true},
+{c:4,q:"TCP timer mechanisms include:",o:["Only ACK timer","Retransmission Timer (RTO), Persistence Timer (zero-window probing), Keepalive Timer (detect dead connections), TIME_WAIT Timer (2MSL)","Only timeout timer","No timers needed"],a:1,ex:"TCP timers: RTO (retransmit if no ACK in time, adaptive based on RTT), Persistence (probe receiver when rwnd=0), Keepalive (probe idle connection to detect crashes), TIME_WAIT (2×MSL after FIN-ACK to handle delayed duplicates).",star:true},
+{c:4,q:"Nagle's algorithm in TCP:",o:["Disables all buffering","Coalesces small segments: don't send small segments until either receive ACK for all unACKed data or have MSS data to send — reduces chatty small-packet traffic","Increases packet loss","Reduces window size"],a:1,ex:"Nagle's algorithm: prevents silly window syndrome (sending many tiny segments). Buffer small writes, send when: (1) enough data for full MSS segment, or (2) all outstanding data is ACKed. Can be disabled with TCP_NODELAY (e.g., for SSH, interactive apps).",star:true},
+{c:4,q:"The maximum segment size (MSS) in TCP is:",o:["Always 1500 bytes","Maximum amount of data in TCP segment payload — typically MTU - IP header - TCP header = 1500 - 20 - 20 = 1460 bytes for Ethernet","65535 bytes always","Always 512 bytes"],a:1,ex:"MSS: negotiated during 3-way handshake (each side announces its MSS). Limits TCP data per segment to avoid IP fragmentation. For Ethernet: MTU=1500, IP header=20, TCP header=20 → MSS=1460 bytes.",star:true},
+{c:4,q:"TCP Reno's response to 3 duplicate ACKs (fast retransmit) is:",o:["Wait for timeout then retransmit","Immediately retransmit lost segment and set ssthresh=cwnd/2, cwnd=ssthresh (fast recovery) — faster than waiting for timeout","Double cwnd","Ignore duplicate ACKs"],a:1,ex:"Fast Retransmit: 3 dup-ACKs = segment lost (but network not severely congested). Immediately retransmit. Fast Recovery: ssthresh=cwnd/2, cwnd=ssthresh+3 (not back to 1). Resume congestion avoidance. Much better than timeout-based retransmit.",star:true},
+{c:4,q:"A well-known port number is in the range:",o:["1024-49151","49152-65535","0-1023 — assigned by IANA, reserved for standard services and protocols","1000-2000"],a:2,ex:"Port ranges: Well-known 0-1023 (IANA assigned, need root/admin to bind). Registered 1024-49151 (applications can register, e.g., MySQL:3306, HTTP-alt:8080). Dynamic/ephemeral 49152-65535 (auto-assigned by OS for clients).",star:true},
+{c:4,q:"Congestion control differs from flow control in that:",o:["No difference","Flow control: prevents sender from overwhelming RECEIVER. Congestion control: prevents sender from overwhelming the NETWORK (routers/links) — different problems, both regulated by TCP","Flow control is for routers","Congestion control is end-to-end while flow control is node-to-node"],a:1,ex:"Flow control: receiver-centric, uses rwnd in TCP header. Congestion control: network-centric, uses cwnd based on perceived network congestion (timeout or dup-ACKs). Actual send window = min(rwnd, cwnd).",star:true},
+{c:4,q:"The effective window in TCP is:",o:["Always rwnd","min(cwnd, rwnd) — minimum of congestion window (network limit) and receive window (receiver limit)","Always cwnd","cwnd + rwnd"],a:1,ex:"Effective window = min(cwnd, cwnd): sender can have at most min(congestion_window, receive_window) bytes unacknowledged at any time. Both limits enforced simultaneously — network and receiver protection.",star:true},
+{c:4,q:"UDP is preferred over TCP for:",o:["File downloads","Real-time applications (VoIP, video streaming, online gaming, DNS) where low latency is more important than reliability — UDP's low overhead and no connection setup is advantageous","Email","Web browsing"],a:1,ex:"UDP use cases: DNS (quick queries, retry at application), VoIP (real-time, retransmit useless if late), video streaming (application-level recovery, latency sensitive), online gaming, TFTP, SNMP, DHCP, NTP.",star:true},
+{c:4,q:"TCP header minimum size is:",o:["8 bytes","20 bytes — contains: source port, destination port, sequence number, acknowledgment number, header length, flags, window size, checksum, urgent pointer","32 bytes","16 bytes"],a:1,ex:"TCP header: 20 bytes minimum (no options). Fields: Src Port(2B), Dst Port(2B), Seq Num(4B), ACK Num(4B), Data Offset(4b)+Reserved(6b)+Flags(6b), Window(2B), Checksum(2B), Urgent(2B). Options up to 40 bytes.",star:true},
+{c:4,q:"TIME_WAIT state in TCP lasts:",o:["Indefinitely","2 × MSL (Maximum Segment Lifetime) — typically 2 × 30-120 seconds — ensures all duplicate packets from old connection expire before new connection on same socket reuses the port","1 second","Until all data is delivered"],a:1,ex:"TIME_WAIT: after sending final ACK in 4-way close. Wait 2MSL (MSL = time a segment can survive in network). Purpose: (1) Ensure final ACK received by peer (if lost, FIN retransmitted, re-enter TIME_WAIT). (2) Let lingering duplicates expire.",star:true},
+{c:4,q:"TCP SYN flood attack exploits:",o:["UDP protocol","TCP 3-way handshake: attacker sends many SYN packets with spoofed IPs, server allocates resources for half-open connections, exhausts server memory — prevented by SYN cookies","ICMP protocol","UDP protocol"],a:1,ex:"SYN flood DDoS: attacker sends massive SYN storm with spoofed source IPs. Server sends SYN-ACKs to non-existent hosts, holds half-open connection state. Server's connection table fills up, legitimate connections refused. SYN cookies: no state until handshake complete.",star:true},
+
+/* ═══════════════════════════════
+   UNIT 6 — Application Layer (33 Qs)
+═══════════════════════════════ */
+{c:5,q:"DNS (Domain Name System) is used for:",o:["Sending emails","Translating human-readable domain names (www.google.com) to IP addresses — hierarchical distributed database","Transferring files","Web browsing protocol"],a:1,ex:"DNS: distributed, hierarchical name resolution. DNS hierarchy: Root servers → TLD servers (.com, .in) → Authoritative servers. Query types: recursive (resolver does all work), iterative (resolver follows referrals). UDP port 53 (TCP for large responses/zone transfers).",star:true,hint:"DNS port = 53 | HTTP = 80 | HTTPS = 443 | FTP = 21 | SSH = 22 | SMTP = 25"},
+{c:5,q:"HTTP (HyperText Transfer Protocol) is:",o:["A file storage protocol","The application-layer protocol for the World Wide Web — client-server, stateless, request-response model — GET, POST, PUT, DELETE, HEAD methods — default port 80","An email protocol","A routing protocol"],a:1,ex:"HTTP: client (browser) sends request, server responds with HTML/data. Stateless (each request independent). HTTP/1.0: new TCP connection per request. HTTP/1.1: persistent connections, pipelining. HTTP/2: multiplexing, compression, server push. HTTP/3: UDP-based (QUIC).",star:true},
+{c:5,q:"HTTPS uses which additional protocol for security?",o:["IPSec","TLS/SSL (Transport Layer Security / Secure Sockets Layer) — encrypts HTTP traffic, uses port 443, provides authentication, confidentiality, and integrity","FTP over SSL","SSH"],a:1,ex:"HTTPS = HTTP over TLS. TLS handshake: negotiate cipher suite, exchange certificates, authenticate server (and optionally client), derive session keys. Then HTTP runs over encrypted TLS channel. Port 443. Certificate from CA (Certificate Authority).",star:true},
+{c:5,q:"FTP (File Transfer Protocol) uses:",o:["One TCP connection","Two TCP connections: control connection (port 21, commands) and data connection (port 20 for active FTP, ephemeral port for passive FTP) — transfers files between client and server","UDP","One UDP connection"],a:1,ex:"FTP: Control connection (port 21): commands (USER, PASS, LIST, RETR, STOR). Data connection: active FTP (server connects to client port 20), passive FTP (client connects to server on negotiated port). Passive preferred through firewalls.",star:true},
+{c:5,q:"SMTP (Simple Mail Transfer Protocol) is used for:",o:["Receiving emails","Sending/transferring emails between mail servers and from email clients to mail servers — TCP port 25 (server-to-server), 587 (client submission)","Web browsing","File transfer"],a:1,ex:"SMTP: push protocol. Client → mail server: port 587 (with auth). Server → server: port 25. Commands: HELO/EHLO, MAIL FROM, RCPT TO, DATA, QUIT. SMTP only sends; POP3 or IMAP used to retrieve emails.",star:true},
+{c:5,q:"POP3 (Post Office Protocol 3) vs IMAP (Internet Message Access Protocol):",o:["Both are identical","POP3: downloads emails to client and deletes from server (port 110) — local storage. IMAP: keeps emails on server, synchronizes across devices (port 143) — server storage","POP3 is newer","IMAP only for sending"],a:1,ex:"POP3 (port 110): download-and-delete model. Emails stored locally. Simple. Works offline after download. IMAP (port 143): emails on server, client syncs. Supports folders, flags. Multiple device sync. POP3S=995 (SSL), IMAPS=993 (SSL).",star:true,hint:"POP3=download & delete (port 110). IMAP=keep on server, sync (port 143). SMTP=send (port 25/587)"},
+{c:5,q:"Telnet is an application layer protocol used for:",o:["File transfer","Remote login — connects to remote computer via command line over TCP port 23 — sends data in plaintext (insecure), largely replaced by SSH","Email","Web browsing"],a:1,ex:"Telnet: remote terminal access over TCP port 23. All data (including passwords) sent in plaintext — easily sniffed. Security concern → replaced by SSH (Secure Shell) which encrypts all traffic. Still used for testing/debugging.",star:true},
+{c:5,q:"SSH (Secure Shell) provides:",o:["Insecure remote access","Secure encrypted remote login, command execution, and tunneling over TCP port 22 — uses public key cryptography for authentication","File storage only","Email service"],a:1,ex:"SSH: encrypted replacement for Telnet, rsh, rlogin. Features: remote command execution, secure file transfer (SFTP/SCP), port forwarding/tunneling. Authentication: password or public key pairs. SSH-2 is current version.",star:true},
+{c:5,q:"The WWW (World Wide Web) is based on:",o:["FTP protocol","HTTP protocol with HTML documents linked by hyperlinks — Tim Berners-Lee invented WWW in 1989 at CERN — browsers render HTML from web servers","Email protocols","DNS only"],a:1,ex:"WWW: collection of hyperlinked documents (web pages) stored on web servers, accessed via HTTP using web browsers. Key components: HTML (content), HTTP (transfer protocol), URL (addressing), CSS (styling), JavaScript (scripting).",star:true},
+{c:5,q:"A URL (Uniform Resource Locator) has the format:",o:["protocol:hostname/path","protocol://[user@]hostname[:port]/path[?query][#fragment] — example: https://www.example.com:443/page?id=5#top","hostname only","IP:port only"],a:1,ex:"URL: scheme://authority/path?query#fragment. Example: https://www.example.com/index.html?q=test#section1. Scheme: http, https, ftp, mailto. Port optional (default: 80/443 for http/https). Fragment = section within page (client-side only).",star:true},
+{c:5,q:"HTTP request methods include:",o:["Only GET and POST","GET (retrieve), POST (submit data), PUT (update/create), DELETE (remove), HEAD (headers only), OPTIONS (allowed methods), PATCH (partial update)","Only GET","Only PUT and DELETE"],a:1,ex:"HTTP methods: GET (idempotent, cacheable, no body), POST (non-idempotent, body with data), PUT (idempotent, replace resource), DELETE, HEAD (like GET but no body, used to check resource), OPTIONS (CORS pre-flight), PATCH (partial modification).",star:true},
+{c:5,q:"HTTP status codes: 200, 301, 404, 500 mean respectively:",o:["Success, Not Found, Redirect, Server Error","OK (success), Moved Permanently (redirect), Not Found (client error), Internal Server Error (server error)","Not Found, OK, Redirect, Error","All mean errors"],a:1,ex:"HTTP status: 1xx=Informational, 2xx=Success (200 OK, 201 Created, 204 No Content), 3xx=Redirect (301 Moved Permanently, 302 Found), 4xx=Client Error (400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found), 5xx=Server Error (500, 503).",star:true},
+{c:5,q:"SNMP (Simple Network Management Protocol) is used for:",o:["Sending emails","Managing and monitoring network devices (routers, switches, servers) — uses UDP port 161 (agent), 162 (trap/notifications)","File transfer","Remote login"],a:1,ex:"SNMP: network management protocol. Manager queries agents (running on devices). Get/Set operations on MIB (Management Information Base) — database of device variables. Traps: unsolicited notifications from agent to manager on events.",star:true},
+{c:5,q:"NTP (Network Time Protocol) is used for:",o:["Network topology discovery","Synchronizing clocks of computers over a network to UTC — uses UDP port 123 — stratum levels (0=atomic clock, 1=NTP server with direct reference, 2+ downstream)","Email delivery","File synchronization"],a:1,ex:"NTP: synchronizes clocks globally. Stratum 0: GPS, atomic clocks (reference clocks). Stratum 1: servers directly connected to stratum 0. Stratum 2: sync from stratum 1. Accuracy: <1ms on LAN, <10ms on internet. Uses algorithms to compensate for network delay.",star:true},
+{c:5,q:"A web cookie is:",o:["A type of malware","A small text file stored by browser containing session/user data — server instructs browser to store via Set-Cookie header, browser sends back in Cookie header — used for sessions, tracking","An HTTP method","A type of certificate"],a:1,ex:"Cookie: server sends Set-Cookie in response. Browser stores and includes Cookie header in subsequent requests to same domain. Uses: session management (login state), personalization (preferences), tracking. Security: HttpOnly (no JS access), Secure (HTTPS only), SameSite.",star:true},
+{c:5,q:"Electronic mail architecture involves:",o:["Direct sender-to-receiver connection","User Agents (UA) for compose/read, Mail Transfer Agents (MTA/mail servers) for relay, and access protocols (POP3/IMAP) for retrieval — SMTP used throughout for transfer","DNS only","FTP protocol"],a:1,ex:"Email system: UA (Outlook, Gmail client) → MTA (mail server using SMTP:587) → DNS lookup MX record → destination MTA (SMTP:25) → mailbox. Recipient UA retrieves via POP3 or IMAP. SMTP pushes, POP3/IMAP pulls.",star:true},
+{c:5,q:"DNS record types include:",o:["Only A records","A (IPv4 address), AAAA (IPv6), MX (mail server), CNAME (canonical name alias), NS (name server), TXT (text, used for SPF/DKIM), PTR (reverse DNS), SOA (start of authority)","Only MX records","Only CNAME records"],a:1,ex:"DNS record types: A (domain→IPv4), AAAA (domain→IPv6), MX (mail exchanger, has priority), CNAME (alias to canonical name), NS (authoritative name server), TXT (text: SPF for email auth), PTR (IP→domain, reverse), SOA (zone info).",star:true},
+{c:5,q:"The MIME (Multipurpose Internet Mail Extensions) standard is used to:",o:["Compress emails","Allow email to include non-ASCII content (attachments, images, HTML, non-English text) — extends SMTP which originally only handled ASCII text","Encrypt emails","Route emails"],a:1,ex:"MIME: extends email to support: text in non-ASCII character sets, non-text attachments (images, audio, video), multiple body parts. MIME headers: Content-Type, Content-Transfer-Encoding (base64 for binary). Also used in HTTP (Content-Type header).",star:true},
+{c:5,q:"Remote Logging (syslog) is used for:",o:["Remote desktop access","Centralizing system log messages from network devices to a log server — uses UDP port 514 (traditional) or TCP for reliable delivery","File transfer","Email relay"],a:1,ex:"Syslog: standard protocol for sending system log/event messages to a central syslog server. Severity levels: 0=Emergency, 1=Alert, 2=Critical, 3=Error, 4=Warning, 5=Notice, 6=Informational, 7=Debug. UDP port 514, TCP port 6514 (TLS).",star:true},
+{c:5,q:"DNS uses which transport protocol and port?",o:["TCP port 80","UDP port 53 for queries (TCP port 53 for zone transfers and large responses > 512 bytes, now also used for reliability)","TCP port 53 only","UDP port 80"],a:1,ex:"DNS: UDP port 53 for regular queries (fast, low overhead, most queries fit in one packet). TCP port 53 for: zone transfers (AXFR), responses > 512 bytes (EDNS0 increases limit to 4096 bytes), DNSSEC. DNS over HTTPS (DoH) and DNS over TLS (DoT) for privacy.",star:true},
+{c:5,q:"P2P (Peer-to-Peer) networking means:",o:["All communication through central server","Nodes can act as both clients and servers — no dedicated server, all peers share resources directly — used in BitTorrent, Skype, blockchain","Only one-way communication","Requires mainframe"],a:1,ex:"P2P: distributed, no central authority. Each node is both client and server. Examples: BitTorrent (file sharing), Skype (early VoIP), Napster (first popular P2P file sharing), blockchain networks. Challenges: security, tracking, reliability.",star:true},
+{c:5,q:"What is a proxy server?",o:["A type of router","An intermediary server between client and destination — provides caching (performance), content filtering, anonymity, load balancing, and security","A DNS server","A mail server"],a:1,ex:"Proxy server: sits between client and internet. Forward proxy: client configured to use proxy (corporate proxy for filtering/caching). Reverse proxy: in front of web servers (load balancer, CDN, SSL termination). Transparent proxy: intercepts without client configuration.",star:true},
+{c:5,q:"Content Delivery Networks (CDNs) improve web performance by:",o:["Compressing web pages","Caching content at distributed edge servers close to users globally — reduces latency (geographic proximity), reduces origin server load, improves availability","Using faster protocols only","Using fiber optic only"],a:1,ex:"CDN: globally distributed servers cache static content (images, videos, CSS, JS) at edge locations near users. When user requests content → served from nearest edge server, not origin. Examples: Cloudflare, Akamai, AWS CloudFront. Reduces RTT from ~200ms to ~5ms.",star:true},
+{c:5,q:"DHCP uses which transport protocol?",o:["TCP","UDP — DHCP client sends broadcast to port 67, server replies to port 68 — UDP chosen because client has no IP yet (can't establish TCP connection) and broadcast delivery needed","ICMP","Both TCP and UDP equally"],a:1,ex:"DHCP: UDP ports 67 (server) and 68 (client). Client broadcasts DISCOVER (no IP yet, can't use TCP). UDP allows broadcast delivery. DHCP over TCP would require IP address for 3-way handshake — chicken-and-egg problem.",star:true},
+];
+
+/* ──── ENGINE ──── */
+let sN='',sB='',sS='',sC='';
+let aQ=[],qi=0,sc=0,sk=0,uA=[];
+let tInt=null,tL=30,ans=false,adT=null;
+const TS=30,AD=1500;
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+$('infoNextBtn').addEventListener('click',()=>{
+  sN=$('inputName').value.trim();
+  if(!sN){toast('⚠️ Please enter your name.');$('inputName').focus();return;}
+  sB=$('inputBranch').value.trim()||'N/A';sS=$('inputSem').value||'N/A';sC=$('inputCollege').value.trim()||'N/A';
+  showScreen('screenIntro');
+});
+let selC='all';
+$('chapterGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.chapter-btn');if(!b)return;
+  document.querySelectorAll('.chapter-btn').forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');selC=b.dataset.chapter;
+});
+$('startBtn').addEventListener('click',()=>{
+  aQ=selC==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===+selC);
+  for(let i=aQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[aQ[i],aQ[j]]=[aQ[j],aQ[i]];}
+  qi=0;sc=0;sk=0;uA=new Array(aQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+
+function startTimer(){
+  clearInterval(tInt);tL=TS;
+  const p=$('timerPill');p.className='timer-pill';p.textContent='⏳ '+tL+'s';
+  tInt=setInterval(()=>{
+    tL--;p.textContent='⏳ '+tL+'s';
+    if(tL<=10&&tL>5)p.className='timer-pill urgent';
+    if(tL<=5)p.className='timer-pill critical';
+    if(tL<=0){clearInterval(tInt);if(!ans){ans=true;uA[qi]=-1;sk++;lockO();showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⏰ Time up!');}}
+  },1000);
+}
+
+function render(){
+  ans=false;clearAd();clearInterval(tInt);
+  const q=aQ[qi],tot=aQ.length;
+  $('progressText').textContent=`Question ${qi+1} of ${tot}`;
+  $('scoreText').textContent=`Score: ${sc}`;
+  $('progressFill').style.width=`${(qi/tot)*100}%`;
+  $('qNum').textContent=`Q${qi+1}`;
+  const os=$('qStar');if(os)os.remove();
+  if(q.star){const s=document.createElement('div');s.id='qStar';s.className='q-star';s.textContent='⭐ VVI';$('qNum').insertAdjacentElement('afterend',s);}
+  $('qText').textContent=q.q;
+  const qe=$('qExample');
+  if(q.hint){qe.textContent='💡 '+q.hint;qe.style.display='block';}else{qe.style.display='none';}
+  $('chapterBadge').textContent=CHAPTERS[q.c].icon+' '+CHAPTERS[q.c].name;
+  const list=$('optionsList');list.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${l}</div><div class="option-text">${q.o[i]}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>pick(i));list.appendChild(li);
+  });
+  $('explanationBox').classList.remove('show');$('nextBtn').classList.remove('visible');$('skipBtn').style.display='';
+  startTimer();
+}
+
+function pick(i){
+  if(ans)return;ans=true;clearInterval(tInt);uA[qi]=i;
+  const q=aQ[qi];lockO();
+  const opts=document.querySelectorAll('.option');
+  if(i===q.a){sc++;opts[i].classList.add('correct');opts[i].querySelector('.option-radio').textContent='✓';showExp();$('skipBtn').style.display='none';startAd();}
+  else{opts[i].classList.add('wrong');opts[i].querySelector('.option-radio').textContent='✗';showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');}
+}
+function startAd(){
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  f.classList.remove('running');void f.offsetWidth;f.classList.add('running');b.classList.add('show');h.classList.add('show');
+  adT=setTimeout(()=>{b.classList.remove('show');h.classList.remove('show');f.classList.remove('running');nxt();},AD);
+}
+function clearAd(){if(adT){clearTimeout(adT);adT=null;}
+  const b=$('autoAdvanceBar'),f=$('autoAdvanceFill'),h=$('autoNextHint');
+  if(b)b.classList.remove('show');if(h)h.classList.remove('show');if(f)f.classList.remove('running');}
+function lockO(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function showCor(){const q=aQ[qi];const o=document.querySelectorAll('.option');o[q.a].classList.add('correct');o[q.a].querySelector('.option-radio').textContent='✓';}
+function showExp(){$('explanationText').textContent=aQ[qi].ex;$('explanationBox').classList.add('show');}
+
+$('skipBtn').addEventListener('click',()=>{if(ans)return;ans=true;clearInterval(tInt);uA[qi]=-1;sk++;lockO();showCor();showExp();$('skipBtn').style.display='none';$('nextBtn').classList.add('visible');toast('⟫ Skipped!');});
+$('nextBtn').addEventListener('click',()=>{clearAd();nxt();});
+function nxt(){qi++;if(qi>=aQ.length)showResult();else render();}
+$('backBtn').addEventListener('click',()=>{if(confirm('Back to intro? Progress lost.')){clearInterval(tInt);clearAd();showScreen('screenIntro');}});
+
+const RMK=[
+  {min:95,e:'🏆',t:'Outstanding! Perfect Score!',s:'You have mastered Computer Networks! Exceptional.'},
+  {min:80,e:'🥇',t:'Excellent Performance!',s:'Strong command of CN. You are exam-ready!'},
+  {min:65,e:'🥈',t:'Good Job!',s:'Solid performance! Revise a few units to score higher.'},
+  {min:50,e:'🥉',t:'Above Average!',s:'Good progress! Keep practicing each unit.'},
+  {min:35,e:'📚',t:'Keep Practicing!',s:'Go through all units again. You can definitely do it!'},
+  {min:0,e:'💪',t:"Don't Give Up!",s:'Every master was once a beginner. Study and try again!'},
+];
+const gRmk=p=>RMK.find(r=>p>=r.min)||RMK[RMK.length-1];
+
+function showResult(){
+  clearInterval(tInt);
+  const tot=aQ.length,wr=tot-sc-sk,pct=~~((sc/tot)*100),r=gRmk(pct);
+  $('resultEmoji').textContent=r.e;$('scoreBig').textContent=sc;$('scoreTotal').textContent='/ '+tot;
+  $('resultPercent').textContent=pct+'%';$('remarkText').textContent=r.t;$('remarkSub').textContent=r.s;
+  $('pillCorrect').textContent=sc;$('pillWrong').textContent=wr;$('pillSkip').textContent=sk;
+  $('bannerName').textContent=sN||'Student';
+  const pts=[sB,sS,sC].filter(v=>v&&v!=='N/A');$('bannerMeta').textContent=pts.join(' · ')||'Computer Networks Quiz';
+  $('certBannerName').textContent=sN||'Your';$('certBannerMeta').textContent='CN Quiz · '+pct+'% · StudyHub';
+  let c=0;const el=$('scoreBig');el.textContent='0';
+  const inc=setInterval(()=>{c++;el.textContent=c;if(c>=sc)clearInterval(inc);},Math.max(15,800/(sc||1)));
+  showScreen('screenResult');if(pct>=75)doConfetti();buildReview();
+}
+function doConfetti(){
+  const cv=$('confettiCanvas'),ctx=cv.getContext('2d');cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const ps=[],cols=['#0F4C81','#EA580C','#16A34A','#F59E0B','#1E88E5','#EC4899'];
+  for(let i=0;i<80;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*-cv.height,w:Math.random()*10+5,h:Math.random()*6+3,c:cols[~~(Math.random()*cols.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,r:Math.random()*360,rs:Math.random()*5-2.5});
+  let f=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.r*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,1-f/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.r+=p.rs;});f++;if(f<130)requestAnimationFrame(draw);}());
+}
+function buildReview(){
+  const list=$('reviewList');list.innerHTML='';
+  aQ.forEach((q,i)=>{const ua=uA[i],ok=ua===q.a,sv=ua===-1;
+    const d=document.createElement('div');d.className=`review-item ${ok?'ri-correct':sv?'ri-skip':'ri-wrong'}`;
+    d.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ok?'ri-correct-ans':sv?'':'ri-wrong-ans'}">${sv?'Skipped':q.o[ua]}</span>${!ok?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(d);});
+}
+$('reviewToggleBtn').addEventListener('click',()=>{const l=$('reviewList'),b=$('reviewToggleBtn');l.classList.toggle('open');b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+$('retryBtn').addEventListener('click',()=>{
+  $('reviewList').classList.remove('open');$('reviewToggleBtn').textContent='📖 Review Answers';$('sharePanel').classList.remove('open');
+  for(let i=aQ.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[aQ[i],aQ[j]]=[aQ[j],aQ[i]];}
+  qi=0;sc=0;sk=0;uA=new Array(aQ.length).fill(-1);showScreen('screenQuiz');render();
+});
+function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function drawCert(){
+  const tot=aQ.length,pct=~~((sc/tot)*100),rm=gRmk(pct),wc=tot-sc-sk;
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=$('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#050E1A');bg.addColorStop(.5,'#0A1F3C');bg.addColorStop(1,'#050E1A');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(15,76,129,.25)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(30,136,229,.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(30,136,229,${Math.max(.05,.22-r*.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,.85)';ctx.lineWidth=3.5;rrect(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(30,136,229,.45)';ctx.lineWidth=1.2;rrect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  const hl=y=>{const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(.3,'rgba(234,88,12,.9)');g.addColorStop(.7,'rgba(234,88,12,.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;};
+  ctx.fillStyle=hl(58);ctx.fillRect(80,58,W-160,2.5);
+  const sx=W/2,sy=96,sg=ctx.createRadialGradient(sx,sy,0,sx,sy,34);sg.addColorStop(0,'#1E88E5');sg.addColorStop(1,'#0A3055');ctx.beginPath();ctx.arc(sx,sy,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='26px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('🌐',sx,sy+8);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('S T U D Y H U B',W/2,sy+52);ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sy+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(.3,'rgba(234,88,12,.7)');dv.addColorStop(.7,'rgba(234,88,12,.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('This certifies that',W/2,183);
+  const dn=sN||'Student';ctx.font=`bold ${dn.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(30,136,229,.85)';ctx.shadowBlur=22;ctx.fillText(dn,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dn).width,ux=W/2-nw/2;const ug=ctx.createLinearGradient(ux,245,ux+nw,245);ug.addColorStop(0,'rgba(30,136,229,0)');ug.addColorStop(.5,'rgba(30,136,229,.8)');ug.addColorStop(1,'rgba(30,136,229,0)');ctx.strokeStyle=ug;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const dt=[sB,sS,sC].filter(v=>v&&v!=='N/A');if(dt.length){ctx.font='13px Arial';ctx.fillStyle='rgba(144,202,249,.85)';ctx.fillText(dt.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  rrect(ctx,W/2-270,304,540,44,22);const qg=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qg.addColorStop(0,'rgba(234,88,12,.18)');qg.addColorStop(1,'rgba(15,76,129,.18)');ctx.fillStyle=qg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 20px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Computer Networks — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(.5,'rgba(234,88,12,.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sy2=420,rx=190,rr2=60,col=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';
+  ctx.beginPath();ctx.arc(rx,sy2,rr2,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,.04)';ctx.fill();
+  ctx.beginPath();ctx.arc(rx,sy2,rr2-8,-Math.PI/2,-Math.PI/2+2*Math.PI*pct/100);ctx.strokeStyle=col;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=col;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(`${sc}/${tot}`,rx,sy2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillText('SCORE',rx,sy2+26);ctx.font='bold 14px Arial';ctx.fillStyle=col;ctx.fillText(pct+'%',rx,sy2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+  rrect(ctx,rx+80,sy2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=col;ctx.fillText(gr,rx+125,sy2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText('GRADE',rx+125,sy2+30);
+  [{i:'✅',l:'CORRECT',v:sc,c:'#22C55E'},{i:'❌',l:'WRONG',v:wc,c:'#F87171'},{i:'⟫',l:'SKIPPED',v:sk,c:'#FBBF24'},{i:'📊',l:'ACCURACY',v:pct+'%',c:'#90CAF9'}].forEach((s,ii)=>{const co=ii%2,ro=~~(ii/2),sx2=440+co*230,sy3=sy2-46+ro*68;rrect(ctx,sx2,sy3,210,56,10);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.i,sx2+12,sy3+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.c;ctx.fillText(String(s.v),sx2+42,sy3+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillText(s.l,sx2+12,sy3+46);});
+  const by=516;rrect(ctx,W/2-230,by-24,460,40,20);const rmg=ctx.createLinearGradient(W/2-230,by,W/2+230,by);rmg.addColorStop(0,'rgba(234,88,12,.15)');rmg.addColorStop(1,'rgba(15,76,129,.15)');ctx.fillStyle=rmg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${rm.e}  ${rm.t}`,W/2,by+4);
+  const bg2=ctx.createLinearGradient(120,548,W-120,548);bg2.addColorStop(0,'transparent');bg2.addColorStop(.5,'rgba(234,88,12,.7)');bg2.addColorStop(1,'transparent');ctx.strokeStyle=bg2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${ds}`,80,572);if(sC&&sC!=='N/A')ctx.fillText(`🏛  ${sC}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#90CAF9';ctx.fillText('StudyHub  ✦  Computer Networks',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.32)';ctx.fillText('StudyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hl(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+const qURL=()=>location.href!=='about:blank'?location.href:'https://studyhub.example.com/cnquiz.html';
+const sTxt=()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct),wc=tot-sc-sk;return `${r.e} CN Quiz — StudyHub\n\n${sN?'👤 '+sN+'\n':''}${sB&&sB!=='N/A'?'📘 '+sB+(sS&&sS!=='N/A'?' · '+sS:'')+'\n':''}🏆 Score: ${sc}/${tot} (${pct}%)\n${r.t}\n\n✅ ${sc}  ❌ ${wc}  ⟫ ${sk}\n\n📚 Try: ${qURL()}\n\nStudyHub`;};
+$('shareBtn').addEventListener('click',()=>{const p=$('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('downloadCertBtn').addEventListener('click',()=>{toast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCert();const a=document.createElement('a');const tot=aQ.length,pct=~~((sc/tot)*100),sn=(sN||'Student').replace(/[^a-zA-Z0-9]/g,'_');a.download=`StudyHub_CN_Certificate_${sn}_${sc}_${tot}_${pct}pct.png`;a.href=cv.toDataURL('image/png');a.click();toast('✅ Certificate downloaded!');$('downloadCertBtn').classList.add('done');}catch(e){toast('⚠️ Download failed.');}},200);});
+$('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(qURL()).then(()=>toast('🔗 Copied!')).catch(()=>prompt('Copy:',qURL()));});
+$('whatsappBtn').addEventListener('click',()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${r.e} *CN Quiz — StudyHub*\n\n${sN?'👤 *'+sN+'*\n':''}🏆 Score: *${sc}/${tot}* (${pct}%)\n${r.t}\n\n📚 Try: ${qURL()}`)}`);});
+$('twitterBtn').addEventListener('click',()=>{const tot=aQ.length,pct=~~((sc/tot)*100),r=gRmk(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${r.e} Scored ${sc}/${tot} (${pct}%) on Computer Networks Quiz!\n${r.t}\n${qURL()} #CN #BTech #StudyHub`)}`);});
+$('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(sTxt()).then(()=>toast('📋 Copied!')).catch(()=>prompt('Copy:',sTxt()));});
+$('hamburger').addEventListener('click',()=>$('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=$('hamburger'),m=$('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

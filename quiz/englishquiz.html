@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communicative English Quiz — StudyHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1D4ED8;--primary-light:#3B82F6;--primary-dark:#1E3A8A;
+  --secondary:#EA580C;--secondary-light:#F97316;
+  --bg:#EEF2FF;--card:#FFFFFF;--text:#0F172A;--text-sub:#4B5DCC;
+  --correct:#16A34A;--correct-bg:#DCFCE7;--wrong:#DC2626;--wrong-bg:#FEE2E2;
+  --shadow-raise:8px 8px 16px #C7D2EE,-8px -8px 16px #FFFFFF;
+  --shadow-raise-sm:4px 4px 10px #C7D2EE,-4px -4px 10px #FFFFFF;
+  --shadow-inset:inset 4px 4px 8px #C7D2EE,inset -4px -4px 8px #FFFFFF;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(238,242,255,0.93);
+  backdrop-filter:blur(18px);box-shadow:0 2px 20px rgba(29,78,216,0.12);z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow-raise-sm)}
+.nav-name{font-weight:800;font-size:1.15rem;color:var(--primary);letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--text-sub);padding:7px 16px;border-radius:50px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:rgba(29,78,216,0.08)}
+.nav-links a.active{color:var(--primary);background:rgba(29,78,216,0.12);box-shadow:var(--shadow-raise-sm);font-weight:600}
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:10px;box-shadow:var(--shadow-raise-sm);
+  background:var(--bg);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-hamburger span{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(238,242,255,0.97);
+  backdrop-filter:blur(18px);padding:12px 20px 20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.10);
+  flex-direction:column;gap:2px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{text-decoration:none;color:var(--text);font-weight:500;padding:12px 16px;border-radius:12px;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:rgba(29,78,216,0.10);color:var(--primary)}
+.page-wrap{padding-top:calc(var(--nav-h)+28px);padding-bottom:60px;max-width:780px;margin:0 auto;padding-left:18px;padding-right:18px}
+.screen{display:none}.screen.active{display:block}
+.toast{position:fixed;top:calc(var(--nav-h)+16px);left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;
+  font-size:.88rem;font-weight:600;padding:11px 24px;border-radius:50px;z-index:9999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.info-screen-card,.intro-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 40px;text-align:center}
+.info-header-emoji{font-size:3.5rem;display:block;margin-bottom:16px;animation:floatBob 3s ease-in-out infinite}
+.info-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.info-sub{font-size:.9rem;color:var(--text-sub);line-height:1.6;margin-bottom:28px}
+.info-form{display:flex;flex-direction:column;gap:18px;margin-bottom:28px;text-align:left}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:.8px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{padding:14px 18px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-inset);
+  border:2px solid transparent;font-family:'Poppins',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--text);transition:all .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--primary);box-shadow:var(--shadow-inset),0 0 0 3px rgba(29,78,216,0.12)}
+.form-input::placeholder{color:var(--text-sub);opacity:.7}
+.intro-emoji{font-size:5rem;display:block;margin-bottom:20px;animation:floatBob 3s ease-in-out infinite}
+.intro-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.intro-sub{font-size:.95rem;color:var(--text-sub);margin-bottom:28px;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.intro-stat{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 10px}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.intro-stat-lbl{font-size:.75rem;color:var(--text-sub);margin-top:2px;font-weight:500}
+.chapter-wrap{margin-bottom:28px;text-align:left}
+.chapter-label{font-size:.88rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chapter-btn{padding:12px 14px;border-radius:14px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border:2px solid transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--text-sub);text-align:left;transition:all .2s;line-height:1.4}
+.chapter-btn:hover{color:var(--primary);border-color:rgba(29,78,216,.3)}
+.chapter-btn.selected{color:var(--primary);border-color:var(--primary);background:rgba(29,78,216,.07);box-shadow:var(--shadow-inset)}
+.chapter-all-btn{grid-column:1/-1;text-align:center;color:var(--primary);border-color:var(--primary)}
+.btn-primary{width:100%;padding:16px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(234,88,12,.38),0 7px 0 #C2410C;transform:translateY(0);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(234,88,12,.42),0 9px 0 #C2410C}
+.btn-primary:active{transform:translateY(5px);box-shadow:0 2px 8px rgba(234,88,12,.3),0 2px 0 #C2410C}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;
+  box-shadow:var(--shadow-raise-sm);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);transition:.2s;flex-shrink:0}
+.back-btn:hover{background:var(--primary);color:#fff}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:7px}
+.progress-track{height:9px;border-radius:9px;background:var(--bg);box-shadow:var(--shadow-inset);overflow:hidden}
+.progress-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .5s ease}
+.timer-pill{display:flex;align-items:center;gap:5px;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  border-radius:50px;padding:8px 14px;font-size:.9rem;font-weight:700;color:var(--text);
+  flex-shrink:0;transition:all .3s;min-width:72px;justify-content:center}
+.timer-pill.urgent{background:#FEF3C7;color:#92400E;animation:pulse .8s ease-in-out infinite}
+.timer-pill.critical{background:#FEE2E2;color:var(--wrong)}
+.chapter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(29,78,216,.10);color:var(--primary);
+  font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:var(--shadow-raise-sm)}
+.auto-advance-bar{height:5px;border-radius:5px;background:rgba(22,163,74,.2);margin-bottom:16px;overflow:hidden;display:none}
+.auto-advance-bar.show{display:block}
+.auto-advance-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),#22C55E);width:100%}
+.auto-advance-fill.running{animation:shrinkBar 1.5s linear forwards}
+@keyframes shrinkBar{from{width:100%}to{width:0%}}
+.auto-next-hint{text-align:center;font-size:.75rem;color:var(--correct);font-weight:600;margin-bottom:12px;display:none}
+.auto-next-hint.show{display:block}
+.question-card{background:linear-gradient(135deg,#1E3A8A,#1D4ED8);border-radius:24px;padding:32px 28px;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(29,78,216,.3),8px 8px 16px #C7D2EE,-8px -8px 16px #FFFFFF;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:repeating-linear-gradient(45deg,#fff 0px,#fff 1px,transparent 1px,transparent 22px)}
+.q-num{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.q-star{display:inline-block;background:rgba(255,215,0,.22);color:#FFD700;font-size:.68rem;font-weight:700;
+  padding:2px 10px;border-radius:50px;margin-bottom:8px;letter-spacing:.5px}
+.q-text{font-size:clamp(.93rem,2.5vw,1.08rem);font-weight:600;color:#fff;line-height:1.55;position:relative;z-index:1}
+.q-example{margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.12);border-radius:10px;
+  border-left:3px solid rgba(255,255,255,.5);font-size:.8rem;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;position:relative;z-index:1}
+.options-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.option{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:15px 18px;
+  box-shadow:var(--shadow-raise-sm);cursor:pointer;transition:all .2s;border:2px solid transparent;user-select:none}
+.option:hover:not(.locked){transform:translateX(4px);box-shadow:10px 10px 20px #B8C8E8,-6px -6px 14px #FFFFFF;border-color:rgba(29,78,216,.2)}
+.option.locked{cursor:not-allowed}
+.option-letter{width:34px;height:34px;border-radius:50%;background:var(--bg);box-shadow:var(--shadow-raise-sm);
+  display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--primary);flex-shrink:0;transition:all .2s}
+.option-text{font-size:.92rem;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.option-radio{width:20px;height:20px;border-radius:50%;border:2px solid #C7D2EE;box-shadow:var(--shadow-raise-sm);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.option.correct{background:var(--correct-bg);border-color:var(--correct);transform:translateX(4px);
+  box-shadow:0 0 0 3px rgba(22,163,74,.15),6px 6px 16px rgba(22,163,74,.1)}
+.option.correct .option-letter{background:var(--correct);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.4)}
+.option.correct .option-radio{background:var(--correct);border-color:var(--correct);color:#fff}
+.option.correct .option-text{color:#065F46;font-weight:600}
+.option.wrong{background:var(--wrong-bg);border-color:var(--wrong);
+  box-shadow:0 0 0 3px rgba(220,38,38,.15),6px 6px 16px rgba(220,38,38,.1)}
+.option.wrong .option-letter{background:var(--wrong);color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.4)}
+.option.wrong .option-radio{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.option.wrong .option-text{color:#991B1B}
+.explanation{background:var(--card);border-radius:16px;box-shadow:var(--shadow-raise-sm);
+  padding:16px 18px;margin-bottom:20px;border-left:4px solid var(--primary);display:none;animation:slideDown .3s ease}
+.explanation.show{display:block}
+.explanation-title{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:5px}
+.explanation-text{font-size:.85rem;color:var(--text-sub);line-height:1.55}
+.action-row{display:flex;gap:12px;align-items:center;justify-content:flex-end}
+.btn-next{padding:14px 32px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(29,78,216,.38),0 6px 0 var(--primary-dark);transition:all .2s;display:none}
+.btn-next:hover{transform:translateY(-2px)}.btn-next:active{transform:translateY(4px)}
+.btn-next.visible{display:flex;align-items:center;gap:6px}
+.skip-btn{padding:12px 20px;border:none;border-radius:50px;background:var(--bg);color:var(--text-sub);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.skip-btn:hover{color:var(--wrong)}
+.result-card{background:var(--card);border-radius:28px;box-shadow:var(--shadow-raise);padding:44px 36px;text-align:center;position:relative;overflow:hidden}
+.confetti-canvas{position:absolute;inset:0;pointer-events:none;border-radius:28px}
+.result-emoji{font-size:4rem;display:block;margin-bottom:16px;animation:floatBob 2.5s ease-in-out infinite}
+.student-info-banner{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-inset);padding:16px 20px;
+  margin-bottom:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.student-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;box-shadow:var(--shadow-raise-sm)}
+.student-info-text{flex:1;min-width:0}
+.student-info-name{font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-info-meta{font-size:.78rem;color:var(--text-sub);font-weight:500;margin-top:2px}
+.result-score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:var(--bg);
+  box-shadow:var(--shadow-raise);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:2.6rem;font-weight:800;color:var(--primary);line-height:1}
+.score-total{font-size:.85rem;color:var(--text-sub);font-weight:500}
+.result-percent{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.remark-text{font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.remark-sub{font-size:.88rem;color:var(--text-sub);margin-bottom:28px;line-height:1.5}
+.result-pills{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.result-pill{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-raise-sm)}
+.pill-correct{background:var(--correct-bg);color:var(--correct)}.pill-wrong{background:var(--wrong-bg);color:var(--wrong)}.pill-skip{background:#FEF3C7;color:#92400E}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-retry{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(29,78,216,.4),0 6px 0 var(--primary-dark);transition:all .2s}
+.btn-retry:hover{transform:translateY(-2px)}
+.btn-explore{padding:14px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--secondary),var(--secondary-light));
+  color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;
+  box-shadow:0 4px 14px rgba(234,88,12,.4),0 6px 0 #C2410C;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-explore:hover{transform:translateY(-2px)}
+.btn-share{padding:12px 22px;border-radius:50px;background:var(--bg);color:var(--text-sub);border:none;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow-raise-sm);transition:all .2s}
+.btn-share:hover{color:var(--primary)}
+.cert-download-section{margin-top:28px;background:linear-gradient(135deg,#0C1A40,#1E3A8A);
+  border-radius:22px;padding:26px 28px;text-align:center;position:relative;overflow:hidden}
+.cert-download-section::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 20px)}
+.cert-section-title{font-size:.78rem;font-weight:700;color:rgba(147,197,253,.9);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.cert-section-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-section-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px}
+.btn-download-cert{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;
+  cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.5),0 7px 0 #C2410C;position:relative;z-index:1;transition:all .2s}
+.btn-download-cert:hover{transform:translateY(-3px)}.btn-download-cert:active{transform:translateY(4px)}
+.btn-download-cert.done{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(22,163,74,.4),0 7px 0 #15803D}
+.share-panel{margin-top:24px;background:var(--bg);border-radius:20px;box-shadow:var(--shadow-inset);
+  padding:22px 20px;display:none;animation:slideDown .35s ease}
+.share-panel.open{display:block}
+.share-panel-title{font-size:.82rem;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center}
+.share-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.share-action-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:none;
+  border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:14px 12px;cursor:pointer;min-width:80px;transition:all .2s;font-family:'Poppins',sans-serif}
+.share-action-btn:hover{transform:translateY(-3px);box-shadow:8px 8px 18px #B8C8E8,-8px -8px 18px #FFFFFF}
+.share-action-btn:active{transform:translateY(1px);box-shadow:var(--shadow-inset)}
+.share-action-icon{font-size:1.5rem;line-height:1}
+.share-action-label{font-size:.7rem;font-weight:600;color:var(--text-sub);text-align:center;line-height:1.3}
+.review-toggle{margin-top:28px;text-align:center}
+.btn-review{padding:11px 28px;border-radius:50px;border:2px solid rgba(29,78,216,.3);background:var(--bg);color:var(--primary);
+  cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;box-shadow:var(--shadow-raise-sm);transition:.2s}
+.btn-review:hover{border-color:var(--primary)}
+.review-list{margin-top:20px;display:none;text-align:left}
+.review-list.open{display:block}
+.review-item{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-raise-sm);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--text-sub)}
+.review-item.ri-correct{border-left-color:var(--correct)}.review-item.ri-wrong{border-left-color:var(--wrong)}.review-item.ri-skip{border-left-color:#F59E0B}
+.ri-q{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+.ri-ans{font-size:.78rem;color:var(--text-sub)}
+.ri-correct-ans{color:var(--correct);font-weight:600}.ri-wrong-ans{color:var(--wrong);font-weight:600}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@media(max-width:600px){
+  .navbar{padding:0 16px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .page-wrap{padding-left:14px;padding-right:14px}
+  .intro-card,.info-screen-card{padding:30px 20px}
+  .info-row{grid-template-columns:1fr}.chapter-grid{grid-template-columns:1fr}
+  .result-card{padding:30px 20px}.result-btns{flex-direction:column;align-items:center}
+  .btn-retry,.btn-explore{width:100%;justify-content:center}
+  .quiz-header{gap:8px}.option{padding:12px 14px;gap:10px}.option-text{font-size:.85rem}
+  .question-card{padding:24px 20px}.share-actions{gap:8px}.share-action-btn{min-width:68px;padding:12px 8px}
+}
+</style>
+</head>
+<body data-quiz="english">
+<nav class="navbar">
+  <a href="https://erabhi.in/studyHub/" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <span class="nav-name">StudyHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://erabhi.in/studyHub/">Home</a></li>
+    <li><a href="quiz.html" class="active">Quizzes</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://erabhi.in/studyHub/">🏠 Home</a>
+  <a href="quiz.html" class="active">🧠 Quizzes</a>
+  <a href="about.html">ℹ️ About</a>
+</div>
+<div class="toast" id="toast"></div>
+<main class="page-wrap">
+
+<div class="screen active" id="screenInfo">
+  <div class="info-screen-card">
+    <span class="info-header-emoji">🎓</span>
+    <div class="info-title">Almost Ready!</div>
+    <div class="info-sub">Enter your details to personalise your certificate and quiz experience.</div>
+    <div class="info-form">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="e.g. Rahul Kumar Sharma" maxlength="50" autocomplete="name">
+      </div>
+      <div class="info-row">
+        <div class="form-group">
+          <label>🏫 Branch / Stream</label>
+          <input class="form-input" id="inputBranch" type="text" placeholder="e.g. Computer Science" maxlength="40">
+        </div>
+        <div class="form-group">
+          <label>📅 Semester</label>
+          <select class="form-input" id="inputSem">
+            <option value="">— Select —</option>
+            <option>1st Semester</option><option>2nd Semester</option>
+            <option>3rd Semester</option><option>4th Semester</option>
+            <option>5th Semester</option><option>6th Semester</option>
+            <option>7th Semester</option><option>8th Semester</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🏛️ College / Institute (Optional)</label>
+        <input class="form-input" id="inputCollege" type="text" placeholder="e.g. AKTU Lucknow" maxlength="60">
+      </div>
+    </div>
+    <button class="btn-primary" id="infoNextBtn">Continue →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenIntro">
+  <div class="intro-card">
+    <span class="intro-emoji">📝</span>
+    <div class="intro-title">Communicative English Quiz</div>
+    <div class="intro-sub">B.Tech Exam-Oriented MCQs — Vocabulary, Writing Skills, Common Errors, Appropriate Writing, Formal Writing & Comprehension. 200 VVI questions across 6 units.</div>
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">200</div><div class="intro-stat-lbl">Questions</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">6</div><div class="intro-stat-lbl">Units</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">30s</div><div class="intro-stat-lbl">Per Question</div></div>
+    </div>
+    <div class="chapter-wrap">
+      <span class="chapter-label">📌 Choose Unit (or play all)</span>
+      <div class="chapter-grid" id="chapterGrid">
+        <button class="chapter-btn chapter-all-btn selected" data-chapter="all">⚡ All Units (200 Questions)</button>
+        <button class="chapter-btn" data-chapter="0">Unit 1: Vocabulary Building</button>
+        <button class="chapter-btn" data-chapter="1">Unit 2: Basic Writing Skills</button>
+        <button class="chapter-btn" data-chapter="2">Unit 3: Common Errors in English</button>
+        <button class="chapter-btn" data-chapter="3">Unit 4: Principles of Appropriate Writing</button>
+        <button class="chapter-btn" data-chapter="4">Unit 5: Practices of Formal Writing</button>
+        <button class="chapter-btn" data-chapter="5">Unit 6: Comprehension of Written English</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">⚡ Start Quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="screenQuiz">
+  <div class="quiz-header">
+    <button class="back-btn" id="backBtn">←</button>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Question 1 of 34</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-pill" id="timerPill">⏱ 30s</div>
+  </div>
+  <div class="chapter-badge" id="chapterBadge">📝 Unit 1</div>
+  <div class="auto-advance-bar" id="autoAdvanceBar"><div class="auto-advance-fill" id="autoAdvanceFill"></div></div>
+  <div class="auto-next-hint" id="autoNextHint">✅ Correct! Moving to next question…</div>
+  <div class="question-card">
+    <div class="q-num" id="qNum">Q1</div>
+    <div class="q-text" id="qText">Loading…</div>
+    <div class="q-example" id="qExample" style="display:none"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <div class="explanation" id="explanationBox">
+    <div class="explanation-title">💡 Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div class="action-row">
+    <button class="skip-btn" id="skipBtn">Skip ⟫</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="screen" id="screenResult">
+  <div class="result-card">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="student-info-banner">
+      <div class="student-avatar">🎓</div>
+      <div class="student-info-text">
+        <div class="student-info-name" id="bannerName">Student</div>
+        <div class="student-info-meta" id="bannerMeta">Communicative English Quiz</div>
+      </div>
+    </div>
+    <div class="result-score-ring">
+      <div class="score-big" id="scoreBig">0</div>
+      <div class="score-total" id="scoreTotal">/ 34</div>
+    </div>
+    <div class="result-percent" id="resultPercent">0%</div>
+    <div class="remark-text" id="remarkText">Great job!</div>
+    <div class="remark-sub" id="remarkSub">Keep it up!</div>
+    <div class="result-pills">
+      <div class="result-pill pill-correct">✅ <span id="pillCorrect">0</span> Correct</div>
+      <div class="result-pill pill-wrong">❌ <span id="pillWrong">0</span> Wrong</div>
+      <div class="result-pill pill-skip">⟫ <span id="pillSkip">0</span> Skipped</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" id="retryBtn">🔄 Retry Quiz</button>
+      <a href="quiz.html" class="btn-explore">🔍 Explore More</a>
+      <button class="btn-share" id="shareBtn">🎖️ Share Score</button>
+    </div>
+    <div class="cert-download-section">
+      <div class="cert-section-title">🏅 Your Certificate is Ready</div>
+      <div class="cert-section-name" id="certBannerName">Certificate of Achievement</div>
+      <div class="cert-section-meta" id="certBannerMeta">Communicative English Quiz · StudyHub</div>
+      <button class="btn-download-cert" id="downloadCertBtn">🖼️ Download Certificate</button>
+    </div>
+    <div class="share-panel" id="sharePanel">
+      <div class="share-panel-title">Share your achievement</div>
+      <div class="share-actions">
+        <button class="share-action-btn" id="copyLinkBtn"><span class="share-action-icon">🔗</span><span class="share-action-label">Copy Quiz<br>Link</span></button>
+        <button class="share-action-btn" id="whatsappBtn"><span class="share-action-icon">💬</span><span class="share-action-label">Share on<br>WhatsApp</span></button>
+        <button class="share-action-btn" id="twitterBtn"><span class="share-action-icon">🐦</span><span class="share-action-label">Share on<br>Twitter</span></button>
+        <button class="share-action-btn" id="copyTextBtn"><span class="share-action-icon">📋</span><span class="share-action-label">Copy Score<br>Text</span></button>
+      </div>
+    </div>
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <div class="review-toggle">
+      <button class="btn-review" id="reviewToggleBtn">📖 Review Answers</button>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+const CHAPTERS=[
+  {name:"Vocabulary Building",                  icon:"📖"},
+  {name:"Basic Writing Skills",                  icon:"✍️"},
+  {name:"Common Errors in English",              icon:"⚠️"},
+  {name:"Principles of Appropriate Writing",     icon:"📋"},
+  {name:"Practices of Formal Writing",           icon:"📄"},
+  {name:"Comprehension of Written English",      icon:"🔍"},
+];
+
+const ALL_QUESTIONS=[
+/* ══════════════════════════════════════
+   UNIT 1 — Vocabulary Building (34 Qs)
+══════════════════════════════════════ */
+{c:0,q:"The process by which a new word is created from an existing word by adding a prefix or suffix is called:",o:["Compounding","Derivation (Affixation)","Blending","Conversion"],a:1,ex:"Derivation/Affixation = adding prefix (pre-, un-, mis-) or suffix (-tion, -ness, -er) to form new words. Example: happy → unhappy (prefix); happy → happiness (suffix).",star:true},
+{c:0,q:"Which of the following is an example of a PREFIX?",o:["-ness in happiness","-tion in education","un- in unhappy","-er in teacher"],a:2,ex:"A prefix is added to the beginning of a word. 'un-' in 'unhappy' is a prefix meaning 'not'. Other prefixes: re- (redo), mis- (mistake), pre- (preview), dis- (disagree).",star:true,hint:"Prefix = comes BEFORE the root word"},
+{c:0,q:"A suffix is a morpheme added to the:",o:["Beginning of a word","Middle of a word","End of a word","Anywhere in a word"],a:2,ex:"Suffix = added at the END of the root word to form new words or change word class. Examples: -tion (action), -ness (kindness), -ly (quickly), -er (teacher), -ment (movement).",star:true},
+{c:0,q:"Root words are important in vocabulary because:",o:["They are always one syllable","They carry the core meaning and help understand related words","They are never changed","They come from English only"],a:1,ex:"Root words (base words) carry fundamental meaning. Knowing roots helps understand many words. Example: root 'port' (carry) → transport, import, export, portable, porter.",star:true},
+{c:0,q:"The Latin root 'dict' means:",o:["Write","Speak or say","Read","Listen"],a:1,ex:"Latin root 'dict' = speak/say. Words: dictionary, dictate, diction, predict, verdict, contradict, edict. Knowing roots unlocks vocabulary.",hint:"Dict → dictation, predict, contradict"},
+{c:0,q:"Which of the following pairs is a correct example of SYNONYMS?",o:["Happy – Sad","Begin – Start","Fast – Slow","Love – Hate"],a:1,ex:"Synonyms are words with similar/same meaning. Begin = Start (both mean to commence). Antonyms: Happy-Sad, Fast-Slow. Synonyms help avoid repetition in writing.",star:true,hint:"Begin = Start = Commence = Initiate"},
+{c:0,q:"ANTONYMS are words that are:",o:["Same in meaning","Opposite in meaning","Similar in pronunciation","Related in spelling"],a:1,ex:"Antonyms = words with opposite meanings. Examples: hot/cold, love/hate, day/night, big/small, happy/sad. Essential for precise expression.",star:true,hint:"Antonym = Anti (against) + onym (name/word)"},
+{c:0,q:"Which of the following is an example of a HOMOPHONE?",o:["Big and Large","Write and Right","Fast and Quick","Happy and Joyful"],a:1,ex:"Homophones = words that sound the same but have different spellings and meanings. Write (to pen)/Right (correct). Other examples: there/their/they're, to/two/too, hear/here.",star:true},
+{c:0,q:"HOMOGRAPHS are words that:",o:["Sound the same but have different meanings","Are spelled the same but have different meanings (and often different pronunciations)","Have the same meaning","Are opposite in meaning"],a:1,ex:"Homographs = same spelling, different meaning (and possibly different pronunciation). Example: 'lead' (to guide) vs 'lead' (metal). 'Bow' (weapon) vs 'bow' (front of ship).",star:true},
+{c:0,q:"The word 'autobiography' can be broken into parts. The root 'bio' means:",o:["Self","Life","Write","Story"],a:1,ex:"Greek root 'bio' = life. So autobiography = auto (self) + bio (life) + graphy (writing) = writing about one's own life. Biology, biography, biodegradable all use 'bio'.",star:true},
+{c:0,q:"Choose the correct ANTONYM for 'Benevolent':",o:["Kind","Generous","Malevolent","Charitable"],a:2,ex:"Benevolent = kind, charitable, well-wishing. Antonym = Malevolent (evil, wishing harm). From Latin: bene (good) vs male (bad) + volent (wishing).",star:true},
+{c:0,q:"A FOREIGN EXPRESSION used in English: 'bona fide' means:",o:["In good faith / genuine","In bad faith","By the way","For example"],a:0,ex:"Bona fide (Latin) = in good faith, genuine, authentic. Example: 'This is a bona fide offer.' Other foreign expressions: ad hoc (for this purpose), per se (by itself), status quo (existing state).",star:true},
+{c:0,q:"The foreign expression 'per se' means:",o:["By or in itself","In passing","Therefore","For example"],a:0,ex:"Per se (Latin) = by itself, in itself, intrinsically. Example: 'The rule is not wrong per se, but its application is unfair.'",star:true},
+{c:0,q:"'E.g.' is an abbreviation for the Latin phrase:",o:["Et cetera (and so on)","Exempli gratia (for example)","Et al. (and others)","Id est (that is)"],a:1,ex:"E.g. = exempli gratia = for example. 'I like fruits, e.g., mango, apple, banana.' Cf. i.e. (id est = that is) which clarifies; e.g. gives examples.",star:true},
+{c:0,q:"'i.e.' is the abbreviation for:",o:["In effect","That is (id est — used for clarification)","For example","In English"],a:1,ex:"i.e. = id est = that is. Used to clarify or restate: 'He speaks the official language, i.e., Hindi.' Compare with e.g. (for example). i.e. introduces a complete restatement.",star:true},
+{c:0,q:"The word 'etc.' stands for:",o:["And so on (et cetera)","Extra caution","Extended copy","Electronic transfer"],a:0,ex:"etc. = et cetera (Latin) = and so on, and other similar things. Used at end of list when items continue: 'Bring pens, pencils, erasers, etc.' Avoid using with e.g. (redundant).",star:true},
+{c:0,q:"Word formation: which method forms 'brunch' from 'breakfast' and 'lunch'?",o:["Derivation","Compounding","Blending","Clipping"],a:2,ex:"Blending = combining parts of two words into one: breakfast + lunch = brunch. Other blends: smog (smoke+fog), motel (motor+hotel), email (electronic+mail), podcast (iPod+broadcast).",star:true},
+{c:0,q:"'NASA' and 'WHO' are examples of:",o:["Abbreviations","Acronyms (pronounced as words/letters)","Blends","Compound words"],a:1,ex:"Acronyms = abbreviations pronounced as words or as sequences of letters. NASA (National Aeronautics and Space Administration). WHO (World Health Organization). UNICEF, AIDS, LASER are acronyms.",star:true},
+{c:0,q:"The prefix 'mis-' as in 'misunderstand' means:",o:["Against","Wrongly or badly","Not","Before"],a:1,ex:"Prefix 'mis-' = wrongly, badly. misunderstand (understand wrongly), misuse (use badly), mistake (take wrongly), miscommunicate, misbehave, misjudge.",star:true},
+{c:0,q:"The suffix '-tion' as in 'education' indicates:",o:["One who does","The process or result of an action","Having a quality","Full of"],a:1,ex:"Suffix '-tion' (also -sion, -ation) = process, state, or result of an action. education (process of educating), communication, creation, celebration, examination.",star:true},
+{c:0,q:"Choose the correct SYNONYM for 'Eloquent':",o:["Silent","Articulate / Fluent","Confused","Angry"],a:1,ex:"Eloquent = fluent, articulate, persuasive in speech or writing. Synonym: articulate, fluent, expressive. Antonym: inarticulate, tongue-tied.",star:true},
+{c:0,q:"Choose the word that is a HOMOPHONE of 'flower':",o:["Floor","Flour","Flute","Flow"],a:1,ex:"Flower (a plant bloom) and Flour (ground grain) are homophones — same pronunciation, different spelling and meaning. Both pronounced /flaʊər/.",star:true},
+{c:0,q:"The Latin root 'scrib/script' means:",o:["Read","Speak","Write"],a:2,ex:"Latin 'scrib/script' = write. Words: script, describe, prescription, manuscript, subscribe, inscription, scribble. Knowing this root helps with many English words.",hint:"Manuscript = manu (hand) + script (written) = written by hand"},
+{c:0,q:"'ASAP' is an acronym for:",o:["As Suggested and Planned","As Soon As Possible","Always Simple and Professional","After Sending A Package"],a:1,ex:"ASAP = As Soon As Possible. Used in formal and informal communication to indicate urgency. Example: 'Please reply ASAP.' Other common acronyms: FYI (For Your Information), TBD (To Be Determined).",star:true},
+{c:0,q:"The word 'international' is formed by the prefix 'inter-' which means:",o:["Inside","Between or among","Against","After"],a:1,ex:"Prefix 'inter-' = between, among. international (between nations), interaction, internet, interview, interlude, intermediate, interdisciplinary.",star:true},
+{c:0,q:"Which of the following correctly describes a COMPOUND WORD?",o:["A word formed by adding a suffix","A word formed by joining two or more existing words","A word borrowed from another language","A word formed by removing a syllable"],a:1,ex:"Compound words = two or more words joined together: bookstore (book+store), sunlight, toothbrush, football, birthday, laptop, classroom. Can be written as one word, hyphenated, or two words.",star:true},
+{c:0,q:"The morpheme is defined as:",o:["A complete sentence","The smallest unit of meaning in a language","A paragraph","A type of verb"],a:1,ex:"Morpheme = smallest meaningful unit of language. 'unhappiness' has 3 morphemes: un + happy + ness. Free morphemes (can stand alone): 'book', 'run'. Bound morphemes (need attachment): '-ing', '-ed', 'un-'.",star:true},
+{c:0,q:"'Photograph', 'telescope', 'telephone' — the root 'tele' means:",o:["Light","Far / at a distance","Sound","Speed"],a:1,ex:"Greek 'tele' = far, at a distance. telescope (see far), telephone (sound far), television (vision far), telegram, telepathy. Photo = light, scope = look/see.",hint:"Tele = far: television, telephone, telegraph, telepathy"},
+{c:0,q:"Which of the following is an example of CLIPPING (a word formation process)?",o:["Smog from smoke+fog","Exam from Examination","Bookstore from book+store","Unhappy from un+happy"],a:1,ex:"Clipping = shortening a word by cutting syllables. exam (examination), lab (laboratory), gym (gymnasium), ad (advertisement), photo (photograph), flu (influenza), phone (telephone).",star:true},
+{c:0,q:"Choose the correct SYNONYM for 'Obstinate':",o:["Flexible","Stubborn","Timid","Generous"],a:1,ex:"Obstinate = stubbornly refusing to change one's opinion. Synonyms: stubborn, headstrong, pigheaded, dogged. Antonyms: flexible, compliant, yielding.",star:true},
+{c:0,q:"The prefix 'pre-' as in 'preview' means:",o:["After","Before","Again","Not"],a:1,ex:"Prefix 'pre-' = before. preview (view before), predict, prepare, precaution, prehistoric, prefix itself (placed before).",star:true},
+{c:0,q:"'CV' stands for:",o:["Career Vision","Curriculum Vitae (course of life — a résumé)","Civil Value","Central Verification"],a:1,ex:"CV = Curriculum Vitae (Latin: course of life). A document summarizing education, experience, and qualifications. Used in job applications. In the US, a résumé is shorter; a CV is more detailed.",star:true},
+{c:0,q:"The word 'transport' contains the root 'port' which means:",o:["Road","Carry","Place","Door"],a:1,ex:"Latin 'port' = carry. transport (carry across), import (carry in), export (carry out), portable, porter, deportment, report (carry back).",star:true},
+{c:0,q:"Which of the following is the ANTONYM of 'Loquacious'?",o:["Talkative","Verbose","Taciturn","Garrulous"],a:2,ex:"Loquacious = very talkative. Antonym = taciturn (habitually silent, saying little). Synonyms of loquacious: verbose, garrulous, chatty, voluble.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 2 — Basic Writing Skills (34 Qs)
+══════════════════════════════════════ */
+{c:1,q:"A NOUN is a word that names:",o:["An action","A person, place, thing, or idea","A quality or description","A state of being"],a:1,ex:"Nouns name people (teacher, Rahul), places (Delhi, park), things (book, car), or ideas/concepts (freedom, love). Nouns are the basic building blocks of sentences.",star:true},
+{c:1,q:"Which of the following is a VERB?",o:["Beautiful","Quickly","Runs","Happiness"],a:2,ex:"Verbs express action (run, write, eat) or state of being (is, was, seems). 'Runs' is an action verb. Beautiful = adjective; Quickly = adverb; Happiness = noun.",star:true},
+{c:1,q:"ADJECTIVES modify:",o:["Verbs","Nouns or pronouns","Other adjectives only","Sentences"],a:1,ex:"Adjectives describe, qualify, or modify nouns and pronouns. 'The tall building', 'She is beautiful', 'three books'. They answer: what kind? how many? which one?",star:true},
+{c:1,q:"ADVERBS modify:",o:["Only nouns","Verbs, adjectives, or other adverbs","Only adjectives","Only pronouns"],a:1,ex:"Adverbs modify verbs (runs quickly), adjectives (very tall), or other adverbs (quite slowly). They answer: how? when? where? to what extent? Most adverbs end in -ly.",star:true},
+{c:1,q:"A PREPOSITION is a word that shows:",o:["An action","Time, place, or relationship between elements in a sentence","A description","An emotion"],a:1,ex:"Prepositions show relationship in time, place, or manner: in, on, at, by, for, with, about, under, between, through. Example: 'The book is on the table.'",star:true},
+{c:1,q:"A CONJUNCTION is used to:",o:["Describe nouns","Join words, phrases, or clauses","Express emotions","Show possession"],a:1,ex:"Conjunctions join words, phrases, or clauses. Coordinating: FANBOYS (For, And, Nor, But, Or, Yet, So). Subordinating: because, although, since, if, when. Correlative: either-or, not only-but also.",star:true},
+{c:1,q:"INTERJECTIONS are words used to express:",o:["Action","Strong emotion or sudden feeling (Oh!, Wow!, Alas!)","Logical relationships","Time"],a:1,ex:"Interjections express sudden emotions and are grammatically independent. Oh!, Wow!, Ouch!, Alas!, Hey!, Hurrah! They are often followed by an exclamation mark.",star:true},
+{c:1,q:"A SIMPLE SENTENCE contains:",o:["Two independent clauses","One independent clause and one dependent clause","Only one independent clause (subject + predicate)","Multiple subjects and predicates"],a:2,ex:"Simple sentence = one independent clause: subject + predicate. 'The dog barks.' 'She reads books.' Even with phrases, if there's only one main clause, it's simple. No subordinate clauses.",star:true},
+{c:1,q:"A COMPOUND SENTENCE is formed by joining:",o:["One independent and one dependent clause","Two or more independent clauses using coordinating conjunctions","One independent clause with a phrase","Only dependent clauses"],a:1,ex:"Compound sentence: two+ independent clauses joined by FANBOYS or semicolon. 'She studied hard, and she passed the exam.' 'He was tired; he slept early.'",star:true},
+{c:1,q:"A COMPLEX SENTENCE contains:",o:["Two independent clauses","One independent clause and at least one dependent (subordinate) clause","Only dependent clauses","Multiple independent clauses"],a:1,ex:"Complex sentence: one main (independent) clause + one or more subordinate (dependent) clauses. 'Although it was raining, she went to school.' The subordinate clause can't stand alone.",star:true},
+{c:1,q:"A COMPOUND-COMPLEX SENTENCE has:",o:["Only one clause","Two independent clauses and one dependent clause (at minimum)","Only dependent clauses","One independent and one dependent clause only"],a:1,ex:"Compound-complex: at least two independent clauses + at least one dependent clause. 'She studied hard because she wanted to pass, and her efforts paid off.'",star:true},
+{c:1,q:"In the sentence 'She is beautiful', the predicate is:",o:["She","Is","Is beautiful","Beautiful"],a:2,ex:"Predicate = the part of the sentence that tells what the subject does or is. Subject: 'She'. Predicate: 'is beautiful' (linking verb + predicate adjective). The predicate includes the verb and all its complements.",star:true},
+{c:1,q:"Which sentence contains a PHRASE (not a clause)?",o:["When she arrived","She arrived late","Running in the park","She ran and he walked"],a:2,ex:"A phrase has no subject-verb combination. 'Running in the park' is a participial phrase — no independent subject-predicate pair. A clause must have a subject and a verb.",star:true},
+{c:1,q:"ACTIVE VOICE: 'The teacher teaches the students.' The passive voice would be:",o:["The students are taught by the teacher.","The teacher is taught by the students.","The students teach the teacher.","The teacher has taught the students."],a:0,ex:"Passive voice: Object of active sentence becomes subject. Active: Subject + Verb + Object. Passive: Object + is/are/was/were + past participle + by + subject. Object ('students') → new subject.",star:true},
+{c:1,q:"The PASSIVE VOICE is formed using:",o:["Subject + Verb + Object","To be + Past Participle","Subject + have + Past Participle","Auxiliary + Present Participle"],a:1,ex:"Passive voice formula: form of 'to be' (is/are/was/were/has been) + past participle. 'The book was written by Sharma.' Focus shifts to the action/receiver rather than the doer.",star:true},
+{c:1,q:"Which PRIMARY AUXILIARY is used to form the simple future tense?",o:["Do/Does","Have/Has","Will/Shall","Am/Is/Are"],a:2,ex:"Primary auxiliaries: be (is/are/was/were), have (has/had), do (does/did). 'Will/Shall' are modal auxiliaries used for future tense. Modals: can, could, may, might, must, should, would, will, shall.",star:true},
+{c:1,q:"WH-WORDS are used for:",o:["Yes/No questions only","Forming WH-questions asking for information (what, where, when, why, who, which, how)","Forming imperative sentences","Expressing emotions"],a:1,ex:"WH-questions ask for information: What (thing), Where (place), When (time), Why (reason), Who (person), Which (choice), Whose (possession), Whom (object), How (manner/degree).",star:true},
+{c:1,q:"Which sentence correctly uses the PAST PERFECT tense?",o:["She has finished the work","She had finished the work before he arrived","She finished the work","She was finishing the work"],a:1,ex:"Past Perfect = had + past participle. Used for an action completed BEFORE another past action. 'She had finished the work before he arrived.' Shows the sequence of past events.",star:true},
+{c:1,q:"PUNCTUATION: A SEMICOLON (;) is correctly used to:",o:["End a sentence","Separate items in a list that already contain commas, or join two related independent clauses","Start a quotation","Show possession"],a:1,ex:"Semicolon uses: (1) Join two related independent clauses: 'She studied; she passed.' (2) Separate list items containing commas: 'Delhi, India; London, UK; Paris, France.'",star:true},
+{c:1,q:"CAPITALIZATION: which of the following should be capitalized?",o:["Seasons (summer, winter)","Proper nouns (names of people, places, organizations: Delhi, Rahul, Google)","Common nouns (book, dog)","Adjectives generally"],a:1,ex:"Capitalize proper nouns: specific people (Mahatma Gandhi), places (Mumbai, Ganga River), organizations (ISRO), holidays (Diwali), days/months (Monday, January). NOT seasons or common nouns.",star:true},
+{c:1,q:"In English grammar, the PRESENT CONTINUOUS tense is formed with:",o:["Subject + will + base verb","Subject + is/am/are + verb-ing","Subject + has/have + past participle","Subject + verb (base form)"],a:1,ex:"Present Continuous = am/is/are + Verb-ing. Expresses action happening now or around now. 'She is reading.' 'They are playing cricket.' Also used for future arrangements: 'I am leaving tomorrow.'",star:true},
+{c:1,q:"Which Modal Auxiliary expresses OBLIGATION or NECESSITY?",o:["May","Can","Must","Would"],a:2,ex:"'Must' expresses strong obligation/necessity: 'You must submit the assignment today.' 'Should' expresses advice. 'Have to' also expresses obligation. 'May'=permission, 'Can'=ability, 'Would'=conditional.",star:true},
+{c:1,q:"PHRASE vs CLAUSE: which of the following is a CLAUSE?",o:["In the morning","Running down the street","Because she was tired","A beautiful garden"],a:2,ex:"A clause has both a subject and a verb. 'Because she was tired' has subject (she) + verb (was) → it's a clause (subordinate/dependent). Phrases lack a subject-verb pair.",star:true},
+{c:1,q:"Which sentence is in the SIMPLE PRESENT tense?",o:["She will read the book","She is reading the book","She reads the book every day","She read the book yesterday"],a:2,ex:"Simple Present = base form of verb (+ s/es for 3rd person singular). Used for habitual actions, facts, general truths. 'She reads the book every day.' Signals: always, usually, every day.",star:true},
+{c:1,q:"A COMPLEX SENTENCE: 'Although he was tired, he continued working.' The dependent clause is:",o:["He continued working","Although he was tired","Although","He was tired"],a:1,ex:"Dependent (subordinate) clause = 'Although he was tired.' It cannot stand alone as a complete sentence. 'Although' is the subordinating conjunction. Main clause: 'he continued working.'",star:true},
+{c:1,q:"The PRESENT PERFECT tense expresses:",o:["An action happening now","An action completed at an unspecified time in the past with relevance to the present","An action in the future","A habitual action"],a:1,ex:"Present Perfect = has/have + past participle. 'She has written three novels.' Action done before now, exact time not important. Signals: already, yet, just, ever, never, recently, since, for.",star:true},
+{c:1,q:"PUNCTUATION: An APOSTROPHE in 'John's book' shows:",o:["Plural","Contraction","Possession","Quotation"],a:2,ex:"Apostrophe (') shows: (1) Possession: John's book (book belonging to John). (2) Contraction: don't (do not), it's (it is). Note: 'its' (possessive pronoun) has NO apostrophe; 'it's' = it is.",star:true},
+{c:1,q:"In a DECLARATIVE sentence, the punctuation mark at the end is:",o:["Question mark (?)","Exclamation mark (!)","Full stop / Period (.)","Semicolon (;)"],a:2,ex:"Sentence types and punctuation: Declarative (statement) = full stop. Interrogative (question) = question mark. Exclamatory (strong emotion) = exclamation mark. Imperative (command) = full stop or !.",star:true},
+{c:1,q:"Identify the CONJUNCTION in: 'She is talented but she lacks confidence.'",o:["She","Is","But","Lacks"],a:2,ex:"'But' is a coordinating conjunction (part of FANBOYS: For, And, Nor, But, Or, Yet, So). It joins two independent clauses and shows contrast.",star:true},
+{c:1,q:"The FORMATION OF QUESTIONS using Modal/Primary Auxiliaries: which is correct?",o:["She can swim? ","Can she swim?","She can swim yes?","Can swim she?"],a:1,ex:"In English, questions are formed by inverting the subject and auxiliary: Subject + Auxiliary → Auxiliary + Subject. 'She can swim' → 'Can she swim?' Same for: 'She is coming' → 'Is she coming?'",star:true},
+{c:1,q:"Which sentence correctly uses a COMMA?",o:["I want to eat, and drink.","However, he refused to leave.","I saw, her.","She is, beautiful."],a:1,ex:"Commas are used after conjunctive adverbs at sentence start (However, Therefore, Moreover), after introductory phrases, in compound sentences, in lists, etc. 'However, he refused to leave.' ✓",star:true},
+{c:1,q:"Identify the KIND OF SENTENCE: 'What a beautiful painting this is!'",o:["Declarative","Interrogative","Imperative","Exclamatory"],a:3,ex:"Exclamatory sentences express strong feelings and use exclamation marks. Pattern: 'What a + adjective + noun + this is!' or 'How + adjective + subject + verb!' Example: 'How wonderful!'",star:true},
+{c:1,q:"The SUBJECT of a sentence is:",o:["The action performed","The person, place, thing, or idea the sentence is about","The word that describes the noun","The helping verb"],a:1,ex:"Subject = who or what the sentence is about, typically performs the action or is described. 'The students study hard.' Subject = 'The students.' Found by asking: Who/What + verb?",star:true},
+{c:1,q:"Which tense form is used to describe actions that were ongoing in the past when another action occurred?",o:["Simple Past","Past Perfect","Past Continuous","Present Perfect"],a:2,ex:"Past Continuous = was/were + verb-ing. 'She was reading when he called.' The ongoing action (was reading) was interrupted by another past action (called). Shows action in progress at a past moment.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 3 — Common Errors in English (33 Qs)
+══════════════════════════════════════ */
+{c:2,q:"Choose the correct sentence regarding use of ARTICLES:",o:["She is honest woman.","She is an honest woman.","She is a honest woman.","She is the honest woman."],a:1,ex:"Before a word beginning with a vowel SOUND, use 'an': an honest woman (h is silent → vowel sound /ɒ/). 'A' before consonant sounds, 'an' before vowel sounds. 'a honest' is wrong — 'h' is silent here.",star:true},
+{c:2,q:"Identify the error: 'Each of the students have submitted their assignment.'",o:["No error","'have' should be 'has' (Each takes singular verb)","'their' should be 'his'","'submitted' should be 'submit'"],a:1,ex:"'Each' is singular → takes singular verb 'has'. Correct: 'Each of the students has submitted his/her assignment.' Common error: plural verb after 'each', 'every', 'either', 'neither'.",star:true},
+{c:2,q:"Which sentence has correct PREPOSITION use?",o:["She is married with a doctor.","She is married to a doctor.","She is married by a doctor.","She is married for a doctor."],a:1,ex:"Married TO (not with/by/for) is correct collocation. Common preposition errors: 'discuss about' (just 'discuss'), 'cope up with' (just 'cope with'), 'return back' (just 'return').",star:true},
+{c:2,q:"REDUNDANCY error: which sentence is incorrect?",o:["Please return the book.","She has a free gift.","He is an expert.","They arrived early."],a:1,ex:"'Free gift' is redundant — a gift is always free by definition. Redundancy = using unnecessary/repetitive words. Other examples: 'advance forward', 'end result', 'past history', 'new innovation', 'personally I think'.",star:true},
+{c:2,q:"Identify the SUBJECT-VERB AGREEMENT error:",o:["The news is disturbing.","Mathematics are my favourite subject.","The team is playing well.","Each student has a book."],a:1,ex:"Mathematics is a single subject → singular verb 'is'. Correct: 'Mathematics is my favourite subject.' Similarly: physics, economics, news, the United States (treated as singular). Common error.",star:true},
+{c:2,q:"MODIFIER ERROR: 'Running to catch the bus, the wallet fell from his pocket.' This is a:",o:["Correct sentence","Dangling modifier (running refers to wallet, not a person)","Misplaced modifier","Correct participial phrase"],a:1,ex:"Dangling modifier: 'Running to catch the bus' should modify the subject of main clause. But 'wallet' can't run. Correct: 'Running to catch the bus, he dropped his wallet.' The participial phrase must be adjacent to what it modifies.",star:true},
+{c:2,q:"Choose the sentence with correct NOUN-PRONOUN AGREEMENT:",o:["Every student must bring their book.","Every student must bring his or her book.","Every students must bring their books.","Every student must bring our book."],a:1,ex:"'Every student' is singular → 'his or her' (singular pronoun). Formal grammar: 'Every student must bring his or her book.' Informal: 'their' is widely accepted but traditionally incorrect with singular antecedent.",star:true},
+{c:2,q:"Which sentence contains a CLICHÉ?",o:["The report was submitted on time.","At the end of the day, we must move forward.","She studied for five hours.","The experiment failed."],a:1,ex:"Clichés are overused expressions that have lost originality: 'at the end of the day', 'think outside the box', 'it is what it is', 'at this point in time'. Professional writing should avoid them.",star:true},
+{c:2,q:"SPELLING ERROR: which word is spelled correctly?",o:["Accomodation","Acommodation","Accommodation","Acomodation"],a:2,ex:"Accommodation = double c, double m. Common misspellings: accommodate, occurrence, necessary (1 c, 2 s), separate (not seperate), definitely (not definately).",star:true},
+{c:2,q:"Choose the correct sentence regarding TENSE consistency:",o:["She walked in, sits down, and started reading.","She walked in, sat down, and started reading.","She walks in, sat down, and starts reading.","She walked in, sat down, and starts reading."],a:1,ex:"Tense consistency: all verbs in a sequence should be in the same tense. All past: walked, sat, started. Mixing tenses (walked…sits…started) is a common error in writing.",star:true},
+{c:2,q:"Which is the correct use of 'EFFECT' vs 'AFFECT'?",o:["The medicine will effect your sleep.","The medicine will affect your sleep.","The medicine will effect a cure (wrong here).","The policy has no affect on sales."],a:1,ex:"AFFECT = verb (to influence): 'Noise affects concentration.' EFFECT = noun (result): 'The effect of pollution.' Exception: 'effect' as verb = to bring about: 'The new law effected a change.'",star:true},
+{c:2,q:"'Between' is used for _______ items; 'among' is used for _______:",o:["Many; two","Two; three or more (multiple)","Equal; unequal","Specific; general"],a:1,ex:"Between = used with two specific items: 'between you and me', 'choose between A and B'. Among = used with three or more: 'distribute among the students'. Common error: 'between three friends' (wrong) → 'among three friends'.",star:true},
+{c:2,q:"Identify the error: 'He is one of the students who has won the prize.'",o:["No error","'has' should be 'have' (who refers to 'students', plural)","'one' should be 'ones'","'won' should be 'wins'"],a:1,ex:"'One of the students who' — the relative pronoun 'who' refers to 'students' (plural) → plural verb 'have'. Correct: 'He is one of the students who have won the prize.' Exception: 'the only one of the students who has'.",star:true},
+{c:2,q:"SPELLING: which is correct?",o:["Seperate","Seperate","Separate","Seperete"],a:2,ex:"Separate = sep-a-rate. Memory aid: 'there is A RAT in sepARATe'. Commonly misspelled: separate, accommodate, necessary, occurrence, definitely, committee, embarrass.",star:true},
+{c:2,q:"Choose the sentence WITHOUT an error in use of PREPOSITIONS:",o:["He is good in mathematics.","He is good at mathematics.","He is good for mathematics.","He is good with mathematics."],a:1,ex:"'Good at' = correct collocation for skills/subjects. Other collocations: interested IN, fond OF, afraid OF, similar TO, different FROM, responsible FOR, depend ON.",star:true},
+{c:2,q:"Which sentence correctly uses FEWER vs LESS?",o:["I have less friends than you.","I have fewer friends than you.","I have fewer water than you.","I have less books than you."],a:1,ex:"FEWER = countable nouns (friends, books, people). LESS = uncountable nouns (water, time, money). 'Fewer friends' ✓, 'less water' ✓, 'fewer books' ✓, 'less money' ✓.",star:true},
+{c:2,q:"ARTICLES error: choose the correct sentence:",o:["She gave me an useful advice.","She gave me a useful advice.","She gave me useful advice.","She gave me the useful advice."],a:2,ex:"'Advice' is uncountable — no article needed (can't say 'an advice' or 'a advice'). Uncountable nouns don't take a/an: advice, information, luggage, furniture, news, equipment. Correct: 'She gave me useful advice.'",star:true},
+{c:2,q:"Choose the correct use of 'ITS' vs 'IT'S':",o:["The dog wagged it's tail.","The dog wagged its tail.","Its a beautiful day (incorrect use).","The dog wagged its' tail."],a:1,ex:"ITS = possessive pronoun (no apostrophe): 'The dog wagged its tail.' IT'S = contraction of 'it is' or 'it has': 'It's raining.' Common error: confusing its (possessive) with it's (contraction).",star:true},
+{c:2,q:"DANGLING MODIFIER: which sentence is correct?",o:["Having finished the exam, the room was left.","Having finished the exam, she left the room.","Having finished the exam, it was left by her.","The room was left, having finished the exam."],a:1,ex:"'Having finished the exam' must modify the subject 'she' (the one who finished). Correct: 'Having finished the exam, she left the room.' In wrong sentences, 'room' or 'it' can't finish an exam.",star:true},
+{c:2,q:"Identify the REDUNDANCY: which phrase is NOT redundant?",o:["Completely finished","Final conclusion","Brief summary","Current trend"],a:3,ex:"'Current trend' is NOT redundant (trend alone doesn't imply 'current'). Redundant pairs: completely finished (finished = complete), final conclusion (conclusion = final), brief summary (summary = brief).",star:true},
+{c:2,q:"Correct the error: 'The committee have decided to postpone the meeting.'",o:["No change needed","The committee has decided to postpone the meeting.","The committees has decided to postpone the meeting.","The committee are deciding to postpone the meeting."],a:1,ex:"In American English, collective nouns (committee, team, jury, government, family) take SINGULAR verbs: 'The committee has decided.' British English often uses plural verbs with collectives, but singular is preferred in formal writing.",star:true},
+{c:2,q:"SPELLING: which word is correctly spelled?",o:["Occured","Occurred","Ocurred","Occurrd"],a:1,ex:"Occurred = double c, double r. Rule: when adding -ed to a one-syllable verb ending in consonant-vowel-consonant with stress on last syllable, double the final consonant: occur → occurred, prefer → preferred.",star:true},
+{c:2,q:"Which sentence incorrectly uses 'SINCE' vs 'FOR'?",o:["I have been here for three hours.","I have been here since morning.","I have been here since three hours.","I have been here for a long time."],a:2,ex:"SINCE = starting point (specific time): since morning, since 2020, since Monday. FOR = duration (period of time): for three hours, for two days, for a long time. 'Since three hours' is wrong → 'for three hours'.",star:true},
+{c:2,q:"CLICHÉ to avoid in formal writing — which should NOT be used?",o:["Please find attached the required documents.","As per your request, I am writing to inform you.","Better late than never, we submitted the report.","I am writing to apply for the position."],a:2,ex:"'Better late than never' is a cliché — overused proverb inappropriate in formal business/academic writing. Formal writing should be precise, original, and professional. Clichés weaken credibility.",star:true},
+{c:2,q:"Which sentence has a MISPLACED MODIFIER?",o:["She only eats vegetables.","He saw the bird with the telescope.","The car is red.","She studies hard."],a:1,ex:"'He saw the bird with the telescope' — does the bird have a telescope or does he use a telescope? Correct: 'Using the telescope, he saw the bird.' Misplaced modifiers create ambiguity.",star:true},
+{c:2,q:"AGREEMENT ERROR: 'Neither of the students were present.' The correct form is:",o:["Neither of the students was present.","Neither of the students are present.","Neither of students was present.","Neither students were present."],a:0,ex:"'Neither' (like 'either', 'each', 'every') is singular → singular verb 'was'. 'Neither of the students was present.' Similarly: 'Either of the options is acceptable.'",star:true},
+{c:2,q:"Choose the sentence that avoids a SPELLING ERROR:",o:["He recieved the letter.","He received the letter.","He receeved the letter.","He receved the letter."],a:1,ex:"Received — remember the rule: 'I before E except after C' (receive, perceive, conceive, deceive). But: achieve, believe, relieve (ie after non-C). Exceptions: weird, seize, height.",star:true},
+{c:2,q:"Which sentence uses 'WHOM' correctly?",o:["Who did you speak to?","Whom should I contact?","Who should I give the book to?","The person who you called is here."],a:1,ex:"WHOM = object pronoun (use where you'd say 'him/her'). 'Whom should I contact?' (I should contact him/her → whom). WHO = subject pronoun. 'Whom did you call?' (You called him → whom).",star:true},
+{c:2,q:"Identify the error in: 'The reason is because she was late.'",o:["No error","'because' is redundant after 'the reason is'; use 'that': 'The reason is that she was late'","'she' should be 'her'","'was' should be 'is'"],a:1,ex:"'The reason is because' = redundant. 'Because' means 'for the reason that.' Correct: 'The reason is that she was late.' Similarly: 'Due to the fact that' → better as 'because'.",star:true},
+{c:2,q:"CORRECT use of 'LIE' vs 'LAY':",o:["Please lay down and rest.","Please lie down and rest.","Please laid down and rest.","Please lied down and rest."],a:1,ex:"LIE (intransitive) = to recline (no object): lie, lay (past), lain. 'Please lie down.' LAY (transitive) = to place something (needs object): lay, laid, laid. 'Lay the book on the table.' Very common error.",star:true},
+{c:2,q:"Choose the sentence with correct PARALLEL STRUCTURE:",o:["She likes reading, to swim, and jogging.","She likes reading, swimming, and jogging.","She likes to read, swimming, and to jog.","She likes read, swim, and jog."],a:1,ex:"Parallel structure: items in a series must be in the same grammatical form. All gerunds: reading, swimming, jogging ✓. Mixed forms (to swim, reading, jogged) violate parallelism — a very common writing error.",star:true},
+{c:2,q:"Which is the correct collocation?",o:["Do a mistake","Make a mistake","Take a mistake","Have a mistake"],a:1,ex:"MAKE a mistake (not 'do' a mistake). Collocations: make a decision, make an effort, make progress, make a speech. DO: do your homework, do business, do damage.",star:true},
+{c:2,q:"DOUBLE NEGATIVE error: which sentence is correct?",o:["I didn't see nobody there.","I didn't see anybody there.","I didn't see no one there.","I didn't see nothing there."],a:1,ex:"Double negatives are incorrect in standard English. 'didn't see nobody' = two negatives = positive (illogical). Correct: 'I didn't see anybody' OR 'I saw nobody.' One negative per clause.",star:true},
+{c:2,q:"Choose the correctly punctuated sentence:",o:["Its raining outside.","It's raining outside.","Its' raining outside.","Raining its outside."],a:1,ex:"It's = it is (contraction with apostrophe). 'It's raining outside.' ITS = possessive: 'The cat licked its paw.' No apostrophe in possessive 'its'. Very frequently tested error.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 4 — Principles of Appropriate Writing (33 Qs)
+══════════════════════════════════════ */
+{c:3,q:"The 7 Cs of professional writing include all EXCEPT:",o:["Clear","Concise","Correct","Creative"],a:3,ex:"The 7 Cs of professional communication: Clear, Concise, Concrete, Correct, Coherent, Complete, Courteous. 'Creative' is not one of them. These principles ensure effective professional writing.",star:true},
+{c:3,q:"'CLEAR' writing means:",o:["Using complex vocabulary to impress","Using simple, unambiguous language that the reader easily understands","Writing in passive voice always","Using jargon extensively"],a:1,ex:"Clarity: use simple words, short sentences, active voice, avoid jargon (unless audience knows it), one idea per paragraph. 'The experiment showed results' → clearer than 'Experimental resultants were manifested.'",star:true},
+{c:3,q:"'CONCISE' writing means:",o:["Writing as much as possible","Using only necessary words — no redundancy, padding, or wordiness","Always writing in one paragraph","Using only short words"],a:1,ex:"Concise = brief but complete. Remove padding: 'due to the fact that' → 'because'. 'At this point in time' → 'now'. 'In spite of the fact that' → 'although'. Quality over quantity.",star:true},
+{c:3,q:"In paragraph organization, the TOPIC SENTENCE:",o:["Concludes the paragraph","Appears only at the end","States the main idea of the paragraph (usually first sentence)","Contains supporting details"],a:2,ex:"Topic sentence = the sentence that expresses the main idea of the paragraph. Usually the FIRST sentence. Supporting sentences develop this idea with facts, examples, and details. Concluding sentence wraps up.",star:true},
+{c:3,q:"A well-organized paragraph should have:",o:["No particular structure","Topic sentence, supporting details, and concluding sentence","Only one long sentence","Random arrangement of sentences"],a:1,ex:"Paragraph structure: (1) Topic sentence — main idea. (2) Supporting sentences — details, examples, evidence. (3) Concluding sentence — summary/transition. This three-part structure ensures coherence.",star:true},
+{c:3,q:"Which is the INTRODUCTION of a formal essay?",o:["Contains the conclusion and recommendations","Presents the thesis statement and background to engage the reader","Lists all the evidence","Contains only statistics"],a:1,ex:"Introduction: (1) Hook — attention-grabbing opening. (2) Background/Context. (3) Thesis statement — the main argument. The intro should be 10-15% of total essay length.",star:true},
+{c:3,q:"The BODY of an essay should:",o:["Restate the introduction only","Present and develop the main points with evidence and examples, one idea per paragraph","Contain only one paragraph","End with a question"],a:1,ex:"Body paragraphs: each has ONE main idea (topic sentence), supported by evidence, examples, analysis. Use transitions (however, moreover, furthermore, in addition) to connect paragraphs. Body = 70-80% of essay.",star:true},
+{c:3,q:"The CONCLUSION of an essay should:",o:["Introduce new arguments","Summarize main points and restate thesis in new words (no new information)","Be longer than the introduction","End abruptly"],a:1,ex:"Conclusion: (1) Restate thesis in different words. (2) Summarize key points. (3) Final thought or call to action. NO new arguments. Should give sense of completion. About 10% of essay.",star:true},
+{c:3,q:"DEFINING AND CLASSIFYING in technical writing: a good definition should include:",o:["Only the term being defined","The term, the category it belongs to, and the distinguishing characteristics","Only an example","A comparison to something else only"],a:1,ex:"Formal definition structure: Term + Class + Distinguishing characteristics. 'A thermometer (term) is an instrument (class) that measures temperature (distinguishing feature).' This genus-differentia structure is precise.",star:true},
+{c:3,q:"EXEMPLIFICATION in writing means:",o:["Listing only theoretical points","Providing specific examples to clarify, support, or illustrate a general statement","Using only statistics","Avoiding examples"],a:1,ex:"Exemplification = using examples to make abstract ideas concrete and understandable. Signal words: for example, for instance, such as, to illustrate, namely. 'Many foods are high in protein; for example, eggs and lentils.'",star:true},
+{c:3,q:"In essay writing, 'COHERENCE' means:",o:["The essay is very long","All parts of the essay flow logically and connect smoothly (unity and logical sequence)","Using complex sentences only","The essay has no errors"],a:1,ex:"Coherence = logical flow and connection between sentences and paragraphs. Achieved through: (1) Transitional words (however, therefore, in addition). (2) Pronoun reference. (3) Repetition of key terms. (4) Parallel structure.",star:true},
+{c:3,q:"'REFERENCES, QUOTATIONS AND ILLUSTRATIONS' in writing serve to:",o:["Lengthen the document","Add credibility, support arguments, and clarify points","Confuse the reader","Replace original thinking"],a:1,ex:"References/citations: support claims with authority. Quotations: use exact words of source with attribution. Illustrations (examples, data, diagrams): make abstract ideas concrete. All strengthen an argument's credibility.",star:true},
+{c:3,q:"APA citation format for a book is:",o:["Author (Year). Title. Publisher.","Title. Author. Publisher. Year.","Publisher. Year. Author. Title.","Year. Title. Author. Publisher."],a:0,ex:"APA (American Psychological Association): Author, A. (Year). Title of book in italics. Publisher. Example: Smith, J. (2020). Technical Writing Skills. Oxford Press. Used in social sciences.",star:true},
+{c:3,q:"ORGANIZING PARAGRAPHS: which transition word shows CONTRAST?",o:["Furthermore","Moreover","However","In addition"],a:2,ex:"'However' = contrast/concession. 'Furthermore, Moreover, In addition, Besides' = addition. 'Therefore, Thus, Hence' = conclusion. 'For example, For instance' = exemplification. Transitions are essential for coherence.",star:true},
+{c:3,q:"Which transition word shows CONCLUSION or RESULT?",o:["However","In contrast","Therefore / Hence / Thus","On the other hand"],a:2,ex:"'Therefore' (= for that reason), 'Hence', 'Thus', 'Consequently', 'As a result' show CAUSE-EFFECT or conclusion. 'However, Although, Nevertheless' show contrast. 'Furthermore, Moreover' show addition.",star:true},
+{c:3,q:"CORRECT writing (one of 7 Cs) means:",o:["Writing creatively","Using grammatically correct, accurate facts, and proper spelling and punctuation","Only correct grammar","Only correct spelling"],a:1,ex:"Correct = accurate grammar, spelling, punctuation, AND factual accuracy. Errors undermine credibility. Proofreading ensures correctness: grammar checkers, spellcheckers, and careful reading are essential.",star:true},
+{c:3,q:"COMPLETE writing (one of 7 Cs) means:",o:["Writing as many words as possible","Providing all necessary information so the reader can take appropriate action","Using only positive language","Using complex vocabulary"],a:1,ex:"Complete: include all information the reader needs — who, what, when, where, why, how. Incomplete letters/reports lead to confusion and follow-up queries. Answer all questions and provide all relevant details.",star:true},
+{c:3,q:"COURTEOUS writing (one of 7 Cs) means:",o:["Being informal and casual","Being respectful, considerate, and using positive language regardless of the situation","Using aggressive language","Flattering the reader excessively"],a:1,ex:"Courtesy: respectful, sincere, positive tone. Avoid blaming ('you failed to') → use positive ('we regret that'). Use 'please' and 'thank you'. Consider the reader's perspective. Builds goodwill.",star:true},
+{c:3,q:"CONCRETE writing (one of 7 Cs) means:",o:["Using abstract words","Using specific, definite facts and figures rather than vague generalities","Writing only in concrete terms literally","Using only numbers"],a:1,ex:"Concrete = specific and definite, not vague. Vague: 'The project will be completed soon.' Concrete: 'The project will be completed by 15 June 2025.' Use exact figures, dates, names for precision.",star:true},
+{c:3,q:"In paragraph development, which method uses specific cases to prove a general point?",o:["Comparison/Contrast","Cause and Effect","Illustration/Example","Process Analysis"],a:2,ex:"Illustration/Example: uses specific instances to support the topic sentence. General statement → specific examples. Other methods: comparison, cause-effect, definition, classification, narration, process.",star:true},
+{c:3,q:"'DEFINING' in technical writing — which is the best FORMAL definition?",o:["A computer is a machine.","A computer is an electronic device that processes data according to stored instructions to produce output.","Computers are very useful.","A computer is what you use for work."],a:1,ex:"A formal definition includes: term + category (electronic device) + specific characteristics (processes data, stored instructions, produces output). The more specific the distinguishing characteristics, the better the definition.",star:true},
+{c:3,q:"Which transition word best indicates ADDITION of information?",o:["Although","Nevertheless","Furthermore / Moreover","Consequently"],a:2,ex:"Furthermore / Moreover / In addition / Besides = add more information to support a point. 'She is intelligent. Furthermore, she is hardworking.' Transition words create logical flow between sentences.",star:true},
+{c:3,q:"ACTIVE vs PASSIVE in appropriate writing: which is preferred for clarity?",o:["Passive voice always","Active voice (subject performs action: The manager approved the proposal)","Either is always equivalent","Passive in all formal writing"],a:1,ex:"Active voice is generally preferred: clearer, more direct, less wordy. 'The committee approved the budget' (active) vs 'The budget was approved by the committee' (passive). Use passive when actor is unknown or less important.",star:true},
+{c:3,q:"A THESIS STATEMENT in an essay is:",o:["The title of the essay","A one or two-sentence statement of the essay's main argument or central claim","The first sentence of every paragraph","The bibliography"],a:1,ex:"Thesis statement: presents the main argument, claim, or purpose of the essay. Found in the introduction. Everything in the essay supports this statement. 'Social media has both positive and negative effects on teenagers.'",star:true},
+{c:3,q:"Which of the following is an example of EXEMPLIFYING?",o:["Global warming is a serious issue.","Global warming is a serious issue. For example, average temperatures have risen by 1°C in the past century.","Global warming exists.","Some say global warming is serious."],a:1,ex:"Exemplifying follows a general claim with specific evidence: 'For example, For instance, Such as, To illustrate.' The specific data (temperatures rose 1°C) makes the abstract claim concrete and believable.",star:true},
+{c:3,q:"The '7 Cs': COHERENT writing means:",o:["Writing is free of grammatical errors","All ideas are logically connected and flow smoothly with a clear purpose","Writing has no spelling mistakes","Writing uses complex vocabulary"],a:1,ex:"Coherent = ideas flow logically, transition naturally, relate to a central purpose. Use: transitional words, pronoun reference, key word repetition. Coherent ≠ just grammatically correct — it's about logical organization.",star:true},
+{c:3,q:"When CLASSIFYING in writing, you should:",o:["List items randomly","Group items into clearly defined categories based on a consistent principle","Use only numbers","Avoid using examples"],a:1,ex:"Classification: organize items into categories using one consistent basis/principle. 'Computers can be classified into three types based on size: mainframe, minicomputer, and microcomputer.' Consistent principle throughout.",star:true},
+{c:3,q:"ORGANIZING PARAGRAPHS — a good paragraph achieves UNITY by:",o:["Including many different ideas","Having all sentences relate to the main idea (topic sentence)","Being very long","Using only one sentence"],a:1,ex:"Unity: every sentence in a paragraph relates directly to the topic sentence. Sentences that introduce unrelated ideas violate paragraph unity. Unity + Coherence = well-organized paragraph.",star:true},
+{c:3,q:"Which word or phrase makes a COMPARISON?",o:["In addition","However","Similarly / Likewise / In the same way","Therefore"],a:2,ex:"Comparison transitions: Similarly, Likewise, In the same way, Just as, Compared to. Contrast: However, Although, On the other hand, In contrast. These signal the logical relationship between ideas.",star:true},
+{c:3,q:"BODY paragraph structure — 'PIE' stands for:",o:["Purpose, Introduction, End","Point (topic sentence), Illustration (evidence), Explanation (analysis)","Plan, Implement, Evaluate","Paragraph, Information, Examples"],a:1,ex:"PIE method for body paragraphs: P = Point (topic sentence stating main idea), I = Illustration (evidence: quote, data, example), E = Explanation (analysis linking evidence to point). Ensures developed, supported paragraphs.",star:true},
+{c:3,q:"In describing and classifying, a PROCESS DESCRIPTION explains:",o:["What something is","Why something happens","How something works or is done (step-by-step sequence)","Who something belongs to"],a:2,ex:"Process description: explains a series of steps or stages. Use chronological order (first, then, next, finally). Example: 'How to write a business letter', 'How an engine works'. Used in technical manuals.",star:true},
+{c:3,q:"A CAUSE AND EFFECT paragraph:",o:["Lists items in alphabetical order","Discusses why something happened (causes) and what resulted (effects)","Describes a person","Gives the definition of a term"],a:1,ex:"Cause-effect writing: identifies causes (reasons) and effects (results). Signal words: because, since, therefore, as a result, consequently, leads to, causes. Can organize by causes only, effects only, or both.",star:true},
+{c:3,q:"APPROPRIATE WRITING: the concept of AUDIENCE AWARENESS means:",o:["Writing the same way for everyone","Adapting your language, tone, and content to suit the specific reader's needs, knowledge, and expectations","Using the most complex vocabulary","Ignoring who will read the document"],a:1,ex:"Audience awareness: consider who will read your document. Expert audience → technical terms acceptable. General audience → avoid jargon, define terms. Formal/official audience → formal tone. Adapt for effectiveness.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 5 — Practices of Formal Writing (33 Qs)
+══════════════════════════════════════ */
+{c:4,q:"A FORMAL LETTER has which of the following parts?",o:["Only greeting and signature","Sender's address, date, receiver's address, subject, salutation, body, complimentary close, signature","Only body and subject","Only date and body"],a:1,ex:"Formal letter parts: (1) Sender's address (2) Date (3) Receiver's address (4) Subject line (5) Salutation (Dear Sir/Madam) (6) Body (opening/main/closing paragraphs) (7) Complimentary close (Yours faithfully) (8) Signature.",star:true},
+{c:4,q:"In a FORMAL LETTER, when you do NOT know the name of the recipient, the complimentary close should be:",o:["Yours sincerely","Yours lovingly","Yours faithfully","With regards"],a:2,ex:"Rule: If salutation = 'Dear Sir/Madam' (name unknown) → close with 'Yours faithfully'. If salutation = 'Dear Mr. Sharma' (name known) → close with 'Yours sincerely'. This is a critical British English convention.",star:true},
+{c:4,q:"A COVER LETTER (job application letter) should:",o:["Repeat the entire résumé","Introduce yourself, explain why you are the best candidate, and express interest in the specific position","List only your education","Be longer than 3 pages"],a:1,ex:"Cover letter purpose: (1) Express interest in specific position. (2) Highlight 2-3 most relevant qualifications matching job requirements. (3) Explain why you want this company. (4) Request interview. 1 page maximum.",star:true},
+{c:4,q:"A RÉSUMÉ / CV should begin with:",o:["References","Personal information (name, contact details) followed by objective/profile, then education and experience","Hobbies only","Work experience only, regardless of experience level"],a:1,ex:"Résumé/CV structure: (1) Personal details (name, phone, email). (2) Career objective/Profile summary. (3) Education. (4) Work experience. (5) Skills. (6) Projects/achievements. (7) References. Tailor for each job.",star:true},
+{c:4,q:"A REPORT is different from an ESSAY because:",o:["A report has no structure","A report presents factual findings objectively with clear sections (title, executive summary, findings, recommendations); an essay is more argumentative","A report must have opinions only","An essay has no introduction"],a:1,ex:"Report: factual, structured (numbered sections), objective language, recommendations/conclusions. Essay: argument-driven, flowing paragraphs, thesis, evidence. Reports include: executive summary, findings, recommendations. Used in business/technical contexts.",star:true},
+{c:4,q:"MINUTES OF A MEETING must include:",o:["Only the decisions made","Name of organization, date/time/venue, attendees, agenda items discussed, decisions/resolutions, action points, next meeting date, signature of chair/secretary","Personal opinions of attendees","Only the attendance list"],a:1,ex:"Minutes: (1) Heading (org name, meeting type). (2) Date, time, venue. (3) Present/Apologies. (4) Agenda items + discussion summary. (5) Decisions/Resolutions. (6) Action points (who does what by when). (7) Next meeting. (8) Signature.",star:true},
+{c:4,q:"In minutes of a meeting, 'APOLOGIES' section records:",o:["Apologies from the chair","Those who were expected to attend but could not (sent their apologies/regrets)","Mistakes made in previous meeting","Complaints from members"],a:1,ex:"'Apologies' in minutes = members who could not attend and formally sent their apologies/regrets. Shows who was absent (as opposed to 'Present' list). Standard part of minutes format.",star:true},
+{c:4,q:"A MEMORANDUM (MEMO) is used for:",o:["External communication to clients","Internal communication within an organization","Personal correspondence","Formal job applications"],a:1,ex:"Memo = internal written communication between departments or employees. Format: TO:, FROM:, DATE:, SUBJECT:, Body. Memos are more informal than formal letters but still professional. No salutation or complimentary close.",star:true},
+{c:4,q:"Which of the following is NOT part of a standard MEMO format?",o:["TO:","FROM:","DATE:","Dear Sir/Madam (salutation)"],a:3,ex:"Memo format: TO:, FROM:, DATE:, SUBJECT:, Body. Memos do NOT have: salutation (Dear...), complimentary close (Yours faithfully), or address block. They are used for quick internal communication.",star:true},
+{c:4,q:"A FORMAL NOTICE (official notice for a meeting/event) should include:",o:["Only the date","Title (NOTICE), name of organization, date, time, venue, agenda/purpose, name and designation of issuing authority","Personal messages","Informal language"],a:1,ex:"Notice format: (1) NOTICE (heading). (2) Name of organization. (3) Date of notice. (4) Title/Subject. (5) Content (date, time, venue, purpose). (6) Signature, Name, Designation. Clear, concise, official language.",star:true},
+{c:4,q:"In ESSAY WRITING, a PERSONAL ESSAY uses:",o:["Only objective facts","First person voice, personal experiences, and reflective/subjective tone","Third person only","Impersonal passive voice throughout"],a:1,ex:"Personal essay: first person (I, me, my), personal experiences, introspective, subjective. Example: personal statement, reflective essay. IMPERSONAL essay: third person, objective, no personal experience.",star:true},
+{c:4,q:"An IMPERSONAL ESSAY (also called Academic Essay):",o:["Uses first person throughout","Is objective, uses third person, avoids personal opinion unless substantiated by evidence","Contains personal narratives","Uses informal language"],a:1,ex:"Impersonal/Academic essay: objective tone, third person, evidence-based arguments, formal vocabulary, passive voice accepted. Contrasts with personal essay. Suitable for academic/technical contexts.",star:true},
+{c:4,q:"EMAIL ETIQUETTE: which of the following is a best practice for professional emails?",o:["Use all capitals for emphasis","Keep a clear, concise subject line; greet appropriately; be professional; proofread before sending","Write very long informal messages","Never use a subject line"],a:1,ex:"Email etiquette: (1) Meaningful subject line. (2) Appropriate greeting. (3) Professional tone. (4) Short paragraphs. (5) No ALL CAPS (seen as shouting). (6) Proofread. (7) Professional signature. (8) Reply promptly.",star:true},
+{c:4,q:"Which salutation is appropriate for a FORMAL EMAIL to someone whose name you know?",o:["Hey there!","Yo!","Dear Mr./Ms. [Last Name],","Hello dude,"],a:2,ex:"Professional email salutation: 'Dear Mr. Sharma,' or 'Dear Dr. Patel,' when name is known. 'Dear Sir/Madam' when unknown. 'Hello [First Name]' for semi-formal colleagues. Informal: 'Hi', 'Hey' only for close colleagues.",star:true},
+{c:4,q:"REPORT WRITING: the EXECUTIVE SUMMARY in a formal report is placed:",o:["At the very end","After the main body","At the beginning, after the title page (provides overview for busy readers)","In the appendix"],a:2,ex:"Executive Summary (or Abstract): concise overview of the entire report — purpose, key findings, conclusions, recommendations. Written last but placed first (after title page). Allows decision-makers to understand report without reading fully.",star:true},
+{c:4,q:"An ARTICLE for a newspaper or magazine should have:",o:["No title","A catchy headline, byline, lead paragraph (most important info first), body, and conclusion","Only the reporter's opinion","No structure at all"],a:1,ex:"Article structure: (1) Headline (catchy, informative). (2) Byline (author name). (3) Lead/opening paragraph (5 Ws: who, what, where, when, why). (4) Body (inverted pyramid: most → least important). (5) Conclusion.",star:true},
+{c:4,q:"'WRITING FOR CURRENT SOCIAL MEDIA' requires which style?",o:["Formal, lengthy paragraphs","Short, engaging, visual, hashtag-friendly, audience-specific, conversational yet purposeful","Highly technical language","Only formal English"],a:1,ex:"Social media writing: concise (character limits), engaging, use of hashtags/emojis (platform-appropriate), strong opening, visual appeal (images/infographics), audience awareness, consistent brand voice. Very different from formal writing.",star:true},
+{c:4,q:"Which of the following is the correct FORMAT for the DATE in a formal letter (British style)?",o:["09/05/2025","May 09, 2025","9th May, 2025 or 9 May 2025","05-09-25"],a:2,ex:"British formal letter date: day month year → '9 May 2025' or '9th May, 2025'. American style: month day year → 'May 9, 2025'. Numeric formats (09/05/25) can be ambiguous (is it May 9 or 5 September?).",star:true},
+{c:4,q:"In RÉSUMÉ writing, the OBJECTIVE STATEMENT should:",o:["List all personal information","Be a brief statement (2-3 sentences) of your career goal and what you offer the employer","Include personal hobbies and interests","Repeat all the information from the cover letter"],a:1,ex:"Career objective: 1-2 sentences stating: (1) the position sought, (2) key skills you bring, (3) what you want to achieve. Modern CVs often use a 'Profile Summary' instead — 3-4 lines highlighting key qualifications.",star:true},
+{c:4,q:"Minutes of meeting: 'AOB' stands for:",o:["Any Outstanding Bills","Any Other Business (matters raised that were not on the agenda)","Another Official Business","Area of Business"],a:1,ex:"AOB = Any Other Business: the last agenda item where members can raise issues not on the original agenda. Important for capturing all relevant matters discussed. Standard in formal meeting minutes.",star:true},
+{c:4,q:"A BUSINESS LETTER of COMPLAINT should:",o:["Be aggressive and threatening","Clearly state the problem, provide relevant details/evidence, specify the desired remedy, and maintain a firm but professional tone","Only express frustration without solution","Be handwritten only"],a:1,ex:"Complaint letter: (1) Clear subject: problem. (2) Date and reference of transaction. (3) Factual, specific description of problem. (4) Evidence/documentation reference. (5) Expected resolution (refund, replacement, apology). (6) Professional, assertive (not rude) tone.",star:true},
+{c:4,q:"A FORMAL REPORT structure follows the order:",o:["Recommendations → Findings → Introduction","Introduction → Findings/Analysis → Conclusions → Recommendations","Appendix → Body → Introduction","Results only, with no introduction"],a:1,ex:"Formal report structure: (1) Title page. (2) Executive summary. (3) Table of contents. (4) Introduction (scope, purpose, methodology). (5) Findings/Analysis. (6) Conclusions. (7) Recommendations. (8) References/Appendix.",star:true},
+{c:4,q:"In MEMO writing, the SUBJECT LINE should be:",o:["Vague and general","Specific and descriptive so the reader knows the content at a glance","Left blank","Only the date"],a:1,ex:"Memo subject line = specific, informative, concise. 'SUBJECT: Budget Approval for Q3 Training Programme' (good). 'SUBJECT: Information' (too vague). Good subject lines improve reading efficiency.",star:true},
+{c:4,q:"Which of the following email closing is APPROPRIATE for a formal business email?",o:["Cheers,","XOXO,","Regards, / Yours sincerely,","Take care, buddy,"],a:2,ex:"Formal email closings: 'Regards', 'Best regards', 'Yours sincerely', 'Yours faithfully', 'With warm regards', 'Respectfully yours'. Informal closings (Cheers, XOXO) are inappropriate in professional communication.",star:true},
+{c:4,q:"The purpose of a NOTICE is:",o:["To have a personal conversation","To officially inform a specific group about an event, decision, or announcement","To persuade customers","To record private discussions"],a:1,ex:"Notice: official written announcement. Purpose: inform members/employees about meetings, events, important information, or decisions. Must be posted/displayed where intended audience will see it. Brief, factual, formal.",star:true},
+{c:4,q:"In SOCIAL MEDIA WRITING, a 'CALL TO ACTION' (CTA) means:",o:["Calling someone on phone","Asking the audience to take a specific action (click, like, share, buy, comment, subscribe)","A complaint message","A formal announcement"],a:1,ex:"CTA = directs audience to act: 'Click here', 'Subscribe now', 'Learn more', 'Share with friends', 'Buy now'. Essential in marketing, social media posts, and website content. Specific, urgent, benefit-driven CTAs work best.",star:true},
+{c:4,q:"Which of the following is characteristic of FORMAL WRITING style?",o:["Contractions (can't, won't, I'd)","Slang and colloquial expressions","Complete words (cannot, will not), formal vocabulary, third person, impersonal tone","First person opinions throughout"],a:2,ex:"Formal writing: no contractions, no slang, formal vocabulary, objective tone, third person often preferred, complete sentences. Academic papers, reports, formal letters, official notices use formal style.",star:true},
+{c:4,q:"A TECHNICAL REPORT differs from a BUSINESS REPORT in that:",o:["Both are identical","Technical reports deal with specific technical findings/research, often for specialists; business reports focus on business decisions and operations","Technical reports have no structure","Business reports are never formal"],a:1,ex:"Technical report: specialized audience, technical terminology, experimental/research data, methodology, scientific format. Business report: management/operational focus, financial/market data, recommendations for business action.",star:true},
+{c:4,q:"In ARTICLE WRITING for social media, which principle is most important?",o:["Write in very formal, academic language","Grab attention in the first line (hook), be shareable, use short paragraphs, and include visuals if possible","Use passive voice throughout","Write 2000+ words always"],a:1,ex:"Social media article: strong hook (first line must compel reading), short paragraphs (2-3 sentences), subheadings, scannable, shareable, appropriate hashtags, engaging visual, clear CTA. Completely different from academic writing.",star:true},
+{c:4,q:"The HEADING of a MEMO typically includes which four elements?",o:["Title, Author, Date, Summary","TO, FROM, DATE, SUBJECT","Introduction, Body, Conclusion, Signature","Opening, Middle, End, Signature"],a:1,ex:"Standard memo heading: TO: (recipient's name and designation), FROM: (sender's name and designation), DATE: (full date), SUBJECT: (specific topic). These four elements identify the communication clearly and quickly.",star:true},
+{c:4,q:"Which is correct regarding REPORT WRITING: recommendations should be:",o:["Vague and general","Listed as the first thing in the report","Specific, actionable, and based on the findings of the report","Copied from other reports"],a:2,ex:"Good recommendations: specific ('Hire 5 additional staff by March 2026' not 'Hire more staff'), numbered, actionable, directly arising from findings. Written in imperative mood or should-statements: 'The company should...'",star:true},
+{c:4,q:"ESSAY: which type of essay presents BOTH SIDES of an argument before giving a conclusion?",o:["Descriptive essay","Narrative essay","Argumentative/Discursive essay (discusses multiple perspectives)","Process essay"],a:2,ex:"Argumentative/Discursive essay: presents arguments for and against an issue (both sides) then reaches a reasoned conclusion. Structure: intro with thesis → arguments for → arguments against → balanced conclusion.",star:true},
+
+/* ══════════════════════════════════════
+   UNIT 6 — Comprehension of Written English (33 Qs)
+══════════════════════════════════════ */
+{c:5,q:"'Of Studies' by Sir Francis Bacon begins with the famous line:",o:["To be or not to be","Studies serve for delight, for ornament, and for ability","All animals are equal","It was the best of times"],a:1,ex:"Opening of 'Of Studies' by Bacon (1597/1625): 'Studies serve for delight, for ornament, and for ability.' Three purposes: private recreation (delight), social conversation (ornament), professional judgment (ability). Classic Renaissance essay.",star:true},
+{c:5,q:"According to Bacon in 'Of Studies', reading makes a/an _______ man:",o:["Perfect","Full","Ready","Wise"],a:1,ex:"Bacon's famous triad: 'Reading maketh a full man; conference a ready man; and writing an exact man.' Full = complete knowledge. Ready = quick in conversation. Exact = precise in reasoning. Most quoted from 'Of Studies'.",star:true},
+{c:5,q:"According to Bacon, 'Writing maketh an _______ man.'",o:["Full","Ready","Exact","Wise"],a:2,ex:"'Reading maketh a full man; conference a ready man; and writing an exact man.' Bacon implies writing requires and develops precision of thought. Writing is associated with exactness and accuracy.",star:true},
+{c:5,q:"In 'Of Studies', Bacon says 'Some books are to be tasted, others to be swallowed, and some few to be _______ and digested.'",o:["Read","Chewed","Analysed","Memorized"],a:1,ex:"Bacon: 'Some books are to be tasted, others to be swallowed, and some few to be chewed and digested.' Tasted = read in parts. Swallowed = read quickly. Chewed and digested = read deeply and thoughtfully.",star:true},
+{c:5,q:"Bacon wrote 'Of Studies' as part of his collection of:",o:["Novels","Plays","Essays","Poems"],a:2,ex:"Francis Bacon's 'Essays' (1597, expanded 1612 and 1625) are collections of short prose pieces on practical wisdom. 'Of Studies' is among his most famous essays. Bacon is considered the father of the English essay.",star:true},
+{c:5,q:"In comprehension reading, 'INFERENCE' means:",o:["Finding directly stated facts","Deducing meaning that is implied but not directly stated","Summarizing the passage","Identifying the title"],a:1,ex:"Inference = reading between the lines. Drawing conclusions not explicitly stated but supported by textual evidence. 'The lights are off and the car is gone' → we infer the family is away. Essential comprehension skill.",star:true},
+{c:5,q:"The 'MAIN IDEA' of a passage is:",o:["Any interesting detail","The central thought or message the author is communicating throughout the passage","The first sentence only","A specific example from the text"],a:1,ex:"Main idea = the central, most important point the author makes. Usually supported by all other details. Found by asking: 'What is this passage mostly about?' Often in the topic sentence of the first/last paragraph.",star:true},
+{c:5,q:"In 'The Sun Rising' by John Donne, the poem is addressed to:",o:["The moon","The sun (the speaker argues his love's room is the center of the universe)","His beloved only","The seasons"],a:1,ex:"'The Sun Rising' (John Donne): speaker scolds the sun for interrupting his time with his beloved. Argues his bedroom is the entire world, and his beloved is all countries and wealth. Metaphysical conceit.",star:true},
+{c:5,q:"John Donne belonged to the _______ school of poetry:",o:["Romantic","Metaphysical","Victorian","Elizabethan lyric"],a:1,ex:"John Donne is the foremost Metaphysical poet. Metaphysical poetry: intellectual, uses extended conceits (elaborate metaphors), paradoxes, explores abstract concepts (love, religion, death) through reasoning and argument.",star:true},
+{c:5,q:"In 'The Sun Rising', Donne calls the sun a 'busy old fool' and 'unruly'. This is an example of:",o:["Simile","Apostrophe (addressing the sun directly as if it were a person)","Alliteration","Metaphor"],a:1,ex:"Apostrophe: directly addressing an absent, dead, or non-human entity as if it were present. Donne addresses the sun directly: 'Busy old fool, unruly Sun, / Why dost thou thus...' Also involves personification.",star:true},
+{c:5,q:"'The Last Leaf' by O. Henry ends with which TWIST?",o:["Johnsy dies","Behrman dies of pneumonia after painting the leaf in the cold to save Johnsy","Sue moves away","The leaf is found to be real"],a:1,ex:"O. Henry's 'The Last Leaf': old artist Behrman secretly paints a realistic ivy leaf on the wall on the night of a storm. The painted 'last leaf' that never falls gives Johnsy hope to live. Behrman dies of pneumonia — giving his masterpiece and life for Johnsy.",star:true},
+{c:5,q:"In 'The Last Leaf', the character SUE is:",o:["A doctor","Johnsy's artist friend who cares for her and contacts Behrman","The old painter","A leaf"],a:1,ex:"Sue: Johnsy's roommate and artist friend who is deeply worried about Johnsy. She asks old Behrman (the failed artist who lives below) to model for her, during which she tells him about Johnsy's morbid obsession with counting leaves.",star:true},
+{c:5,q:"'The Last Leaf' by O. Henry is significant for its use of:",o:["Historical references","Irony and surprise ending (the 'Gift of the Magi' twist technique)","Romantic language","Complex scientific description"],a:1,ex:"O. Henry is famous for his surprise endings (twist in the tale). 'The Last Leaf': the leaf that saves Johnsy is a painting — painted by Behrman at the cost of his life. The 'masterpiece' he always wanted to paint was this act of sacrifice.",star:true},
+{c:5,q:"SKIMMING a text means:",o:["Reading every word carefully","Quickly glancing over text to get the general idea / gist","Reading word by word very slowly","Reading only footnotes"],a:1,ex:"Skimming: quick reading to get main idea, overview, or gist. Read title, headings, first/last paragraphs, bold text. Used to decide if text is worth reading in detail. Contrasts with scanning (looking for specific info).",star:true},
+{c:5,q:"SCANNING a text means:",o:["Reading the whole text word for word","Rapidly searching for specific information (a name, date, fact) without reading everything","Making a general summary","Highlighting all text"],a:1,ex:"Scanning: quickly searching text for specific information. Run eyes over text until you find what you need (phone number, date, name, specific fact). Like using Ctrl+F in a document. Different from skimming (general idea).",star:true},
+{c:5,q:"What is a PRECIS (précis writing)?",o:["A type of poem","A condensed restatement of a longer passage in about 1/3 its length, in the writer's own words","A type of business letter","A detailed expansion of an idea"],a:1,ex:"Précis: a condensed version of a passage preserving essential ideas, in about one-third of original length, in writer's own words, in continuous prose (not notes), in third person, past tense. Tests comprehension and expression.",star:true},
+{c:5,q:"When writing a PRÉCIS, you should:",o:["Include every detail and example","Retain only essential ideas; omit examples, repetition, and illustrations; use own words","Copy sentences directly","Add your own opinion"],a:1,ex:"Précis rules: (1) Read three times for full understanding. (2) Note main ideas (not examples). (3) Write in own words in continuous prose. (4) About 1/3 original length. (5) No personal opinion. (6) Third person, past tense.",star:true},
+{c:5,q:"An UNSEEN/UNTAUGHT PASSAGE comprehension question tests:",o:["Memory of studied texts","Ability to read, understand, and interpret an unfamiliar text and answer questions on it","Knowledge of grammar rules only","Vocabulary memorization"],a:1,ex:"Unseen passage: tests actual reading comprehension skills — ability to extract meaning, infer, identify main ideas, understand vocabulary in context. Cannot rely on memorized answers. Pure reading comprehension skill.",star:true},
+{c:5,q:"What does O. Henry's story 'The Last Leaf' teach us?",o:["Money is important","Self-sacrifice for others and the power of will to live / hope in the face of adversity","Success comes easily","Art is worthless"],a:1,ex:"Theme of 'The Last Leaf': Behrman's self-sacrifice (painting the leaf in the freezing storm, knowing he would fall ill) saves Johnsy's life. Theme: true masterpiece = act of love and sacrifice. Hope and will to live.",star:true},
+{c:5,q:"In reading comprehension, 'VOCABULARY IN CONTEXT' means:",o:["Looking up every word in a dictionary","Determining the meaning of an unfamiliar word from surrounding words and context clues","Memorizing word lists","Guessing random meanings"],a:1,ex:"Vocabulary in context: use surrounding sentences, paragraph meaning, prefix/suffix/root clues to determine meaning of unfamiliar words. Efficient skill for exams. Context clues: synonyms, antonyms, definitions, examples in nearby text.",star:true},
+{c:5,q:"Francis Bacon's style in 'Of Studies' is best described as:",o:["Romantic and emotional","Aphoristic, concise, epigrammatic (short, memorable, witty statements)","Scientific and technical","Narrative and story-like"],a:1,ex:"Bacon's style: aphoristic (expressing much in few words), condensed, impersonal, balanced, uses Latin quotations and classical references. His short, memorable sentences are considered the first modern English prose style.",star:true},
+{c:5,q:"In 'The Sun Rising', the line 'She is all states, and all princes, I' is an example of:",o:["Simile","Hyperbole (exaggeration of love's supremacy over worldly power)","Onomatopoeia","Allusion"],a:1,ex:"Hyperbole: deliberate exaggeration for effect. Donne claims his beloved encompasses all countries (she is all states) and he represents all princes — their love surpasses all worldly power. Characteristic of Metaphysical conceits.",star:true},
+{c:5,q:"In a comprehension passage, the TONE of a piece is:",o:["The main topic","The author's attitude or feeling conveyed through the writing (formal, ironic, satirical, nostalgic, etc.)","The first sentence","The number of paragraphs"],a:1,ex:"Tone: author's attitude toward subject or audience expressed through word choice, style. Examples: sarcastic, humorous, solemn, optimistic, critical, nostalgic. Identifying tone shows deep comprehension of intent.",star:true},
+{c:5,q:"John Donne's 'The Sun Rising' — the central CONCEIT of the poem is:",o:["The sun is friendly","The bedroom of the lovers is compared to the entire world/universe (all wealth and power contained in their love)","The sun is old","Time passes too quickly"],a:1,ex:"Central conceit (extended metaphor): lover's room = entire world. Beloved = all countries, king = all princes. The sun only needs to shine on them to illuminate all states and kings. Classic Metaphysical conceit — logically extended, intellectually surprising.",star:true},
+{c:5,q:"When answering COMPREHENSION questions, which approach is recommended?",o:["Write only one-word answers","Read the questions first, then read the passage, locate relevant sections, and answer in complete sentences","Copy entire paragraphs","Guess without reading"],a:1,ex:"Best approach: (1) Read questions first (know what to look for). (2) Read passage carefully. (3) Locate relevant sections. (4) Answer in own words in complete sentences. (5) Ensure answers are in same tense as questions. (6) Check word limits.",star:true},
+{c:5,q:"The 'GIFT OF THE MAGI' technique used by O. Henry (also seen in 'The Last Leaf') is a storytelling technique called:",o:["Foreshadowing","Flashback","Ironic twist ending / Situational irony","Stream of consciousness"],a:2,ex:"O. Henry's trademark: situational irony + surprise twist ending. In 'Gift of the Magi': wife sells hair to buy watch chain; husband sells watch to buy combs. Both gifts are useless but the love is priceless. 'The Last Leaf' has similar ironic twist.",star:true},
+{c:5,q:"In 'Of Studies', Bacon says 'Crafty men contemn studies, simple men admire them, and wise men use them.' This shows:",o:["Studies are useless","The proper use of knowledge is application (wisdom)","Simple people are better","All people reject studies"],a:1,ex:"Bacon distinguishes: (1) Crafty/cunning men despise formal learning (rely on experience). (2) Simple men are in awe of education without understanding. (3) Wise men use knowledge practically. The highest goal of education = practical application.",star:true},
+{c:5,q:"In comprehension, SUMMARIZING is:",o:["Copying the original text","Identifying and restating the most important points of a text in concise form","Adding new information","Memorizing the text"],a:1,ex:"Summarizing: capture essential information — main ideas, key conclusions — in your own words, much shorter than original. Omit examples, repetition, minor details. Shows understanding. Similar to précis but less strict format.",star:true},
+{c:5,q:"'The Last Leaf' is set in:",o:["London","Greenwich Village, New York City (in an artists' colony)","Paris","Boston"],a:1,ex:"'The Last Leaf' is set in Greenwich Village, New York, in a community of artists. This setting is important — both the characters (Johnsy, Sue, Behrman) and O. Henry himself had connections to the New York artistic community.",star:true},
+{c:5,q:"O. Henry (pen name of William Sydney Porter) was famous for:",o:["Poetry of the Romantic period","Short stories with ironic twist endings and sympathetic portrayals of ordinary people","Victorian novels","Science fiction"],a:1,ex:"O. Henry: American short story master (1862-1910). Known for surprise endings (twist in the tail), compassionate portrayal of everyday urban life, irony, and sentimentality. Famous works: 'The Gift of the Magi', 'The Last Leaf', 'The Cop and the Anthem'.",star:true},
+{c:5,q:"In reading comprehension, 'CRITICAL READING' means:",o:["Finding every error in the text","Actively analyzing and evaluating the author's arguments, evidence, and intentions — not just understanding but judging","Reading quickly","Reading only the headings"],a:1,ex:"Critical reading: beyond literal comprehension. Analyse: author's purpose, argument structure, evidence quality, assumptions, bias, tone. Ask: Is the argument logical? Is evidence sufficient? What is implied? Used in academic writing and analysis.",star:true},
+{c:5,q:"In 'The Sun Rising', Donne's statement that 'Love, all alike, no season knows, nor clime, nor hours, days, months, which are the rags of time' means:",o:["Love depends on seasons","True love transcends time — it is eternal and unchanging, unlike the temporal world","Time helps love grow","The sun controls love"],a:1,ex:"Donne argues love is timeless and transcends mundane divisions of time (seasons, hours, days, months). He dismisses the sun's power: love is above time. This is a Metaphysical argument — love as absolute, eternal truth.",star:true},
+{c:5,q:"The study of RHETORIC in communication helps us understand:",o:["Mathematical formulas","The art of effective speaking and writing — how language is used to persuade and communicate effectively","Chemical reactions","Programming languages"],a:1,ex:"Rhetoric: the art of persuasion through effective language. Classical rhetoric (Aristotle): ethos (credibility), pathos (emotion), logos (logic). Rhetoric is fundamental to communication, debate, advertising, politics, and professional writing.",star:true},
+];
+
+/* ═══ STATE ═══ */
+let activeQuestions=[],currentIndex=0,score=0,skipped=0,userAnswers=[];
+let isAnswered=false,timerInterval=null,timeLeft=30,selectedChapter='all';
+let autoAdvanceTimer=null;
+let studentName='',studentBranch='',studentSem='',studentCollege='';
+const TIMER_SECS=30,AUTO_ADVANCE_DELAY=1500,LETTERS=['A','B','C','D'];
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function getRemark(pct){
+  if(pct>=90)return{emoji:'🏆',title:"Outstanding! You're a genius!",sub:"Excellent! You've mastered Communicative English."};
+  if(pct>=75)return{emoji:'🌟',title:"Excellent Work! Almost Perfect!",sub:"Great score! A little more practice and you'll ace the exam."};
+  if(pct>=60)return{emoji:'👍',title:"Good Job! Keep Practicing!",sub:"Solid performance. Review the topics you missed."};
+  if(pct>=40)return{emoji:'📚',title:"Not Bad! Review & Retry",sub:"You're getting there. Focus on units you struggled with."};
+  if(pct>=20)return{emoji:'💪',title:"Keep Going! Practice Makes Perfect",sub:"Don't give up! Review basics and try again."};
+  return{emoji:'🎯',title:"Don't Give Up! Back to Basics",sub:"Start fresh! Review study material and give it another shot."};
+}
+
+document.getElementById('infoNextBtn').addEventListener('click',()=>{
+  const name=document.getElementById('inputName').value.trim();
+  if(!name){showToast('⚠️ Please enter your name to continue');document.getElementById('inputName').focus();return}
+  studentName=name;studentBranch=document.getElementById('inputBranch').value.trim()||'N/A';
+  studentSem=document.getElementById('inputSem').value||'N/A';studentCollege=document.getElementById('inputCollege').value.trim()||'';
+  showScreen('screenIntro');
+});
+document.querySelectorAll('.chapter-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.chapter-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedChapter=btn.dataset.chapter;});});
+document.getElementById('startBtn').addEventListener('click',()=>{
+  activeQuestions=selectedChapter==='all'?[...ALL_QUESTIONS]:ALL_QUESTIONS.filter(q=>q.c===parseInt(selectedChapter));
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);
+  showScreen('screenQuiz');renderQuestion();
+});
+
+function renderQuestion(){
+  isAnswered=false;clearAutoAdvance();
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('explanationBox').classList.remove('show');
+  document.getElementById('skipBtn').style.display='';
+  document.getElementById('autoAdvanceBar').classList.remove('show');
+  document.getElementById('autoNextHint').classList.remove('show');
+  document.getElementById('autoAdvanceFill').classList.remove('running');
+  const q=activeQuestions[currentIndex],total=activeQuestions.length;
+  document.getElementById('progressText').textContent=`Question ${currentIndex+1} of ${total}`;
+  document.getElementById('scoreText').textContent=`Score: ${score}`;
+  document.getElementById('progressFill').style.width=((currentIndex/total)*100)+'%';
+  document.getElementById('chapterBadge').textContent=`${CHAPTERS[q.c].icon} ${CHAPTERS[q.c].name}`;
+  document.getElementById('qNum').textContent=`Q${currentIndex+1}`;
+  document.getElementById('qText').textContent=q.q;
+  let se=document.querySelector('.q-star');if(se)se.remove();
+  if(q.star){const sb=document.createElement('div');sb.className='q-star';sb.textContent='★ Important';document.getElementById('qNum').after(sb);}
+  const ex=document.getElementById('qExample');
+  if(q.hint){ex.textContent=q.hint;ex.style.display='';}else{ex.style.display='none';}
+  const list=document.getElementById('optionsList');list.innerHTML='';
+  q.o.forEach((opt,i)=>{const li=document.createElement('li');li.className='option';
+    li.innerHTML=`<div class="option-letter">${LETTERS[i]}</div><div class="option-text">${opt}</div><div class="option-radio"></div>`;
+    li.addEventListener('click',()=>selectAnswer(i));list.appendChild(li);});
+  startTimer();
+}
+function startTimer(){clearInterval(timerInterval);timeLeft=TIMER_SECS;updateTimerDisplay();timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);timeUp();}},1000);}
+function updateTimerDisplay(){const p=document.getElementById('timerPill');p.textContent=`⏱ ${timeLeft}s`;p.className='timer-pill';if(timeLeft<=5)p.classList.add('critical');else if(timeLeft<=10)p.classList.add('urgent');}
+function timeUp(){if(isAnswered)return;isAnswered=true;showToast('⏰ Time Up! Correct answer revealed.');lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');}
+function selectAnswer(idx){
+  if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);
+  userAnswers[currentIndex]=idx;const q=activeQuestions[currentIndex];
+  lockOptions();const opts=document.querySelectorAll('.option');
+  if(idx===q.a){opts[idx].classList.add('correct');opts[idx].querySelector('.option-radio').textContent='✓';score++;document.getElementById('scoreText').textContent=`Score: ${score}`;showExplanation();document.getElementById('skipBtn').style.display='none';startAutoAdvance();}
+  else{opts[idx].classList.add('wrong');opts[idx].querySelector('.option-radio').textContent='✕';highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');}
+}
+function startAutoAdvance(){
+  const bar=document.getElementById('autoAdvanceBar'),fill=document.getElementById('autoAdvanceFill'),hint=document.getElementById('autoNextHint');
+  fill.classList.remove('running');void fill.offsetWidth;fill.style.animationDuration=AUTO_ADVANCE_DELAY+'ms';
+  bar.classList.add('show');hint.classList.add('show');fill.classList.add('running');
+  autoAdvanceTimer=setTimeout(()=>{bar.classList.remove('show');hint.classList.remove('show');fill.classList.remove('running');goNext();},AUTO_ADVANCE_DELAY);
+}
+function clearAutoAdvance(){if(autoAdvanceTimer){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=null;}
+  const b=document.getElementById('autoAdvanceBar'),f=document.getElementById('autoAdvanceFill'),h=document.getElementById('autoNextHint');
+  if(b)b.classList.remove('show');if(h)h.classList.remove('show');if(f)f.classList.remove('running');}
+function lockOptions(){document.querySelectorAll('.option').forEach(o=>o.classList.add('locked'));}
+function highlightCorrect(){const q=activeQuestions[currentIndex];const opts=document.querySelectorAll('.option');opts[q.a].classList.add('correct');opts[q.a].querySelector('.option-radio').textContent='✓';}
+function showExplanation(){document.getElementById('explanationText').textContent=activeQuestions[currentIndex].ex;document.getElementById('explanationBox').classList.add('show');}
+document.getElementById('skipBtn').addEventListener('click',()=>{if(isAnswered)return;isAnswered=true;clearInterval(timerInterval);userAnswers[currentIndex]=-1;skipped++;lockOptions();highlightCorrect();showExplanation();document.getElementById('skipBtn').style.display='none';document.getElementById('nextBtn').classList.add('visible');showToast('⟫ Skipped — correct answer shown.');});
+document.getElementById('nextBtn').addEventListener('click',()=>{clearAutoAdvance();goNext();});
+function goNext(){currentIndex++;if(currentIndex>=activeQuestions.length)showResult();else renderQuestion();}
+document.getElementById('backBtn').addEventListener('click',()=>{if(confirm('Go back to intro? Your progress will be lost.')){clearInterval(timerInterval);clearAutoAdvance();showScreen('screenIntro');}});
+
+function showResult(){
+  clearInterval(timerInterval);
+  const total=activeQuestions.length,wrong=total-score-skipped,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  document.getElementById('resultEmoji').textContent=remark.emoji;document.getElementById('scoreBig').textContent=score;document.getElementById('scoreTotal').textContent='/ '+total;
+  document.getElementById('resultPercent').textContent=pct+'%';document.getElementById('remarkText').textContent=remark.title;document.getElementById('remarkSub').textContent=remark.sub;
+  document.getElementById('pillCorrect').textContent=score;document.getElementById('pillWrong').textContent=wrong;document.getElementById('pillSkip').textContent=skipped;
+  document.getElementById('bannerName').textContent=studentName||'Student';
+  const pts=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');document.getElementById('bannerMeta').textContent=pts.join(' · ')||'Communicative English Quiz';
+  document.getElementById('certBannerName').textContent=studentName||'Your';document.getElementById('certBannerMeta').textContent='Communicative English Quiz · '+pct+'% · StudyHub';
+  let cnt=0;const el=document.getElementById('scoreBig');el.textContent='0';const ic=setInterval(()=>{cnt++;el.textContent=cnt;if(cnt>=score)clearInterval(ic);},Math.max(20,800/(score||1)));
+  showScreen('screenResult');if(pct>=75)launchConfetti();buildReview();
+}
+function launchConfetti(){
+  const cv=document.getElementById('confettiCanvas'),ctx=cv.getContext('2d');cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const ps=[],cols=['#1D4ED8','#EA580C','#16A34A','#F59E0B','#3B82F6','#EC4899'];
+  for(let i=0;i<80;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*-cv.height,w:Math.random()*10+5,h:Math.random()*6+3,color:cols[Math.floor(Math.random()*cols.length)],vy:Math.random()*3+2,vx:Math.random()*2-1,rot:Math.random()*360,rSpeed:Math.random()*5-2.5});
+  let fr=0;function draw(){ctx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-fr/120);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.rSpeed;});fr++;if(fr<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,cv.width,cv.height);}draw();
+}
+function buildReview(){
+  const list=document.getElementById('reviewList');list.innerHTML='';
+  activeQuestions.forEach((q,i)=>{const ua=userAnswers[i],ic=ua===q.a,is=ua===-1;
+    const div=document.createElement('div');div.className=`review-item ${ic?'ri-correct':is?'ri-skip':'ri-wrong'}`;
+    div.innerHTML=`<div class="ri-q">${i+1}. ${q.q}</div><div class="ri-ans">Your answer: <span class="${ic?'ri-correct-ans':is?'':'ri-wrong-ans'}">${is?'Skipped':q.o[ua]}</span>${!ic?` &nbsp;|&nbsp; Correct: <span class="ri-correct-ans">${q.o[q.a]}</span>`:''}</div>`;
+    list.appendChild(div);});
+}
+document.getElementById('reviewToggleBtn').addEventListener('click',()=>{const l=document.getElementById('reviewList'),b=document.getElementById('reviewToggleBtn');l.classList.toggle('open');b.textContent=l.classList.contains('open')?'✕ Hide Answers':'📖 Review Answers';});
+document.getElementById('retryBtn').addEventListener('click',()=>{
+  document.getElementById('reviewList').classList.remove('open');document.getElementById('reviewToggleBtn').textContent='📖 Review Answers';document.getElementById('sharePanel').classList.remove('open');
+  for(let i=activeQuestions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[activeQuestions[i],activeQuestions[j]]=[activeQuestions[j],activeQuestions[i]];}
+  currentIndex=0;score=0;skipped=0;userAnswers=new Array(activeQuestions.length).fill(-1);showScreen('screenQuiz');renderQuestion();
+});
+
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function drawCertificate(){
+  const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);
+  const wrongCount=total-score-skipped,dateStr=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const cv=document.getElementById('certCanvas'),W=960,H=680;cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#0C1A40');bg.addColorStop(0.5,'#1E3A8A');bg.addColorStop(1,'#0C1A40');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  const rg=ctx.createRadialGradient(W/2,H*.38,0,W/2,H*.38,320);rg.addColorStop(0,'rgba(29,78,216,0.22)');rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(59,130,246,0.07)';ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx,cy],i)=>{for(let r=40;r<=160;r+=30){ctx.strokeStyle=`rgba(59,130,246,${Math.max(0.05,0.22-r*0.001)})`;ctx.lineWidth=1.5;ctx.beginPath();const a=[0,Math.PI/2,-Math.PI/2,Math.PI][i];ctx.arc(cx,cy,r,a,a+Math.PI/2);ctx.stroke();}});
+  ctx.strokeStyle='rgba(234,88,12,0.85)';ctx.lineWidth=3.5;roundRect(ctx,22,22,W-44,H-44,22);ctx.stroke();ctx.strokeStyle='rgba(59,130,246,0.45)';ctx.lineWidth=1.2;roundRect(ctx,36,36,W-72,H-72,14);ctx.stroke();
+  function hLine(y){const g=ctx.createLinearGradient(80,y,W-80,y);g.addColorStop(0,'rgba(234,88,12,0)');g.addColorStop(0.3,'rgba(234,88,12,0.9)');g.addColorStop(0.7,'rgba(234,88,12,0.9)');g.addColorStop(1,'rgba(234,88,12,0)');return g;}
+  ctx.fillStyle=hLine(58);ctx.fillRect(80,58,W-160,2.5);
+  const sX=W/2,sY=96,sg=ctx.createRadialGradient(sX,sY,0,sX,sY,34);sg.addColorStop(0,'#3B82F6');sg.addColorStop(1,'#1E3A8A');ctx.beginPath();ctx.arc(sX,sY,34,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.8)';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='24px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('📝',sX,sY+9);
+  ctx.font='bold 15px Arial';ctx.fillStyle='#93C5FD';ctx.fillText('S T U D Y H U B',W/2,sY+52);ctx.font='bold 11px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T',W/2,sY+74);
+  const dv=ctx.createLinearGradient(120,150,W-120,150);dv.addColorStop(0,'transparent');dv.addColorStop(0.3,'rgba(234,88,12,0.7)');dv.addColorStop(0.7,'rgba(234,88,12,0.7)');dv.addColorStop(1,'transparent');ctx.strokeStyle=dv;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(120,150);ctx.lineTo(W-120,150);ctx.stroke();
+  ctx.font='15px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('This certifies that',W/2,183);
+  const dN=studentName||'Student';ctx.font=`bold ${dN.length>22?36:44}px Arial`;ctx.fillStyle='#FFFFFF';ctx.shadowColor='rgba(59,130,246,0.85)';ctx.shadowBlur=22;ctx.fillText(dN,W/2,234);ctx.shadowBlur=0;
+  const nw=ctx.measureText(dN).width,ux=W/2-nw/2;const uG=ctx.createLinearGradient(ux,245,ux+nw,245);uG.addColorStop(0,'rgba(59,130,246,0)');uG.addColorStop(0.5,'rgba(59,130,246,0.8)');uG.addColorStop(1,'rgba(59,130,246,0)');ctx.strokeStyle=uG;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ux,245);ctx.lineTo(ux+nw,245);ctx.stroke();
+  const det=[studentBranch,studentSem,studentCollege].filter(v=>v&&v!=='N/A');if(det.length){ctx.font='13px Arial';ctx.fillStyle='rgba(147,197,253,0.85)';ctx.fillText(det.join('  ·  '),W/2,268);}
+  ctx.font='14px Arial';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText('has successfully completed the quiz',W/2,296);
+  roundRect(ctx,W/2-270,304,540,44,22);const qG=ctx.createLinearGradient(W/2-270,316,W/2+270,316);qG.addColorStop(0,'rgba(234,88,12,0.18)');qG.addColorStop(1,'rgba(29,78,216,0.18)');ctx.fillStyle=qG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.font='bold 19px Arial';ctx.fillStyle='#FB923C';ctx.fillText('Communicative English Quiz — StudyHub',W/2,332);
+  const d2=ctx.createLinearGradient(120,370,W-120,370);d2.addColorStop(0,'transparent');d2.addColorStop(0.5,'rgba(234,88,12,0.7)');d2.addColorStop(1,'transparent');ctx.strokeStyle=d2;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,370);ctx.lineTo(W-120,370);ctx.stroke();
+  const sY2=420,rX=190,rR=60,sc=pct>=75?'#22C55E':pct>=40?'#FB923C':'#F87171';ctx.beginPath();ctx.arc(rX,sY2,rR,0,2*Math.PI);ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fill();ctx.beginPath();ctx.arc(rX,sY2,rR-8,-Math.PI/2,-Math.PI/2+(2*Math.PI*pct/100));ctx.strokeStyle=sc;ctx.lineWidth=11;ctx.lineCap='round';ctx.shadowColor=sc;ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+  ctx.font='bold 28px Arial';ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.fillText(`${score}/${total}`,rX,sY2+8);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('SCORE',rX,sY2+26);ctx.font='bold 14px Arial';ctx.fillStyle=sc;ctx.fillText(pct+'%',rX,sY2+46);
+  const gr=pct>=90?'A+':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';roundRect(ctx,rX+80,sY2-46,90,68,14);ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();ctx.font='bold 36px Arial';ctx.fillStyle=sc;ctx.fillText(gr,rX+125,sY2+10);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText('GRADE',rX+125,sY2+30);
+  [{icon:'✅',label:'CORRECT',val:score,color:'#22C55E'},{icon:'❌',label:'WRONG',val:wrongCount,color:'#F87171'},{icon:'⟫',label:'SKIPPED',val:skipped,color:'#FBBF24'},{icon:'📊',label:'ACCURACY',val:pct+'%',color:'#93C5FD'}].forEach((s,i)=>{const col=i%2,row=Math.floor(i/2),sx=440+col*230,sy=sY2-46+row*68;roundRect(ctx,sx,sy,210,56,10);ctx.fillStyle='rgba(255,255,255,0.05)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.stroke();ctx.font='18px Arial';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(s.icon,sx+12,sy+28);ctx.font='bold 20px Arial';ctx.fillStyle=s.color;ctx.fillText(String(s.val),sx+42,sy+28);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(s.label,sx+12,sy+46);});
+  const bY=516;roundRect(ctx,W/2-230,bY-24,460,40,20);const rG=ctx.createLinearGradient(W/2-230,bY,W/2+230,bY);rG.addColorStop(0,'rgba(234,88,12,0.15)');rG.addColorStop(1,'rgba(29,78,216,0.15)');ctx.fillStyle=rG;ctx.fill();ctx.strokeStyle='rgba(234,88,12,0.45)';ctx.lineWidth=1.5;ctx.stroke();ctx.font='bold 14px Arial';ctx.fillStyle='#FFA07A';ctx.textAlign='center';ctx.fillText(`${remark.emoji}  ${remark.title}`,W/2,bY+4);
+  const bG=ctx.createLinearGradient(120,548,W-120,548);bG.addColorStop(0,'transparent');bG.addColorStop(0.5,'rgba(234,88,12,0.7)');bG.addColorStop(1,'transparent');ctx.strokeStyle=bG;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(120,548);ctx.lineTo(W-120,548);ctx.stroke();
+  ctx.font='11px Arial';ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='left';ctx.fillText(`📅  Issued: ${dateStr}`,80,572);if(studentCollege)ctx.fillText(`🏛  ${studentCollege}`,80,590);
+  ctx.textAlign='right';ctx.font='bold 14px Arial';ctx.fillStyle='#93C5FD';ctx.fillText('StudyHub  ✦  EnglishSourceCode',W-80,567);ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.32)';ctx.fillText('erabhi.in/studyHub',W-80,584);
+  ctx.font='10px Arial';ctx.fillStyle='rgba(255,255,255,0.25)';ctx.textAlign='center';ctx.fillText('⭐  Verified Digital Certificate  ⭐',W/2,600);ctx.fillStyle=hLine(H-55);ctx.fillRect(80,H-55,W-160,1.5);ctx.textAlign='left';return cv;
+}
+
+function getQuizURL(){return window.location.href!=='about:blank'?window.location.href:'https://erabhi.in/studyHub/quiz/englishquiz.html';}
+function buildShareText(){const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct),wc=total-score-skipped;const ns=studentName?`👤 ${studentName}\n`:'',ms=(studentBranch&&studentBranch!=='N/A')?`📘 ${studentBranch}${studentSem&&studentSem!=='N/A'?' · '+studentSem:''}\n`:'';return `${remark.emoji} Communicative English Quiz — StudyHub\n\n${ns}${ms}🏆 Score: ${score}/${total} (${pct}%)\n${remark.title}\n\n✅ Correct: ${score}  ❌ Wrong: ${wc}  ⟫ Skipped: ${skipped}\n\n📚 Try: ${getQuizURL()}\n\nStudyHub — erabhi.in/studyHub/`;}
+document.getElementById('shareBtn').addEventListener('click',()=>{const p=document.getElementById('sharePanel');p.classList.toggle('open');if(p.classList.contains('open'))p.scrollIntoView({behavior:'smooth',block:'nearest'});});
+document.getElementById('downloadCertBtn').addEventListener('click',()=>{showToast('🎨 Generating certificate…');setTimeout(()=>{try{const cv=drawCertificate();const lk=document.createElement('a');const total=activeQuestions.length,pct=Math.round((score/total)*100);const sn=(studentName||'Student').replace(/[^a-zA-Z0-9]/g,'_');lk.download=`StudyHub_English_Certificate_${sn}_${score}_${total}_${pct}pct.png`;lk.href=cv.toDataURL('image/png');lk.click();showToast('✅ Certificate downloaded!');document.getElementById('downloadCertBtn').classList.add('done');}catch(e){showToast('⚠️ Download failed — try another browser');}},200);});
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{navigator.clipboard.writeText(getQuizURL()).then(()=>showToast('🔗 Quiz link copied!')).catch(()=>prompt('Copy:',getQuizURL()));});
+document.getElementById('whatsappBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);window.open(`https://wa.me/?text=${encodeURIComponent(`${remark.emoji} *Communicative English Quiz — StudyHub*\n\n${studentName?'👤 *'+studentName+'*\n':''}🏆 Score: *${score}/${total}* (${pct}%)\n${remark.title}\n\n📚 Try: ${getQuizURL()}`)}`,'_blank');});
+document.getElementById('twitterBtn').addEventListener('click',()=>{const total=activeQuestions.length,pct=Math.round((score/total)*100),remark=getRemark(pct);window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${remark.emoji} Just scored ${score}/${total} (${pct}%) on Communicative English Quiz!\n${remark.title}\nTry it 👇\n${getQuizURL()}\n#CommunicativeEnglish #English #StudyHub #BTech`)}`,'_blank');});
+document.getElementById('copyTextBtn').addEventListener('click',()=>{navigator.clipboard.writeText(buildShareText()).then(()=>showToast('📋 Score text copied!')).catch(()=>prompt('Copy:',buildShareText()));});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+document.addEventListener('click',e=>{const h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');if(!h.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>
