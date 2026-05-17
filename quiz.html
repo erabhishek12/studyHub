@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StudyHub — Quiz Center</title>
-      <!-- Favicon -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="images/logo.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="images/logo.png">
@@ -594,37 +594,26 @@
     box-shadow: 12px 12px 28px #C4C8D4, -12px -12px 28px #FFFFFF;
   }
 
-  @keyframes shareHighlightPulse {
-    0%,100%{
-      transform: translateY(-6px) scale(1.015);
-      box-shadow:
-       0 0 0 4px rgba(124,58,237,.35),
-       0 0 35px rgba(124,58,237,.45),
-       12px 12px 28px #C4C8D4,
-      -12px -12px 28px #FFFFFF;
-    }
-    50%{
-      transform: translateY(-10px) scale(1.03);
-      box-shadow:
-       0 0 0 7px rgba(168,85,247,.45),
-       0 0 55px rgba(124,58,237,.65),
-       12px 12px 28px #C4C8D4,
-      -12px -12px 28px #FFFFFF;
-    }
-  }
 
-  .quiz-card.shared-highlight {
-    position:relative;
-    z-index:10;
-    border:2px solid #7C3AED;
-    animation:none;
-    box-shadow:
-      0 0 0 4px rgba(124,58,237,.35),
-      0 0 35px rgba(124,58,237,.45),
-      12px 12px 28px #C4C8D4,
-      -12px -12px 28px #FFFFFF;
-  }
 
+.quiz-card.shared-highlight {
+
+  border: 2px solid #7C3AED;
+
+  box-shadow:
+    0 0 0 4px rgba(124,58,237,.20),
+    0 0 25px rgba(124,58,237,.25),
+    12px 12px 28px #C4C8D4,
+   -12px -12px 28px #FFFFFF;
+
+  transform: translateY(-4px);
+
+  transition:
+    box-shadow .35s ease,
+    transform .35s ease,
+    border-color .35s ease;
+
+}
   .quiz-card.shared-highlight::before {
     content:"📌 Shared With You";
     position:absolute;
@@ -2187,7 +2176,12 @@ function renderView(animate) {
     else if (v === 'quizzes') html = renderQuizzes(course, branch, sem, quizId);
     else html = renderHome();
     view.innerHTML = html;
-    scrollTo({ top: 0, behavior: 'smooth' });
+    if (!state.quizId) {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
     bindPostRender();
   };
 
@@ -2315,22 +2309,36 @@ function handleCardClick(e, url) {
 }
 
 function scheduleHighlight(quizId) {
-  setTimeout(() => {
-    const card = document.querySelector(`.quiz-card[data-quiz-id="${quizId}"]`);
-    if (!card) return;
-    const y = card.getBoundingClientRect().top + window.pageYOffset - 68 - 40;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+
+  requestAnimationFrame(() => {
+
     setTimeout(() => {
-      document.querySelectorAll('.quiz-card').forEach(c => c.classList.remove('shared-highlight'));
+
+      const card = document.querySelector(
+        `.quiz-card[data-quiz-id="${quizId}"]`
+      );
+
+      if (!card) return;
+
+      // remove old highlights
+      document.querySelectorAll('.quiz-card')
+        .forEach(c => c.classList.remove('shared-highlight'));
+
+      // add highlight
       card.classList.add('shared-highlight');
-      card.style.animation = 'shareHighlightPulse 2.2s ease-in-out infinite';
-      showToast('📌 Shared quiz highlighted for you');
-      const obs = new MutationObserver(() => {
-        if (!card.classList.contains('shared-highlight')) card.classList.add('shared-highlight');
+
+      // smooth scroll
+      card.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
       });
-      obs.observe(card, { attributes: true, attributeFilter: ['class'] });
-    }, 900);
-  }, 500);
+
+      showToast('📌 Shared quiz highlighted for you');
+
+    }, 300);
+
+  });
+
 }
 
 // ──────────────────────────────────────────────────────────────
